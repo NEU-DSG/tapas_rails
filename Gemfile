@@ -33,6 +33,12 @@ gem 'figaro'
 # Use CerberusCore as the basis for this project 
 gem 'cerberus_core', git: "https://github.com/NEU-Libraries/cerberus_core.git"
 
+# Use Resque to handle background tasks 
+gem 'resque'
+
+# Use Nest because some inherited config uses Nest
+gem 'nest'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
