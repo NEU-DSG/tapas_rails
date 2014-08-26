@@ -5,6 +5,15 @@ TapasRails::Application.routes.draw do
   # You can have the root of your site routed with "root"
   # root 'welcome#index'
 
+  # Show resque admin in development environment
+  resque_web_constraint = lambda do |request|
+    Rails.env == "development"
+  end
+
+  constraints resque_web_constraint do 
+    mount Resque::Server, at: "/resque" 
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

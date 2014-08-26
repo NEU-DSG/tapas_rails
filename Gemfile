@@ -34,7 +34,7 @@ gem 'figaro'
 gem 'cerberus_core', git: "https://github.com/NEU-Libraries/cerberus_core.git"
 
 # Use Resque to handle background tasks 
-gem 'resque'
+gem 'resque', :require => 'resque/server'
 
 # Use Nest because some inherited config uses Nest
 gem 'nest'
