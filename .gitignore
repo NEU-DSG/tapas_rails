@@ -24,6 +24,9 @@
 # Ignore Redis generated dump file
 dump.rdb
 
+# Ignore vagrant config information
+.vagrant
+
 *.rbc
 capybara-*.html
 .rspec
