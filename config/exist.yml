@@ -1,0 +1,6 @@
+development: 
+	base_path: "localhost:8983/exist/rest/db/development"
+
+test: 
+	base_path: "locahost:8983/exist/rest/db/test"
+
