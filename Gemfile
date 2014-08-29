@@ -31,7 +31,7 @@ gem 'jbuilder', '~> 1.2'
 gem 'figaro' 
 
 # Use CerberusCore as the basis for this project 
-gem 'cerberus_core', git: "https://github.com/NEU-Libraries/cerberus_core.git"
+gem 'cerberus_core', git: "https://github.com/NEU-Libraries/cerberus_core.git", :branch => "master"
 
 # Use Resque to handle background tasks 
 gem 'resque', :require => 'resque/server'
