@@ -1,4 +1,6 @@
 class CollectionsController < ApplicationController
+  include JsonApiAccessible
+
   def index
 
   end
@@ -8,7 +10,7 @@ class CollectionsController < ApplicationController
   end
 
   def create
-    render "success"
+    render :nothing => true and return
   end
 
   def show

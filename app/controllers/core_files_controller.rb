@@ -1,4 +1,6 @@
 class CoreFilesController < ApplicationController
+  include JsonApiAccessible
+
   def index
 
   end

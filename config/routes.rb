@@ -14,9 +14,9 @@ TapasRails::Application.routes.draw do
     mount Resque::Server, at: "/resque" 
   end
 
-  resources :communities, :defaults => { :format => "json" } 
-  resources :collections, :defaults => { :format => "json" } 
-  resources :core_files,  :defaults => { :format => "json" } 
+  resources :communities
+  resources :collections
+  resources :core_files
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
