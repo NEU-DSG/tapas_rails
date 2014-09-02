@@ -53,6 +53,7 @@ GEM
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
     arel (4.0.2)
+    bcrypt (3.1.7)
     blacklight (5.7.0)
       bootstrap-sass (~> 3.2)
       deprecation
@@ -79,6 +80,14 @@ GEM
     daemons (1.1.9)
     deprecation (0.1.0)
       activesupport
+    devise (3.3.0)
+      bcrypt (~> 3.0)
+      orm_adapter (~> 0.1)
+      railties (>= 3.2.6, < 5)
+      thread_safe (~> 0.1)
+      warden (~> 1.2.3)
+    devise-guests (0.3.3)
+      devise
     diff-lcs (1.2.4)
     ebnf (0.3.6)
       haml (~> 4.0)
@@ -185,6 +194,7 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
+    orm_adapter (0.5.0)
     polyglot (0.3.5)
     rack (1.5.2)
     rack-protection (1.5.0)
@@ -333,6 +343,8 @@ GEM
       json (>= 1.8.0)
     vegas (0.1.11)
       rack (>= 1.0.0)
+    warden (1.2.3)
+      rack (>= 1.0)
     xml-simple (1.1.4)
 
 PLATFORMS
@@ -341,6 +353,8 @@ PLATFORMS
 DEPENDENCIES
   cerberus_core!
   coffee-rails (~> 4.0.0)
+  devise
+  devise-guests (~> 0.3)
   figaro
   jbuilder (~> 1.2)
   jettywrapper
