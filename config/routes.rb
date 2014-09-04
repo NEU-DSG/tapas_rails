@@ -23,7 +23,7 @@ TapasRails::Application.routes.draw do
 
   resources :communities
   resources :collections
-  resources :core_files
+  resources :core_files 
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

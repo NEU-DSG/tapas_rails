@@ -97,6 +97,11 @@ GEM
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
     execjs (2.2.1)
+    factory_girl (4.4.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.4.1)
+      factory_girl (~> 4.4.0)
+      railties (>= 3.0.0)
     fastercsv (1.5.5)
     ffi (1.9.3)
     figaro (0.7.0)
@@ -355,6 +360,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   devise-guests (~> 0.3)
+  factory_girl_rails
   figaro
   jbuilder (~> 1.2)
   jettywrapper
