@@ -1,31 +1,12 @@
 class CollectionsController < ApplicationController
   include JsonApiAccessible
 
-  def index
-
-  end
-
-  def new
-
-  end
-
   def create
-    render :nothing => true and return
-  end
+    respond_to do |format| 
 
-  def show
-
-  end
-
-  def edit 
-
-  end
-
-  def update 
-
-  end
-
-  def delete 
-
+      format.json do 
+        render :nothing => true, status: 200
+      end
+    end
   end
 end

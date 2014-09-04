@@ -21,9 +21,9 @@ TapasRails::Application.routes.draw do
     mount Resque::Server, at: "/resque" 
   end
 
-  resources :communities
-  resources :collections
-  resources :core_files 
+  resources :communities, only: [:create]
+  resources :collections, only: [:create]
+  resources :core_files,  only: [:create]
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

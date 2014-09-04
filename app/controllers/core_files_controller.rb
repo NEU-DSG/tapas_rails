@@ -1,31 +1,12 @@
 class CoreFilesController < ApplicationController
   include JsonApiAccessible
 
-  def index
-
-  end
-
-  def new
-
-  end
-
   def create
+    respond_to do |format| 
 
-  end
-
-  def show
-
-  end
-
-  def edit 
-
-  end
-
-  def update 
-
-  end
-
-  def delete 
-
+      format.json do 
+        render :nothing => true, status: 200
+      end
+    end
   end
 end
