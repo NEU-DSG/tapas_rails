@@ -23,7 +23,7 @@ TapasRails::Application.routes.draw do
 
   resources :communities, only: [:create]
   resources :collections, only: [:create]
-  resources :core_files,  only: [:create]
+  resources :core_files,  only: [:create], path: "files"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
