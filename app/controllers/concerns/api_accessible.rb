@@ -1,17 +1,18 @@
-module JsonApiAccessible 
+module ApiAccessible 
   extend ActiveSupport::Concern 
 
   included do 
-    # Disable CSRF checks for JSON API requests
-    skip_before_action :verify_authenticity_token, :if => :json_request?
-    # Check for an API token on JSON API requests
-    before_action :authenticate_api_request, :if => :json_request?
+    # Disable CSRF protection...
+    skip_before_action :verify_authenticity_token
+
+    # But enforce credential checks on each and every request.
+    before_action :authenticate_api_request
   end
 
-  private 
+  private
 
-  def json_request?
-    request.format.json?
+  def auth_info_present?
+    params[:email].present? && params[:token].present?
   end
 
   def authenticate_api_request

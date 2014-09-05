@@ -1,12 +1,7 @@
 class CoreFilesController < ApplicationController
-  include JsonApiAccessible
+  include ApiAccessible
 
   def create
-    respond_to do |format| 
-
-      format.json do 
-        render :nothing => true, status: 200
-      end
-    end
+    render nothing: true, status: 200
   end
 end
