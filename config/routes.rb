@@ -1,4 +1,11 @@
 TapasRails::Application.routes.draw do
+
+  # At some point we'll want all this, but I'm going to disable these routes
+  # until we're ready to migrate to 100% Hydra-Head usage for tapas. 
+  # root :to => "catalog#index"
+  # blacklight_for :catalog
+  # devise_for :users
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
@@ -13,6 +20,10 @@ TapasRails::Application.routes.draw do
   constraints resque_web_constraint do 
     mount Resque::Server, at: "/resque" 
   end
+
+  resources :communities, only: [:create]
+  resources :collections, only: [:create]
+  resources :core_files,  only: [:create], path: "files"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
