@@ -12,6 +12,13 @@ module TapasObjectValidator
     end
   end
 
+  def no_params
+    unless self.params.present?
+      errors << "Object had no parameters or did not exist" 
+      return errors
+    end
+  end
+
   def validate_required_attributes
     required_attributes.each do |attribute|
       unless params[attribute]

@@ -6,11 +6,7 @@ class CoreFileValidator
   end
 
   def validate_params
-    unless params.present?
-      errors << "Object had no parameters or did not exist" 
-      return errors 
-    end
-
+    return errors if no_params
     validate_required_attributes
     validate_parent
     validate_files

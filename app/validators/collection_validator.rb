@@ -6,6 +6,17 @@ class CollectionValidator
   end
 
   def validate_params
-    #TODO
+    return errors if no_params
+    validate_required_attributes
+    validate_parent 
+    return errors 
+  end
+
+  def required_attributes
+    [:title, :parent]
+  end
+
+  def validate_parent
+    validate_parent_helper([Collection, Community])
   end
 end
