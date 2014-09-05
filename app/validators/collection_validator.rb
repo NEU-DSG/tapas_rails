@@ -1,0 +1,3 @@
+class CollectionValidator < TapasObjectValidator 
+
+end

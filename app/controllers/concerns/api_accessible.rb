@@ -6,14 +6,16 @@ module ApiAccessible
     skip_before_action :verify_authenticity_token
 
     # But enforce credential checks on each and every request.
+    # Note that this and the csrf disable up top will have to be 
+    # reworked once tapas_rails is the actual frontend for tapas.
     before_action :authenticate_api_request
+
+    # Ensure params passed to create requests are valid
+    # e.g. an object is creatable
+    before_action :validate_creation_params, only: [:create]
   end
 
   private
-
-  def auth_info_present?
-    params[:email].present? && params[:token].present?
-  end
 
   def authenticate_api_request
     email   = params[:email]
@@ -28,6 +30,23 @@ module ApiAccessible
       render_json_403.call and return unless (user.api_key == api_key)
     else
       render_json_403.call and return
+    end
+  end
+
+  # Validates that the metadata passed in is valid 
+  def validate_creation_params
+    klass = controller_name.classify
+
+    if klass == "Community"
+      errors = CommunityValidator.validate_params(params[:object])
+    elsif klass == "CoreFile"
+      errors = CoreFileValidator.validate_params(params[:object])
+    elsif klass == "Collection" 
+      errors = CollectionValidator.validate_params(params[:object]) 
+    end
+
+    if errors.present?
+      #TODO: Build erroneous response 
     end
   end
 end
