@@ -17,6 +17,9 @@ module TapasRails
 
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
+    # Enable pid generation on object instantiation
+    config.cerberus_core.auto_generate_pid = true
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
