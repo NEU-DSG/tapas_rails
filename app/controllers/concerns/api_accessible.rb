@@ -35,18 +35,11 @@ module ApiAccessible
 
   # Validates that the metadata passed in is valid 
   def validate_creation_params
-    klass = controller_name.classify
-
-    if klass == "Community"
-      errors = CommunityValidator.validate_params(params[:object])
-    elsif klass == "CoreFile"
-      errors = CoreFileValidator.validate_params(params[:object])
-    elsif klass == "Collection" 
-      errors = CollectionValidator.validate_params(params[:object]) 
-    end
+    validator = "#{controller_name.classify}Validator".constantize
+    errors    = validator.validate_params(params[:object])
 
     if errors.present?
-      #TODO: Build erroneous response 
+      #TODO: Build response
     end
   end
 end

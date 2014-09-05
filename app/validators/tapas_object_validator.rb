@@ -1,32 +1,44 @@
-class TapasObjectValidator
-  attr_reader   :params, :klass
-  attr_accessor :errors 
+module TapasObjectValidator
+  extend ActiveSupport::Concern
 
-  def initialize(object_params, object_class)
-    @params = object_params.with_indifferent_access
-    @klass  = object_class
-    @errors = []
-  end
+  included do 
+    attr_reader   :params
+    attr_accessor :errors
 
-  def self.validate_params(object_params)
-    TapasObjectValidatorService.new(object_params).validate_params 
-  end
-
-  def validate_params
-    # If the param hash passed in was nonexistant say that 
-    # and exit.
-    unless params.present?
-      errors << "Object had no parameters or did not exist"
-      return errors 
+    def initialize(object_params)
+      params_hash = object_params || {}
+      @params = params_hash.with_indifferent_access
+      @errors = []
     end
+  end
 
-    # Check for all required metadata attributes
-    required_attributes.each do |attribute| 
-      unless params[attribute].present?
+  def validate_required_attributes
+    required_attributes.each do |attribute|
+      unless params[attribute]
         errors << "Object was missing required attribute #{attribute}"
       end
     end
+  end
 
-    return errors
+  def validate_parent_helper(expected_parent_classes)
+    pid = params[:parent]
+
+    if ActiveFedora::Base.exists?(pid) && pid
+      parent = ActiveFedora::Base.find(pid, cast: true)
+
+      unless expected_parent_classes.include? parent.class 
+        errors << <<-eos 
+        Object at specified parent pid #{pid} was a
+        #{parent.class}.  Must be one of: 
+        #{expected_parent_classes.join(", ") }
+        eos
+      end
+    elsif pid
+      errors << "No object exists at the specified parent pid of #{pid}"
+    end
+  end
+
+  def shared_required_attributes
+    [:title]
   end
 end
