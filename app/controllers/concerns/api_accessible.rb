@@ -10,8 +10,6 @@ module ApiAccessible
     # reworked once tapas_rails is the actual frontend for tapas.
     before_action :authenticate_api_request
 
-    # Ensure params passed to create requests are valid
-    # e.g. an object is creatable
     before_action :validate_creation_params, only: [:create]
   end
 

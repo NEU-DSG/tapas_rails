@@ -31,7 +31,9 @@ shared_examples_for "an API enabled controller" do
   describe "content validation" do 
 
     it "returns a 422 for invalid requests" do 
-      post :create, {email: user.email, token: "test_api_key" } 
+      post :create, { email:  user.email, 
+                      token:  "test_api_key",
+                      object: nil }
       expect(response.status).to eq 422
       msg = "Resource creation failed.  Invalid parameters!" 
 
