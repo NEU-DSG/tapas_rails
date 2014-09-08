@@ -11,6 +11,11 @@ module ApiAccessible
     before_action :authenticate_api_request
 
     before_action :validate_creation_params, only: [:create]
+
+    def create
+      c = controller_name.classify.to_s
+      Drs::Application::Queue.push(TapasObjectCreationJob.new(params, c))
+    end
   end
 
   private

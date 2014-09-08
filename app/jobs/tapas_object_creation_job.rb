@@ -7,6 +7,6 @@ class TapasObjectCreationJob
   end
 
   def run 
-    TapasObjectCreatorService.create_record(params, klass)
+    "#{klass}CreatorService".constantize.create_record(params)
   end
 end
