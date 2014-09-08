@@ -14,7 +14,8 @@ module ApiAccessible
 
     def create
       c = controller_name.classify.to_s
-      Drs::Application::Queue.push(TapasObjectCreationJob.new(params, c))
+      object = params[:object]
+      Drs::Application::Queue.push(TapasObjectCreationJob.new(object, c))
     end
   end
 
