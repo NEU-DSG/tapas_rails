@@ -6,7 +6,7 @@ class CollectionValidator
   end
 
   def validate_params
-    return errors if no_params
+    return errors if no_params?
     validate_required_attributes
     validate_parent 
     return errors 

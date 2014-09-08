@@ -12,10 +12,10 @@ module TapasObjectValidator
     end
   end
 
-  def no_params
+  def no_params?
     unless self.params.present?
       errors << "Object had no parameters or did not exist" 
-      return errors
+      return true
     end
   end
 
@@ -34,18 +34,12 @@ module TapasObjectValidator
       parent = ActiveFedora::Base.find(pid, cast: true)
 
       unless expected_parent_classes.include? parent.class 
-        errors << <<-eos 
-        Object at specified parent pid #{pid} was a
-        #{parent.class}.  Must be one of: 
-        #{expected_parent_classes.join(", ") }
-        eos
+        errors << %W(Object at specified parent pid #{pid} was a 
+                  #{parent.class}.  Must be one of: 
+                  #{expected_parent_classes}.).join(" ")
       end
     elsif pid
       errors << "No object exists at the specified parent pid of #{pid}"
     end
-  end
-
-  def shared_required_attributes
-    [:title]
   end
 end

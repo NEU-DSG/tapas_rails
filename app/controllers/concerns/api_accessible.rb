@@ -39,7 +39,16 @@ module ApiAccessible
     errors    = validator.validate_params(params[:object])
 
     if errors.present?
-      #TODO: Build response
+      # Build a json error response with all errors and the original 
+      # params of the request as interpreted by the server
+      # Ensure api_key is NOT displayed by this
+      msg = {
+        message: "Resource creation failed.  Invalid parameters!",
+        errors:  errors,
+
+        original_object_parameters: params[:object]
+      }
+      render json: msg, status: 422
     end
   end
 end
