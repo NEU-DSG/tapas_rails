@@ -1,5 +1,5 @@
 class CommunityCreatorService 
-  include TapasObjectCreator
+  include Concerns::TapasObjectCreator
 
   def create_record
     # Things to do: 

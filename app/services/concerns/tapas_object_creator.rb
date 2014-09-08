@@ -1,4 +1,4 @@
-module TapasObjectCreator 
+module Concerns::TapasObjectCreator 
   extend ActiveSupport::Concern
 
   included do 
