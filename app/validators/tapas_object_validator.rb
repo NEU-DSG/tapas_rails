@@ -19,6 +19,8 @@ module TapasObjectValidator
     end
   end
 
+  # Requires that a method 'required_attributes' be defined on the containing
+  # class that returns an array of necessary attribute names.
   def validate_required_attributes
     required_attributes.each do |attribute|
       unless params[attribute]
@@ -27,6 +29,8 @@ module TapasObjectValidator
     end
   end
 
+  # Requires that a method 'expected_parent_classes' be defined on the 
+  # containing class that returns an array of class constants
   def validate_parent_helper(expected_parent_classes)
     pid = params[:parent]
 
