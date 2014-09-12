@@ -27,4 +27,11 @@ describe TEIValidator do
     expect(errors).to include no_header_error
     expect(errors).to include root_node_error 
   end
+
+  it "returns no errors on files that are valid TEI data" do 
+    tei    = File.read Rails.root.join "spec", "fixtures", "files", "tei.xml"
+    errors = validate_file tei 
+
+    expect(errors.length).to eq 0 
+  end
 end
