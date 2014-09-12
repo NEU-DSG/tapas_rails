@@ -1,8 +1,8 @@
 class TapasObjectCreationJob
   attr_accessor :params, :klass
 
-  def initialize(request_params, object_class)
-    self.params = request_params 
+  def initialize(object_params, object_class)
+    self.params = object_params 
     self.klass  = object_class
   end
 
