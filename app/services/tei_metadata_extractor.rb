@@ -71,7 +71,7 @@ class TEIMetadataExtractor
         date = DateTime.parse(date).to_s(:db)
         {date: date}
       rescue ArgumentError => error
-        {date: "Could not parse date #{elements.first}"}
+        {date: "Could not parse date: #{elements.first}.  May still be valid"}
       end
     else
       {}
