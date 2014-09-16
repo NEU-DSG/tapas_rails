@@ -10,6 +10,19 @@ class CoreFilesController < ApplicationController
       json = { message: "Fatal validation errors", errors: errors }
       render json: JSON.pretty_generate(json), status: 422 and return 
     end
-    #TODO Handle metadata extraction
+
+    metadata = TEIMetadataExtractor.extract(params[:file])
+
+    if errors.any?
+      json = { 
+              message: "Some warnings raised",
+              errors:  errors,
+              metadata: metadata
+             }
+      render json: JSON.pretty_generate(json), status: 200 and return 
+    else
+      json = { message: "OK", metadata: metadata }
+      render json: JSON.pretty_generate(json), status: 200 and return 
+    end
   end
 end
