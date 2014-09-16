@@ -9,7 +9,8 @@ describe TEIValidator do
   it "returns errors on malformed xml" do 
     errors = validate_file("<a>xml")
     expect(errors.length).to eq 1 
-    expect(errors.first).to eq "Premature end of data in tag a line 1"
+    expect(errors.first[:class]).to eq "schematron-fatal"
+    expect(errors.first[:content]).to eq "Premature end of data in tag a line 1"
   end
 
   it "returns errors on files that aren't TEI data" do 
@@ -23,9 +24,11 @@ describe TEIValidator do
 
     errors = validate_file("<a>xml</a>")
     expect(errors.length).to eq 3
-    expect(errors).to include namespace_error
-    expect(errors).to include no_header_error
-    expect(errors).to include root_node_error 
+    
+    error_messages = errors.map { |error| error[:content] }
+    expect(error_messages).to include namespace_error
+    expect(error_messages).to include no_header_error
+    expect(error_messages).to include root_node_error
   end
 
   it "returns no errors on files that are valid TEI data" do 
