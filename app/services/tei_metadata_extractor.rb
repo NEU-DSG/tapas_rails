@@ -22,6 +22,8 @@ class TEIMetadataExtractor
     response.merge! handle_source
     response.merge! handle_language
     response.merge! handle_publish_date
+    response.merge! handle_creator
+    response.merge! handle_contributors
     return response
   end
 
@@ -71,7 +73,7 @@ class TEIMetadataExtractor
         date = DateTime.parse(date).to_s(:db)
         {date: date}
       rescue ArgumentError => error
-        {date: "Could not parse date: #{elements.first}.  May still be valid"}
+        {date: "Could not parse date: '#{elements.first}'. May still be valid"}
       end
     else
       {}
@@ -83,8 +85,9 @@ class TEIMetadataExtractor
     elements.any? ? {contributors: elements} : {}
   end
 
-  def handle_creators
-    elements = extract_element "dc_creator" 
+  def handle_creator
+    elements = extract_element "dc_creator"
+    elements.any? ? { creator: elements.first } : {} 
     # The logic for the current set creator action is not worth the 
     # headache of maintaining.
   end
