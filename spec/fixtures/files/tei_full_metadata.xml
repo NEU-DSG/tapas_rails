@@ -66,7 +66,7 @@
       <change when="2000-00-00" who="JSC">Transcribed</change>
     </revisionDesc>
   </teiHeader>
-  <text>
+  <text xml:lang="english">
     <body>
     </body>
   </text>

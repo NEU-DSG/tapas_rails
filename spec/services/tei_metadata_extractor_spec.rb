@@ -25,6 +25,10 @@ describe TEIMetadataExtractor do
         expect(@extractor.response[:title]).to eq "After the Argument"
       end
 
+      it "grabs a language" do 
+        expect(@extractor.response[:language]).to eq "eng" 
+      end
+
       it "grabs a creator" do 
         expect(@extractor.response[:creator]).to eq "Walt Whitman"
       end
@@ -54,7 +58,7 @@ describe TEIMetadataExtractor do
         expect(@extractor.response[:rights]).to eq rights 
       end
 
-      it "returns the document source" do 
+      it "grabs the TEI document source" do 
         source_str = "Walt Whitman “After the Argument” 1890 or 1891 The " +
                      "Charles E. Feinberg Collection of the Papers of Walt " + 
                      "Whitman, Library of Congress, Washington, DC " + 
