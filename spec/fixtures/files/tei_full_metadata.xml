@@ -1,0 +1,34 @@
+<TEI xmlns="http://www.tei-c.org/ns/1.0">
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>The TEI File's Title</title>
+        <author>Will Jackson</author>
+      </titleStmt>
+      <publicationStmt>
+        <p>An example publication statement</p>
+      </publicationStmt>
+      <sourceDesc>
+        <biblStruct>
+          <imprint>
+            <date>
+              September 16, 2014
+            </date>
+          </imprint>
+        </biblStruct>
+      </sourceDesc>
+    </fileDesc>
+    <profileDesc>
+      <textClass>
+        <classCode scheme="#example/local/scheme">Test Scheme</classCode>
+        <classCode scheme="http://www.udcc.org/udcsummary/php/index.php">
+          005.756
+        </classCode>
+      </textClass>
+    </profileDesc>
+  </teiHeader>
+  <text>
+    <body>
+    </body>
+  </text>
+</TEI>
