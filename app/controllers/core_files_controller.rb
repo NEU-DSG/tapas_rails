@@ -2,27 +2,33 @@ class CoreFilesController < ApplicationController
   include ApiAccessible
 
   def parse_tei
+    response = {}
+
     errors = TEIValidator.validate_file(params[:file])
+    response[:errors] = errors if errors
 
     fatal_errors = %W(schematron-fatal schematron-error)
 
-    if errors.any? { |x| fatal_errors.include? x[:class] }
-      json = { message: "Fatal validation errors", errors: errors }
-      render json: JSON.pretty_generate(json), status: 422 and return 
+    if response[:errors].any? { |x| fatal_errors.include? x[:class] }
+      response[:message] = "Fatal validation errors!" 
+      render json: JSON.pretty_generate(response), status: 422 and return
     end
 
     metadata = TEIMetadataExtractor.extract(params[:file])
+    response[:metadata] = metadata
 
-    if errors.any?
-      json = { 
-              message: "Some warnings raised",
-              errors:  errors,
-              metadata: metadata
-             }
-      render json: JSON.pretty_generate(json), status: 200 and return 
+    if response[:errors] && response[:errors].any?
+      response[:message] = "Some warnings but OK"
     else
-      json = { message: "OK", metadata: metadata }
-      render json: JSON.pretty_generate(json), status: 200 and return 
+      response[:message] = "OK"
     end
+
+    render json: JSON.pretty_generate(response), status: 200 and return
   end
+
+  private
+
+    def pretty_json(message, status)
+      render json: JSON.pretty_generate(message), status: 200
+    end
 end

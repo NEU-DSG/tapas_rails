@@ -43,6 +43,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # we can test what we're doing. 
   config.vm.provision "shell", path: "lib/scripts/vagrant_provisioning.sh", privileged: false
 
+  config.vm.synced_folder "~/ptapas", "/home/vagrant/ptapas", nfs: true
   config.vm.synced_folder ".", "/home/vagrant/tapas_rails", nfs: true 
 
   config.vm.network "private_network", ip: "192.168.3.6"
