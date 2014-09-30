@@ -39,6 +39,12 @@ gem 'resque', :require => 'resque/server'
 # Use Nest because some inherited config uses Nest
 gem 'nest'
 
+# Use thor for command line tasks
+gem 'thor'
+
+# Install thor-rails to write thor tasks that are rails env aware
+gem 'thor-rails'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
