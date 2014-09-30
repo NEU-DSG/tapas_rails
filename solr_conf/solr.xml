@@ -31,6 +31,6 @@
   <cores adminPath="/admin/cores" defaultCoreName="development">
     <core name="development" instanceDir="development-core" />
     <core name="test" instanceDir="test-core" />
-    <core name="drupal" instanceDir = "drupal-core" />
+    <core name="drupal" instanceDir="drupal-core" />
   </cores>
 </solr>
