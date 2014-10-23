@@ -29,10 +29,12 @@ class TEIValidator
 
       fatal_errors = %W(schematron-fatal schematron-error)
       if errors.any? { |e| fatal_errors.include? e[:class] }
+        # Explicitly returning from inside the proc causes method 
+        # execution to stop: this ensures that we break and return 
+        # as soon as fatal errors are detected.
         return errors 
       end
     end
-
 
     # Ensure the file is well-formed xml
     xml_doc = Nokogiri::XML(file)
@@ -42,14 +44,15 @@ class TEIValidator
       errors << error 
     end
 
-    return errors unless errors.empty?
+    return errors if errors.any?
 
     # Ensure the file is valid TEI 
     run_check.call(tei_checker, xml_doc)
     # Ensure the styling on the file is okay I suspect
     run_check.call(css_checker, xml_doc)
 
-    # return the empty array if no errors exist
-    []
+    # If we get to this point, the array is either empty 
+    # or consists solely of non-fatal errors 
+    errors
   end
 end
