@@ -13,9 +13,11 @@ staging:
   adapter: mysql2 
   encoding: utf8
   host: localhost
+  port: 3306
+  pool: 5
   database: tapas_rails_staging
-  username: root 
-  password: <%= ENV["MYSQL_STAGING_PASSWORD"] %>
+  username: tapas_rails 
+  password: <%= ENV['MYSQL_STAGING_PASSWORD'] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
