@@ -4,7 +4,8 @@ class CoreFilesController < ApplicationController
   def parse_tei
     response = {}
 
-    errors = TEIValidator.validate_file(params[:file])
+    str = params[:file].read
+    errors = TEIValidator.validate_file(str)
     response[:errors] = errors if errors
 
     fatal_errors = %W(schematron-fatal schematron-error)
@@ -14,7 +15,7 @@ class CoreFilesController < ApplicationController
       render json: JSON.pretty_generate(response), status: 422 and return
     end
 
-    metadata = TEIMetadataExtractor.extract(params[:file])
+    metadata = TEIMetadataExtractor.extract(str)
     response[:metadata] = metadata
 
     if response[:errors] && response[:errors].any?
