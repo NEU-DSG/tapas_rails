@@ -43,12 +43,12 @@ class TEIMetadataExtractor
 
   def handle_rights
     elements = extract_element "dc_rights"
-    elements.first.present? ? {rights: elements.first} : {}
+    elements.first.present? ? { rights: elements.first } : {}
   end
 
   def handle_source
     elements = extract_element "dc_source" 
-    elements.first.present? ? {source: elements.first} : {}
+    elements.first.present? ? { source: elements.first } : {}
   end
 
   def handle_language
@@ -56,7 +56,7 @@ class TEIMetadataExtractor
     if elements.first.present?
       language = elements.first 
       language = language[/[a-zA-Z][a-zA-Z][a-zA-Z]/] || language
-      {language: language}
+      { language: language }
     else
       {}
     end
@@ -66,14 +66,14 @@ class TEIMetadataExtractor
     elements = extract_element "dc_date" 
     # Make Ruby's built-in date processing do the transformation
     # and if it can't assume the user did something heinous
-    # and return an error 
+    # and return nothing 
     if elements.first.present?
       date = elements.first 
       begin 
         date = DateTime.parse(date).to_s(:db)
-        {date: date}
+        { date: date }
       rescue ArgumentError => error
-        {date: "Could not parse date: '#{elements.first}'. May still be valid"}
+        {}
       end
     else
       {}
@@ -82,7 +82,7 @@ class TEIMetadataExtractor
 
   def handle_contributors
     elements = extract_element "dc_contributor" 
-    elements.any? ? {contributors: elements} : {}
+    elements.any? ? { contributors: elements } : {}
   end
 
   def handle_creator

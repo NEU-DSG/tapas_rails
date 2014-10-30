@@ -40,8 +40,8 @@ describe TEIMetadataExtractor do
       # The date in the sample TEI file we're using is defined as 
       # "sometime between 1890 and 1891"
       # Ought to check behavior with actual date
-      it "returns a notification that the date was janky" do 
-        expect(@extractor.response[:date]).to include "Could not parse date:"
+      it "returns no date information" do 
+        expect(@extractor.response[:date]).to be nil
       end
 
       it "grabs rights information" do 
