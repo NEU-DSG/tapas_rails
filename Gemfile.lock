@@ -199,6 +199,7 @@ GEM
     minitest (4.7.5)
     multi_json (1.10.1)
     mysql2 (0.3.16)
+    namae (0.9.2)
     nest (1.1.2)
       redis
     net-http-persistent (1.9)
@@ -394,6 +395,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   mysql2
+  namae
   nest
   rails (= 4.0.8)
   resque

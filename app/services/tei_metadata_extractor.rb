@@ -86,10 +86,41 @@ class TEIMetadataExtractor
   end
 
   def handle_creator
-    elements = extract_element "dc_creator"
-    elements.any? ? { creator: elements.first } : {} 
-    # The logic for the current set creator action is not worth the 
-    # headache of maintaining.
+    creator = extract_element("dc_creator").first
+
+    return {} unless creator 
+
+    response   = {}
+    name_parts = Namae.parse(creator).first
+    response[:family] = name_parts.family if name_parts.family
+
+    # Detects all roman numeral matches between I and MMMM (4000)
+    exp = /^M{0,4}(CM|CD|D?C{0,3})(XC|XL|L?X{0,3})(IX|IV|V?I{0,3})$/
+    is_numeral = (name_parts.suffix =~ exp)
+    # Check if its a junior or a senior 
+    jr_sr      = ["Jr.", "jr.", "Sr.", "sr.", "jr", "sr"]
+    is_jr_sr   = (jr_sr.include?(name_parts.suffix))
+    if is_numeral || is_jr_sr
+      response[:generational] = name_parts.suffix
+    end
+
+    # Handle given names - since Namae has no notion of 
+    # middle names we blithely assume a space means that a 
+    # given and middle name have been appended together and 
+    # split them up.
+    if name_parts.given 
+      first, middle = name_parts.given.split(" ") 
+
+      response[:given]  = first if first 
+      response[:middle] = middle if middle 
+    end
+
+
+    title = name_parts.title || name_parts.appellation
+    response[:title] = title if title
+    response
+
+    { creator: response }
   end
 
   private 

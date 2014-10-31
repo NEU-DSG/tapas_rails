@@ -48,6 +48,9 @@ gem 'thor'
 # Install thor-rails to write thor tasks that are rails env aware
 gem 'thor-rails'
 
+# Use Namae to try to parse arbitrary names
+gem 'namae'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
