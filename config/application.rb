@@ -13,6 +13,7 @@ module TapasRails
       g.test_framework :rspec, :spec => true
     end
 
+    config.autoload_paths += Dir[Rails.root.join('app', 'models', '{**}')]
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     config.secret_key_base = ENV["SECRET_KEY_BASE"]

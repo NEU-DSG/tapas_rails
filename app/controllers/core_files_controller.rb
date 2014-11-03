@@ -1,6 +1,12 @@
 class CoreFilesController < ApplicationController
   include ApiAccessible
 
+  # In the interest of keeping complexity down for a second, 
+  # let's just (temporarily) skip validation and assume that 
+  # anything we're getting has been validated by validate_tei.
+  skip_before_action :validate_creation_params
+
+
   def parse_tei
     response = {}
 

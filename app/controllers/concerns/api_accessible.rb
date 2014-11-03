@@ -14,8 +14,12 @@ module ApiAccessible
 
     def create
       c = controller_name.classify.to_s
-      object = params[:object]
-      Drs::Application::Queue.push(TapasObjectCreationJob.new(object, c))
+
+      # params[:request_body] is simply a wrapper around the form elements that 
+      # make up the actual object to be created, and the specifics of it are 
+      # handled by each <Klass>CreatorService object.
+      request_body = params[:request_body]
+      Drs::Application::Queue.push(TapasObjectCreationJob.new(request_body, c))
     end
   end
 
