@@ -29,7 +29,6 @@ class TEIMetadataExtractor
 
   def handle_title
     elements = extract_element "dc_title"
-    puts elements
     if elements.first.present?
       title = elements.first 
       title = "#{title[0..252]}..." if (title.length >= 255)
