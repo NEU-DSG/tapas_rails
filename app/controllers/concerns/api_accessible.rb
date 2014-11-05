@@ -39,24 +39,46 @@ module ApiAccessible
     else
       render_json_403.call and return
     end
+
+    # Strip api_key and validation email so they're never 
+    # displayed/used past this point
+    params.except!(:token, :email)
   end
 
   # Validates that the metadata passed in is valid 
   def validate_creation_params
     validator = "#{controller_name.classify}Validator".constantize
-    errors    = validator.validate_params(params[:object])
+    errors    = validator.validate_params(params)
 
     if errors.present?
       # Build a json error response with all errors and the original 
       # params of the request as interpreted by the server
       # Ensure api_key is NOT displayed by this
       msg = {
-        message: "Resource creation failed.  Invalid parameters!",
+        message: "Resource creation failed.  Invalid parameters! " + 
+                 "Note that original_object_parameters deliberately " +
+                 "does not display your api key.",
         errors:  errors,
 
-        original_object_parameters: params[:object]
+        original_object_parameters: original_post_params
       }
-      render json: msg, status: 422
+      render json: JSON.pretty_generate(msg), status: 422
     end
+  end
+
+  def original_post_params
+    pcopy = params
+    # Returns a sanitized json display of original post params
+
+    # Remove controller and action hash elems 
+    pcopy.except!(:controller, :action)
+
+    # If original request involved a file, clean up what we display
+    # back to the end user.
+    if pcopy[:file]
+      pcopy[:file] = pcopy[:file].as_json.except!("tempfile")
+    end
+
+    return pcopy
   end
 end

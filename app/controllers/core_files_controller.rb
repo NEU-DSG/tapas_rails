@@ -1,18 +1,13 @@
 class CoreFilesController < ApplicationController
   include ApiAccessible
 
-  # In the interest of keeping complexity down for a second, 
-  # let's just (temporarily) skip validation and assume that 
-  # anything we're getting has been validated by parse_tei.
-  skip_before_action :validate_creation_params
-
   # No strict guarantee that parse_tei will always run before 
   # the create action, so just always execute validations
   before_action :validate_tei_content
 
   def create
     params.except!(:email, :token)
-    
+
     # Rewrite the file param to be a path string
     fpath = params[:file].path
     fname = Pathname.new(fpath).basename.to_s

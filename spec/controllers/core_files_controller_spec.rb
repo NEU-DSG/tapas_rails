@@ -30,11 +30,26 @@ describe CoreFilesController do
   end
 
   describe "POST #create" do 
+    it "returns a 422 for uploads that lack a depositor field" do 
+      data = { file: test_file("tei.xml"), collection: "1" }
+      post :create, params.merge(data)
+
+      expect(response.status).to eq 422 
+    end
+
+    it "returns a 422 for uploads that lack a collection id field" do
+      data = { file: test_file("tei.xml"), depositor: "w@w.net" } 
+      post :create, params.merge(data) 
+
+      expect(response.status). to eq 422 
+    end
+
     it "returns a 202 processing for valid uploads" do 
       data = { file: test_file("tei.xml"),
                depositor: "123@abc.com", 
                collection: "1" }
       post :create, params.merge(data)
+
       expect(response.status).to eq 202
     end 
   end
