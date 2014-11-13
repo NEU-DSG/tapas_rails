@@ -6,7 +6,6 @@ class Collection < CerberusCore::BaseModels::Collection
   parent_community_relationship  :community 
   parent_collection_relationship :collection
 
-  # Override default properties ds with our custom one.
   has_metadata :name => "mods", :type => ModsDatastream
 
   # Return the collection where we store TEI files that reference 

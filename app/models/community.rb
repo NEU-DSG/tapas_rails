@@ -7,6 +7,5 @@ class Community < CerberusCore::BaseModels::Community
 
   parent_community_relationship :community 
 
-  # Override default properties ds with our custom one.
   has_metadata :name => "mods", :type => ModsDatastream
 end
