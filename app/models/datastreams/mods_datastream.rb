@@ -2,6 +2,7 @@ class ModsDatastream < CerberusCore::Datastreams::ModsDatastream
   use_terminology CerberusCore::Datastreams::ModsDatastream 
 
   extend_terminology do |t| 
+    t.identifier(path: "identifier", namespace_prefix: "mods", attributes: { type: :none })
     t.nid(path: "identifier", namespace_prefix: "mods", attributes: { type: "tapas_id" })
   end
 
