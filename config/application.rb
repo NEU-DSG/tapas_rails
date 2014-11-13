@@ -18,6 +18,10 @@ module TapasRails
 
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
+    # Pid to use for the Collection that stores TEI files 
+    # that reference non-existant collections.
+    config.phantom_collection_pid = "tap:phantom"
+
     # Enable pid generation on object instantiation
     config.cerberus_core.auto_generate_pid = true
 

@@ -8,4 +8,21 @@ class Collection < CerberusCore::BaseModels::Collection
 
   # Override default properties ds with our custom one.
   has_metadata :name => "properties", :type => PropertiesDatastream
+
+  # Return the collection where we store TEI files that reference 
+  # non-existant collections.  If it doesn't exist create it.
+  def self.phantom_collection
+    pid = Rails.configuration.phantom_collection_pid
+    if Collection.exists?(pid)
+      return Collection.find(pid)
+    else 
+      c = Collection.new(:pid => pid).tap do |c|
+        c.mods.title     = "Orphaned TEI records." 
+        c.depositor = "tapasrails@neu.edu"
+      end
+
+      c.save!
+      return c
+    end 
+  end
 end
