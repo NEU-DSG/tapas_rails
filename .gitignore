@@ -44,3 +44,6 @@ config/secrets.yml
 .rvmrc
 
 /vendor/cache
+
+# Ignore swp files 
+**.swp

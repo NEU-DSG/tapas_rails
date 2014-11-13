@@ -2,7 +2,7 @@ require 'spec_helper'
 
 class NidTester < ActiveFedora::Base
   include Nid 
-  has_metadata :name => "properties", :type => PropertiesDatastream
+  has_metadata :name => "mods", :type => ModsDatastream
 end
 
 describe "The Nid module" do 
