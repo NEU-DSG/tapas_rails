@@ -1,12 +1,16 @@
 require 'spec_helper'
 
 describe CoreFileCreatorService do 
+  def copy_tei
+    @original_path = "#{Rails.root}/spec/fixtures/files/tei.xml"
+    @copy_path     = "#{Rails.root}/spec/fixtures/files/tei_copy.xml"
+
+    FileUtils.cp(@original_path, @copy_path)
+  end
+
   describe "A clean run" do 
     before(:all) do 
-      @original_path = "#{Rails.root}/spec/fixtures/files/tei.xml"
-      @copy_path     = "#{Rails.root}/spec/fixtures/files/tei_copy.xml"
-
-      FileUtils.cp(@original_path, @copy_path)
+      copy_tei
 
       params = {}
       params[:depositor]     = "tapasguy@brown.edu"
@@ -60,7 +64,44 @@ describe CoreFileCreatorService do
     end
   end
 
-  describe "Exception handling" do 
+  describe "A run where the collection doesn't exist" do 
+    before(:all) do
+      copy_tei  
+      params = {}
+      params[:depositor]     = "tapasguy@brown.edu"
+      params[:node_id]       = "8873"
+      params[:collection_id] = "invalid"
+      params[:file]          = @copy_path
+      
+      @core = CoreFileCreatorService.create_record(params)
+    end
 
+    after(:all) { ActiveFedora::Base.delete_all }
+
+    it "adds the TEI record to the phantom collection" do 
+      expect(@core.collection.pid).to eq Rails.configuration.phantom_collection_pid
+    end
+  end
+
+  describe "A run that errors out" do 
+    before(:all) { copy_tei } 
+    after(:all)  { ActiveFedora::Base.delete_all }
+
+    it "persists no objects and deletes the TEI file from the filesystem" do 
+      params = {
+        :depositor     => "tapasguy@brown.edu",
+        :node_id       => "1919191",
+        :collection_id => "valid",
+        :file          => @copy_path,
+      }
+      
+      # Ensure that file creation fails near the very end
+      TEIFile.any_instance.stub(:save!).and_raise(RuntimeError)
+
+      expect { CoreFileCreatorService.create_record(params) }.to raise_error(RuntimeError)
+
+      expect(CoreFile.count).to eq 0
+      expect(File.exists? @copy_path).to be false
+    end
   end
 end
