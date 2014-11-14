@@ -34,9 +34,9 @@ TapasRails::Application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
   
-  config.middleware.use ExceptionNotifier::Rack,
+  config.middleware.use ExceptionNotification::Rack,
     :email => {
-      :email_prefix => "[Tapas Rails TEST]",
+      :email_prefix => "[Tapas Rails Notifier TEST]",
       :sender_address => %{"notifier" <notifier@tapasrailsdev.neu.edu>},
       :exception_recipients => %w{nobody@nowhere.com}
     }
