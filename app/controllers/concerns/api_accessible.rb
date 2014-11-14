@@ -10,17 +10,7 @@ module ApiAccessible
     # reworked once tapas_rails is the actual frontend for tapas.
     before_action :authenticate_api_request
 
-    before_action :validate_creation_params, only: [:create]
-
-    def create
-      c = controller_name.classify.to_s
-
-      # params[:request_body] is simply a wrapper around the form elements that 
-      # make up the actual object to be created, and the specifics of it are 
-      # handled by each <Klass>CreatorService object.
-      request_body = params[:request_body]
-      Drs::Application::Queue.push(TapasObjectCreationJob.new(request_body, c))
-    end
+    before_action :validate_request_params, :only => [:create, :update]
   end
 
   private
@@ -45,8 +35,8 @@ module ApiAccessible
     params.except!(:token, :email)
   end
 
-  # Validates that the metadata passed in is valid 
-  def validate_creation_params
+  # Validate the params associated with update and create API requests
+  def validate_request_params
     validator = "#{controller_name.classify}Validator".constantize
     errors    = validator.validate_params(params)
 

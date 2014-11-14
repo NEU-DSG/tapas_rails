@@ -8,32 +8,45 @@ describe CoreFileValidator do
     @collection = FactoryGirl.create(:collection)
   end
 
-  describe "Parent validation" do 
-    it "raises an error when the specified parent points at nothing" do 
-      params = { parent: "blah:1" }
-      expect(parent_validation_errors(params).length).to eq 1
+  describe "on POST #create" do 
+    let(:defaults) do 
+      { :file => "default",
+        :node_id => "default",
+        :collection_id => "default",
+        :depositor => "default",
+        :action => "create" }
     end
 
-    it "raises an error when the specified parent is not a Collection" do 
-      params = { parent: @community.pid } 
-      expect(parent_validation_errors(params).length).to eq 1
+    it "raises an error if two CoreFiles would have the same nid." do 
+      begin
+        c = CoreFile.new.tap do |c| 
+          c.depositor = "wjackson"
+          c.nid       = "default" 
+          c.save!
+        end
+
+        expect(validation_errors(defaults).length).to eq 1
+        msg = "Core File with nid default already exists, aborting create"
+        expect(validation_errors(defaults).first).to eq msg
+      ensure
+        c.destroy
+      end
     end
 
-    it "raises no errors when the parent is a Collection" do
-      params = { parent: @collection.pid }  
-      expect(parent_validation_errors(params).length).to eq 0
+    it "raises an error if no node_id is present" do 
+      expect(validation_errors(defaults.except :node_id).length).to eq 1
+    end
+
+    it "raises an error if no depositor is present" do 
+      expect(validation_errors(defaults.except :depositor).length).to eq 1
+    end
+
+    it "raises an error if no collection id is present" do 
+      expect(validation_errors(defaults.except :collection_id).length).to eq 1
+    end
+
+    it "raises an error if no file is present" do
+      expect(validation_errors(defaults.except :file).length).to eq 1 
     end
   end
-
-  describe "File validation" do
-    def validate_files(params)
-      x = CoreFileValidator.new(params)
-      x.validate_files 
-      return x.errors 
-    end
-
-    pending "figure out what file validations actually look like" 
-  end
-
-  after(:all) { @community.destroy ; @collection.destroy }
 end
