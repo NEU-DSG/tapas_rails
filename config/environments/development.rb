@@ -43,7 +43,7 @@ TapasRails::Application.configure do
   config.middleware.use ExceptionNotification::Rack, 
     :email => { 
       :email_prefix => "[Tapas Rails Notifier DEV]",
-      :sender_address => %{"notifier" <notifier@tapasrails.neu.edu},
+      :sender_address => %{"notifier" <notifier@tapasrails.neu.edu>},
       :exception_recipients => email
     }
 end
