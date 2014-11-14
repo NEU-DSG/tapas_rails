@@ -110,6 +110,7 @@ GEM
     equivalent-xml (0.5.1)
       nokogiri (>= 1.4.3)
     erubis (2.7.0)
+    exception_notifier (1.0.0)
     execjs (2.2.1)
     factory_girl (4.4.0)
       activesupport (>= 3.0.0)
@@ -389,6 +390,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   devise
   devise-guests (~> 0.3)
+  exception_notifier
   factory_girl_rails
   figaro
   jbuilder (~> 1.2)

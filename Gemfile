@@ -51,6 +51,9 @@ gem 'thor-rails'
 # Use Namae to try to parse arbitrary names
 gem 'namae'
 
+# Configure email alerts on exception
+gem 'exception_notifier'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
