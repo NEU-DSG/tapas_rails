@@ -52,7 +52,10 @@ gem 'thor-rails'
 gem 'namae'
 
 # Configure email alerts on exception
-gem 'exception_notifier'
+gem 'exception_notification'
+
+# Use ParseConfig to do some exception mailer related conf
+gem 'parseconfig'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

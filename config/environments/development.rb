@@ -26,4 +26,24 @@ TapasRails::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+  # Parse ~/.gitconfig in an attempt to load the email address of the currently
+  # developing developer.  Return a nonsense default otherwise
+  conf_path = "#{Dir.home}/.gitconfig"
+  if File.exists?(conf_path)
+    gitconfig = ParseConfig.new(conf_path)
+
+    if gitconfig['user']
+      email = gitconfig['user']['email'] || "changeme@example.com"
+    else
+      email = "changeme@example.com"
+    end
+  end
+
+  config.middleware.use ExceptionNotification::Rack, 
+    :email => { 
+      :email_prefix => "[Tapas Rails Notifier DEV]",
+      :sender_address => %{"notifier" <notifier@tapasrails.neu.edu},
+      :exception_recipients => email
+    }
 end
