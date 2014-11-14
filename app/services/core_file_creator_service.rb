@@ -1,6 +1,11 @@
 class CoreFileCreatorService
   include Concerns::TapasObjectCreator
 
+  # Create a CoreFile from a given set of params which map exactly
+  # to the quirks of tight integration w. the Drupal Tapas system.
+  # Note that this does not represent a particularly generalizable 
+  # solution to anything and should be rewritten as part of any transition
+  # to a unified system
   def create_record(run_cleanup = true) 
     # Things to do:
       # 1. Instantiate record with pid assigned
@@ -52,6 +57,7 @@ class CoreFileCreatorService
       # repository and that an email is sent (production environments only).
       core.destroy if core && core.persisted? 
       tei_file.destroy if tei_file && tei_file.persisted?
+      ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e
     ensure
       # Always ensure that the file at params[:file] is deleted.

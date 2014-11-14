@@ -83,11 +83,11 @@ describe CoreFileCreatorService do
     end
   end
 
-  describe "A run that errors out" do 
+  describe "A run that errors out", :type => :mailer do 
     before(:all) { copy_tei } 
     after(:all)  { ActiveFedora::Base.delete_all }
 
-    it "persists no objects and deletes the TEI file from the filesystem" do 
+    it "persists no objects, deletes the TEI File, and triggers an exception notification." do
       params = {
         :depositor     => "tapasguy@brown.edu",
         :node_id       => "1919191",
@@ -102,6 +102,11 @@ describe CoreFileCreatorService do
 
       expect(CoreFile.count).to eq 0
       expect(File.exists? @copy_path).to be false
+
+      # Validate the email
+      expect(ActionMailer::Base.deliveries.length).to eq 1
+      mail = ActionMailer::Base.deliveries.first 
+      expect(mail.subject).to include "[Tapas Rails Notifier TEST]"
     end
   end
 end
