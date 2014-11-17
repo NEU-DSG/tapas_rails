@@ -29,30 +29,37 @@ describe CoreFilesController do
     end
   end
 
-  describe "POST #create" do 
-    it "returns a 422 for uploads that lack a depositor field" do 
-      data = { file: test_file("tei.xml"), collection: "1" }
-      post :create, params.merge(data)
-
-      expect(response.status).to eq 422 
+  describe "POST #create" do
+    before(:each) do 
+      @src = "#{Rails.root}/spec/fixtures/files/tei.xml"
     end
 
-    it "returns a 422 for uploads that lack a collection id field" do
-      data = { file: test_file("tei.xml"), depositor: "w@w.net" } 
-      post :create, params.merge(data) 
-
-      expect(response.status). to eq 422 
+    let(:post_defaults) do 
+      { :collection_id => "12345",
+        :node_id       => "111",
+        :depositor     => "wjackson",
+        :file          => test_file(@src) }
     end
 
-    it "returns a 202 processing for valid uploads" do 
-      data = { file: test_file("tei.xml"),
-               depositor: "123@abc.com", 
-               collection: "1" }
-      post :create, params.merge(data)
+    after(:all) { ActiveFedora::Base.delete_all }
+
+    # Note that we force Resque to run inline for the duration of this spec.
+    it "returns a 202 and creates the desired file on a valid request." do 
+      Resque.inline = true
+      file_path = post_defaults[:file].path
+      post :create, params.merge(post_defaults)
 
       expect(response.status).to eq 202
+
+      core = CoreFile.find(CoreFile.find_by_nid("111").id)
+      tei  = core.canonical_object(:return_as => :models)
+
+      expect(tei.class).to eq TEIFile
+      expect(tei.content.content).to eq File.read(@src)
+      expect(File.exists? file_path).to be false
+
+      Resque.inline = false
     end 
   end
-
   it_should_behave_like "an API enabled controller"
 end

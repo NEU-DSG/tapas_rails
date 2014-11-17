@@ -6,8 +6,6 @@ class CoreFilesController < ApplicationController
   before_action :validate_tei_content
 
   def create
-    params.except!(:email, :token)
-
     # Rewrite the file param to be a path string
     fpath = params[:file].path
     fname = Pathname.new(fpath).basename.to_s
@@ -54,5 +52,4 @@ class CoreFilesController < ApplicationController
         pretty_json(422) and return 
       end
     end
-
 end
