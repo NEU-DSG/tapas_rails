@@ -13,6 +13,5 @@ module Nid
     end
     
     has_attributes :nid, datastream: "mods", multiple: false 
-    delegate :nid=, to: "mods"
   end
 end

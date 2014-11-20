@@ -11,6 +11,5 @@ module OGReference
   
   included do 
     has_attributes :og_reference, datastream: "properties", multiple: false
-    delegate :og_reference=, to: "properties"
   end
 end
