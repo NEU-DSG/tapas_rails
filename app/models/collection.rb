@@ -1,5 +1,7 @@
 class Collection < CerberusCore::BaseModels::Collection
   include Nid
+  include OGReference
+
   has_core_file_types  ["CoreFile"]
   has_collection_types ["Collection"]
 
@@ -7,6 +9,7 @@ class Collection < CerberusCore::BaseModels::Collection
   parent_collection_relationship :collection
 
   has_metadata :name => "mods", :type => ModsDatastream
+  has_metadata :name => "properties", :type => PropertiesDatastream
 
   # Return the collection where we store TEI files that reference 
   # non-existant collections.  If it doesn't exist create it.

@@ -1,5 +1,6 @@
 class Community < CerberusCore::BaseModels::Community
   include Nid
+  include OGReference
 
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
@@ -8,4 +9,5 @@ class Community < CerberusCore::BaseModels::Community
   parent_community_relationship :community 
 
   has_metadata :name => "mods", :type => ModsDatastream
+  has_metadata :name => "properties", :type => PropertiesDatastream
 end
