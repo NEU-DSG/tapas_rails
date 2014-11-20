@@ -7,12 +7,6 @@ class CoreFileCreatorService
   # solution to anything and should be rewritten as part of any transition
   # to a unified system
   def create_record(run_cleanup = true) 
-    # Things to do:
-      # 1. Instantiate record with pid assigned
-      # 2. Assign metadata from all params
-      # 3. If a TEI-XML object type is provided, extract the TEI header
-      # 4. Assign all file objects to their own content_file objects
-      # 5. Return a 201 to some endpoint on the drupal site. 
     begin 
       core     = nil 
       tei_file = nil
