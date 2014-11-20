@@ -41,6 +41,10 @@ describe CoreFileCreatorService do
       expect(@core.nid).to eq "123"
     end
 
+    it "stores the nid of its parent as a distinct property" do 
+      expect(@core.og_reference).to eq "3017" 
+    end
+    
     it "assigns the core file to the right parent collection" do 
       expect(@core.collection.pid).to eq @collection.pid 
     end
@@ -80,6 +84,10 @@ describe CoreFileCreatorService do
 
     it "adds the TEI record to the phantom collection" do 
       expect(@core.collection.pid).to eq Rails.configuration.phantom_collection_pid
+    end
+
+    it "records the nid of its expected parent." do 
+      expect(@core.og_reference).to eq "invalid" 
     end
   end
 

@@ -27,6 +27,7 @@ class CoreFileCreatorService
      
       core.save!
 
+      core.og_reference = params[:collection_id]
       # Attach this file to its collection, or add it to the phantom 
       # collection if it doesn't seem to have one.
       collection = Collection.find_by_nid(params[:collection_id])
