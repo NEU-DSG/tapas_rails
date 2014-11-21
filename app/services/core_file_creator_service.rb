@@ -11,10 +11,8 @@ class CoreFileCreatorService
       core     = nil 
       tei_file = nil
 
-      # 1. Instantiate a core record 
       core = CoreFile.new
 
-      # 2. Assign metadata from all params
       core.depositor        = params[:depositor]
       core.mass_permissions = "private" 
       core.nid              = params[:node_id]
