@@ -1,6 +1,7 @@
 # -*- encoding : utf-8 -*-
 class SolrDocument
   include Blacklight::Solr::Document
+  include CerberusCore::SolrDocumentBehavior
 
   # self.unique_key = 'id'
   
@@ -16,5 +17,4 @@ class SolrDocument
   # and Blacklight::Solr::Document#to_semantic_values
   # Recommendation: Use field names from Dublin Core
   use_extension( Blacklight::Solr::Document::DublinCore)    
-
 end
