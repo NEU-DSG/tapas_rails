@@ -10,4 +10,6 @@ class Community < CerberusCore::BaseModels::Community
 
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
+
+  has_attributes :project_members, datastream: "properties", multiple: true
 end

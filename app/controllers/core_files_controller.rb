@@ -35,12 +35,7 @@ class CoreFilesController < ApplicationController
 
   private
 
-    def pretty_json(status)
-      render json: JSON.pretty_generate(@response), status: status
-    end
-
-    def validate_tei_content
-      @response = {}
+   def validate_tei_content
       @file     = params[:file].read
 
       errors = TEIValidator.validate_file(@file)

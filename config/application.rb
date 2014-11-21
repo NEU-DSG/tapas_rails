@@ -22,6 +22,11 @@ module TapasRails
     # that reference non-existant collections.
     config.phantom_collection_pid = "tap:phantom"
 
+    # Pid to use for the Project that is the graph root for
+    # the tapas repository.  Note that this doesn't map to any 
+    # project object that exists in the drupal head.
+    config.tap_root = "tap:1"
+
     # Enable pid generation on object instantiation
     config.cerberus_core.auto_generate_pid = true
 
