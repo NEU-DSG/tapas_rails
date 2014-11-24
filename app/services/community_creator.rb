@@ -1,4 +1,4 @@
-class CommunityCreatorService 
+class CommunityCreator
   include Concerns::TapasObjectCreator
 
   def create_record

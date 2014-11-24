@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CoreFileCreatorService do 
+describe CoreFileCreator do 
   def copy_tei
     @original_path = "#{Rails.root}/spec/fixtures/files/tei.xml"
     @copy_path     = "#{Rails.root}/spec/fixtures/files/tei_copy.xml"
@@ -24,7 +24,7 @@ describe CoreFileCreatorService do
       @collection.depositor = "tapasguy@brown.edu"
       @collection.save!
 
-      @core = CoreFileCreatorService.create_record(params)
+      @core = CoreFileCreator.create_record(params)
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
@@ -77,7 +77,7 @@ describe CoreFileCreatorService do
       params[:collection_id] = "invalid"
       params[:file]          = @copy_path
       
-      @core = CoreFileCreatorService.create_record(params)
+      @core = CoreFileCreator.create_record(params)
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
@@ -106,7 +106,7 @@ describe CoreFileCreatorService do
       # Ensure that file creation fails near the very end
       TEIFile.any_instance.stub(:save!).and_raise(RuntimeError)
 
-      expect { CoreFileCreatorService.create_record(params) }.to raise_error(RuntimeError)
+      expect { CoreFileCreator.create_record(params) }.to raise_error(RuntimeError)
 
       expect(CoreFile.count).to eq 0
       expect(File.exists? @copy_path).to be false

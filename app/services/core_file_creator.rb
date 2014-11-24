@@ -1,4 +1,4 @@
-class CoreFileCreatorService
+class CoreFileCreator
   include Concerns::TapasObjectCreator
 
   # Create a CoreFile from a given set of params which map exactly

@@ -1,6 +1,6 @@
 require 'spec_helper' 
 
-describe CollectionCreatorService do 
+describe CollectionCreator do 
   describe "A clean run" do 
     before :all do 
       @project = Community.new
@@ -10,7 +10,7 @@ describe CollectionCreatorService do
       @params = { nid: "111",
                   title: "Test Collection",
                   project: "555" }
-      @collection = CollectionCreatorService.create_record(@params)
+      @collection = CollectionCreator.create_record(@params)
     end
 
     after :all do 
@@ -45,7 +45,7 @@ describe CollectionCreatorService do
                   title: "Test Collection",
                   project: "555" }
 
-      @collection = CollectionCreatorService.create_record(@params)
+      @collection = CollectionCreator.create_record(@params)
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
@@ -72,7 +72,7 @@ describe CollectionCreatorService do
 
       Collection.any_instance.stub(:collection=).and_raise(RuntimeError)
 
-      expect { CollectionCreatorService.create_record(params) }.to raise_error(RuntimeError)
+      expect { CollectionCreator.create_record(params) }.to raise_error(RuntimeError)
       expect(Collection.find_by_nid "111").to be nil 
       expect(ActionMailer::Base.deliveries.length).to eq 1
     end

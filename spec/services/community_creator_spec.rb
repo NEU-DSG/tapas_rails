@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CommunityCreatorService do 
+describe CommunityCreator do 
   describe "A clean run" do 
     before(:all) do 
       @root = Community.new(pid: Rails.configuration.tap_root)
@@ -11,7 +11,7 @@ describe CommunityCreatorService do
       params[:title] = "Sample Project"
       params[:members] = %w(1 2 3 4)
       params[:description] = "A sample project." 
-      @community = CommunityCreatorService.create_record(params)
+      @community = CommunityCreator.create_record(params)
     end
     
     after(:all) { @root.destroy ; @community.destroy } 
@@ -50,7 +50,7 @@ describe CommunityCreatorService do
 
       Community.any_instance.stub(:community_id=).and_raise(RuntimeError)
 
-      expect { CommunityCreatorService.create_record(params) }.to raise_error(RuntimeError)
+      expect { CommunityCreator.create_record(params) }.to raise_error(RuntimeError)
 
       expect(Community.count).to eq 0
       expect(ActionMailer::Base.deliveries.length).to eq 1
