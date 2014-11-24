@@ -7,7 +7,6 @@ module Concerns::TapasObjectCreator
 
     def initialize(params)
       @params = params 
-      @response = {}
     end
 
     def self.create_record(params) 
