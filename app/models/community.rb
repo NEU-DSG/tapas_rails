@@ -12,4 +12,18 @@ class Community < CerberusCore::BaseModels::Community
   has_metadata :name => "properties", :type => PropertiesDatastream
 
   has_attributes :project_members, datastream: "properties", multiple: true
+
+  # Look up or create the root community of the graph
+  def self.root_community
+    if Community.exists?(Rails.configuration.tap_root)
+      Community.find(Rails.configuration.tap_root)
+    else
+      community = Community.new
+      community.depositor = "000000000"
+      community.mods.title = "TAPAS root"
+      community.mass_permissions = "private" 
+      community.save!
+      return community
+    end
+  end
 end
