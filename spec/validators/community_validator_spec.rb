@@ -14,6 +14,19 @@ describe CommunityValidator do
       expect(validation_errors(params).length).to eq 0
     end
 
+    it "raises an error if the specified nid is already in use" do 
+      begin 
+        collection = Collection.new
+        collection.nid = "111"
+        collection.depositor = "0000000"
+        collection.save!
+
+        expect(validation_errors(params).length).to eq 1
+      ensure
+        collection.delete if collection.persisted?
+      end
+    end
+
     it "raises an error with no nid attr" do 
       expect(validation_errors(params.except :nid).length).to eq 1
     end

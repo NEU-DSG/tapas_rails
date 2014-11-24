@@ -1,17 +1,6 @@
-class CoreFileValidator
-  include TapasObjectValidator
-
-  def self.validate_params(params)
-    CoreFileValidator.new(params).validate_params
-  end
-
-  def validate_params
-    return errors if no_params?
-    validate_required_attributes
-    validate_uniqueness
-    return errors
-  end
-
+class CoreFileValidator < TapasObjectValidator
+  # TODO: Delete this special method once params[:node_id] has been changed 
+  # to params[:nid], which is a much better name.
   def validate_uniqueness 
     if (params[:action] == "create") && CoreFile.find_by_nid(params[:node_id])
       errors << "Core File with nid #{params[:node_id]} already exists, aborting create"
