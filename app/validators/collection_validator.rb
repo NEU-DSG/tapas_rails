@@ -8,15 +8,13 @@ class CollectionValidator
   def validate_params
     return errors if no_params?
     validate_required_attributes
-    validate_parent 
     return errors 
   end
 
   def required_attributes
-    [:title, :parent]
-  end
-
-  def validate_parent
-    validate_parent_helper([Collection, Community])
+    case params["action"]
+    when "create"
+      [:nid, :project, :title]
+    end
   end
 end

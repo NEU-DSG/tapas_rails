@@ -3,13 +3,8 @@ require 'spec_helper'
 describe CoreFileValidator do 
   include ValidatorHelpers
 
-  before(:all) do 
-    @community  = FactoryGirl.create(:community)
-    @collection = FactoryGirl.create(:collection)
-  end
-
   describe "on POST #create" do 
-    let(:defaults) do 
+    let(:params) do 
       { :file => "default",
         :node_id => "default",
         :collection_id => "default",
@@ -25,28 +20,28 @@ describe CoreFileValidator do
           c.save!
         end
 
-        expect(validation_errors(defaults).length).to eq 1
+        expect(validation_errors(params).length).to eq 1
         msg = "Core File with nid default already exists, aborting create"
-        expect(validation_errors(defaults).first).to eq msg
+        expect(validation_errors(params).first).to eq msg
       ensure
         c.destroy
       end
     end
 
     it "raises an error if no node_id is present" do 
-      expect(validation_errors(defaults.except :node_id).length).to eq 1
+      expect(validation_errors(params.except :node_id).length).to eq 1
     end
 
     it "raises an error if no depositor is present" do 
-      expect(validation_errors(defaults.except :depositor).length).to eq 1
+      expect(validation_errors(params.except :depositor).length).to eq 1
     end
 
     it "raises an error if no collection id is present" do 
-      expect(validation_errors(defaults.except :collection_id).length).to eq 1
+      expect(validation_errors(params.except :collection_id).length).to eq 1
     end
 
     it "raises an error if no file is present" do
-      expect(validation_errors(defaults.except :file).length).to eq 1 
+      expect(validation_errors(params.except :file).length).to eq 1 
     end
   end
 end
