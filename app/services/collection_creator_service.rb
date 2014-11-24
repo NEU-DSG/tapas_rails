@@ -7,8 +7,9 @@ class CollectionCreatorService
       collection.nid = params[:nid]
       collection.mods.title = params[:title]
       collection.depositor = "000000000"
-    
+      collection.og_reference = params[:project]
       collection.save!
+
 
       project = Community.find_by_nid(params[:project])
 

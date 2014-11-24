@@ -26,6 +26,10 @@ describe CollectionCreatorService do
       expect(@collection.nid).to eq @params[:nid]
     end
 
+    it "assigns the project reference to the og field" do 
+      expect(@collection.og_reference).to eq @params[:project]
+    end
+
     it "assigns the collection a title" do 
       expect(@collection.mods.title).to eq [@params[:title]]
     end
@@ -49,6 +53,10 @@ describe CollectionCreatorService do
     it "assigns the collection to the phantom collection" do 
       expect(@collection.community_id).to be nil 
       expect(@collection.collection_id).to eq Rails.configuration.phantom_collection_pid
+    end
+
+    it "writes the og reference field for future reference" do 
+      expect(@collection.og_reference).to eq @params[:project]
     end
   end
 
