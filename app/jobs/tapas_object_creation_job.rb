@@ -1,12 +1,12 @@
 class TapasObjectCreationJob
-  attr_accessor :params, :klass
+  attr_accessor :params
 
-  def initialize(object_params, object_class)
-    self.params = object_params 
-    self.klass  = object_class
+  def initialize(params)
+    @params = params 
   end
 
   def run 
-    "#{klass}Creator".constantize.create_record(params)
+    model_name = params[:controller].singularize.camelcase
+    "#{model_name}Creator".constantize.create_record(params)
   end
 end

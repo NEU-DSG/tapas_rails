@@ -2,8 +2,7 @@ class CollectionsController < ApplicationController
   include ApiAccessible
 
   def create
-    job = TapasObjectCreationJob.new(params, "Collection")
-    TapasRails::Application::Queue.push(job)
+    TapasRails::Application::Queue.push TapasObjectCreationJob.new(params)
     @response[:message] = "Collection is being processed"
     pretty_json(202) and return 
   end

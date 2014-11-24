@@ -13,14 +13,14 @@ class CoreFilesController < ApplicationController
     FileUtils.mv(fpath, npath)
     params[:file] = npath.to_s
 
-    job = TapasObjectCreationJob.new(params, "CoreFile")
-    TapasRails::Application::Queue.push(job)
+    TapasRails::Application::Queue.push TapasObjectCreationJob.new params
     @response[:message] = "Your files are processing." 
     pretty_json(202) and return
   end
 
 
   def parse_tei
+    puts "Controller was #{params[:controller]}"
     metadata = TEIMetadataExtractor.extract(@file)
     @response[:metadata] = metadata
 
