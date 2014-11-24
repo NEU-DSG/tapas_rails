@@ -5,7 +5,6 @@ describe CommunityValidator do
 
   describe "On POST #create" do 
     let(:params) { { title: "valid",
-                     description: "valid", 
                      members: ["valid"], 
                      nid: "111",
                      action: "create" } }
@@ -33,10 +32,6 @@ describe CommunityValidator do
 
     it "raises an error with no title param" do 
       expect(validation_errors(params.except :title).length).to eq 1
-    end
-
-    it "raises an error with no description param" do 
-      expect(validation_errors(params.except :description).length).to eq 1
     end
 
     it "raises an error with no members param" do 
