@@ -30,7 +30,7 @@ describe TEIMetadataExtractor do
       end
 
       it "grabs a creator" do 
-        expect(@extractor.response[:creator]).to eq "Walt Whitman"
+        expect(@extractor.response[:creator]).to eq({ family: "Whitman", given: "Walt" })
       end
 
       it "grabs all contributors" do 
