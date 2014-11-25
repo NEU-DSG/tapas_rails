@@ -12,7 +12,7 @@ class CommunityCreator
       # Turns out the drupal site has no notion of nested projects (communities).
       # So Communities can always just belong to the root tapas community
       community.save
-      community.community_id = Rails.configuration.tap_root
+      community.community = Community.root_community
       community.save
       return community.reload
     rescue => e

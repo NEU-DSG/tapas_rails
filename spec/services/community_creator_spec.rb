@@ -48,11 +48,11 @@ describe CommunityCreator do
         :members     => %w(1 2),
       }
 
-      Community.any_instance.stub(:community_id=).and_raise(RuntimeError)
+      Community.any_instance.stub(:community=).and_raise(RuntimeError)
 
       expect { CommunityCreator.create_record(params) }.to raise_error(RuntimeError)
 
-      expect(Community.count).to eq 0
+      expect(Community.find_by_nid params[:nid]).to be nil
       expect(ActionMailer::Base.deliveries.length).to eq 1
     end
   end
