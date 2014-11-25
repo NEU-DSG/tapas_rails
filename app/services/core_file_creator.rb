@@ -16,17 +16,17 @@ class CoreFileCreator
       core.depositor        = params[:depositor]
       core.mass_permissions = "private" 
       core.nid              = params[:node_id]
-     
+      core.og_reference = params[:collection_id]
+
       core.save!
 
-      core.og_reference = params[:collection_id]
       # Attach this file to its collection, or add it to the phantom 
       # collection if it doesn't seem to have one.
       collection = Collection.find_by_nid(params[:collection_id])
       if collection
-        core.collection_id = collection.id
+        core.collection = Collection.find(collection.id)
       else
-        core.collection_id = Collection.phantom_collection.pid
+        core.collection = Collection.phantom_collection
       end
 
       core.save!
@@ -34,8 +34,7 @@ class CoreFileCreator
       # Take params[:file] (always assumed to be a string file path as 
       # this makes enqueing this in a job possible), extract it to its 
       # own TEIFile object, and kick off inline derivation creation
-      tei_file = TEIFile.new(depositor: params[:depositor])
-
+      tei_file = TEIFile.new
       fname = Pathname.new(params[:file]).basename.to_s
       fblob = File.read(params[:file])
       tei_file.add_file(fblob, "content", fname)
