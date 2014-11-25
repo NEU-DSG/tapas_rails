@@ -9,7 +9,8 @@ describe CollectionCreator do
 
       @params = { nid: "111",
                   title: "Test Collection",
-                  project: "555" }
+                  project: "555",
+                  depositor: "111" }
       @collection = CollectionCreator.create_record(@params)
     end
 
@@ -20,6 +21,10 @@ describe CollectionCreator do
 
     it "creates the requested collection" do 
       expect(Collection.find_by_nid("111")).not_to be nil 
+    end
+
+    it "assigns the depositor to the collection" do 
+      expect(@collection.depositor).to eq @params[:depositor]
     end
 
     it "assigns the collection a nid" do 
@@ -43,7 +48,8 @@ describe CollectionCreator do
     before :all do 
       @params = { nid: "111",
                   title: "Test Collection",
-                  project: "555" }
+                  project: "555",
+                  depositor: "111" }
 
       @collection = CollectionCreator.create_record(@params)
     end
@@ -67,7 +73,8 @@ describe CollectionCreator do
       params = { 
         nid: "111",
         project: "333",
-        title: "Invalid Collection"
+        title: "Invalid Collection",
+        depositor: "101"
       }
 
       Collection.any_instance.stub(:collection=).and_raise(RuntimeError)

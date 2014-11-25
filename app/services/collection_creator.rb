@@ -6,7 +6,7 @@ class CollectionCreator
       collection = Collection.new
       collection.nid = params[:nid]
       collection.mods.title = params[:title]
-      collection.depositor = "000000000"
+      collection.depositor = params[:depositor]
       collection.og_reference = params[:project]
       collection.save!
 

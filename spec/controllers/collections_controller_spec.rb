@@ -16,7 +16,7 @@ describe CollectionsController do
 
     it "returns a 202 and creates the requested collection on a valid request" do 
       Resque.inline = true 
-      post_params = { title: "Collection", nid: "8018", project: "invalid" }
+      post_params = { title: "Collection", nid: "8018", project: "invalid", depositor: "101" }
       post_params = post_params.merge params
       post :create, post_params
 
