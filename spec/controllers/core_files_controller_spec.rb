@@ -35,10 +35,10 @@ describe CoreFilesController do
     end
 
     let(:post_defaults) do 
-      { :collection_id => "12345",
-        :node_id       => "111",
-        :depositor     => "wjackson",
-        :file          => test_file(@src) }
+      { :collection => "12345",
+        :nid        => "111",
+        :depositor  => "wjackson",
+        :file       => test_file(@src) }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }

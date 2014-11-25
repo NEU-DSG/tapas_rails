@@ -20,7 +20,6 @@ class CoreFilesController < ApplicationController
 
 
   def parse_tei
-    puts "Controller was #{params[:controller]}"
     metadata = TEIMetadataExtractor.extract(@file)
     @response[:metadata] = metadata
 

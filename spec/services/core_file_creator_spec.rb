@@ -14,8 +14,8 @@ describe CoreFileCreator do
 
       params = {}
       params[:depositor]     = "tapasguy@brown.edu"
-      params[:node_id]       = "123"
-      params[:collection_id] = "3017"
+      params[:nid]       = "123"
+      params[:collection] = "3017"
       params[:file]          = @copy_path
 
       # Instantiate the collection we expect to exist
@@ -73,8 +73,8 @@ describe CoreFileCreator do
       copy_tei  
       params = {}
       params[:depositor]     = "tapasguy@brown.edu"
-      params[:node_id]       = "8873"
-      params[:collection_id] = "invalid"
+      params[:nid]       = "8873"
+      params[:collection] = "invalid"
       params[:file]          = @copy_path
       
       @core = CoreFileCreator.create_record(params)
@@ -98,8 +98,8 @@ describe CoreFileCreator do
     it "persists no objects, deletes the TEI File, and triggers an exception notification." do
       params = {
         :depositor     => "tapasguy@brown.edu",
-        :node_id       => "1919191",
-        :collection_id => "valid",
+        :nid       => "1919191",
+        :collection => "valid",
         :file          => @copy_path,
       }
       

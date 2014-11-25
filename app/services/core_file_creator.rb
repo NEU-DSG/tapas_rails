@@ -15,14 +15,14 @@ class CoreFileCreator
 
       core.depositor        = params[:depositor]
       core.mass_permissions = "private" 
-      core.nid              = params[:node_id]
-      core.og_reference = params[:collection_id]
+      core.nid              = params[:nid]
+      core.og_reference = params[:collection]
 
       core.save!
 
       # Attach this file to its collection, or add it to the phantom 
       # collection if it doesn't seem to have one.
-      collection = Collection.find_by_nid(params[:collection_id])
+      collection = Collection.find_by_nid(params[:collection])
       if collection
         core.collection = Collection.find(collection.id)
       else
