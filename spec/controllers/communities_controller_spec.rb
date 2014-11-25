@@ -14,7 +14,7 @@ describe CommunitiesController do
 
     it "returns a 202 and creates the requested community on a valid request" do
       Resque.inline = true 
-      post_params = { title: "a", members: %w(a), nid: "12", description: "blah" }
+      post_params = { title: "a", members: %w(a), nid: "12", depositor: "101" }
       post_params = post_params.merge params
       post :create, post_params
 

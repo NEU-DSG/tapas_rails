@@ -7,7 +7,7 @@ class CommunityCreator
       community.mods.title      = params[:title]
       community.nid             = params[:nid]
       community.project_members = params[:members]
-      community.depositor       = "000000000"
+      community.depositor       = params[:depositor]
           
       # Turns out the drupal site has no notion of nested projects (communities).
       # So Communities can always just belong to the root tapas community

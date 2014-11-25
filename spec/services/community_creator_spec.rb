@@ -6,12 +6,13 @@ describe CommunityCreator do
       @root = Community.new(pid: Rails.configuration.tap_root)
       @root.save!
       
-      params = {}
-      params[:nid] = "111"
-      params[:title] = "Sample Project"
-      params[:members] = %w(1 2 3 4)
-      params[:description] = "A sample project." 
-      @community = CommunityCreator.create_record(params)
+      @params = {
+        :nid => "111",
+        :title => "Sample Project",
+        :members => %w(1 2 3 4),
+        :depositor => "101"
+      }
+      @community = CommunityCreator.create_record(@params)
     end
     
     after(:all) { @root.destroy ; @community.destroy } 
@@ -20,16 +21,20 @@ describe CommunityCreator do
       expect{ Community.find(@community.pid) }.not_to raise_error 
     end
 
+    it "assigns the depositor to the object" do 
+      expect(@community.depositor).to eq @params[:depositor]
+    end
+
     it "assigns the nid to the object" do 
-      expect(@community.nid).to eq "111"
+      expect(@community.nid).to eq @params[:nid]
     end
 
     it "assigns the title to the object" do 
-      expect(@community.mods.title.first).to eq "Sample Project"
+      expect(@community.mods.title.first).to eq @params[:title]
     end
 
     it "assigns the users to the members field" do 
-      expect(@community.project_members).to match_array %w(1 2 3 4)
+      expect(@community.project_members).to match_array @params[:members]
     end
 
     it "assigns the community to the root community" do 
@@ -44,7 +49,7 @@ describe CommunityCreator do
       params = {
         :title => "My Collection",
         :nid   => "123",
-        :description => "A collection",
+        :depositor => "101",
         :members     => %w(1 2),
       }
 

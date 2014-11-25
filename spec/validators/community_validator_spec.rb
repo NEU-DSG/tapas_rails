@@ -7,7 +7,8 @@ describe CommunityValidator do
     let(:params) { { title: "valid",
                      members: ["valid"], 
                      nid: "111",
-                     action: "create" } }
+                     action: "create",
+                     depositor: "101" } }
 
     it "raises no error with valid params" do 
       expect(validation_errors(params).length).to eq 0
@@ -26,7 +27,11 @@ describe CommunityValidator do
       end
     end
 
-    it "raises an error with no nid attr" do 
+    it "raises an error with no depositor param" do 
+      expect(validation_errors(params.except :depositor).length).to eq 1
+    end
+
+    it "raises an error with no nid param" do 
       expect(validation_errors(params.except :nid).length).to eq 1
     end
 
