@@ -44,5 +44,10 @@ describe CommunitiesController do
     end 
   end
 
+  it "422s if no community with the requested nid can be found." do 
+    put :nid_update, params.merge( { :nid => "311", :members => %w(101) })
+    expect(response.status).to eq 422
+  end
+
   it_should_behave_like "an API enabled controller"
 end
