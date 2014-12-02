@@ -22,6 +22,7 @@ TapasRails::Application.routes.draw do
   end
 
   resources :communities, only: [:create]
+  put 'communities/nid/:nid' => 'communities#nid_update'
   resources :collections, only: [:create]
 
   # TEI data on TAPAS currently comes in as a 2-phase ingest.

@@ -25,5 +25,24 @@ describe CommunitiesController do
     end
   end
 
+  describe "#PUT nid_update" do 
+    
+    it "updates the requested community if it exists" do 
+      begin
+        community = Community.new
+        community.mods.title = "Test Community"
+        community.nid = "311"
+        community.depositor = "System" 
+        community.project_members = ["303"]
+        community.save!
+
+        put :nid_update, params.merge( {:nid => "311",  :members => %w(303 404 505) })
+        expect(assigns(:community).project_members).to match_array %w(303 404 505)
+      ensure
+        community.delete if community.persisted?
+      end
+    end 
+  end
+
   it_should_behave_like "an API enabled controller"
 end

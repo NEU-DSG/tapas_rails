@@ -3,8 +3,8 @@ class CommunityValidator < TapasObjectValidator
     case params[:action]
     when "create"
       [:nid, :title, :members, :depositor] 
-    when "update"
-      #TODO
+    when "nid_update"
+      []
     end
   end
 end

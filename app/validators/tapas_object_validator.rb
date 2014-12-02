@@ -16,6 +16,7 @@ class TapasObjectValidator
   def validate_params
     return errors if no_params?
     validate_required_attributes
+    validate_existence
     validate_uniqueness
     return errors 
   end
@@ -24,6 +25,20 @@ class TapasObjectValidator
     unless self.params.present?
       errors << "Object had no parameters or did not exist" 
       return true
+    end
+  end
+
+  # Make sure the requested object exists if this isn't a create request
+  def validate_existence
+    case params[:action]
+    when "create"
+      true
+    else
+      klass = self.class.to_s[0..-10]
+      object = klass.constantize.find_by_nid(params[:nid])
+      unless object
+        errors << "Tried to operate on #{klass} with nid #{params[:nid]} - no such object."
+      end
     end
   end
 
