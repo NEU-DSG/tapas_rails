@@ -3,6 +3,8 @@ require 'thor/rails'
 class ExistJetty < Thor
   include Thor::Rails
   include Thor::Actions
+  require 'net/http'
+  @@newPort = "8986"
   
   desc "init", <<-eos
   Description:
@@ -44,17 +46,74 @@ class ExistJetty < Thor
     else
       # Unzip WAR file.
       say "Unpacking #{pth}/exist-2.2-rev.war", :green
-      run "unzip #{pth}/exist-2.2-rev.war -d #{pth}"
+      run "unzip -q #{pth}/exist-2.2-rev.war -d #{pth}"
       # Preserve the original properties files with .template extension.
       backup_properties(client)
       backup_properties(backup)
     end
     # Change the port that eXist expects to use.
-    edit_port("8080","8986",client)
-    edit_port("8080","8986",backup)
+    edit_port("8080",@@newPort,client)
+    edit_port("8080",@@newPort,backup)
     # Add context and configuration files for eXist installation.
     insert_context_file("#{::Rails.root}/jetty/contexts/exist.xml")
     insert_config_file("#{::Rails.root}/config/exist.yml")
+  end
+  
+  desc "set_permissions", <<-eos
+  Description:
+    If Jetty (with eXist) is running on the default security settings, set the 
+    eXist admin password and change the database permissions within eXist.
+    NOTE: This will only work if Jetty/eXist is up and running!
+  Example:
+    thor exist_jetty:set_permissions dsgT@pas
+  eos
+  
+  # Change the eXist default security measures.
+  def set_permissions
+    newPasswd = "dsgT@pas" #ask("Enter new password for eXist admin:", :echo => false)
+    say "\nReplacing default security permissions within eXist", :green
+    xquery =  "<?xml version='1.0' encoding='UTF-8'?>
+    <query xmlns='http://exist.sourceforge.net/NS/exist' cache='no'>
+    	<text>
+    		import module namespace session='http://exist-db.org/xquery/session';
+    		import module namespace sm='http://exist-db.org/xquery/securitymanager';
+
+    		let $a := if (session:set-current-user('admin','')) then
+                  (: Change default password and permissions. :)
+                  (sm:passwd('admin','#{newPasswd}'), 'Set admin password', sm:chmod(xs:anyURI('/db'),'rwxrwxr--'), 'Changed database permissions to: rwxrwxr--')
+              		else 'Admin password is already set!'
+    		return $a
+    	</text>
+    	<properties>
+        <property name='indent' value='yes'/>
+      </properties>
+    </query>"
+    uri = URI('http://localhost:8983')
+    # Submit the XQuery fragment to eXist.
+    begin
+      Net::HTTP.start(uri.host, uri.port) do |http|
+        response = http.post("/exist/rest/db/", 
+                             xquery, 
+                             {"Content-Type" => "application/xml"})
+        case response
+        # If the permissions have already been changed, the response will be 
+        #  of type HTTPUnauthorized.
+        when Net::HTTPUnauthorized then
+          say "eXist admin password is already set - skipping", :yellow
+        # If the request succeeds, return eXist's response in XML.
+        when Net::HTTPSuccess then
+          say response.body
+        # All else fails, return the error and response.
+        else
+          say "Error setting eXist permissions: #{response.value}", :red
+        end
+      end
+    # The above will fail if the Jetty server is not running. If so, give error
+    #  message and instructions for running the task again.
+    rescue
+      say "#{uri} is invalid or not responding.", :red
+      say "Execute 'thor exist_jetty:set_permissions' when the Jetty server is running.", :red
+    end
   end
   
   no_commands do
