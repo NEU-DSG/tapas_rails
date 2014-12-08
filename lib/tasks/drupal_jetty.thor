@@ -16,6 +16,21 @@ class DrupalJetty < Thor
     conf_path = "#{::Rails.root}/jetty/solr/drupal-core/conf"
     FileUtils.mkdir_p(conf_path) unless File.directory?(conf_path)
 
+    # Insert drupal core definition if it doesn't exist 
+    solr_conf_path = "#{::Rails.root}/jetty/solr/solr.xml"
+    doc = Nokogiri::XML.parse File.read(solr_conf_path)
+    unless doc.xpath("//core[@name='drupal']").any?
+      say "Adding drupal core definition to solr.xml", :blue
+      node = Nokogiri::XML::Node.new "core", doc 
+      node["name"] = "drupal"
+      node["instanceDir"] = "drupal-core"
+      doc.at_xpath("//cores").add_child node 
+      File.open(solr_conf_path, "w") { |f| f.print(doc.to_xml) } 
+    else
+      say "Drupal core definition already added to solr.xml - skipping", :yellow
+    end
+
+
     # Copy over the three required config files from the apachesolr module
     # in drupal tapas
     druconf = "/var/www/html/tapas/sites/all/modules/apachesolr/solr-conf/solr-4.x"
