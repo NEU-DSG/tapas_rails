@@ -9,6 +9,7 @@ describe CommunityCreator do
       @params = {
         :nid => "111",
         :title => "Sample Project",
+        :access => "public",
         :members => %w(1 2 3 4),
         :depositor => "101"
       }
@@ -23,6 +24,10 @@ describe CommunityCreator do
 
     it "assigns the depositor to the object" do 
       expect(@community.depositor).to eq @params[:depositor]
+    end
+
+    it "assigns the drupal access level to the object" do 
+      expect(@community.drupal_access).to eq @params[:access]
     end
 
     it "assigns the nid to the object" do 
@@ -49,6 +54,7 @@ describe CommunityCreator do
       params = {
         :title => "My Collection",
         :nid   => "123",
+        :access => "public",
         :depositor => "101",
         :members     => %w(1 2),
       }

@@ -7,6 +7,7 @@ describe CommunityValidator do
     let(:params) { { title: "valid",
                      members: ["valid"], 
                      nid: "111",
+                     access: "public",
                      action: "create",
                      depositor: "101" } }
 
@@ -25,6 +26,10 @@ describe CommunityValidator do
       ensure
         collection.delete if collection.persisted?
       end
+    end
+
+    it "raises an error with no access param" do 
+      expect(validation_errors(params.except :access).length).to eq 1
     end
 
     it "raises an error with no depositor param" do 
