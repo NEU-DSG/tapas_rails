@@ -9,6 +9,7 @@ describe CollectionCreator do
 
       @params = { nid: "111",
                   title: "Test Collection",
+                  access: "public",
                   project: "555",
                   depositor: "111" }
       @collection = CollectionCreator.create_record(@params)
@@ -21,6 +22,10 @@ describe CollectionCreator do
 
     it "creates the requested collection" do 
       expect(Collection.find_by_nid("111")).not_to be nil 
+    end
+
+    it "assigns the drupal access level to the collection" do 
+      expect(@collection.drupal_access).to eq @params[:access]
     end
 
     it "assigns the depositor to the collection" do 
@@ -48,6 +53,7 @@ describe CollectionCreator do
     before :all do 
       @params = { nid: "111",
                   title: "Test Collection",
+                  access: "public",
                   project: "555",
                   depositor: "111" }
 
@@ -73,6 +79,7 @@ describe CollectionCreator do
       params = { 
         nid: "111",
         project: "333",
+        access: "public",
         title: "Invalid Collection",
         depositor: "101"
       }

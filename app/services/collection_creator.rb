@@ -8,6 +8,7 @@ class CollectionCreator
       collection.mods.title = params[:title]
       collection.depositor = params[:depositor]
       collection.og_reference = params[:project]
+      collection.drupal_access = params[:access]
       collection.save!
 
       project = Community.find_by_nid(params[:project])

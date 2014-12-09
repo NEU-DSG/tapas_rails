@@ -7,6 +7,7 @@ describe CollectionValidator do
     let(:params) { { action: "create",
                      nid: "1",
                      project: "333",
+                     access: "public",
                      title:   "Valid",
                      depositor: "123" } }
 
@@ -24,6 +25,10 @@ describe CollectionValidator do
       ensure
         community.destroy
       end
+    end
+
+    it "raises an error with no access param" do 
+      expect(validation_errors(params.except :access).length).to eq 1 
     end
 
     it "raises an error with no depositor param" do 
