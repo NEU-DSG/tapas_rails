@@ -14,6 +14,11 @@ describe PropertiesDatastream do
     expect(properties.project_members).to match_array ["1", "2", "3"]
   end
 
+  it "implements the drupal access field." do 
+    properties.drupal_access = "public" 
+    expect(properties.drupal_access.first).to eq "public" 
+  end
+
   it "solrizes correctly" do 
     properties.depositor = "William Jackson"
     properties.og_reference = "321" 
