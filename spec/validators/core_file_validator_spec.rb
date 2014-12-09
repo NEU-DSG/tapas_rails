@@ -7,6 +7,7 @@ describe CoreFileValidator do
     let(:params) do 
       { :file => "default",
         :nid => "default",
+        :access => "public",
         :collection => "default",
         :depositor => "default",
         :action => "create" }
@@ -26,6 +27,10 @@ describe CoreFileValidator do
       ensure
         c.destroy
       end
+    end
+
+    it "raises an error if no access level is present" do 
+      expect(validation_errors(params.except :access).length).to eq 1
     end
 
     it "raises an error if no node_id is present" do 

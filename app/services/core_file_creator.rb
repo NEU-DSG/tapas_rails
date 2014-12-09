@@ -13,10 +13,11 @@ class CoreFileCreator
 
       core = CoreFile.new
 
-      core.depositor        = params[:depositor]
+      core.depositor = params[:depositor]
       core.mass_permissions = "private" 
-      core.nid              = params[:nid]
+      core.nid = params[:nid]
       core.og_reference = params[:collection]
+      core.drupal_access = params[:access]
 
       core.save!
 

@@ -5,6 +5,7 @@ describe CoreFileCreator do
   def params
     { :depositor => "tapasguy@brown.edu", 
       :nid => "123",
+      :access => "public",
       :collection => "3017",
       :file => fixture_file("tei_copy.xml") }
   end
@@ -29,6 +30,10 @@ describe CoreFileCreator do
 
     it "assigns a depositor to the core file" do 
       expect(@core.depositor).to eq params[:depositor]
+    end
+
+    it "sets the drupal access level of the object" do 
+      expect(@core.drupal_access).to eq params[:access]
     end
 
     it "assigns a nid to the core file" do 
