@@ -1,6 +1,7 @@
 class CoreFile < CerberusCore::BaseModels::CoreFile
   include Nid
   include OGReference
+  include DrupalAccess
 
   parent_collection_relationship :collection 
 

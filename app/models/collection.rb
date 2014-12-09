@@ -1,6 +1,7 @@
 class Collection < CerberusCore::BaseModels::Collection
   include Nid
   include OGReference
+  include DrupalAccess
 
   has_core_file_types  ["CoreFile"]
   has_collection_types ["Collection"]

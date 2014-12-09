@@ -1,6 +1,7 @@
 class Community < CerberusCore::BaseModels::Community
   include Nid
   include OGReference
+  include DrupalAccess
 
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
