@@ -34,4 +34,19 @@ describe "The Nid module" do
     c.save! 
     expect(NidTester.find_by_nid("nid:123")).to be nil 
   end
+
+  it "allows us to check if a nid is already in use" do 
+    expect(NidTester.exists_by_nid?("not_used")).to be false 
+
+    begin 
+      c = Collection.new
+      c.nid = "not_used" 
+      c.depositor = "whomever" 
+      c.save!
+
+      expect(NidTester.exists_by_nid? "not_used").to be true 
+    ensure
+      c.delete if c.persisted?
+    end
+  end
 end
