@@ -2,51 +2,48 @@ require 'spec_helper'
 
 describe CommunitiesController do
   let(:user)   { FactoryGirl.create(:user) } 
-  let(:params) { { email: user.email, token: "test_api_key" } } 
 
-  describe "#POST create" do 
-    after(:all) { ActiveFedora::Base.delete_all }
+  describe "#POST upsert" do 
+    before(:all) { Resque.inline = true } 
+    after(:each) { ActiveFedora::Base.delete_all } 
+    after(:all) { Resque.inline = false } 
+
+    let(:params) do 
+      { :email => user.email, 
+        :token => "test_api_key",
+        :title => "Test Community",
+        :depositor => "000000000",
+        :members => %w(1 2 3),
+        :access => "public",
+        :nid => "12",
+      } 
+    end
+    let(:community) { Community.find_by_nid params[:nid] }
 
     it "422s for invalid requests" do 
-      post :create, params
+      post :upsert, params.except(:depositor)
       expect(response.status).to eq 422
     end
 
-    it "returns a 202 and creates the requested community on a valid request" do
-      Resque.inline = true 
-      post_params = { title: "a", members: %w(a), nid: "12", depositor: "101" }
-      post_params = post_params.merge params
-      post :create, post_params
+    it "returns a 202 and creates community on requests with new nids." do 
+      post :upsert, params
 
       expect(response.status).to eq 202
-      community = Community.find(Community.find_by_nid("12").id)
-      expect(community.project_members).to eq ["a"]
-      Resque.inline = false 
+      expect(community.depositor).to eq params[:depositor]
     end
-  end
 
-  describe "#PUT nid_update" do 
-    
-    it "updates the requested community if it exists" do 
-      begin
-        community = Community.new
-        community.mods.title = "Test Community"
-        community.nid = "311"
-        community.depositor = "System" 
-        community.project_members = ["303"]
-        community.save!
+    it "returns and 202 and updates the requested community if it exists" do 
+      community_old = Community.new
+      community_old.mods.title = "Test Community"
+      community_old.nid = params[:nid] 
+      community_old.depositor = "System" 
+      community_old.project_members = ["303"]
+      community_old.save!
 
-        put :nid_update, params.merge( {:nid => "311",  :members => %w(303 404 505) })
-        expect(assigns(:community).project_members).to match_array %w(303 404 505)
-      ensure
-        community.delete if community.persisted?
-      end
+      post :upsert, params 
+      expect(response.status).to eq 202 
+      expect(community.depositor).to eq params[:depositor]
     end 
-  end
-
-  it "422s if no community with the requested nid can be found." do 
-    put :nid_update, params.merge( { :nid => "311", :members => %w(101) })
-    expect(response.status).to eq 422
   end
 
   it_should_behave_like "an API enabled controller"

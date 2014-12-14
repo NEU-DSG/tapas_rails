@@ -21,8 +21,7 @@ TapasRails::Application.routes.draw do
     mount Resque::Server, at: "/resque" 
   end
 
-  resources :communities, only: [:create]
-  put 'communities/nid/:nid' => 'communities#nid_update'
+  post "communities/upsert" => "communities#upsert"
   resources :collections, only: [:create]
 
   # TEI data on TAPAS currently comes in as a 2-phase ingest.
