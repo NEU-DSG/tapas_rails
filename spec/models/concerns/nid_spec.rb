@@ -36,7 +36,7 @@ describe "The Nid module" do
   end
 
   it "allows us to check if a nid is already in use" do 
-    expect(NidTester.exists_by_nid?("not_used")).to be false 
+    expect(Nid.exists_by_nid?("not_used")).to be false 
 
     begin 
       c = Collection.new
@@ -44,9 +44,13 @@ describe "The Nid module" do
       c.depositor = "whomever" 
       c.save!
 
-      expect(NidTester.exists_by_nid? "not_used").to be true 
+      expect(Nid.exists_by_nid? "not_used").to be true 
     ensure
       c.delete if c.persisted?
     end
+  end
+
+  it "doesn't define a per-model existence check" do 
+    expect(NidTester.respond_to?(:exists_by_nid?)).to be false 
   end
 end
