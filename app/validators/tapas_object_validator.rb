@@ -16,8 +16,7 @@ class TapasObjectValidator
   def validate_params
     return errors if no_params?
     validate_required_attributes
-    validate_existence
-    validate_uniqueness
+    validate_upsert
     return errors 
   end
 
@@ -25,6 +24,23 @@ class TapasObjectValidator
     unless self.params.present?
       errors << "Object had no parameters or did not exist" 
       return true
+    end
+  end
+
+  # Make sure the object either doesn't exist or is a member of the 
+  # requested class.
+  def validate_upsert
+    if params[:action] == 'upsert' 
+      return true unless Nid.exists_by_nid? params[:nid]
+
+      klass = self.class.to_s[0..-10]
+      object = ActiveFedora::Base.where("nid_ssim" => params[:nid]).first
+
+      if object && !object.instance_of?(klass.constantize)
+        errors << "Tried to perform upsert with nid #{params[:nid]} on object of " + 
+                  "type #{klass} - nid already in use by #{object.class} " + 
+                  "with id #{object.pid}."
+      end
     end
   end
 
