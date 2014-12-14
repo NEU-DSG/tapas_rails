@@ -3,8 +3,8 @@ require 'spec_helper'
 describe CollectionValidator do 
   include ValidatorHelpers
 
-  describe "on POST #create" do 
-    let(:params) { { action: "create",
+  describe "on POST #upsert" do 
+    let(:params) { { action: "upsert",
                      nid: "1",
                      project: "333",
                      access: "public",
@@ -15,7 +15,20 @@ describe CollectionValidator do
       expect(validation_errors(params).length).to eq 0
     end
 
-    it "raises an error if nid is already in use" do 
+    it "raises no error if nid is already in use by a Collection" do 
+      begin 
+        collection = Collection.new
+        collection.nid = params[:nid]
+        collection.depositor = params[:depositor]
+        collection.save!
+
+        expect(validation_errors(params).length).to eq 0 
+      ensure
+        collection.destroy if collection.persisted?
+      end
+    end
+
+    it "raises an error if nid is already in use by a non-Collection" do 
       begin 
         community = Community.new
         community.nid = "1"
