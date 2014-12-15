@@ -22,7 +22,7 @@ TapasRails::Application.routes.draw do
   end
 
   post "communities/upsert" => "communities#upsert"
-  resources :collections, only: [:create]
+  post "collections/upsert" => "collections#upsert" 
 
   # TEI data on TAPAS currently comes in as a 2-phase ingest.
   # files/validate_tei should typically be run before the actual 
