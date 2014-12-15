@@ -29,7 +29,7 @@ describe CoreFilesController do
     end
   end
 
-  describe "POST #create" do
+  describe "POST #upsert" do
     before(:each) do 
       @src = "#{Rails.root}/spec/fixtures/files/tei.xml"
     end
@@ -37,17 +37,17 @@ describe CoreFilesController do
     let(:post_defaults) do 
       { :collection => "12345",
         :nid        => "111",
+        :access     => "private",
         :depositor  => "wjackson",
         :file       => test_file(@src) }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
 
-    # Note that we force Resque to run inline for the duration of this spec.
     it "returns a 202 and creates the desired file on a valid request." do 
       Resque.inline = true
       file_path = post_defaults[:file].path
-      post :create, params.merge(post_defaults)
+      post :upsert, params.merge(post_defaults)
 
       expect(response.status).to eq 202
 

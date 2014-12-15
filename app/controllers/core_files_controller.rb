@@ -3,26 +3,25 @@ class CoreFilesController < ApplicationController
 
   # No strict guarantee that parse_tei will always run before 
   # the create action, so just always execute validations
-  before_action :validate_tei_content, :only => %i(create parse_tei)
+  before_action :validate_tei_content, :only => %i(parse_tei)
 
-  def create
-    # Rewrite the file param to be a path string
-    move_and_pathify_file
-
-    TapasRails::Application::Queue.push TapasObjectCreationJob.new params
-    @response[:message] = "Your files are processing." 
-    pretty_json(202) and return
-  end
-
-  def nid_update
-    if params[:revision]
-      filename = params[:file].original_filename
-      move_and_pathify_file
-      job = FileRevisionJob.new(params[:nid], params[:file], filename)
-      TapasRails::Application::Queue.push job
-      @response[:message] = "File revision being processed" 
-      pretty_json(202) and return
+  def upsert
+    # If params[:file] is set to anything, we assume 
+    # we need to perform a file content update - extract 
+    # filepath and filename
+    if params[:file].present?
+      params[:filename] = params[:file].original_filename 
+      
+      fpath = params[:file].path
+      npath = Rails.root.join("tmp", params[:filename])
+      FileUtils.mv(fpath, npath)
+      params[:filepath] = npath.to_s 
+      params[:file] = "" 
     end
+
+    TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 
+    @response[:message] = "CoreFile create/update in progress" 
+    pretty_json(202) and return 
   end
 
   def parse_tei
