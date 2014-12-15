@@ -3,29 +3,39 @@ require 'spec_helper'
 describe CoreFileValidator do 
   include ValidatorHelpers
 
-  describe "on POST #create" do 
+  describe "on POST #upsert" do 
     let(:params) do 
       { :file => "default",
         :nid => "default",
         :access => "public",
         :collection => "default",
         :depositor => "default",
-        :action => "create" }
+        :action => "upsert" }
     end
 
-    it "raises an error if two CoreFiles would have the same nid." do 
+    it "raises no error if nid belongs to a preexisting CoreFile" do 
       begin
         c = CoreFile.new.tap do |c| 
           c.depositor = "wjackson"
-          c.nid       = "default" 
+          c.nid       = params[:nid]
           c.save!
         end
 
-        expect(validation_errors(params).length).to eq 1
-        msg = "Object with nid of default already exists - aborting."
-        expect(validation_errors(params).first).to eq msg
+        expect(validation_errors(params).length).to eq 0
       ensure
         c.destroy
+      end
+    end
+
+    it "raises an error if nid belongs to an object that isn't a CoreFile" do 
+      begin 
+        c = Community.new
+        c.nid = params[:nid]
+        c.save!
+
+        expect(validation_errors(params).length).to eq 1 
+      ensure
+        c.delete if c.persisted?
       end
     end
 
