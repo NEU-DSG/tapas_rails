@@ -27,9 +27,8 @@ TapasRails::Application.routes.draw do
   # TEI data on TAPAS currently comes in as a 2-phase ingest.
   # files/validate_tei should typically be run before the actual 
   # create action is invoked
-  resources :core_files,  only: [:create], path: "files"
+  post 'files/upsert' => 'core_files#upsert', as: "upsert"
   post 'files/validate_tei' => 'core_files#parse_tei', as: "validate_tei"
-  put 'files/nid/:nid' => 'core_files#nid_update'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
