@@ -54,9 +54,5 @@ describe CoreFileValidator do
     it "raises an error if no collection id is present" do 
       expect(validation_errors(params.except :collection).length).to eq 1
     end
-
-    it "raises an error if no file is present" do
-      expect(validation_errors(params.except :file).length).to eq 1 
-    end
   end
 end
