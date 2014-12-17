@@ -8,8 +8,7 @@ describe CoreFileUpserter do
       :nid => "test", 
       :access => "public", 
       :collection => "023",
-      :filepath => fixture_file("tei_copy.xml"),
-      :filename => "tei_copy.xml"
+      :file => fixture_file("tei_copy.xml"),
     }
   end
 
@@ -40,8 +39,8 @@ describe CoreFileUpserter do
     its(:class) { should eq TEIFile } 
     its(:canonical?) { should be true }
 
-    it "cleans up the file at filepath" do 
-      expect(File.exists?(params[:filepath])).to be false 
+    it "cleans up the file" do 
+      expect(File.exists?(params[:file])).to be false 
     end
 
     # have to be using file generated from fixture_file("tei.xml").

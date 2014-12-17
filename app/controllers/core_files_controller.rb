@@ -10,16 +10,11 @@ class CoreFilesController < ApplicationController
     # we need to perform a file content update - extract 
     # filepath and filename
     if params[:file].present?
-      params[:filename] = params[:file].original_filename 
-      
-      fpath = params[:file].path
-      npath = Rails.root.join("tmp", params[:filename])
+      filename = params[:file].original_filename 
+      fpath = params[:file].path 
+      npath = Rails.root.join("tmp", filename)
       FileUtils.mv(fpath, npath)
-      params[:filepath] = npath.to_s 
-
-      # @TODO: We set this to a blank string because the actual File stored here
-      # won't serialize very well.  There's a better way to handle this.
-      params[:file] = "" 
+      params[:file] = npath.to_s
     end
 
     TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 

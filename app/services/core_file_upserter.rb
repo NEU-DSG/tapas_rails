@@ -10,12 +10,12 @@ class CoreFileUpserter
         core_file.nid = params[:nid]
       end
       update_core_file_metadata(core_file)
-      update_core_file_tei_file(core_file) if params[:filepath]
+      update_core_file_tei_file(core_file) if params[:file]
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
-      FileUtils.rm(params[:filepath]) if params[:filepath]
+      FileUtils.rm(params[:file]) if params[:file]
     end
   end
 
@@ -50,7 +50,17 @@ class CoreFileUpserter
       end 
 
       tei.depositor = params[:depositor]
-      tei.add_file(File.read(params[:filepath]), "content", params[:filename])
+
+      filename = Pathname.new(params[:file]).basename.to_s
+      filecontent = File.read(params[:file])
+      current_filename = tei.content.label 
+      current_filecontent = tei.content.content 
+      # If the filename and content are identical to the filename
+      # and content of the most recent version, don't store the file.
+      unless (current_filename == filename) && (current_filecontent == filecontent)
+        tei.add_file(filecontent, "content", filename)
+      end
+
       tei.save!
     end
 end
