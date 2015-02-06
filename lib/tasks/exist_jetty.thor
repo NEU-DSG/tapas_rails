@@ -5,6 +5,12 @@ class ExistJetty < Thor
   include Thor::Actions
   require 'net/http'
   @@newPort = "8986"
+  # The contexts hash should be updated every time TAPAS uses a new version 
+  #  of eXist: JETTY-CONTEXT-PATH => EXIST-VERSION. Older versions of eXist,
+  #  if available, should have context paths reflecting their version. The
+  #  current version should be accessible at "exist".
+  @@contexts = {"exist"=>"exist-2.2", "exist-2.2-rev"=>"exist-2.2-rev"}
+  @@newestVers = @@contexts["exist"]
   
   desc "init", <<-eos
   Description:
@@ -21,41 +27,65 @@ class ExistJetty < Thor
   
   def init
     say "Creating eXist .war file", :green
-    pth = "#{::Rails.root}/jetty/webapps/exist-2.2"
-    FileUtils.mkdir_p(pth) unless File.directory?(pth)
+    # Create an eXist directory in Jetty's webapps folder, along with directories 
+    #  for data backups and .war file backups.
+    pth = "#{::Rails.root}/jetty/webapps/exist"
+    backupDir = "#{pth}/backups"
+    warDir = "#{backupDir}/wars"
+    FileUtils.mkdir_p(warDir) unless File.directory?(warDir)
+
+    # Check for - and deal with - any out-of-date file structures.
     # This is the path to the .war file created by cerberus_core's exist_generator.rb.
-    old_war_path = "#{::Rails.root}/jetty/webapps/exist-2.2-rev.war"
+    cerberusPath = "#{::Rails.root}/jetty/webapps/exist-2.2-rev.war"
+    # This is the path used before 1-31-2015.
+    oneAppPath = "#{::Rails.root}/jetty/webapps/exist-2.2"
+    contextPath = "#{::Rails.root}/jetty/contexts"
+    if File.file?(cerberusPath)
+      say "Found exist-2.2-rev.war at old filepath - moving file to #{warDir}", :yellow
+      FileUtils.mv cerberusPath, "#{warDir}/exist-2.2-rev.war" unless File.file?("#{warDir}/exist-2.2-rev.war")
+      # Delete old exist.xml and exist.yml files.
+      FileUtils.rm %w(#{::Rails.root}/jetty/contexts/exist.xml #{::Rails.root}/config/exist.yml)
+    elsif File.directory?(oneAppPath)
+      say "Found exist-2.2 at old filepath - moving directory to #{pth}", :yellow
+      FileUtils.mv "#{oneAppPath}/exist-2.2-rev.war", "#{warDir}/exist-2.2-rev.war" unless File.file?("#{warDir}/exist-2.2-rev.war")
+      # Move the entire directory under #{::Rails.root}/jetty/webapps/exist.
+      if not File.directory?("#{pth}/exist-2.2-rev")
+        FileUtils.mkdir("#{pth}/exist-2.2-rev")
+        FileUtils.cp_r "#{oneAppPath}/.", "#{pth}/exist-2.2-rev"
+        FileUtils.rm_r oneAppPath
+      end
+      # Edit Jetty's exist.xml -> exist-2.2-rev.xml context file.
+      FileUtils.mv "#{contextPath}/exist.xml", "#{contextPath}/exist-2.2-rev.xml" unless File.file?("#{contextPath}/exist-2.2-rev.xml")
+      say "Replacing any references in context file", :green
+      gsub_file "#{contextPath}/exist-2.2-rev.xml", /exist-2.2\//, "exist/exist-2.2-rev/"
+      gsub_file "#{contextPath}/exist-2.2-rev.xml", />\/exist</, ">/exist-2.2-rev<"
+    end
     
     # Download the .war if necessary.
-    if File.file?("#{pth}/exist-2.2-rev.war")
-      say "#{pth}/exist-2.2-rev.war already exists - skipping download", :yellow
-    # If the .war file is found at the out-of-date filepath, move it to new 
-    #  filepath (exist-2.2 directory).
-    elsif File.file?(old_war_path)
-      say "Found .war at old eXist filepath - moving file to #{pth}", :yellow
-      FileUtils.mv old_war_path, "#{pth}/exist-2.2-rev.war"
+    if File.file?("#{warDir}/#{@@newestVers}.war")
+      say "#{warDir}/#{@@newestVers}.war already exists - skipping download", :yellow
     else
-      url = "http://librarystaff.neu.edu/DRSzip/exist-2.2-rev.war"
-      get url, "#{pth}/exist-2.2-rev.war"
+      url = "http://librarystaff.neu.edu/DRSzip/#{@@newestVers}.war"
+      get url, "#{warDir}/#{@@newestVers}.war"
     end
-    # If the properties files are present, consider the WAR file unpacked.
-    client = "#{pth}/WEB-INF/client.properties"
-    backup = "#{pth}/WEB-INF/backup.properties"
+    # If the properties files are present, consider the .war file unpacked.
+    client = "#{pth}/#{@@newestVers}/WEB-INF/client.properties"
+    backup = "#{pth}/#{@@newestVers}/WEB-INF/backup.properties"
     if File.file?(client) && File.file?(backup)
       say "#{client} and/or #{backup} already exist - skipping WAR unpacking", :yellow
     else
-      # Unzip WAR file.
-      say "Unpacking #{pth}/exist-2.2-rev.war", :green
-      run "unzip -q #{pth}/exist-2.2-rev.war -d #{pth}"
-      # Preserve the original properties files with .template extension.
-      backup_properties(client)
-      backup_properties(backup)
+      # Unzip .war file.
+      say "Unpacking #{warDir}/#{@@newestVers}.war", :green
+      run "unzip -q #{warDir}/#{@@newestVers}.war -d #{pth}/#{@@newestVers}"
+      # Back up original eXist properties files before they are edited.
+      backup_as_template(client)
+      backup_as_template(backup)
     end
     # Change the port that eXist expects to use.
     edit_port("8080",@@newPort,client)
     edit_port("8080",@@newPort,backup)
     # Add context and configuration files for eXist installation.
-    insert_context_file("#{::Rails.root}/jetty/contexts/exist.xml")
+    insert_context_file("#{contextPath}/#{@@newestVers}.xml")
     insert_config_file("#{::Rails.root}/config/exist.yml")
   end
   
@@ -116,9 +146,9 @@ class ExistJetty < Thor
     end
   end
   
-  no_commands do
-    # Back up original eXist properties files before they are edited.
-    def backup_properties(file)
+  no_commands do    
+    # Preserve an original file as a copy with the .template extension.
+    def backup_as_template(file)
       unless File.file?("#{file}.template")
         say "Backing up #{file} to #{file}.template", :green
         FileUtils.cp file, "#{file}.template"
@@ -133,37 +163,30 @@ class ExistJetty < Thor
       else
         say "#{file} does not exist - skipping port configuration"
       end
-    end  
+    end
     
     # Add the eXist context file telling Jetty where eXist resides.
     def insert_context_file(context)
-      say "Creating exist db context file", :green
+      say "Creating exist-db context file", :green
       if File.exists?(context)
         say "#{context} already exists - skipping download", :yellow
-        # Replace any reference to the out-of-date filepath.
-        if context =~ /exist-2.2-rev.war/
-          say "Replacing any references to old filepath in #{context}", :green
-          gsub_file context, /exist-2.2-rev.war/, "exist-2.2/"
-        end
       else
-        url = "http://librarystaff.neu.edu/DRSzip/exist.xml"
-        get url, "jetty/contexts/exist.xml"
+        url = "http://librarystaff.neu.edu/DRSzip/#{@@newestVers}.xml"
+        get url, context
       end
     end
 
     # Add the eXist config file telling Rails what addresses eXist uses.
     def insert_config_file(config)
-      say "Creating exist db connector configuration", :green
+      say "Creating exist-db connector configuration", :green
       if File.exists?(config)
         say "#{config} already exists - skipping download", :yellow
         # Replace any references to inaccurate eXist web addresses.
-        if config =~ /(db\/)(development|test|staging)/
-          say "Replacing any references to eXist address in #{config}", :green
-          gsub_file config, /(db\/)(development|test|staging)/, '\1apps/\2'
-        end
+        say "Replacing any references to old eXist address in #{config}", :green
+        gsub_file config, /(db\/)(development|test|staging)/, '\1apps/\2'
       else
         url = "http://librarystaff.neu.edu/DRSzip/exist.yml"
-        get url, "config/exist.yml"
+        get url, config
       end
     end
   end

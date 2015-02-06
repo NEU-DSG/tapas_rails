@@ -47,3 +47,5 @@ config/secrets.yml
 
 # Ignore swp files 
 **.swp
+
+.DS_Store
