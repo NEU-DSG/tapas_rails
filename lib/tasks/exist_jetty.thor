@@ -4,13 +4,10 @@ class ExistJetty < Thor
   include Thor::Rails
   include Thor::Actions
   require 'net/http'
+  #require 'zip'
   @@newPort = "8986"
-  # The contexts hash should be updated every time TAPAS uses a new version 
-  #  of eXist: JETTY-CONTEXT-PATH => EXIST-VERSION. Older versions of eXist,
-  #  if available, should have context paths reflecting their version. The
-  #  current version should be accessible at "exist".
-  @@contexts = {"exist"=>"exist-2.2", "exist-2.2-rev"=>"exist-2.2-rev"}
-  @@newestVers = @@contexts["exist"]
+  @@newestVers = "exist-2.2"
+  oldVers = ["exist-2.2-rev"]
   
   desc "init", <<-eos
   Description:
@@ -20,8 +17,8 @@ class ExistJetty < Thor
   Example:
     thor exist_jetty:init
   This will create:
-    jetty/webapps/exist-2.2-rev.war
-    jetty/contexts/exist.xml
+    jetty/webapps/exist/backups/wars/exist-2.2.war
+    jetty/contexts/exist-2.2.xml
     config/exist.yml
   eos
   
@@ -40,26 +37,27 @@ class ExistJetty < Thor
     # This is the path used before 1-31-2015.
     oneAppPath = "#{::Rails.root}/jetty/webapps/exist-2.2"
     contextPath = "#{::Rails.root}/jetty/contexts"
+    # Reorganize the old file structure indicated by cerberusPath.
     if File.file?(cerberusPath)
       say "Found exist-2.2-rev.war at old filepath - moving file to #{warDir}", :yellow
       FileUtils.mv cerberusPath, "#{warDir}/exist-2.2-rev.war" unless File.file?("#{warDir}/exist-2.2-rev.war")
       # Delete old exist.xml and exist.yml files.
       FileUtils.rm %w(#{::Rails.root}/jetty/contexts/exist.xml #{::Rails.root}/config/exist.yml)
+    # Reorganize the old file structure indicated by oneAppPath.
     elsif File.directory?(oneAppPath)
       say "Found exist-2.2 at old filepath - moving directory to #{pth}", :yellow
       FileUtils.mv "#{oneAppPath}/exist-2.2-rev.war", "#{warDir}/exist-2.2-rev.war" unless File.file?("#{warDir}/exist-2.2-rev.war")
       # Move the entire directory under #{::Rails.root}/jetty/webapps/exist.
-      if not File.directory?("#{pth}/exist-2.2-rev")
-        FileUtils.mkdir("#{pth}/exist-2.2-rev")
-        FileUtils.cp_r "#{oneAppPath}/.", "#{pth}/exist-2.2-rev"
-        FileUtils.rm_r oneAppPath
+      if not File.exists?("#{backupDir}/exist-2.2-rev.zip")
+        move_dir_to_zip("#{backupDir}/exist-2.2-rev.zip", oneAppPath)
       end
-      # Edit Jetty's exist.xml -> exist-2.2-rev.xml context file.
-      FileUtils.mv "#{contextPath}/exist.xml", "#{contextPath}/exist-2.2-rev.xml" unless File.file?("#{contextPath}/exist-2.2-rev.xml")
-      say "Replacing any references in context file", :green
-      gsub_file "#{contextPath}/exist-2.2-rev.xml", /exist-2.2\//, "exist/exist-2.2-rev/"
-      gsub_file "#{contextPath}/exist-2.2-rev.xml", />\/exist</, ">/exist-2.2-rev<"
+      # Back up Jetty's exist.xml -> exist-2.2-rev.xml context file.
+      if File.exists?("#{contextPath}/exist.xml")
+        FileUtils.mv "#{contextPath}/exist.xml", "#{backupDir}/exist-2.2-rev.xml" unless File.file?("#{backupDir}/exist-2.2-rev.xml")
+      end
     end
+    
+    # Check for - and deal with - any older versions of eXist.
     
     # Download the .war if necessary.
     if File.file?("#{warDir}/#{@@newestVers}.war")
@@ -188,6 +186,13 @@ class ExistJetty < Thor
         url = "http://librarystaff.neu.edu/DRSzip/exist.yml"
         get url, config
       end
+    end
+    
+    # Recursively archive the given directory. If the test of the resultant .zip
+    #  file comes back OK, the original directory will be deleted.
+    def move_dir_to_zip(outpath, inpath)
+      say "Zipping #{inpath} to #{outpath}", :green
+      run "zip -rTm #{outpath} #{inpath} -x .DS_STORE"
     end
   end
 end
