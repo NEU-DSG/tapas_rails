@@ -10,11 +10,15 @@ class CoreFilesController < ApplicationController
     # we need to perform a file content update - extract 
     # filepath and filename
     if params[:file].present?
-      filename = params[:file].original_filename 
-      fpath = params[:file].path 
-      npath = Rails.root.join("tmp", filename)
-      FileUtils.mv(fpath, npath)
-      params[:file] = npath.to_s
+      params[:file] = http_file_upload_to_hash(params[:file])
+    end
+
+    if params[:support_files].present?
+      support_file_array = []
+      params[:support_files].map do |key, support_file| 
+        support_file_array << http_file_upload_to_hash(support_file)
+      end
+      params[:support_files] = support_file_array
     end
 
     TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 
@@ -36,14 +40,13 @@ class CoreFilesController < ApplicationController
   end
 
   private
-
-   def move_and_pathify_file
-     fpath = params[:file].path
-     fname = Pathname.new(fpath).basename.to_s
-     npath = Rails.root.join("tmp", fname)
-     FileUtils.mv(fpath, npath)
-     params[:file] = npath.to_s
-   end
+    def http_file_upload_to_hash(file_upload)
+      fpath = file_upload.path 
+      fname = file_upload.original_filename
+      tmp   = Rails.root.join("tmp", "fname#{SecureRandom.hex}").to_s
+      FileUtils.mv(fpath, tmp)
+      return { :name => fpath, :path => tmp }
+    end
 
    def validate_tei_content
       @file     = params[:file].read

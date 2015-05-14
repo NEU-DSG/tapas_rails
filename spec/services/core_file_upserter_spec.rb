@@ -8,7 +8,7 @@ describe CoreFileUpserter do
       :nid => "test", 
       :access => "public", 
       :collection => "023",
-      :file => fixture_file("tei_copy.xml"),
+      :file => {:path => fixture_file("tei_copy.xml"), :name => "tei_copy.xml" }
     }
   end
 
@@ -29,6 +29,13 @@ describe CoreFileUpserter do
     its(:drupal_access) { should eq params[:access] } 
   end
 
+  RSpec.shared_examples "a support file updating operation" do 
+    before(:all) do 
+      core = CoreFile.find_by_nid(params[:nid])
+      @tei = core.canonical_object(:return_as => :models) 
+    end
+  end
+
   RSpec.shared_examples "a tei file updating operation" do 
     before(:all) do 
       core = CoreFile.find_by_nid(params[:nid])
@@ -40,7 +47,7 @@ describe CoreFileUpserter do
     its(:canonical?) { should be true }
 
     it "cleans up the file" do 
-      expect(File.exists?(params[:file])).to be false 
+      expect(File.exists?(params[:file][:path])).to be false 
     end
 
     # have to be using file generated from fixture_file("tei.xml").
@@ -99,37 +106,73 @@ describe CoreFileUpserter do
   end
 
   context "when updating an existing core file" do 
-    before(:all) do 
+    def setup_update_tests
       assign_collection
       copy_fixture("tei.xml", "tei_copy.xml")
-      # Build the core file we intend to update
-      core = FactoryGirl.create(:core_file) 
-      core.nid = params[:nid]
-      core.og_reference = params[:collection]
-      core.save! ; core.collection = @collection ; core.save!
+      # Test requires two preexisting objects - a core file and a tei file
+      @core = FactoryGirl.create(:core_file)
+      @core.depositor = params[:depositor]
+      @core.nid = params[:nid]
+      @core.og_reference = params[:collection]
+      @core.save! ; @core.collection = @collection ; @core.save! 
 
-      # Build the tei_file attached to it 
-      @tei = TEIFile.new 
+      @tei = TEIFile.new
       @tei.depositor = params[:depositor]
-      filedata = File.read(fixture_file "tei_full_metadata.xml")
-      @tei.add_file(filedata, "content", "tei_full_metadata.xml")  
       @tei.canonize
-      @tei.save! ; @tei.core_file = core ; @tei.save! 
-
-      CoreFileUpserter.upsert(params)
+      @tei.save! ; @tei.core_file = @core ; @tei.save! 
     end
 
-    after(:all) { ActiveFedora::Base.delete_all } 
+    context "with new tei data" do 
+      before(:all) do 
+        setup_update_tests 
+        old_content = File.read(fixture_file("tei_full_metadata.xml"))
+        @tei.add_file(old_content, "content", "tei_full_metadata.xml")
+        @tei.save!
 
-    it "updates the preexisting core file" do 
-      expect(CoreFile.count).to eq 1 
+        CoreFileUpserter.upsert(params)
+      end
+
+      after(:all) { ActiveFedora::Base.delete_all } 
+
+      it "updates the preexisting core file" do 
+        expect(CoreFile.count).to eq 1 
+      end
+
+      it "revisions rather than overwrites file data" do 
+        expect(@tei.content.versions.length).to eq 2 
+      end
+
+      it "has the latest file data as the latest revision" do 
+        ids = ["content.0", "content.1"]
+        expect(@tei.content.versions.map { |x| x.versionID }).to match_array ids
+        new = @tei.content.versions.find { |x| x.label == params[:file][:name] }
+        expect(new).not_to be nil 
+        expect(new.content).to eq File.read(fixture_file("tei.xml"))
+      end
+
+      it_should_behave_like "a metadata assigning operation"
+      it_should_behave_like "a tei file updating operation" 
     end
 
-    it "revisions rather than overwrites file data" do 
-      expect(@tei.content.versions.length).to eq 2 
-    end
+    context "with identical tei data" do 
+      before(:all) do 
+        setup_update_tests
+        old_content = File.read(fixture_file("tei.xml"))
+        @tei.add_file(old_content, "content", params[:file][:name])
+        @tei.save!
 
-    it_should_behave_like "a metadata assigning operation"
-    it_should_behave_like "a tei file updating operation" 
+        CoreFileUpserter.upsert(params)
+      end
+
+      after(:all) { ActiveFedora::Base.delete_all } 
+
+      it "updates the preexisting core file" do 
+        expect(CoreFile.count).to eq 1 
+      end
+
+      it "performs no revision" do 
+        expect(@tei.content.versions.length).to eq 1 
+      end
+    end
   end
 end

@@ -6,16 +6,18 @@ class CoreFileUpserter
       if Nid.exists_by_nid?(params[:nid])
         core_file = CoreFile.find_by_nid(params[:nid])
       else
+        puts "creating core file"
         core_file = CoreFile.new
         core_file.nid = params[:nid]
       end
       update_core_file_metadata(core_file)
       update_core_file_tei_file(core_file) if params[:file]
     rescue => e 
+      puts "error ahhh"
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
-      FileUtils.rm(params[:file]) if params[:file]
+      FileUtils.rm(params[:file][:path]) if params[:file][:path]
     end
   end
 
@@ -51,8 +53,8 @@ class CoreFileUpserter
 
       tei.depositor = params[:depositor]
 
-      filename = Pathname.new(params[:file]).basename.to_s
-      filecontent = File.read(params[:file])
+      filename = params[:file][:name]
+      filecontent = File.read(params[:file][:path])
       current_filename = tei.content.label 
       current_filecontent = tei.content.content 
       # If the filename and content are identical to the filename
