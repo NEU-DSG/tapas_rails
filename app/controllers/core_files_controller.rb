@@ -11,9 +11,10 @@ class CoreFilesController < ApplicationController
 
     if params[:support_files].present?
       support_file_array = []
-      params[:support_files].map do |key, support_file| 
+      params[:support_files].map do |key, support_file|
         support_file_array << http_file_upload_to_hash(support_file)
       end
+
       params[:support_files] = support_file_array
     end
 
