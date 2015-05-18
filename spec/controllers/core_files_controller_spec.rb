@@ -10,25 +10,6 @@ describe CoreFilesController do
     return @file 
   end
 
-  describe "POST #parse_tei" do 
-    let(:body)   { JSON.parse response.body } 
-
-    it "raises a fatal error and 422s with invalid XML" do 
-      post :parse_tei, params.merge({ file: test_file("image.jpg") })
-      expect(response.status).to eq 422 
-    end
-
-    it "raises a fatal error and 422s with XML that isn't TEI" do 
-      post :parse_tei, params.merge({file: test_file("xml.xml") })
-      expect(response.status).to eq 422
-    end
-    
-    it "responds with a 200 for files that are valid TEI" do 
-      post :parse_tei, params.merge({file: test_file("tei.xml")})
-      expect(response.status).to eq 200 
-    end
-  end
-
   describe "POST #upsert" do
     before(:each) do 
       @src = "#{Rails.root}/spec/fixtures/files/tei.xml"

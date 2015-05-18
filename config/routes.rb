@@ -28,7 +28,6 @@ TapasRails::Application.routes.draw do
   # files/validate_tei should typically be run before the actual 
   # create action is invoked
   post 'files/upsert' => 'core_files#upsert', as: "upsert"
-  post 'files/validate_tei' => 'core_files#parse_tei', as: "validate_tei"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
