@@ -31,14 +31,14 @@ class TapasObjectValidator
   # requested class.
   def validate_upsert
     if params[:action] == 'upsert' 
-      return true unless Nid.exists_by_nid? params[:nid]
+      return true unless Did.exists_by_did? params[:did]
 
       klass = self.class.to_s[0..-10]
-      object = ActiveFedora::Base.where("nid_ssim" => params[:nid]).first
+      object = ActiveFedora::Base.where("did_ssim" => params[:did]).first
 
       if object && !object.instance_of?(klass.constantize)
-        errors << "Tried to perform upsert with nid #{params[:nid]} on object of " + 
-                  "type #{klass} - nid already in use by #{object.class} " + 
+        errors << "Tried to perform upsert with did #{params[:did]} on object of " + 
+                  "type #{klass} - did already in use by #{object.class} " + 
                   "with id #{object.pid}."
       end
     end
@@ -51,9 +51,9 @@ class TapasObjectValidator
       true
     else
       klass = self.class.to_s[0..-10]
-      object = klass.constantize.find_by_nid(params[:nid])
+      object = klass.constantize.find_by_did(params[:did])
       unless object
-        errors << "Tried to operate on #{klass} with nid #{params[:nid]} - no such object."
+        errors << "Tried to operate on #{klass} with did #{params[:did]} - no such object."
       end
     end
   end
@@ -61,8 +61,8 @@ class TapasObjectValidator
   def validate_uniqueness
     case params[:action]
     when "create"
-      if ActiveFedora::SolrService.query("tapas_nid_ssim:\"#{params[:nid]}\"").any?
-        errors << "Object with nid of #{params[:nid]} already exists - aborting."
+      if ActiveFedora::SolrService.query("tapas_did_ssim:\"#{params[:did]}\"").any?
+        errors << "Object with did of #{params[:did]} already exists - aborting."
       end
     else
       return true 

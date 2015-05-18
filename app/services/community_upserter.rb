@@ -3,13 +3,13 @@ class CommunityUpserter
 
   def upsert 
     begin 
-      if Nid.exists_by_nid?(params[:nid])
-        community = Community.find_by_nid(params[:nid])
+      if Did.exists_by_did?(params[:did])
+        community = Community.find_by_did(params[:did])
         update_metadata(community)
         community.save!
       else
         community = Community.new
-        community.nid = params[:nid]
+        community.did = params[:did]
         update_metadata(community)
 
         community.save!

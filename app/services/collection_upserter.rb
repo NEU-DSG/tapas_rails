@@ -3,13 +3,13 @@ class CollectionUpserter
 
   def upsert 
     begin 
-      if Nid.exists_by_nid?(params[:nid])
-        collection = Collection.find_by_nid params[:nid]
+      if Did.exists_by_did?(params[:did])
+        collection = Collection.find_by_did params[:did]
         update_metadata(collection)
         collection.save!
       else
         collection = Collection.new
-        collection.nid = params[:nid]
+        collection.did = params[:did]
         update_metadata(collection)
         collection.save!
       end
@@ -27,7 +27,7 @@ class CollectionUpserter
       collection.drupal_access = params[:access]
       collection.og_reference = params[:project]
 
-      project = Community.find_by_nid(params[:project])
+      project = Community.find_by_did(params[:project])
 
       collection.save! unless collection.persisted?
       if project

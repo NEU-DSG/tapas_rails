@@ -1,5 +1,5 @@
 class CoreFile < CerberusCore::BaseModels::CoreFile
-  include Nid
+  include Did
   include OGReference
   include DrupalAccess
 

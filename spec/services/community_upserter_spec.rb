@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe CommunityUpserter do 
   def params 
-    { :nid => "123",
+    { :did => "123",
       :depositor => "011",
       :title => "A sample community",
       :access => "public", 
       :members => ["011", "023", "034"]  }
   end
 
-  subject(:community) { Community.find_by_nid(params[:nid]) }
+  subject(:community) { Community.find_by_did(params[:did]) }
 
   RSpec.shared_examples "a metadata assigning operation" do 
     its("mods.title")     { should eq [params[:title]] } 
@@ -36,7 +36,7 @@ describe CommunityUpserter do
   context "Update" do 
     before(:all) do 
       community = Community.new
-      community.nid = "123"
+      community.did = "123"
       community.mods.title = "A different title" 
       community.project_members = ["011"]
       community.drupal_access = "private" 

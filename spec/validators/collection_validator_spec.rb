@@ -5,7 +5,7 @@ describe CollectionValidator do
 
   describe "on POST #upsert" do 
     let(:params) { { action: "upsert",
-                     nid: "1",
+                     did: "1",
                      project: "333",
                      access: "public",
                      title:   "Valid",
@@ -15,10 +15,10 @@ describe CollectionValidator do
       expect(validation_errors(params).length).to eq 0
     end
 
-    it "raises no error if nid is already in use by a Collection" do 
+    it "raises no error if did is already in use by a Collection" do 
       begin 
         collection = Collection.new
-        collection.nid = params[:nid]
+        collection.did = params[:did]
         collection.depositor = params[:depositor]
         collection.save!
 
@@ -28,10 +28,10 @@ describe CollectionValidator do
       end
     end
 
-    it "raises an error if nid is already in use by a non-Collection" do 
+    it "raises an error if did is already in use by a non-Collection" do 
       begin 
         community = Community.new
-        community.nid = "1"
+        community.did = "1"
         community.save!
 
         expect(validation_errors(params).length).to eq 1
@@ -48,8 +48,8 @@ describe CollectionValidator do
       expect(validation_errors(params.except :depositor).length).to eq 1
     end
 
-    it "raises an error with no nid param" do 
-      expect(validation_errors(params.except :nid).length).to eq 1 
+    it "raises an error with no did param" do 
+      expect(validation_errors(params.except :did).length).to eq 1 
     end
 
     it "raises an error with no project param" do 

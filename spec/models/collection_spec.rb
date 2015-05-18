@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Collection do 
-  let (:collection) { Collection.new }
-
   describe "phantom collection" do 
     let(:phantom) { Collection.phantom_collection }
 

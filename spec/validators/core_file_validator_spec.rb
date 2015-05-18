@@ -6,18 +6,18 @@ describe CoreFileValidator do
   describe "on POST #upsert" do 
     let(:params) do 
       { :file => "default",
-        :nid => "default",
+        :did => "default",
         :access => "public",
         :collection => "default",
         :depositor => "default",
         :action => "upsert" }
     end
 
-    it "raises no error if nid belongs to a preexisting CoreFile" do 
+    it "raises no error if did belongs to a preexisting CoreFile" do 
       begin
         c = CoreFile.new.tap do |c| 
           c.depositor = "wjackson"
-          c.nid       = params[:nid]
+          c.did       = params[:did]
           c.save!
         end
 
@@ -27,10 +27,10 @@ describe CoreFileValidator do
       end
     end
 
-    it "raises an error if nid belongs to an object that isn't a CoreFile" do 
+    it "raises an error if did belongs to an object that isn't a CoreFile" do 
       begin 
         c = Community.new
-        c.nid = params[:nid]
+        c.did = params[:did]
         c.save!
 
         expect(validation_errors(params).length).to eq 1 
@@ -44,7 +44,7 @@ describe CoreFileValidator do
     end
 
     it "raises an error if no node_id is present" do 
-      expect(validation_errors(params.except :nid).length).to eq 1
+      expect(validation_errors(params.except :did).length).to eq 1
     end
 
     it "raises an error if no depositor is present" do 

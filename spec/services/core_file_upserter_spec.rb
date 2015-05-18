@@ -5,7 +5,7 @@ describe CoreFileUpserter do
 
   def params 
     { :depositor => "test",
-      :nid => "test", 
+      :did => "test", 
       :access => "public", 
       :collection => "023",
       :file => {:path => fixture_file("tei_copy.xml"), :name => "tei_copy.xml" }
@@ -14,13 +14,13 @@ describe CoreFileUpserter do
 
   def assign_collection
     @collection = Collection.new
-    @collection.nid = params[:collection]
+    @collection.did = params[:collection]
     @collection.depositor = params[:depositor]
     @collection.save!
   end
 
   subject(:core_file) do 
-    CoreFile.find_by_nid(params[:nid])
+    CoreFile.find_by_did(params[:did])
   end
 
   RSpec.shared_examples "a metadata assigning operation" do 
@@ -31,14 +31,14 @@ describe CoreFileUpserter do
 
   RSpec.shared_examples "a support file updating operation" do 
     before(:all) do 
-      core = CoreFile.find_by_nid(params[:nid])
+      core = CoreFile.find_by_did(params[:did])
       @tei = core.canonical_object(:return_as => :models) 
     end
   end
 
   RSpec.shared_examples "a tei file updating operation" do 
     before(:all) do 
-      core = CoreFile.find_by_nid(params[:nid])
+      core = CoreFile.find_by_did(params[:did])
       @tei = core.canonical_object(:return_as => :models) 
     end
 
@@ -112,7 +112,7 @@ describe CoreFileUpserter do
       # Test requires two preexisting objects - a core file and a tei file
       @core = FactoryGirl.create(:core_file)
       @core.depositor = params[:depositor]
-      @core.nid = params[:nid]
+      @core.did = params[:did]
       @core.og_reference = params[:collection]
       @core.save! ; @core.collection = @collection ; @core.save! 
 

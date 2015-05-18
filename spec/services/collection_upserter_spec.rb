@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe CollectionUpserter do 
   def params
-    { :nid => "111",
+    { :did => "111",
       :depositor => "011", 
       :title => "A Test Collection",
       :access => "public",
@@ -12,11 +12,11 @@ describe CollectionUpserter do
 
   def build_parent_community
     @community = Community.new
-    @community.nid = params[:project]
+    @community.did = params[:project]
     @community.save!
   end
 
-  subject(:collection) { Collection.find_by_nid(params[:nid]) } 
+  subject(:collection) { Collection.find_by_did(params[:did]) } 
 
   RSpec.shared_examples "a metadata assigning operation" do 
     its("mods.title") { should eq [params[:title]] }
@@ -62,7 +62,7 @@ describe CollectionUpserter do
     before(:all) do 
       build_parent_community
       collection_old = Collection.new
-      collection_old.nid = params[:nid]
+      collection_old.did = params[:did]
       collection_old.depositor = "#{params[:depositor]}_old"
       collection_old.save!
 

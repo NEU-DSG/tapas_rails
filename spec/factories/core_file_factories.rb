@@ -1,6 +1,6 @@
 FactoryGirl.define do 
   factory :core_file do 
     depositor "test_user" 
-    sequence(:nid) { |nid| "#{nid}" }
+    sequence(:did) { |did| "#{did}" }
   end
 end

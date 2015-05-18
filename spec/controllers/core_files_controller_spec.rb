@@ -17,7 +17,7 @@ describe CoreFilesController do
 
     let(:post_defaults) do 
       { :collection => "12345",
-        :nid        => "111",
+        :did        => "111",
         :access     => "private",
         :depositor  => "wjackson",
         :file       => test_file(@src) }
@@ -32,7 +32,7 @@ describe CoreFilesController do
 
       expect(response.status).to eq 202
 
-      core = CoreFile.find(CoreFile.find_by_nid("111").id)
+      core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:return_as => :models)
 
       expect(tei.class).to eq TEIFile

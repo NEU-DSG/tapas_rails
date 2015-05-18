@@ -3,12 +3,12 @@ class CoreFileUpserter
 
   def upsert 
     begin 
-      if Nid.exists_by_nid?(params[:nid])
-        core_file = CoreFile.find_by_nid(params[:nid])
+      if Did.exists_by_did?(params[:did])
+        core_file = CoreFile.find_by_did(params[:did])
       else
         puts "creating core file"
         core_file = CoreFile.new
-        core_file.nid = params[:nid]
+        core_file.did = params[:did]
       end
       update_core_file_metadata(core_file)
       update_core_file_tei_file(core_file) if params[:file]
@@ -29,7 +29,7 @@ class CoreFileUpserter
       core_file.drupal_access = params[:access] 
       core_file.og_reference = params[:collection] 
 
-      collection = Collection.find_by_nid(params[:project]) 
+      collection = Collection.find_by_did(params[:project]) 
 
       core_file.save! unless core_file.persisted?
 

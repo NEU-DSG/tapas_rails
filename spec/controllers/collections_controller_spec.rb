@@ -23,14 +23,14 @@ describe CollectionsController do
       Resque.inline = true 
       post_params = { title: "Collection", 
         access: "private",  
-        nid: "8018", 
+        did: "8018", 
         project: "invalid", 
         depositor: "101" }
       post_params = post_params.merge params
       post :upsert, post_params
 
       expect(response.status).to eq 202
-      expect(Collection.find_by_nid("8018")).not_to be nil 
+      expect(Collection.find_by_did("8018")).not_to be nil 
       Resque.inline = false 
     end
   end

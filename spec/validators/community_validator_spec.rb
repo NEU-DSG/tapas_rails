@@ -6,12 +6,12 @@ describe CommunityValidator do
   describe "On POST #upsert" do 
     let(:params) { { title: "valid",
                      members: ["valid"], 
-                     nid: "111",
+                     did: "111",
                      access: "public",
                      action: "upsert",
                      depositor: "101" } }
 
-    it "raises no errors with valid params and an unused nid" do 
+    it "raises no errors with valid params and an unused did" do 
       expect(validation_errors(params).length).to eq 0 
     end
 
@@ -23,8 +23,8 @@ describe CommunityValidator do
       expect(validation_errors(params.except :depositor).length).to eq 1
     end
 
-    it "raises an error with no nid param" do 
-      expect(validation_errors(params.except :nid).length).to eq 1
+    it "raises an error with no did param" do 
+      expect(validation_errors(params.except :did).length).to eq 1
     end
 
     it "raises an error with no title param" do 
@@ -35,10 +35,10 @@ describe CommunityValidator do
       expect(validation_errors(params.except :members).length).to eq 1
     end
 
-    it "raises an error if the nid exists but doesn't belong to a Community" do 
+    it "raises an error if the did exists but doesn't belong to a Community" do 
       begin
         collection = Collection.new
-        collection.nid = params[:nid]
+        collection.did = params[:did]
         collection.depositor = "SYSTEM"
         collection.save!
 
@@ -48,10 +48,10 @@ describe CommunityValidator do
       end
     end 
 
-    it "raises no errors if the nid exists and belongs to a Community" do 
+    it "raises no errors if the did exists and belongs to a Community" do 
       begin 
         community = Community.new
-        community.nid = params[:nid]
+        community.did = params[:did]
         community.depositor = "SYSTEM"
         community.save!
 

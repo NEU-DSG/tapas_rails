@@ -1,22 +1,22 @@
 class FileRevisionJob
-  attr_reader :nid, :filepath, :filename
+  attr_reader :did, :filepath, :filename
 
-  def initialize(nid, filepath, filename)
-    @nid = nid
+  def initialize(did, filepath, filename)
+    @did = did
     @filepath = filepath
     @filename = filename
   end
 
   def run 
     begin 
-      core = CoreFile.find_by_nid(nid)
+      core = CoreFile.find_by_did(did)
       core = CoreFile.find core.id 
 
       tei_file = core.canonical_object(:return_as => :models)
       tei_file.add_file(File.read(filepath), "content", filename)
       tei_file.save!
     rescue => e
-      data = { nid: nid, filepath: filepath, filename: filename }
+      data = { did: did, filepath: filepath, filename: filename }
       ExceptionNotifier.notify_exception(e, data: data)
       raise e
     ensure

@@ -1,5 +1,5 @@
 class Community < CerberusCore::BaseModels::Community
-  include Nid
+  include Did
   include OGReference
   include DrupalAccess
 

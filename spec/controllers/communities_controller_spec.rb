@@ -15,17 +15,17 @@ describe CommunitiesController do
         :depositor => "000000000",
         :members => %w(1 2 3),
         :access => "public",
-        :nid => "12",
+        :did => "12",
       } 
     end
-    let(:community) { Community.find_by_nid params[:nid] }
+    let(:community) { Community.find_by_did params[:did] }
 
     it "422s for invalid requests" do 
       post :upsert, params.except(:depositor)
       expect(response.status).to eq 422
     end
 
-    it "returns a 202 and creates community on requests with new nids." do 
+    it "returns a 202 and creates community on requests with new dids." do 
       post :upsert, params
 
       expect(response.status).to eq 202
@@ -35,7 +35,7 @@ describe CommunitiesController do
     it "returns and 202 and updates the requested community if it exists" do 
       community_old = Community.new
       community_old.mods.title = "Test Community"
-      community_old.nid = params[:nid] 
+      community_old.did = params[:did] 
       community_old.depositor = "System" 
       community_old.project_members = ["303"]
       community_old.save!
