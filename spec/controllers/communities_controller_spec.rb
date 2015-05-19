@@ -13,6 +13,7 @@ describe CommunitiesController do
         :token => "test_api_key",
         :title => "Test Community",
         :depositor => "000000000",
+        :description => "This is a test community.",
         :members => %w(1 2 3),
         :access => "public",
         :did => "12",
@@ -32,7 +33,7 @@ describe CommunitiesController do
       expect(community.depositor).to eq params[:depositor]
     end
 
-    it "returns and 202 and updates the requested community if it exists" do 
+    it "returns a 202 and updates the requested community if it exists" do 
       community_old = Community.new
       community_old.mods.title = "Test Community"
       community_old.did = params[:did] 
@@ -43,6 +44,7 @@ describe CommunitiesController do
       post :upsert, params 
       expect(response.status).to eq 202 
       expect(community.depositor).to eq params[:depositor]
+      expect(community.project_members).to eq ["1", "2", "3"]
     end 
   end
 

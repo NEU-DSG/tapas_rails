@@ -24,7 +24,8 @@ describe CollectionsController do
       post_params = { title: "Collection", 
         access: "private",  
         did: "8018", 
-        project: "invalid", 
+        project_did: "invalid", 
+        description: "This is a test collection",
         depositor: "101" }
       post_params = post_params.merge params
       post :upsert, post_params
