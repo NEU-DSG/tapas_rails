@@ -8,12 +8,12 @@ class CoreFileUpserter
       if Did.exists_by_did?(params[:did])
         core_file = CoreFile.find_by_did(params[:did])
       else
-        core_file = CoreFile.new
-        core_file.did = params[:did]
+        core_file = CoreFile.new(:did => params[:did])
       end
-      update_core_file_metadata(core_file)
-      update_core_file_tei_file(core_file) if params[:file]
-      update_support_files(core_file) if params[:support_files].present?
+
+      update_core_file_metadata!(core_file)
+      update_core_file_tei_file!(core_file) if params[:file]
+      update_support_files!(core_file) if params[:support_files].present?
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
@@ -23,7 +23,7 @@ class CoreFileUpserter
   end
 
 
-  def update_core_file_metadata(core_file)
+  def update_core_file_metadata!(core_file)
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
     core_file.og_reference = params[:collection_did] if params[:collection_did].present?
@@ -41,7 +41,7 @@ class CoreFileUpserter
     core_file.save! 
   end
 
-  def update_core_file_tei_file(core_file) 
+  def update_core_file_tei_file!(core_file) 
     tei = core_file.canonical_object(:return_as => :models)
 
     unless tei
@@ -65,7 +65,7 @@ class CoreFileUpserter
     tei.save!
   end
 
-  def update_support_files(core_file)
+  def update_support_files!(core_file)
     # First, remove all current support files
     core_file.content_objects(:return_as => :models).each do |content|
       unless content.canonical?

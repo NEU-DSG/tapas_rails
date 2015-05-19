@@ -178,7 +178,7 @@ describe CoreFileUpserter do
 
   # These are nicer tests if they work at the method level
   # Should probably go back and clean up everything above this.
-  describe "#update_support_files" do 
+  describe "#update_support_files!" do 
     let(:upserter) do 
       sf_hash = { :path => fixture_file("zipped_support_images.zip"),
                   :name => "zipped_support_images.zip" }
@@ -190,7 +190,7 @@ describe CoreFileUpserter do
     it "adds support files to a core record that has none" do 
       core = CoreFile.create(:did => "111", :depositor => "test")
 
-      upserter.update_support_files(core)
+      upserter.update_support_files!(core)
 
       expect(core.content_objects(:as => :solr_doc).length).to eq 3      
     end
@@ -206,7 +206,7 @@ describe CoreFileUpserter do
       imf_pid = imf.pid
       tei_pid = tei.pid
 
-      upserter.update_support_files(core)
+      upserter.update_support_files!(core)
       content_objects = core.content_objects(:return_as => :models)
       pids = content_objects.map { |x| x.pid } 
 
