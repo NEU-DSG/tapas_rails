@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CoreFileValidator do 
   include ValidatorHelpers
+  include FileHelpers
 
   describe "on POST #upsert" do 
     let(:params) do 
@@ -11,7 +12,7 @@ describe CoreFileValidator do
         :access => "public",
         :collection_did => "default",
         :file_type => "tei_content",
-        :mods => "mods",
+        :mods => File.read(fixture_file("mods.xml")),
         :depositor => "default",
         :action => "upsert" }
     end
@@ -45,6 +46,18 @@ describe CoreFileValidator do
     context "When creating a file it" do 
       it "raises an error if no access level is present" do 
         expect(validation_errors(params.except :access).length).to eq 1
+      end
+
+      it "raises an error if mods is invalid" do 
+        # Note that mods_invalid generates only one syntax error but other files
+        # could generate many more.
+        params[:mods] = File.read(fixture_file("mods_invalid.xml"))
+        expect(validation_errors(params).length).to eq 1 
+      end
+
+      it "raises an error if mods is not xml" do 
+        params[:mods] = "<Abba <>" 
+        expect(validation_errors(params).length).to eq 1
       end
 
       it "raises an error if no mods datastream is present" do 
