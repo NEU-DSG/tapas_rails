@@ -3,16 +3,17 @@ require 'spec_helper'
 describe CollectionUpserter do 
   def params
     { :did => "111",
+      :description => "This is a test collection",
       :depositor => "011", 
       :title => "A Test Collection",
       :access => "public",
-      :project => "333"
+      :project_did => "333"
     }
   end
 
   def build_parent_community
     @community = Community.new
-    @community.did = params[:project]
+    @community.did = params[:project_did]
     @community.save!
   end
 
@@ -20,9 +21,10 @@ describe CollectionUpserter do
 
   RSpec.shared_examples "a metadata assigning operation" do 
     its("mods.title") { should eq [params[:title]] }
+    its("mods.abstract") { should eq [params[:description]] }
     its(:depositor)   { should eq params[:depositor] } 
     its(:drupal_access) { should eq params[:access] } 
-    its(:og_reference) { should eq params[:project] } 
+    its(:og_reference) { should eq params[:project_did] } 
   end
 
   context "When creating a collection" do 

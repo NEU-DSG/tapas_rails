@@ -22,14 +22,16 @@ class CollectionUpserter
   private 
 
     def update_metadata(collection)
-      collection.mods.title = params[:title]
-      collection.depositor = params[:depositor]
-      collection.drupal_access = params[:access]
-      collection.og_reference = params[:project]
+      collection.mods.title = params[:title] if params[:title].present?
+      collection.mods.abstract = params[:description] if params[:description].present?
+      collection.depositor = params[:depositor] if params[:depositor].present?
+      collection.drupal_access = params[:access] if params[:access].present?
+      collection.og_reference = params[:project_did] if params[:project_did].present?
 
-      project = Community.find_by_did(params[:project])
+      project = Community.find_by_did(params[:project_did])
 
       collection.save! unless collection.persisted?
+      
       if project
         collection.community = project 
       else
