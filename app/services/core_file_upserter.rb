@@ -1,3 +1,5 @@
+require "zip"
+
 class CoreFileUpserter
   include Concerns::Upserter
 
@@ -6,14 +8,13 @@ class CoreFileUpserter
       if Did.exists_by_did?(params[:did])
         core_file = CoreFile.find_by_did(params[:did])
       else
-        puts "creating core file"
         core_file = CoreFile.new
         core_file.did = params[:did]
       end
       update_core_file_metadata(core_file)
       update_core_file_tei_file(core_file) if params[:file]
+      update_support_files(core_file) if params[:support_files].present?
     rescue => e 
-      puts "error ahhh"
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
@@ -21,49 +22,70 @@ class CoreFileUpserter
     end
   end
 
-  private 
 
-    def update_core_file_metadata(core_file)
-      core_file.mods.title = params[:title] 
-      core_file.depositor = params[:depositor] 
-      core_file.drupal_access = params[:access] 
-      core_file.og_reference = params[:collection] 
+  def update_core_file_metadata(core_file)
+    core_file.depositor = params[:depositor] if params[:depositor].present?
+    core_file.drupal_access = params[:access] if params[:access].present?
+    core_file.og_reference = params[:collection_did] if params[:collection_did].present?
 
-      collection = Collection.find_by_did(params[:project]) 
-
+    if params[:collection_did].present?
       core_file.save! unless core_file.persisted?
 
-      if collection
-        core_file.collection = collection
+      if Did.exists_by_did? params[:collection_did]
+        core_file.collection = Collection.find_by_did params[:collection_did]
       else
         core_file.collection = Collection.phantom_collection
       end
-      
-      core_file.save! 
+    end
+    
+    core_file.save! 
+  end
+
+  def update_core_file_tei_file(core_file) 
+    tei = core_file.canonical_object(:return_as => :models)
+
+    unless tei
+      tei = TEIFile.new
+      tei.canonize
+      tei.save! ; tei.core_file = core_file 
+    end 
+
+    tei.depositor = params[:depositor]
+
+    filename = params[:file][:name]
+    filecontent = File.read(params[:file][:path])
+    current_filename = tei.content.label 
+    current_filecontent = tei.content.content 
+    # If the filename and content are identical to the filename
+    # and content of the most recent version, don't store the file.
+    unless (current_filename == filename) && (current_filecontent == filecontent)
+      tei.add_file(filecontent, "content", filename)
     end
 
-    def update_core_file_tei_file(core_file) 
-      tei = core_file.canonical_object(:return_as => :models)
+    tei.save!
+  end
 
-      unless tei
-        tei = TEIFile.new
-        tei.canonize
-        tei.save! ; tei.core_file = core_file 
-      end 
-
-      tei.depositor = params[:depositor]
-
-      filename = params[:file][:name]
-      filecontent = File.read(params[:file][:path])
-      current_filename = tei.content.label 
-      current_filecontent = tei.content.content 
-      # If the filename and content are identical to the filename
-      # and content of the most recent version, don't store the file.
-      unless (current_filename == filename) && (current_filecontent == filecontent)
-        tei.add_file(filecontent, "content", filename)
+  def update_support_files(core_file)
+    # First, remove all current support files
+    core_file.content_objects(:return_as => :models).each do |content|
+      unless content.canonical?
+        content.destroy
       end
-
-      tei.save!
     end
+
+    # Then, unzip the provided support files and add each of them as a new 
+    # content object
+    Zip::File.open(params[:support_files][:path]) do |zip_file|
+      zip_file.each do |entry| 
+        if entry.file?  && entry.name.split("/").last.first != "."
+          imf = ImageMasterFile.new(:depositor => params[:depositor])
+          imf.save!
+          imf.core_file = core_file 
+          imf.content.content = entry.get_input_stream.read 
+          imf.save!
+        end
+      end
+    end
+  end
 end
 

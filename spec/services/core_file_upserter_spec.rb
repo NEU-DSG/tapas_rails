@@ -7,14 +7,14 @@ describe CoreFileUpserter do
     { :depositor => "test",
       :did => "test", 
       :access => "public", 
-      :collection => "023",
+      :collection_did => "023",
       :file => {:path => fixture_file("tei_copy.xml"), :name => "tei_copy.xml" }
     }
   end
 
   def assign_collection
     @collection = Collection.new
-    @collection.did = params[:collection]
+    @collection.did = params[:collection_did]
     @collection.depositor = params[:depositor]
     @collection.save!
   end
@@ -25,7 +25,7 @@ describe CoreFileUpserter do
 
   RSpec.shared_examples "a metadata assigning operation" do 
     its(:depositor) { should eq params[:depositor] } 
-    its(:og_reference) { should eq params[:collection] } 
+    its(:og_reference) { should eq params[:collection_did] } 
     its(:drupal_access) { should eq params[:access] } 
   end
 
@@ -173,6 +173,45 @@ describe CoreFileUpserter do
       it "performs no revision" do 
         expect(@tei.content.versions.length).to eq 1 
       end
+    end
+  end
+
+  # These are nicer tests if they work at the method level
+  # Should probably go back and clean up everything above this.
+  describe "#update_support_files" do 
+    let(:upserter) do 
+      sf_hash = { :path => fixture_file("zipped_support_images.zip"),
+                  :name => "zipped_support_images.zip" }
+      CoreFileUpserter.new(params.merge(:support_files => sf_hash))
+    end
+
+    after(:each) { ActiveFedora::Base.delete_all } 
+
+    it "adds support files to a core record that has none" do 
+      core = CoreFile.create(:did => "111", :depositor => "test")
+
+      upserter.update_support_files(core)
+
+      expect(core.content_objects(:as => :solr_doc).length).to eq 3      
+    end
+
+    it "removes preexisting support file objects on update but does not remove the canonical item" do 
+      core = CoreFile.create(:did => "111", :depositor => "test")
+      imf = ImageMasterFile.create(:depositor => "test") 
+      imf.save! ; imf.core_file = core ; imf.save! 
+      tei = TEIFile.create(:depositor => "test")
+      tei.canonize
+      tei.save! ; tei.core_file = core ; tei.save!
+
+      imf_pid = imf.pid
+      tei_pid = tei.pid
+
+      upserter.update_support_files(core)
+      content_objects = core.content_objects(:return_as => :models)
+      pids = content_objects.map { |x| x.pid } 
+
+      expect(pids).to include tei_pid
+      expect(pids).not_to include imf_pid
     end
   end
 end
