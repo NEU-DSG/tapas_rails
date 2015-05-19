@@ -10,7 +10,7 @@ module ApiAccessible
     # reworked once tapas_rails is the actual frontend for tapas.
     before_action :authenticate_api_request
 
-    before_action :validate_request_params
+    before_action :validate_request_params, only: [:upsert]
   end
 
   private

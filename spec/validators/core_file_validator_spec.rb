@@ -6,9 +6,12 @@ describe CoreFileValidator do
   describe "on POST #upsert" do 
     let(:params) do 
       { :file => "default",
+        :support_files => "zip.zip",
         :did => "default",
         :access => "public",
-        :collection => "default",
+        :collection_did => "default",
+        :file_type => "tei_content",
+        :mods => "mods",
         :depositor => "default",
         :action => "upsert" }
     end
@@ -39,20 +42,47 @@ describe CoreFileValidator do
       end
     end
 
-    it "raises an error if no access level is present" do 
-      expect(validation_errors(params.except :access).length).to eq 1
+    context "When creating a file it" do 
+      it "raises an error if no access level is present" do 
+        expect(validation_errors(params.except :access).length).to eq 1
+      end
+
+      it "raises an error if no mods datastream is present" do 
+        expect(validation_errors(params.except :mods).length).to eq 1 
+      end
+
+      it "raises an error if no drupal id is present" do 
+        expect(validation_errors(params.except :did).length).to eq 1
+      end
+
+      it "raises an error if no depositor is present" do 
+        expect(validation_errors(params.except :depositor).length).to eq 1
+      end
+
+      it "raises an error if no file_type is set" do 
+        expect(validation_errors(params.except :file_type).length).to eq 1 
+      end
+
+      it "raises an error if no collection id is present" do 
+        expect(validation_errors(params.except :collection_did).length).to eq 1
+      end
+
+      it "raises an error with no file param" do 
+        expect(validation_errors(params.except :file).length).to eq 1 
+      end
     end
 
-    it "raises an error if no node_id is present" do 
-      expect(validation_errors(params.except :did).length).to eq 1
-    end
+    context "When updating a file it" do 
+      before(:all) do 
+        @core = CoreFile.create(:did => "default", :depositor => "depositor")
+      end
 
-    it "raises an error if no depositor is present" do 
-      expect(validation_errors(params.except :depositor).length).to eq 1
-    end
+      after(:all) { @core.destroy }
 
-    it "raises an error if no collection id is present" do 
-      expect(validation_errors(params.except :collection).length).to eq 1
+      it "requires only a did" do 
+        p = { :did => "default", :action => "upsert" }
+        expect(validation_errors(p).length).to eq 0
+      end
     end
   end
 end

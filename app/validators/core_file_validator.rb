@@ -1,10 +1,5 @@
 class CoreFileValidator < TapasObjectValidator
-  def required_attributes
-    case params[:action]
-    when "upsert" 
-      [:depositor, :did, :collection, :access]
-    when "parse_tei"
-      [:file]
-    end 
+  def create_attributes
+    [:did, :file, :collection_did, :mods, :depositor, :access, :file_type]
   end
 end

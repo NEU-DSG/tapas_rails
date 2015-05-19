@@ -1,8 +1,5 @@
 class CommunityValidator < TapasObjectValidator
-  def required_attributes
-    case params[:action]
-    when "upsert" 
-      [:did, :title, :members, :depositor, :access]
-    end
+  def create_attributes
+    [:did, :members, :depositor, :access, :title, :description]
   end
 end

@@ -1,9 +1,5 @@
 class CollectionValidator < TapasObjectValidator
-
-  def required_attributes
-    case params["action"]
-    when "upsert"
-      [:did, :project, :title, :depositor, :access]
-    end
+  def create_attributes
+    [:did, :project_did, :title, :description, :depositor, :access]
   end
 end

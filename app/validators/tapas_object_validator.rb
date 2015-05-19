@@ -15,63 +15,40 @@ class TapasObjectValidator
 
   def validate_params
     return errors if no_params?
+    validate_class_correctness
     validate_required_attributes
-    validate_upsert
     return errors 
   end
 
   def no_params?
-    unless self.params.present?
-      errors << "Object had no parameters or did not exist" 
+    unless self.params.present? && self.params[:did].present?
+      errors << "Request did not specify a did" 
       return true
     end
   end
 
   # Make sure the object either doesn't exist or is a member of the 
   # requested class.
-  def validate_upsert
-    if params[:action] == 'upsert' 
-      return true unless Did.exists_by_did? params[:did]
+  def validate_class_correctness
+    return true unless Did.exists_by_did? params[:did]
 
-      klass = self.class.to_s[0..-10]
-      object = ActiveFedora::Base.where("did_ssim" => params[:did]).first
+    klass = self.class.to_s[0..-10]
+    object = ActiveFedora::Base.where("did_ssim" => params[:did]).first
 
-      if object && !object.instance_of?(klass.constantize)
-        errors << "Tried to perform upsert with did #{params[:did]} on object of " + 
-                  "type #{klass} - did already in use by #{object.class} " + 
-                  "with id #{object.pid}."
-      end
+    if object && !object.instance_of?(klass.constantize)
+      errors << "Tried to perform upsert with did #{params[:did]} on object of " + 
+                "type #{klass} - did already in use by #{object.class} " + 
+                "with id #{object.pid}."
     end
   end
 
-  # Make sure the requested object exists if this isn't a create request
-  def validate_existence
-    case params[:action]
-    when "create"
-      true
-    else
-      klass = self.class.to_s[0..-10]
-      object = klass.constantize.find_by_did(params[:did])
-      unless object
-        errors << "Tried to operate on #{klass} with did #{params[:did]} - no such object."
-      end
-    end
-  end
-
-  def validate_uniqueness
-    case params[:action]
-    when "create"
-      if ActiveFedora::SolrService.query("tapas_did_ssim:\"#{params[:did]}\"").any?
-        errors << "Object with did of #{params[:did]} already exists - aborting."
-      end
-    else
-      return true 
-    end
-  end
-
-  # Requires that a method 'required_attributes' be defined on the containing
-  # class that returns an array of necessary attribute names.
   def validate_required_attributes
+    unless Did.exists_by_did? params[:did]
+      required_attributes = create_attributes
+    else
+      required_attributes = [:did]
+    end
+
     required_attributes.each do |attribute|
       unless params[attribute]
         errors << "Object was missing required attribute #{attribute}"
