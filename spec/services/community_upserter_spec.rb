@@ -4,6 +4,7 @@ describe CommunityUpserter do
   def params 
     { :did => "123",
       :depositor => "011",
+      :description => "This community is a test",
       :title => "A sample community",
       :access => "public", 
       :members => ["011", "023", "034"]  }
@@ -13,8 +14,9 @@ describe CommunityUpserter do
 
   RSpec.shared_examples "a metadata assigning operation" do 
     its("mods.title")     { should eq [params[:title]] } 
-    its(:depositor)       {should eq params[:depositor] } 
+    its(:depositor)       { should eq params[:depositor] } 
     its(:drupal_access)   { should eq params[:access] } 
+    its("mods.abstract")  { should eq [params[:description]] }
     its(:project_members) { should match_array params[:members] } 
   end
 
@@ -47,7 +49,7 @@ describe CommunityUpserter do
     after(:all) { ActiveFedora::Base.delete_all } 
 
     it "doesn't build a new community" do 
-      expect(Community.all.length).to eq 2 
+      expect(Community.count).to eq 2 
     end
 
     it_should_behave_like "a metadata assigning operation" 
