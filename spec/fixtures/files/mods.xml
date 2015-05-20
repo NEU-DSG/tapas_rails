@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<modsCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
-<mods version="3.3">
+<mods:modsCollection xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-3.xsd">
+<mods:mods version="3.3">
 
-  <titleInfo>
-    <title>FranUlmer.com -- Home Page</title>
-  </titleInfo>
-  <titleInfo type="alternative">
-    <title>Fran Ulmer, Democratic candidate for Governor, Alaska, 2002</title>
-  </titleInfo>
-  <name type="personal">
-    <namePart>Ulmer, Fran</namePart>
-  </name>
-  <genre>Website</genre>
-  <originInfo>
-    <dateCaptured point="start" encoding="iso8601">20020702 </dateCaptured>
-    <dateCaptured point="end" encoding="iso8601"> 20021203</dateCaptured>
-  </originInfo>
-  <language>
-    <languageTerm authority="iso639-2b">eng</languageTerm>
-  </language>
-  <physicalDescription>
-    <internetMediaType>text/html</internetMediaType>
-    <internetMediaType>image/jpg</internetMediaType>
-  </physicalDescription>
-  <abstract>Website promoting the candidacy of Fran Ulmer, Democratic candidate for Governor, Alaska, 2002. Includes candidate biography, issue position statements, campaign contact information, privacy policy and campaign news press releases. Site features enable visitors to sign up for campaign email list, volunteer, make campaign contributions and follow links to other internet locations. </abstract>
-  <subject>
-    <topic>Elections</topic>
-    <geographic>Alaska</geographic>
-  </subject>
-  <subject>
-    <topic>Governors</topic>
-    <geographic>Alaska</geographic>
-    <topic>Election</topic>
-  </subject>
-  <subject>
-    <topic>Democratic Party (AK)</topic>
-  </subject>
-  <relatedItem type="host">
-    <titleInfo>
-      <title>Election 2002 Web Archive</title>
-    </titleInfo>
-    <location>
-      <url>http://www.loc.gov/minerva/collect/elec2002/</url>
-    </location>
-  </relatedItem>
-  <location>
-    <url displayLabel="Active site (if available)">http://www.franulmer.com/</url>
-  </location>
-  <location>
-    <url displayLabel="Archived site">http://wayback-cgi1.alexa.com/e2002/*/http://www.franulmer.com/</url>
-  </location>
-</mods>
+  <mods:titleInfo>
+    <mods:title>FranUlmer.com -- Home Page</mods:title>
+  </mods:titleInfo>
+  <mods:titleInfo type="alternative">
+    <mods:title>Fran Ulmer, Democratic candidate for Governor, Alaska, 2002</mods:title>
+  </mods:titleInfo>
+  <mods:name type="personal">
+    <mods:namePart>Ulmer, Fran</mods:namePart>
+  </mods:name>
+  <mods:genre>Website</mods:genre>
+  <mods:originInfo>
+    <mods:dateCaptured point="start" encoding="iso8601">20020702 </mods:dateCaptured>
+    <mods:dateCaptured point="end" encoding="iso8601"> 20021203</mods:dateCaptured>
+  </mods:originInfo>
+  <mods:language>
+    <mods:languageTerm authority="iso639-2b">eng</mods:languageTerm>
+  </mods:language>
+  <mods:physicalDescription>
+    <mods:internetMediaType>text/html</mods:internetMediaType>
+    <mods:internetMediaType>image/jpg</mods:internetMediaType>
+  </mods:physicalDescription>
+  <mods:abstract>Website promoting the candidacy of Fran Ulmer, Democratic candidate for Governor, Alaska, 2002. Includes candidate biography, issue position statements, campaign contact information, privacy policy and campaign news press releases. Site features enable visitors to sign up for campaign email list, volunteer, make campaign contributions and follow links to other internet locations. </mods:abstract>
+  <mods:subject>
+    <mods:topic>Elections</mods:topic>
+    <mods:geographic>Alaska</mods:geographic>
+  </mods:subject>
+  <mods:subject>
+    <mods:topic>Governors</mods:topic>
+    <mods:geographic>Alaska</mods:geographic>
+    <mods:topic>Election</mods:topic>
+  </mods:subject>
+  <mods:subject>
+    <mods:topic>Democratic Party (AK)</mods:topic>
+  </mods:subject>
+  <mods:relatedItem type="host">
+    <mods:titleInfo>
+      <mods:title>Election 2002 Web Archive</mods:title>
+    </mods:titleInfo>
+    <mods:location>
+      <mods:url>http://www.loc.gov/minerva/collect/elec2002/</mods:url>
+    </mods:location>
+  </mods:relatedItem>
+  <mods:location>
+    <mods:url displayLabel="Active site (if available)">http://www.franulmer.com/</mods:url>
+  </mods:location>
+  <mods:location>
+    <mods:url displayLabel="Archived site">http://wayback-cgi1.alexa.com/e2002/*/http://www.franulmer.com/</mods:url>
+  </mods:location>
+</mods:mods>
 
-</modsCollection>
+</mods:modsCollection>
