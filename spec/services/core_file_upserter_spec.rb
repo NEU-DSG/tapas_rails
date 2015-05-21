@@ -8,7 +8,8 @@ describe CoreFileUpserter do
       :did => "test", 
       :access => "public", 
       :collection_did => "023",
-      :file => {:path => fixture_file("tei_copy.xml"), :name => "tei_copy.xml" }
+      :file => {:path => fixture_file("tei_copy.xml"), :name => "tei_copy.xml" },
+      :mods => File.read(fixture_file("mods.xml"))
     }
   end
 
@@ -27,6 +28,13 @@ describe CoreFileUpserter do
     its(:depositor) { should eq params[:depositor] } 
     its(:og_reference) { should eq params[:collection_did] } 
     its(:drupal_access) { should eq params[:access] } 
+    its("mods.title.first") { should eq "FranUlmer.com -- Home Page" }
+
+    it "has mods data" do 
+      puts core_file.mods.did
+    end
+
+    its(:did) { should eq params[:did] }
   end
 
   RSpec.shared_examples "a support file updating operation" do 

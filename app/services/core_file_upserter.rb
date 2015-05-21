@@ -24,9 +24,15 @@ class CoreFileUpserter
 
 
   def update_core_file_metadata!(core_file)
+    did = core_file.did
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
     core_file.og_reference = params[:collection_did] if params[:collection_did].present?
+
+    # Make sure to rewrite the did/pid after updating MODS.
+    core_file.mods.content = params[:mods] if params[:mods].present?
+    core_file.did = did 
+    core_file.mods.identifier = core_file.pid
 
     if params[:collection_did].present?
       core_file.save! unless core_file.persisted?
