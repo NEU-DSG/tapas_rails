@@ -2,6 +2,10 @@
 # The default namespace maps to the default namespace for generating rels_ext from solr
 :default_namespace: info:fedora/fedora-system:def/relations-external#
 
+# Namespace out drs relationships
+:predicate_namespaces:
+  drs: http://repository.neu.edu/ns/relations#
+
 # namespace mappings--- 
 # you can add specific mappings for your institution by providing the following:
 #   namespace_uri:
@@ -52,3 +56,12 @@
     :is_governed_by: isGovernedBy
   http://repository.neu.edu/ns/relations#:
     :has_affiliation: hasAffiliation
+    :is_image_for: isImageFor
+    :is_page_image_for: isPageImageFor
+    :has_sequence_for: hasSequenceFor
+    :is_xography_for: isXographyFor
+    :is_personography_for: isPersonographyFor
+    :is_orgography_for: isOrgographyFor
+    :is_bibliography_for: isBibliographyFor
+    :is_otherography_for: isOtherographyFor
+    :is_odd_file_for: isOddFileFor
