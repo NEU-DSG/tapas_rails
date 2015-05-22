@@ -34,13 +34,6 @@ describe CoreFileUpserter do
     its(:xography_for) { should eq [] }
   end
 
-  RSpec.shared_examples "a support file updating operation" do 
-    before(:all) do 
-      core = CoreFile.find_by_did(params[:did])
-      @tei = core.canonical_object(:return_as => :models) 
-    end
-  end
-
   RSpec.shared_examples "a tei file updating operation" do 
     before(:all) do 
       core = CoreFile.find_by_did(params[:did])
