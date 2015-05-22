@@ -5,6 +5,7 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
   extend_terminology do |t| 
     t.og_reference
     t.project_members
+    t.drupal_access
   end
 
   def to_solr(hsh = {})

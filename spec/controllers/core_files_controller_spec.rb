@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe CoreFilesController do
+  include FileHelpers
+
   let (:user) { FactoryGirl.create(:user) }
   let(:params) { { email: user.email, token: "test_api_key" } } 
 
@@ -10,48 +12,31 @@ describe CoreFilesController do
     return @file 
   end
 
-  describe "POST #parse_tei" do 
-    let(:body)   { JSON.parse response.body } 
-
-    it "raises a fatal error and 422s with invalid XML" do 
-      post :parse_tei, params.merge({ file: test_file("image.jpg") })
-      expect(response.status).to eq 422 
-    end
-
-    it "raises a fatal error and 422s with XML that isn't TEI" do 
-      post :parse_tei, params.merge({file: test_file("xml.xml") })
-      expect(response.status).to eq 422
-    end
-    
-    it "responds with a 200 for files that are valid TEI" do 
-      post :parse_tei, params.merge({file: test_file("tei.xml")})
-      expect(response.status).to eq 200 
-    end
-  end
-
-  describe "POST #create" do
+  describe "POST #upsert" do
     before(:each) do 
       @src = "#{Rails.root}/spec/fixtures/files/tei.xml"
     end
 
     let(:post_defaults) do 
-      { :collection => "12345",
-        :nid        => "111",
-        :depositor  => "wjackson",
-        :file       => test_file(@src) }
+      { :collection_did => "12345",
+        :did            => "111",
+        :access         => "private",
+        :depositor      => "wjackson",
+        :file           => test_file(@src), 
+        :file_type      => "tei_content", 
+        :mods           => File.read(fixture_file("mods.xml")) }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
 
-    # Note that we force Resque to run inline for the duration of this spec.
     it "returns a 202 and creates the desired file on a valid request." do 
       Resque.inline = true
       file_path = post_defaults[:file].path
-      post :create, params.merge(post_defaults)
+      post :upsert, params.merge(post_defaults)
 
       expect(response.status).to eq 202
 
-      core = CoreFile.find(CoreFile.find_by_nid("111").id)
+      core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:return_as => :models)
 
       expect(tei.class).to eq TEIFile

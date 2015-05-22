@@ -6,17 +6,17 @@ shared_examples_for "an API enabled controller" do
   describe "authentication" do 
 
     it "raises a 403 for requests with no attached user" do 
-      post :create, { token: "blah" } 
+      post :upsert, { token: "blah" } 
       expect(response.status).to eq 403
     end
 
     it "raises a 403 for requests with no attached token" do 
-      post :create, { email: "blah" }
+      post :upsert, { email: "blah" }
       expect(response.status).to eq 403
     end
 
     it "raises a 403 for requests with an invalid token" do 
-      post :create, { email: user.email, token: "blurgl" }
+      post :upsert, { email: user.email, token: "blurgl" }
       expect(response.status).to eq 403
     end
 

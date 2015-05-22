@@ -1,0 +1,44 @@
+
+<mods:mods xmlns:tei="http://www.tei-c.org/ns/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mods="http://www.loc.gov/mods/v3" xsi:schemaLocation="http://www.loc.gov/mods/v3 http://www.loc.gov/standards/mods/v3/mods-3-4.xsd">
+  <mods:titleInfo>
+    <mods:title>Test X, private</mods:title>
+  </mods:titleInfo>
+  <mods:typeOfResource>text</mods:typeOfResource>
+  <mods:genre authority="aat">texts (document genres)</mods:genre>
+  <mods:note>Collection Ia, public</mods:note>
+  <mods:extension displayLabel="TEI">
+    <TEI xmlns="http://www.tei-c.org/ns/1.0">
+      <teiHeader>
+        <fileDesc>
+          <titleStmt>
+            <title>Test X, private</title>
+          </titleStmt>
+          <publicationStmt>
+            <p>Collection Ia, public</p>
+            <p>Project A, public</p>
+          </publicationStmt>
+          <sourceDesc>
+            <p>AMC</p>
+          </sourceDesc>
+        </fileDesc>
+      </teiHeader>
+      <text>
+        <body>
+          <p>Right now, we're operating under the assumption that TAPAS users do not work directly with eXist. Importing user IDs into eXist would not be helpful, because users will never be able to log into eXist. Instead, eXist should have a user 'TAPAS', which will run XQueries at the behest of TAPAS and return XML-structured results for display in the website. eXist will work hand-in-hand with Fedora and Hydra, not the casual TAPAS user.</p>
+          <p>The important thing here is that eXist understand: what groups have access to a project/collection/document, and which documents should be used for any given XQuery. Let's assume here that Fedora/Hydra will be able to tell eXist what the group-level permissions to apply. <eg>(Ex. Identify ____ in all of publicly-available TAPAS, project A, and project B.)</eg>
+          </p>
+          <p>One way of doing this would be to include an XML file, stating which group has permissions for each resource. This could be stored at the project-level. However, XQueries would have to ensure that these XML snippets are only used for authentication purposes, not being queried themselves.</p>
+          <p>Another way would be to use eXist's security permissions module to assign each resource to a group. Say, resources in group "all" are available to all TAPAS users, and those in group "projectA" are only available to users with that authentication. This is not a great solution because it implies that there are different users able to query different parts of the eXist database. As previously discussed, we want to use one eXist user which has access to all documents, but is able to distinguish between them for the benefit of TAPAS.</p>
+          <p>It seems to be possible to create groups and then find associated groups with sm:get-permissions(). This checking could be sped up by configuring an index to include this information...? Actually, that's incorrect - indexes are set up with the expectation that you're looking for specific elements within an XML document, not permissions that the database would normally handle.</p>
+        </body>
+      </text>
+    </TEI>
+  </mods:extension>
+  <mods:recordInfo>
+    <mods:recordContentSource>TEI Archive, Publishing, and Access Service (TAPAS)</mods:recordContentSource>
+    <mods:recordOrigin>MODS record generated from TEI source file teiHeader data.</mods:recordOrigin>
+    <mods:languageOfCataloging>
+      <mods:languageTerm type="text" authority="iso639-2b">English</mods:languageTerm>
+    </mods:languageOfCataloging>
+  </mods:recordInfo>
+</mods:mods>

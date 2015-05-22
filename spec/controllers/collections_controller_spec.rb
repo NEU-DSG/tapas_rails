@@ -6,23 +6,33 @@ describe CollectionsController do
 
   it_should_behave_like "an API enabled controller"
 
-  describe "POST #create" do 
-    after(:all) { ActiveFedora::Base.delete_all }
+  describe "POST #upsert" do 
+    after(:all) { ActiveFedora::Base.delete_all } 
+
+    it "403s for unauthorized requests" do 
+      post :upsert, params.except(:token)
+      expect(response.status).to eq 403
+    end
 
     it "422s for invalid requests" do 
-      post :create, params
-      expect(response.status).to eq 422
+      post :upsert, params 
+      expect(response.status).to eq 422 
     end
 
     it "returns a 202 and creates the requested collection on a valid request" do 
       Resque.inline = true 
-      post_params = { title: "Collection", nid: "8018", project: "invalid", depositor: "101" }
+      post_params = { title: "Collection", 
+        access: "private",  
+        did: "8018", 
+        project_did: "invalid", 
+        description: "This is a test collection",
+        depositor: "101" }
       post_params = post_params.merge params
-      post :create, post_params
+      post :upsert, post_params
 
       expect(response.status).to eq 202
-      expect(Collection.find_by_nid("8018")).not_to be nil 
-      Resque.inline = false
+      expect(Collection.find_by_did("8018")).not_to be nil 
+      Resque.inline = false 
     end
   end
 end

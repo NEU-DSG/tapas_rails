@@ -3,13 +3,13 @@ class ModsDatastream < CerberusCore::Datastreams::ModsDatastream
 
   extend_terminology do |t| 
     t.identifier(path: "identifier", namespace_prefix: "mods", attributes: { type: :none })
-    t.nid(path: "identifier", namespace_prefix: "mods", attributes: { type: "tapas_id" })
+    t.did(path: "identifier", namespace_prefix: "mods", attributes: { type: "did" })
   end
 
   def to_solr(solr_doc = {})
     solr_doc = super solr_doc 
 
-    solr_doc["tapas_nid_ssim"] = self.nid.first if self.nid.first.present?
+    solr_doc["did_ssim"] = self.did.first if self.did.first.present?
 
     return solr_doc
   end

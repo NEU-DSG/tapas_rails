@@ -6,6 +6,9 @@ gem 'rails', '4.0.8'
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
 
+# Use rubyzip to handle Zipped content files from Drupal
+gem 'rubyzip'
+
 # Use mysql2 for the staging environment 
 gem 'mysql2'
 

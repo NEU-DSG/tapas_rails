@@ -18,7 +18,7 @@ describe FileRevisionJob do
       Resque.inline = true
       @filepath = copy_fixture("tei_full_metadata.xml", "tfm_copy.xml")
       @filename = "tfm_copy.xml"
-      job = FileRevisionJob.new(@core.nid, @filepath, @filename) 
+      job = FileRevisionJob.new(@core.did, @filepath, @filename) 
       job.run
       Resque.inline = false
 
@@ -74,7 +74,7 @@ describe FileRevisionJob do
     it "raises an exception, doesn't persist changes to the tei_file" do 
       TEIFile.any_instance.stub(:save!).and_raise(RuntimeError)
 
-      job = FileRevisionJob.new(@core.nid, @fcopy, "tei_copy.xml")
+      job = FileRevisionJob.new(@core.did, @fcopy, "tei_copy.xml")
 
       expect(File.exists? @fcopy).to be true
       Resque.inline = true 
