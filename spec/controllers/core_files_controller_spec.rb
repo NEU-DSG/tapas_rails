@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe CoreFilesController do
+  include FileHelpers
+
   let (:user) { FactoryGirl.create(:user) }
   let(:params) { { email: user.email, token: "test_api_key" } } 
 
@@ -16,11 +18,13 @@ describe CoreFilesController do
     end
 
     let(:post_defaults) do 
-      { :collection => "12345",
-        :did        => "111",
-        :access     => "private",
-        :depositor  => "wjackson",
-        :file       => test_file(@src) }
+      { :collection_did => "12345",
+        :did            => "111",
+        :access         => "private",
+        :depositor      => "wjackson",
+        :file           => test_file(@src), 
+        :file_type      => "tei_content", 
+        :mods           => File.read(fixture_file("mods.xml")) }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
