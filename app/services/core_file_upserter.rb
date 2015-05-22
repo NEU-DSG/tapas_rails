@@ -34,6 +34,9 @@ class CoreFileUpserter
     core_file.did = did 
     core_file.mods.identifier = core_file.pid
 
+    # Rewrite the ography relationship that this core file has
+    # Currently, every core file can only be one kind of ography
+
     if params[:collection_did].present?
       core_file.save! unless core_file.persisted?
 
@@ -44,6 +47,23 @@ class CoreFileUpserter
       end
     end
     
+    if params[:file_type].present?
+      case params[:file_type]
+      when "ography"
+        clear_and_update_ography!(core_file, :xography_for=) 
+      when "personography"
+        clear_and_update_ography!(core_file, :personography_for=)
+      when "orgography"
+        clear_and_update_ography!(core_file, :orgography_for=)
+      when "bibliography"
+        clear_and_update_ography!(core_file, :bibliography_for=)
+      when "odd_file"
+        clear_and_update_ography!(core_file, :odd_file_for=)
+      when "tei_content"
+        clear_and_update_ography!(core_file)
+      end
+    end
+
     core_file.save! 
   end
 
@@ -93,5 +113,20 @@ class CoreFileUpserter
       end
     end
   end
+
+  private 
+
+    def clear_and_update_ography!(core_file, ography_assignment = nil)
+      core_file.xography_for = []
+      core_file.personography_for = []
+      core_file.orgography_for = []
+      core_file.bibliography_for = []
+      core_file.otherography_for = []
+      core_file.odd_file_for = []
+
+      if ography_assignment
+        core_file.send(:ography_assignment, core_file.collection)
+      end
+    end
 end
 
