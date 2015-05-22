@@ -5,6 +5,9 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   parent_collection_relationship :collection 
 
+  has_many :page_images, :property => :is_page_image_for, 
+    :class_name => "ImageMasterFile"
+
   # Add definitions for all ographies
   has_and_belongs_to_many :xography_for, :property => :is_xography_for, 
     :class_name => "Collection"

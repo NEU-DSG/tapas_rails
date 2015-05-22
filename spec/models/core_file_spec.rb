@@ -35,4 +35,26 @@ describe CoreFile do
       end
     end
   end
+
+  describe "Page Image relationships" do 
+    it { respond_to :page_images }
+    it { respond_to :page_images= }
+
+    it "can be set on the Core File object but are written to the IMF" do 
+      begin
+        core_file = CoreFile.create(:did => "123", :depositor => "Will")
+        imf = ImageMasterFile.create(:depositor => "Will")
+
+        expect(core_file.page_images).to eq []
+
+        core_file.page_images << imf 
+        core_file.save!
+
+        expect(imf.page_image_for.first.pid).to eq core_file.pid
+      ensure
+        core_file.delete if core_file.persisted?
+        imf.delete if imf.persisted?
+      end
+    end
+  end
 end
