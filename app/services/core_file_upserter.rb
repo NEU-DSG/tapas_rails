@@ -125,7 +125,7 @@ class CoreFileUpserter
       core_file.odd_file_for = []
 
       if ography_assignment
-        core_file.send(:ography_assignment, core_file.collection)
+        core_file.send(ography_assignment, [core_file.collection])
       end
     end
 end
