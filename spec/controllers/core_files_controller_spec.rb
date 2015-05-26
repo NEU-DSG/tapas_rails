@@ -12,6 +12,28 @@ describe CoreFilesController do
     return @file 
   end
 
+  describe "DELETE destroy" do 
+    after(:each) { ActiveFedora::Base.delete_all }
+
+    it "422s for nonexistant dids" do 
+      delete :destroy, params.merge(:did => "not a real did") 
+      expect(response.status).to eq 422
+    end
+
+    it "422s for dids that don't belong to a CoreFile" do 
+      community = Community.create(:did => "115", :depositor => "test")
+      delete :destroy, params.merge(:did => community.did)
+      expect(response.status).to eq 422
+    end
+
+    it "200s for dids that belong to a CoreFile and removes the resource" do 
+      core = CoreFile.create(:did => "78382", :depositor => "test")
+      delete :destroy, params.merge(:did => core.did)
+      expect(response.status).to eq 200
+      expect(CoreFile.find_by_did core.did).to be nil 
+    end
+  end
+
   describe "POST #upsert" do
     before(:each) do 
       @src = "#{Rails.root}/spec/fixtures/files/tei.xml"
