@@ -34,9 +34,6 @@ class CoreFileUpserter
     core_file.did = did 
     core_file.mods.identifier = core_file.pid
 
-    # Rewrite the ography relationship that this core file has
-    # Currently, every core file can only be one kind of ography
-
     if params[:collection_did].present?
       core_file.save! unless core_file.persisted?
 
@@ -46,7 +43,9 @@ class CoreFileUpserter
         core_file.collection = Collection.phantom_collection
       end
     end
-    
+
+    # Rewrite the ography relationship that this core file has
+    # Currently, every core file can only be one kind of ography
     if params[:file_type].present?
       case params[:file_type]
       when "ography"
