@@ -20,13 +20,11 @@ describe Collection do
   end
 
   describe "Ography relationships" do 
-    it { respond_to :xographies }
     it { respond_to :personographies } 
     it { respond_to :orgographies } 
     it { respond_to :bibliographies }
     it { respond_to :otherographies } 
     it { respond_to :odd_files }
-    it { respond_to :xographies= }
     it { respond_to :personographies= }
     it { respond_to :orgographies= }
     it { respond_to :bibliographies= }

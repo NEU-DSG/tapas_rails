@@ -2,8 +2,6 @@ require "spec_helper"
 
 describe CoreFile do 
   describe "Ography relationships" do 
-    it { respond_to :xography_for= }
-    it { respond_to :xography_for }
     it { respond_to :personography_for }
     it { respond_to :personography_for= }
     it { respond_to :orgography_for }
@@ -20,14 +18,14 @@ describe CoreFile do
         collection = Collection.create(:depositor => "Will", :did => "1176")
         other_collection = Collection.create(:depositor => "Will", :did => "1177")
 
-        core.xography_for << collection
-        core.xography_for << other_collection 
+        core.otherography_for << collection
+        core.otherography_for << other_collection 
 
-        expect(core.xography_for).to match_array [collection, other_collection]
+        expect(core.otherography_for).to match_array [collection, other_collection]
 
-        core.xography_for = [collection]
+        core.otherography_for = [collection]
 
-        expect(core.xography_for).to match_array [collection]
+        expect(core.otherography_for).to match_array [collection]
       ensure
         core.delete if core.persisted?
         collection.delete if collection.persisted?
