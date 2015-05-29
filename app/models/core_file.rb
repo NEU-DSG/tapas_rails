@@ -8,9 +8,6 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   has_many :page_images, :property => :is_page_image_for, 
     :class_name => "ImageMasterFile"
 
-  # Add definitions for all ographies
-  has_and_belongs_to_many :xography_for, :property => :is_xography_for, 
-    :class_name => "Collection"
   has_and_belongs_to_many :personography_for, :property => :is_personography_for,
     :class_name => "Collection"
   has_and_belongs_to_many :orgography_for, :property => :is_orgography_for,

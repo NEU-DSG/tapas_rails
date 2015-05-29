@@ -16,6 +16,7 @@ describe CommunityUpserter do
     its("mods.title")     { should eq [params[:title]] } 
     its(:depositor)       { should eq params[:depositor] } 
     its(:drupal_access)   { should eq params[:access] } 
+    its(:mass_permissions) { should eq "private" }
     its("mods.abstract")  { should eq [params[:description]] }
     its(:project_members) { should match_array params[:members] } 
   end

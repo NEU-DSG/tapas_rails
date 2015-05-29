@@ -29,9 +29,10 @@ describe CoreFileUpserter do
     its(:depositor) { should eq params[:depositor] } 
     its(:og_reference) { should eq params[:collection_did] } 
     its(:drupal_access) { should eq params[:access] } 
+    its(:mass_permissions) { should eq "private" }
     its("mods.title.first") { should eq "Test X, private" }
     its(:did) { should eq params[:did] }
-    its(:xography_for) { should eq [] }
+    its(:otherography_for) { should eq [] }
   end
 
   RSpec.shared_examples "a tei file updating operation" do 

@@ -6,8 +6,6 @@ class Collection < CerberusCore::BaseModels::Collection
   has_core_file_types  ["CoreFile"]
   has_collection_types ["Collection"]
 
-  has_many :xographies, :property => :is_xography_for, 
-    :class_name => "CoreFile"
   has_many :personographies, :property => :is_personography_for, 
     :class_name => "CoreFile"
   has_many :orgographies, :property => :is_orgography_for, 

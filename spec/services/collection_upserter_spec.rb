@@ -24,6 +24,7 @@ describe CollectionUpserter do
     its("mods.abstract") { should eq [params[:description]] }
     its(:depositor)   { should eq params[:depositor] } 
     its(:drupal_access) { should eq params[:access] } 
+    its(:mass_permissions) { should eq "private" }
     its(:og_reference) { should eq params[:project_did] } 
   end
 
