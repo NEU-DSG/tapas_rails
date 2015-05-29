@@ -37,7 +37,7 @@ describe CoreFilesController do
       expect(response.status).to eq 202
 
       core = CoreFile.find(CoreFile.find_by_did("111").id)
-      tei  = core.canonical_object(:return_as => :models)
+      tei  = core.canonical_object(:model)
 
       expect(tei.class).to eq TEIFile
       expect(tei.content.content).to eq File.read(@src)

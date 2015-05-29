@@ -38,7 +38,7 @@ describe CoreFileUpserter do
   RSpec.shared_examples "a tei file updating operation" do 
     before(:all) do 
       core = CoreFile.find_by_did(params[:did])
-      @tei = core.canonical_object(:return_as => :models) 
+      @tei = core.canonical_object
     end
 
     subject(:tei) { @tei } 
@@ -191,7 +191,7 @@ describe CoreFileUpserter do
 
       upserter.update_support_files!(core)
 
-      expect(core.content_objects(:as => :solr_doc).length).to eq 3      
+      expect(core.content_objects(:raw).length).to eq 3      
     end
 
     it "removes preexisting support file objects on update but does not remove the canonical item" do 
@@ -206,7 +206,7 @@ describe CoreFileUpserter do
       tei_pid = tei.pid
 
       upserter.update_support_files!(core)
-      content_objects = core.content_objects(:return_as => :models)
+      content_objects = core.content_objects
       pids = content_objects.map { |x| x.pid } 
 
       expect(pids).to include tei_pid

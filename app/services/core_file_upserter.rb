@@ -67,7 +67,7 @@ class CoreFileUpserter
   end
 
   def update_core_file_tei_file!(core_file) 
-    tei = core_file.canonical_object(:return_as => :models)
+    tei = core_file.canonical_object
 
     unless tei
       tei = TEIFile.new
@@ -92,7 +92,7 @@ class CoreFileUpserter
 
   def update_support_files!(core_file)
     # First, remove all current support files
-    core_file.content_objects(:return_as => :models).each do |content|
+    core_file.content_objects.each do |content|
       unless content.canonical?
         content.destroy
       end

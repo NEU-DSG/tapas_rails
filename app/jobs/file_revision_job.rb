@@ -12,7 +12,7 @@ class FileRevisionJob
       core = CoreFile.find_by_did(did)
       core = CoreFile.find core.id 
 
-      tei_file = core.canonical_object(:return_as => :models)
+      tei_file = core.canonical_object(:model)
       tei_file.add_file(File.read(filepath), "content", filename)
       tei_file.save!
     rescue => e
