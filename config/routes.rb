@@ -22,12 +22,15 @@ TapasRails::Application.routes.draw do
   end
 
   post "communities/upsert" => "communities#upsert"
+  delete "communities/:did" => "communities#destroy"
   post "collections/upsert" => "collections#upsert" 
+  delete "collections/:did" => "collections#destroy"
 
   # TEI data on TAPAS currently comes in as a 2-phase ingest.
   # files/validate_tei should typically be run before the actual 
   # create action is invoked
   post 'files/upsert' => 'core_files#upsert', as: "upsert"
+  delete "files/:did" => "core_files#destroy"
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

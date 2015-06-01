@@ -6,7 +6,33 @@ describe CollectionsController do
 
   it_should_behave_like "an API enabled controller"
 
-  describe "POST #upsert" do 
+  describe "DELETE destroy" do 
+    after(:each) { ActiveFedora::Base.delete_all }
+
+    it "422s for nonexistant dids" do 
+      delete :destroy, params.merge(:did => "not a real did") 
+      expect(response.status).to eq 422
+    end
+
+    it "422s for dids that don't belong to a Collection" do 
+      begin
+        community = Community.create(:did => "115", :depositor => "test")
+        delete :destroy, params.merge(:did => community.did)
+        expect(response.status).to eq 422
+      ensure
+        community.delete if community.persisted?
+      end
+    end
+
+    it "200s for dids that belong to a Collection and removes the resource" do 
+      collection = Collection.create(:did => "938401", :depositor => "test")
+      delete :destroy, params.merge(:did => collection.did)
+      expect(response.status).to eq 200
+      expect(Collection.find_by_did collection.did).to be nil 
+    end
+  end
+
+  describe "POST upsert" do 
     after(:all) { ActiveFedora::Base.delete_all } 
 
     it "403s for unauthorized requests" do 
