@@ -55,6 +55,10 @@ describe CoreFileUpserter do
       expect(tei.content.content).to eq file_data 
     end
 
+    it "specifies the mime type of the content datastream" do 
+      expect(tei.content.mimeType).to eq "application/xml" 
+    end
+
     it "never creates more than one tei file" do 
       core_file = tei.core_file
       expect(core_file.content_objects.count).to eq 1 

@@ -81,6 +81,7 @@ class CoreFileUpserter
     filecontent = File.read(params[:file][:path])
     current_filename = tei.content.label 
     current_filecontent = tei.content.content 
+    tei.content.mimeType = "application/xml"
     # If the filename and content are identical to the filename
     # and content of the most recent version, don't store the file.
     unless (current_filename == filename) && (current_filecontent == filecontent)
