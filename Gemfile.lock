@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/NEU-Libraries/cerberus_core.git
-  revision: 4be3e696dc78cfe109a184b105a0f18578f7888a
+  revision: 81d86a73a72de2000ab62b0d3a9c088667e0cda2
   branch: master
   specs:
     cerberus_core (0.0.1)
