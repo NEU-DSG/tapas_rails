@@ -34,4 +34,28 @@ describe ExtractFiles do
       end
     end
   end
+
+  context "with no support files or mods record" do 
+    before(:all) do 
+      @response = ExtractFiles.extract!(fixture_file("tei_tfc_only.zip"))
+    end
+
+    after(:all) { FileUtils.rm_r "#{Rails.root}/tmp/extracted_files" }
+
+    it "returns nil for the mods file" do 
+      expect(@response[:mods]).to be nil 
+    end
+
+    it "returns nil for the support files array" do 
+      expect(@response[:support_files]).to be nil 
+    end
+
+    it "returns a file holding tfc content" do 
+      expect(File.exists?(@response[:tfc])).to be true 
+    end
+
+    it 'returns a file holding tei content' do 
+      expect(File.exists?(@response[:tei])).to be true
+    end
+  end
 end
