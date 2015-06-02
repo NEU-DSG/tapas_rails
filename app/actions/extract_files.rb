@@ -27,6 +27,8 @@ class ExtractFiles
     @tmp_dir = "#{Rails.root}/tmp/extracted_files/#{SecureRandom.hex}"
     FileUtils.mkdir_p tmp_dir
 
+    response[:directory] = @tmp_dir
+
     Zip::File.open(zip_path) do |zip|
       zip.each do |entry| 
         name = entry.name

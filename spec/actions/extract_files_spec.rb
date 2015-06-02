@@ -32,6 +32,11 @@ describe ExtractFiles do
           expect(File.exists?(sf)).to be true 
         end 
       end
+
+      it "stores the directory that the files were written to" do 
+        expect(@response[:directory]).to include "#{Rails.root}/tmp/extracted_files"
+        expect(@response[:tei]).to include @response[:directory]
+      end
     end
   end
 
@@ -56,6 +61,11 @@ describe ExtractFiles do
 
     it 'returns a file holding tei content' do 
       expect(File.exists?(@response[:tei])).to be true
+    end
+
+    it "stores the directory that the files were written to" do 
+      expect(@response[:directory]).to include "#{Rails.root}/tmp/extracted_files"
+      expect(@response[:tei]).to include @response[:directory]
     end
   end
 end
