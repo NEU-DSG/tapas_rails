@@ -6,13 +6,11 @@ describe CoreFileValidator do
 
   describe "on POST #upsert" do 
     let(:params) do 
-      { :file => "default",
-        :support_files => "zip.zip",
+      { :files => "default",
         :did => "default",
         :access => "public",
         :collection_did => "default",
         :file_type => "tei_content",
-        :mods => File.read(fixture_file("mods.xml")),
         :depositor => "default",
         :action => "upsert" }
     end
@@ -48,22 +46,6 @@ describe CoreFileValidator do
         expect(validation_errors(params.except :access).length).to eq 1
       end
 
-      it "raises an error if mods is invalid" do 
-        # Note that mods_invalid generates only one syntax error but other files
-        # could generate many more.
-        params[:mods] = File.read(fixture_file("mods_invalid.xml"))
-        expect(validation_errors(params).length).to eq 1 
-      end
-
-      it "raises an error if mods is not xml" do 
-        params[:mods] = "<Abba <>" 
-        expect(validation_errors(params).length).to eq 1
-      end
-
-      it "raises an error if no mods datastream is present" do 
-        expect(validation_errors(params.except :mods).length).to eq 1 
-      end
-
       it "raises an error if no drupal id is present" do 
         expect(validation_errors(params.except :did).length).to eq 1
       end
@@ -80,8 +62,8 @@ describe CoreFileValidator do
         expect(validation_errors(params.except :collection_did).length).to eq 1
       end
 
-      it "raises an error with no file param" do 
-        expect(validation_errors(params.except :file).length).to eq 1 
+      it "raises an error with no files param" do 
+        expect(validation_errors(params.except :files).length).to eq 1 
       end
     end
 
