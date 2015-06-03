@@ -35,35 +35,33 @@ describe CoreFilesController do
   end
 
   describe "POST #upsert" do
-    before(:each) do 
-      @src = "#{Rails.root}/spec/fixtures/files/tei.xml"
-    end
-
     let(:post_defaults) do 
       { :collection_did => "12345",
         :did            => "111",
         :access         => "private",
         :depositor      => "wjackson",
-        :file           => test_file(@src), 
-        :file_type      => "tei_content", 
-        :mods           => File.read(fixture_file("mods.xml")) }
+        :files          => test_file(fixture_file("all_files.zip")),
+        :file_type      => "tei_content", }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
 
     it "returns a 202 and creates the desired file on a valid request." do 
       Resque.inline = true
-      file_path = post_defaults[:file].path
       post :upsert, params.merge(post_defaults)
 
       expect(response.status).to eq 202
 
       core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:model)
+      tfc  = core.tfc.first
 
       expect(tei.class).to eq TEIFile
-      expect(tei.content.content).to eq File.read(@src)
-      expect(File.exists? file_path).to be false
+      expect(tei.content.content.size).not_to eq 0 
+
+      expect(tfc.class).to eq TEIFile
+      expect(tfc.content.content.size).not_to eq 0
+
 
       Resque.inline = false
     end 

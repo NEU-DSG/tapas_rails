@@ -1,6 +1,22 @@
 require "spec_helper" 
 
 describe CoreFile do 
+  describe "TFC relationship" do 
+    it { respond_to :tfc } 
+    it { respond_to :tfc= } 
+    
+    after(:each) { ActiveFedora::Base.delete_all }
+
+    it "can be set on the CoreFile but is written to the TEIFile" do 
+      core = CoreFile.create(:depositor => "will", :did => SecureRandom.hex) 
+      tei  = TEIFile.create(:depositor => "Will") 
+
+      core.tfc << tei ; core.save! 
+
+      expect(tei.tfc_for).to match_array [core]
+    end
+  end
+
   describe "Ography relationships" do 
     it { respond_to :personography_for }
     it { respond_to :personography_for= }

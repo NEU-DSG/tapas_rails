@@ -65,3 +65,4 @@
     :is_bibliography_for: isBibliographyFor
     :is_otherography_for: isOtherographyFor
     :is_odd_file_for: isOddFileFor
+    :is_tfc_for: isTFCFor

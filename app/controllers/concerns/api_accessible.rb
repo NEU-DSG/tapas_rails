@@ -8,7 +8,11 @@ module ApiAccessible
     # But enforce credential checks on each and every request.
     # Note that this and the csrf disable up top will have to be 
     # reworked once tapas_rails is the actual frontend for tapas.
-    before_action :authenticate_api_request
+    if Rails.env.development?
+      before_action :authenticate_api_request, except: [:show_tfc] 
+    else
+      before_action :authenticate_api_request
+    end
 
     before_action :validate_request_params, only: [:upsert]
   end
