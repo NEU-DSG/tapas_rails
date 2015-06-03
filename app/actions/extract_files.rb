@@ -23,28 +23,34 @@ class ExtractFiles
   # - support_files: All support files (at this point, this basically means 
   # images) associated with this upload
   def extract!
-    response = {} 
-    @tmp_dir = "#{Rails.root}/tmp/extracted_files/#{SecureRandom.hex}"
-    FileUtils.mkdir_p tmp_dir
+    begin 
+      response = {} 
+      @tmp_dir = "#{Rails.root}/tmp/extracted_files/#{SecureRandom.hex}"
+      FileUtils.mkdir_p tmp_dir
 
-    response[:directory] = @tmp_dir
+      response[:directory] = @tmp_dir
 
-    Zip::File.open(zip_path) do |zip|
-      zip.each do |entry| 
-        name = entry.name
-        if Pathname.new(name).basename.to_s == "mods.xml"
-          response[:mods] = write_to_file entry 
-        elsif Pathname.new(name).basename.to_s == "tfc.xml" 
-          response[:tfc] = write_to_file entry 
-        elsif name.split("/").second == "tei" && real_file?(entry)
-          response[:tei] = write_to_file entry
-        elsif name.split("/").second == "support_files" && real_file?(entry)
-          response[:support_files] ||= []
-          response[:support_files] << write_to_file(entry)
+      # Ensure support_files is always initialized to an empty array
+      response[:support_files] = []
+
+      Zip::File.open(zip_path) do |zip|
+        zip.each do |entry| 
+          name = entry.name
+          if Pathname.new(name).basename.to_s == "mods.xml"
+            response[:mods] = write_to_file entry 
+          elsif Pathname.new(name).basename.to_s == "tfc.xml" 
+            response[:tfc] = write_to_file entry 
+          elsif name.split("/").second == "tei" && real_file?(entry)
+            response[:tei] = write_to_file entry
+          elsif name.split("/").second == "support_files" && real_file?(entry)
+            response[:support_files] << write_to_file(entry)
+          end
         end
       end
+      response
+    ensure
+      FileUtils.rm zip_path if File.exists? zip_path
     end
-    response
   end
 
   private 
