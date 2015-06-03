@@ -1,220 +1,174 @@
-require 'spec_helper'
+require "spec_helper" 
 
 describe CoreFileUpserter do 
   include FileHelpers
 
-  def params 
-    { :depositor => "test",
-      :did => "test", 
-      :access => "public", 
-      :collection_did => "023",
-      :file => {:path => fixture_file("tei_copy.xml"), :name => "tei_copy.xml" },
-      :mods => File.read(fixture_file("mods.xml")), 
-      :file_type => "tei_content"
-    }
-  end
-
-  def assign_collection
-    @collection = Collection.new
-    @collection.did = params[:collection_did]
-    @collection.depositor = params[:depositor]
-    @collection.save!
-  end
-
-  subject(:core_file) do 
-    CoreFile.find_by_did(params[:did])
-  end
-
-  RSpec.shared_examples "a metadata assigning operation" do 
-    its(:depositor) { should eq params[:depositor] } 
-    its(:og_reference) { should eq params[:collection_did] } 
-    its(:drupal_access) { should eq params[:access] } 
-    its(:mass_permissions) { should eq "private" }
-    its("mods.title.first") { should eq "Test X, private" }
-    its(:did) { should eq params[:did] }
-    its(:otherography_for) { should eq [] }
-  end
-
-  RSpec.shared_examples "a tei file updating operation" do 
+  describe "#update_metadata!" do
     before(:all) do 
-      core = CoreFile.find_by_did(params[:did])
-      @tei = core.canonical_object
+      @params = { 
+        :depositor => "tapas@neu.edu",
+        :access => "public",
+        :collection_did => "111",
+        :file_type => "otherography",
+      }
+
+      upserter = CoreFileUpserter.new @params
+      upserter.mods_path = fixture_file "mods.xml" 
+      @core = CoreFile.new 
+      upserter.update_metadata! @core
+      @core.reload
     end
 
-    subject(:tei) { @tei } 
-    its(:class) { should eq TEIFile } 
-    its(:canonical?) { should be true }
+    after(:all) { @core.delete } 
 
-    it "cleans up the file" do 
-      expect(File.exists?(params[:file][:path])).to be false 
+    it "sets the depositor equal to params[:depositor]" do 
+      expect(@core.depositor).to eq @params[:depositor]
     end
 
-    # have to be using file generated from fixture_file("tei.xml").
-    it "assigns content to the core_file" do
-      file_data = File.read(fixture_file "tei.xml")  
-      expect(tei.content.content).to eq file_data 
+    it "sets the drupal access level equal to params[:access]" do 
+      expect(@core.drupal_access).to eq @params[:access] 
     end
 
-    it "specifies the mime type of the content datastream" do 
-      expect(tei.content.mimeType).to eq "application/xml" 
+    it "assigns the object to the phantom collection when no collection" \
+      "with params[:collection_did] exists" do 
+      pid = Rails.configuration.phantom_collection_pid
+      expect(@core.collection.pid).to eq pid
     end
 
-    it "never creates more than one tei file" do 
-      core_file = tei.core_file
-      expect(core_file.content_objects.count).to eq 1 
+    # This test relies on usage of the mods.xml file
+    it "assigns the metadata from the mods_path field to the mods record" do 
+      expect(@core.mods.title.first).to eq "Test X, private"
     end
-  end
-
-  context "when creating a new core file" do 
-    context "with a valid collection" do 
-      before(:all) do 
-        copy_fixture("tei.xml", "tei_copy.xml")
-        assign_collection
-        CoreFileUpserter.upsert(params) 
-      end
-
-      after(:all) { ActiveFedora::Base.delete_all }
-      
-      it "creates the core file" do 
-        expect(core_file.class).to eq CoreFile 
-      end
-
-      it "assigns the core file to the requested collection" do 
-        expect(core_file.collection.pid).to eq @collection.pid 
-      end
-
-      it_should_behave_like "a metadata assigning operation" 
-      it_should_behave_like "a tei file updating operation"
+    
+    it "writes the object's did to the MODS record" do 
+      expect(@core.did).to eq @params[:did] 
     end
 
-    context "without a valid collection" do 
-      before(:all) do 
-        copy_fixture("tei.xml", "tei_copy.xml")
-        CoreFileUpserter.upsert(params)
-      end
-
-      after(:all) { ActiveFedora::Base.delete_all } 
-
-      it "creates the core file" do 
-        expect(core_file.class).to eq CoreFile 
-      end
-
-      it "assigns the core file to the phantom collection" do 
-        expect(core_file.collection).to eq Collection.phantom_collection
-      end
-
-      it_should_behave_like "a metadata assigning operation"
-      it_should_behave_like "a tei file updating operation"
+    it "writes the object's file type" do 
+      expect(@core.otherography_for.first).to eq Collection.phantom_collection
     end
   end
 
-  context "when updating an existing core file" do 
-    def setup_update_tests
-      assign_collection
-      copy_fixture("tei.xml", "tei_copy.xml")
-      # Test requires two preexisting objects - a core file and a tei file
-      @core = FactoryGirl.create(:core_file)
-      @core.depositor = params[:depositor]
-      @core.did = params[:did]
-      @core.og_reference = params[:collection]
-      @core.save! ; @core.collection = @collection ; @core.save! 
+  describe "#update_xml_file!" do
+    context "when creating a tfc file" do 
+      before(:all) do 
+        @core = FactoryGirl.create(:core_file)
+        u = CoreFileUpserter.new({})
+        u.tfc_path = fixture_file "tei.xml"
+        u.update_xml_file!(@core, u.tfc_path, :tfc)
+      end
 
-      @tei = TEIFile.new
-      @tei.depositor = params[:depositor]
-      @tei.canonize
-      @tei.save! ; @tei.core_file = @core ; @tei.save! 
+      let(:tfc) { @core.reload.tfc.first }
+      after(:all) { @core.delete }
+
+      it "creates the tfc file" do
+        expect(tfc).not_to be nil 
+      end
+
+      it "loads the file content into the content datastream" do 
+        expect(tfc.content.content).to eq File.read(fixture_file("tei.xml"))
+      end
+
+      it "asserts that the content object is the tfc for the core record" do 
+        expect(tfc.tfc_for.first).to eq @core 
+        expect(tfc.tfc_for.size).to eq 1
+        expect(tfc.canonical?).to be false
+      end
     end
 
-    context "with new tei data" do 
+    context "when creating a tei file" do 
       before(:all) do 
-        setup_update_tests 
-        old_content = File.read(fixture_file("tei_full_metadata.xml"))
-        @tei.add_file(old_content, "content", "tei_full_metadata.xml")
-        @tei.save!
-
-        CoreFileUpserter.upsert(params)
+        @core = FactoryGirl.create(:core_file)
+        u = CoreFileUpserter.new({})
+        u.tei_path = fixture_file "tei.xml" 
+        u.update_xml_file!(@core, u.tei_path, :tei) 
       end
 
-      after(:all) { ActiveFedora::Base.delete_all } 
+      let(:tei) { @core.reload.canonical_object } 
+      after(:all) { @core.delete }
 
-      it "updates the preexisting core file" do 
-        expect(CoreFile.count).to eq 1 
+      it "creates the tei file" do 
+        expect(tei).not_to be nil 
+        expect(tei.class).to eq TEIFile 
       end
 
-      it "revisions rather than overwrites file data" do 
-        expect(@tei.content.versions.length).to eq 2 
+      it "loads the file content into the content datastream" do 
+        expect(tei.content.content).to eq File.read(fixture_file("tei.xml"))
       end
 
-      it "has the latest file data as the latest revision" do 
-        ids = ["content.0", "content.1"]
-        expect(@tei.content.versions.map { |x| x.versionID }).to match_array ids
-        new = @tei.content.versions.find { |x| x.label == params[:file][:name] }
-        expect(new).not_to be nil 
-        expect(new.content).to eq File.read(fixture_file("tei.xml"))
+      it "asserts that the content object is the canonical record for the" \
+        " core file" do 
+        expect(tei.canonical?).to be true
+        expect(tei.tfc_for.size).to eq 0 
       end
-
-      it_should_behave_like "a metadata assigning operation"
-      it_should_behave_like "a tei file updating operation" 
     end
 
-    context "with identical tei data" do 
+    context "when updating an xml file" do 
       before(:all) do 
-        setup_update_tests
-        old_content = File.read(fixture_file("tei.xml"))
-        @tei.add_file(old_content, "content", params[:file][:name])
+        @core = FactoryGirl.create(:core_file)
+        u = CoreFileUpserter.new({})
+        u.tei_path = fixture_file "tei.xml" 
+
+        @tei = TEIFile.create(:depositor => @core.depositor)
+        @tei.canonize
+        @tei.add_file(File.read(fixture_file("tei.xml")), "content", "tei.xml") 
+        @tei.core_file = @core 
         @tei.save!
 
-        CoreFileUpserter.upsert(params)
+        u.update_xml_file!(@core, u.tei_path, :tei)
       end
 
-      after(:all) { ActiveFedora::Base.delete_all } 
+      after(:all) { @core.delete }
 
-      it "updates the preexisting core file" do 
-        expect(CoreFile.count).to eq 1 
-      end
-
-      it "performs no revision" do 
+      it "doesn't create a new content version for the same file" do 
         expect(@tei.content.versions.length).to eq 1 
       end
+
+      it "doesn't create a new TEIFile object" do 
+        expect(@core.content_objects(:raw).count).to eq 1 
+      end
     end
   end
 
-  # These are nicer tests if they work at the method level
-  # Should probably go back and clean up everything above this.
   describe "#update_support_files!" do 
-    let(:upserter) do 
-      sf_hash = { :path => fixture_file("zipped_support_images.zip"),
-                  :name => "zipped_support_images.zip" }
-      CoreFileUpserter.new(params.merge(:support_files => sf_hash))
-    end
+    before(:all) do 
+      @core = FactoryGirl.create(:core_file)
+      u = CoreFileUpserter.new({})
+      u.support_file_paths = [fixture_file("image.jpg"), 
+        fixture_file("other_image.jpg")]
 
-    after(:each) { ActiveFedora::Base.delete_all } 
-
-    it "adds support files to a core record that has none" do 
-      core = CoreFile.create(:did => "111", :depositor => "test")
-
-      upserter.update_support_files!(core)
-
-      expect(core.content_objects(:raw).length).to eq 3      
-    end
-
-    it "removes preexisting support file objects on update but does not remove the canonical item" do 
-      core = CoreFile.create(:did => "111", :depositor => "test")
-      imf = ImageMasterFile.create(:depositor => "test") 
-      imf.save! ; imf.core_file = core ; imf.save! 
-      tei = TEIFile.create(:depositor => "test")
+      tei = TEIFile.create(:depositor => "system") 
+      tei.core_file = @core 
       tei.canonize
-      tei.save! ; tei.core_file = core ; tei.save!
+      tei.save!
 
-      imf_pid = imf.pid
-      tei_pid = tei.pid
+      imf = ImageMasterFile.create(:depositor => "system") 
+      imf.core_file = @core 
+      imf.save!
+      u.update_support_files!(@core) 
+      @core.reload
+    end
 
-      upserter.update_support_files!(core)
-      content_objects = core.content_objects
-      pids = content_objects.map { |x| x.pid } 
+    after(:all) { @core.delete }
 
-      expect(pids).to include tei_pid
-      expect(pids).not_to include imf_pid
+    it "deletes preexisting image support files" do 
+      expect(@core.content_objects(:raw).length).to eq 3 
+    end
+
+    it "does not delete TEIFile objects" do 
+      expect(@core.canonical_object).not_to be nil 
+    end
+
+    it "writes the content for each support file" do 
+      content_objects = @core.content_objects
+      labels = %w(image.jpg other_image.jpg)
+
+      content_objects.each do |content| 
+        if content.instance_of? ImageMasterFile 
+          expect(labels).to include content.content.label
+          expect(content.content.content.size).not_to eq 0
+        end
+      end
     end
   end
 end

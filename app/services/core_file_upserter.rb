@@ -2,6 +2,21 @@ require "zip"
 
 class CoreFileUpserter
   include Concerns::Upserter
+  attr_accessor :mods_path
+  attr_accessor :tei_path
+  attr_accessor :tfc_path
+  attr_accessor :support_file_paths
+
+  def initialize(params)
+    @params = params
+    if params[:files] 
+      all_files = ExtractFiles.extract!(params[:files])
+      @mods_path = all_files[:mods] 
+      @tei_path = all_files[:tei]
+      @tfc_path = all_files[:tfc]
+      @support_file_paths = all_files[:support_files]
+    end
+  end
 
   def upsert 
     begin 
@@ -9,30 +24,37 @@ class CoreFileUpserter
         core_file = CoreFile.find_by_did(params[:did])
       else
         core_file = CoreFile.new(:did => params[:did])
+        ensure_complete_upload!
       end
 
-      update_core_file_metadata!(core_file)
-      update_core_file_tei_file!(core_file) if params[:file]
-      update_support_files!(core_file) if params[:support_files].present?
+      update_metadata!(core_file)
+      update_xml_file!(core_file, tei_path, :tei) if tei_path
+      update_xml_file!(core_file, tfc_path, :tfc) if tfc_path
+      update_support_files!(core_file) if support_file_paths
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
-      FileUtils.rm(params[:file][:path]) if params[:file][:path]
+      FileUtils.rm mods_path if mods_path
+      FileUtils.rm tei_path if tei_path
+      FileUtils.rm tfc_path if tfc_path
+      support_file_paths.each { |sf| FileUtils.rm sf }
     end
   end
 
 
-  def update_core_file_metadata!(core_file)
+  def update_metadata!(core_file)
     did = core_file.did
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
     core_file.og_reference = params[:collection_did] if params[:collection_did].present?
 
     # Make sure to rewrite the did/pid after updating MODS.
-    core_file.mods.content = params[:mods] if params[:mods].present?
-    core_file.did = did 
-    core_file.mods.identifier = core_file.pid
+    if mods_path
+      core_file.mods.content = File.read(mods_path)
+      core_file.did = did 
+      core_file.mods.identifier = core_file.pid 
+    end
 
     if params[:collection_did].present?
       core_file.save! unless core_file.persisted?
@@ -66,55 +88,71 @@ class CoreFileUpserter
     core_file.save! 
   end
 
-  def update_core_file_tei_file!(core_file) 
-    tei = core_file.canonical_object
-
-    unless tei
-      tei = TEIFile.new
-      tei.canonize
-      tei.save! ; tei.core_file = core_file 
-    end 
-
-    tei.depositor = params[:depositor]
-
-    filename = params[:file][:name]
-    filecontent = File.read(params[:file][:path])
-    current_filename = tei.content.label 
-    current_filecontent = tei.content.content 
-    tei.content.mimeType = "application/xml"
-    # If the filename and content are identical to the filename
-    # and content of the most recent version, don't store the file.
-    unless (current_filename == filename) && (current_filecontent == filecontent)
-      tei.add_file(filecontent, "content", filename)
+  def update_xml_file!(core_file, filepath, file_type)
+    if file_type == :tei
+      content = core_file.canonical_object
+    elsif file_type == :tfc 
+      content = core_file.tfc.first 
+    else
+      raise "Invalid XML file type passed to update_xml_file!" 
     end
 
-    tei.save!
+    unless content 
+      content = TEIFile.new 
+      if file_type == :tei 
+        content.save!
+        content.canonize
+      elsif file_type == :tfc 
+        content.save! 
+        content.tfc_for << core_file 
+      end
+      
+      content.core_file = core_file 
+    end
+
+    filename = Pathname.new(filepath).basename.to_s
+    filecontent = File.read(filepath)
+    current_filename = content.content.label 
+    current_filecontent = content.content.content 
+    content.content.mimeType = "application/xml" 
+
+    unless (current_filename == filename) && (current_filecontent == filecontent) 
+      content.add_file(filecontent, "content", filename)
+    end
+
+    content.save!
   end
 
   def update_support_files!(core_file)
     # First, remove all current support files
     core_file.content_objects.each do |content|
-      unless content.canonical?
+      unless content.instance_of? TEIFile
         content.destroy
       end
     end
 
-    # Then, unzip the provided support files and add each of them as a new 
-    # content object
-    Zip::File.open(params[:support_files][:path]) do |zip_file|
-      zip_file.each do |entry| 
-        if entry.file?  && entry.name.split("/").last.first != "."
-          imf = ImageMasterFile.new(:depositor => params[:depositor])
-          imf.save!
-          imf.core_file = core_file 
-          imf.content.content = entry.get_input_stream.read 
-          imf.save!
-        end
-      end
+    support_file_paths.each do |support_file| 
+      imf = ImageMasterFile.new(:depositor => core_file.depositor)
+      fname = Pathname.new(support_file).basename.to_s
+      imf.save!
+      imf.core_file = core_file 
+      imf.add_file(File.open(support_file), "content", fname)
+      imf.save!
     end
   end
 
   private 
+
+    # If we have a new Core File being created, raise an error unless all needed 
+    # files are present
+    def ensure_complete_upload! 
+      unless mods_path && tei_path && tfc_path
+        raise "Could not create a new Core File using the zipped content!" \
+          " Mods file found at #{mods_path || 'NOT FOUND'}," \
+          " TEI file found at #{tei_path || 'NOT FOUND'}," \
+          " TFC file found at #{tfc_path || 'NOT FOUND'}"
+      end 
+    end
 
     def clear_and_update_ography!(core_file, ography_assignment = nil)
       core_file.personography_for = []
