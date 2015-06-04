@@ -24,11 +24,13 @@ class ZipContentValidator
   def self.tei(tei_path)
     validate_extension(tei_path, %w(xml), "TEI File") 
     xml = load_and_validate_xml tei_path
+    validate_tei(xml, tei_path)
   end
 
   def self.tfc(tfc_path)
     validate_extension(tfc_path, %w(xml), "TFC File") 
     xml = load_and_validate_xml tfc_path
+    validate_tei(xml, tfc_path)
   end
 
   def self.support_files(support_file_paths)
@@ -38,6 +40,21 @@ class ZipContentValidator
   end
 
   private
+    def self.validate_tei(xml, path) 
+      xsl_path = "#{Rails.root}/lib/assets/xslt/is_tei.xsl" 
+      template = Nokogiri::XSLT(File.read(xsl_path))
+      results = template.transform(xml) 
+
+      errors = []
+      
+      results.xpath("p").each do |error| 
+        errors << error.text
+      end
+
+      raise Exceptions::InvalidZipError.new "TEI or TFC file at #{path} did " \
+        "not validate as TEI!  Errors were:\n #{errors.join("\n")}"
+    end
+
     def self.validate_extension(path, valid_exts, file_type)
       extension = path.split('.').last
       unless valid_exts.include? extension 

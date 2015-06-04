@@ -17,6 +17,18 @@ describe ZipContentValidator do
     end
   end
 
+  RSpec.shared_examples "a TEI validating operation" do |method| 
+    it "that rejects files that aren't valid TEI" do 
+      p = fixture_file "xml.xml" 
+      expect { zcv.send(method, p) }.to raise_error Exceptions::InvalidZipError
+    end
+
+    it "that accepts files that are valid TEI" do 
+      p = fixture_file "tei.xml" 
+      expect { zcv.send(method, p) }.to raise_error Exceptions::InvalidZipError
+    end
+  end
+
   describe ".mods" do 
     it_should_behave_like "an xml validating operation", :mods
 
@@ -28,10 +40,12 @@ describe ZipContentValidator do
 
   describe ".validate_tei" do 
     it_should_behave_like "an xml validating operation", :tei
+    it_should_behave_like "a TEI validating operation", :tei
   end
 
   describe ".validate_tfc" do 
     it_should_behave_like "an xml validating operation", :tfc
+    it_should_behave_like "a TEI validating operation", :tfc
   end
 
   describe ".validate_support_files" do 
