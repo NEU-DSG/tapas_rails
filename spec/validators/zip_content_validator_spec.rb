@@ -55,8 +55,6 @@ describe ZipContentValidator do
     end
   end
 
-
-
   describe ".support_files" do 
     it "raises an error if a support file isn't a jpg or png" do 
       sfs = [fixture_file("image.jpg"), fixture_file("mods.xml")]
