@@ -20,6 +20,14 @@ class CoreFileUpserter
 
   def upsert 
     begin 
+      ZipContentValidator.mods(mods_path) if mods_path
+      ZipContentValidator.tei(tei_path) if tei_path
+      ZipContentValidator.tfc(tfc_path) if tfc_path 
+      
+      if support_file_paths.any?
+        ZipContentValidator.support_files(support_file_paths)
+      end
+
       if Did.exists_by_did?(params[:did])
         core_file = CoreFile.find_by_did(params[:did])
       else
