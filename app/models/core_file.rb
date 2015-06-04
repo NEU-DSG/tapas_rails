@@ -8,6 +8,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   has_many :page_images, :property => :is_page_image_for, 
     :class_name => "ImageMasterFile"
   has_many :tfc, :property => :is_tfc_for, :class_name => "TEIFile"
+  has_many :html_files, :property => :is_html_for, :class_name => "HTMLFile"
 
   has_and_belongs_to_many :personography_for, :property => :is_personography_for,
     :class_name => "Collection"

@@ -66,3 +66,4 @@
     :is_otherography_for: isOtherographyFor
     :is_odd_file_for: isOddFileFor
     :is_tfc_for: isTFCFor
+    :is_html_for: isHTMLFor 
