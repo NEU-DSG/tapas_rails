@@ -42,6 +42,8 @@ class ExtractFiles
             response[:tfc] = write_to_file entry 
           elsif name.split("/").second == "tei" && real_file?(entry)
             response[:tei] = write_to_file entry
+          elsif name.split("/").second == "html" && real_file?(entry)
+            response[:html] = write_to_file entry 
           elsif name.split("/").second == "support_files" && real_file?(entry)
             response[:support_files] << write_to_file(entry)
           end
