@@ -38,17 +38,26 @@ describe ZipContentValidator do
     end
   end
 
-  describe ".validate_tei" do 
+  describe ".tei" do 
     it_should_behave_like "an xml validating operation", :tei
     it_should_behave_like "a TEI validating operation", :tei
   end
 
-  describe ".validate_tfc" do 
+  describe ".tfc" do 
     it_should_behave_like "an xml validating operation", :tfc
     it_should_behave_like "a TEI validating operation", :tfc
   end
 
-  describe ".validate_support_files" do 
+  describe ".html" do 
+    it "raises an error if the file doesn't have an .html extension" do
+      p = fixture_file "image.jpg" 
+      expect { zcv.html(p) }.to raise_error Exceptions::InvalidZipError
+    end
+  end
+
+
+
+  describe ".support_files" do 
     it "raises an error if a support file isn't a jpg or png" do 
       sfs = [fixture_file("image.jpg"), fixture_file("mods.xml")]
       expect { zcv.support_files(sfs) }.to raise_error Exceptions::InvalidZipError
