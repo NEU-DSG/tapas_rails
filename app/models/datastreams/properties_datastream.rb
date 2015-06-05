@@ -13,7 +13,7 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     hsh = super(hsh)
 
     if self.html_type.first 
-      hsh["html_type_ssim"] = self.html_type.first
+      hsh["html_type_ssi"] = self.html_type.first
     end
 
     if self.og_reference.first

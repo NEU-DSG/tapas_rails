@@ -32,6 +32,6 @@ describe PropertiesDatastream do
 
     expect(solr_hash["depositor_tesim"]).to eq ["William Jackson"]
     expect(solr_hash["drupal_og_reference_ssim"]).to eq "321"
-    expect(solr_hash["html_type_ssim"]).to eq "teibp" 
+    expect(solr_hash["html_type_ssi"]).to eq "teibp" 
   end
 end
