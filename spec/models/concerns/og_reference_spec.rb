@@ -35,7 +35,7 @@ describe "The OG Reference module" do
     d.save! 
 
     result = OGReference.find_all_in_og('111')
-    pids   = result.map { |solr_doc| solr_doc.id }
+    pids   = result.map { |solr_doc| solr_doc.pid }
 
     expect(result.length).to eq 3 
     expect(pids).to include a.pid 
