@@ -15,6 +15,16 @@ describe ExtractFiles do
         FileUtils.rm_r("#{Rails.root}/tmp/extracted_files")
       end  
 
+      it "creates a file holding teibp content" do 
+        expect(File.exists?(@response[:teibp])).to be true 
+        expect(File.size(@response[:teibp])).not_to eq 0 
+      end
+
+      it "creates a file holding tapas_generic content" do 
+        expect(File.exists?(@response[:tapas_generic])).to be true 
+        expect(File.size(@response[:tapas_generic])).not_to eq 0 
+      end
+
       it "creates a file holding mods content" do 
         expect(File.exists?(@response[:mods])).to be true 
         expect(File.size(@response[:mods])).not_to eq 0
@@ -54,6 +64,10 @@ describe ExtractFiles do
 
       it "returns nil for the mods file" do 
         expect(@response[:mods]).to be nil 
+      end
+
+      it "returns nil for the html file" do 
+        expect(@response[:html]).to be nil 
       end
 
       it "returns an empty array for the support files array" do 

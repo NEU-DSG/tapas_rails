@@ -21,6 +21,10 @@ class ZipContentValidator
     end
   end
 
+  def self.html(html_path)
+    validate_extension(html_path, %w(html), "HTML Display File")
+  end
+
   def self.tei(tei_path)
     validate_extension(tei_path, %w(xml), "TEI File") 
     xml = load_and_validate_xml tei_path

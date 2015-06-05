@@ -2,6 +2,7 @@
 class SolrDocument
   include Blacklight::Document
   include CerberusCore::SolrDocumentBehavior
+  include TapasQueries
 
   # self.unique_key = 'id'
   

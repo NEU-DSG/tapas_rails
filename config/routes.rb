@@ -26,7 +26,8 @@ TapasRails::Application.routes.draw do
   post "collections/upsert" => "collections#upsert" 
   delete "collections/:did" => "collections#destroy"
 
-  get 'files/:did/tfc' => 'core_files#show_tfc'
+  get 'files/:did/teibp' => 'core_files#show_teibp'
+  get 'files/:did/tapas_generic' => 'core_files#show_tapas_generic'
   post 'files/upsert' => 'core_files#upsert', as: "upsert"
   delete "files/:did" => "core_files#destroy"
 

@@ -14,6 +14,11 @@ describe PropertiesDatastream do
     expect(properties.project_members).to match_array ["1", "2", "3"]
   end
 
+  it "implements the html_type field" do 
+    properties.html_type = "tapas_generic" 
+    expect(properties.html_type).to eq ["tapas_generic"]
+  end
+
   it "implements the drupal access field." do 
     properties.drupal_access = "public" 
     expect(properties.drupal_access.first).to eq "public" 
@@ -23,8 +28,10 @@ describe PropertiesDatastream do
     properties.depositor = "William Jackson"
     properties.og_reference = "321" 
     properties.project_members = ["1", "2"]
+    properties.html_type = "teibp"
 
     expect(solr_hash["depositor_tesim"]).to eq ["William Jackson"]
     expect(solr_hash["drupal_og_reference_ssim"]).to eq "321"
+    expect(solr_hash["html_type_ssi"]).to eq "teibp" 
   end
 end
