@@ -28,15 +28,15 @@ class CoreFileUpserter
       ZipContentValidator.tfc(tfc_path) if tfc_path 
       ZipContentValidator.html(teibp_path) if teibp_path
       ZipContentValidator.html(tapas_generic_path) if tapas_generic_path
-      
+
       if support_file_paths.any?
         ZipContentValidator.support_files(support_file_paths)
       end
 
       if Did.exists_by_did?(params[:did])
-        core_file = CoreFile.find_by_did(params[:did])
+        self.core_file = CoreFile.find_by_did(params[:did])
       else
-        core_file = CoreFile.new(:did => params[:did])
+        self.core_file = CoreFile.create(:did => params[:did])
         ensure_complete_upload!
       end
 
@@ -145,7 +145,7 @@ class CoreFileUpserter
         content.save! 
         content.tfc_for << core_file 
       end
-      
+
       content.core_file = core_file 
     end
 
@@ -172,44 +172,44 @@ class CoreFileUpserter
 
   private 
 
-    def add_unique_file!(content_object, filepath)
-      new_filename = Pathname.new(filepath).basename.to_s 
-      new_filecontent = File.read filepath 
+  def add_unique_file!(content_object, filepath)
+    new_filename = Pathname.new(filepath).basename.to_s 
+    new_filecontent = File.read filepath 
 
-      current_filename = content_object.content.label 
-      current_filecontent = content_object.content.content 
+    current_filename = content_object.content.label 
+    current_filecontent = content_object.content.content 
 
-      fnames_match = (current_filename == new_filename)
-      fcontent_matches = (new_filecontent == current_filecontent) 
+    fnames_match = (current_filename == new_filename)
+    fcontent_matches = (new_filecontent == current_filecontent) 
 
-      unless fnames_match && fcontent_matches 
-        content_object.add_file(new_filecontent, "content", new_filename)
-      end
-      
-      content_object.save!
+    unless fnames_match && fcontent_matches 
+      content_object.add_file(new_filecontent, "content", new_filename)
     end
 
-    # If we have a new Core File being created, raise an error unless all needed 
-    # files are present
-    def ensure_complete_upload! 
-      unless mods_path && tei_path && tfc_path
-        raise "Could not create a new Core File using the zipped content!" \
-          " Mods file found at #{mods_path || 'NOT FOUND'}," \
-          " TEI file found at #{tei_path || 'NOT FOUND'}," \
-          " TFC file found at #{tfc_path || 'NOT FOUND'}"
-      end 
-    end
+    content_object.save!
+  end
 
-    def clear_and_update_ography!(ography_assignment = nil)
-      core_file.personography_for = []
-      core_file.orgography_for = []
-      core_file.bibliography_for = []
-      core_file.otherography_for = []
-      core_file.odd_file_for = []
+  # If we have a new Core File being created, raise an error unless all needed 
+  # files are present
+  def ensure_complete_upload! 
+    unless mods_path && tei_path && tfc_path
+      raise "Could not create a new Core File using the zipped content!" \
+        " Mods file found at #{mods_path || 'NOT FOUND'}," \
+        " TEI file found at #{tei_path || 'NOT FOUND'}," \
+        " TFC file found at #{tfc_path || 'NOT FOUND'}"
+    end 
+  end
 
-      if ography_assignment
-        core_file.send(ography_assignment, [core_file.collection])
-      end
+  def clear_and_update_ography!(ography_assignment = nil)
+    core_file.personography_for = []
+    core_file.orgography_for = []
+    core_file.bibliography_for = []
+    core_file.otherography_for = []
+    core_file.odd_file_for = []
+
+    if ography_assignment
+      core_file.send(ography_assignment, [core_file.collection])
     end
+  end
 end
 
