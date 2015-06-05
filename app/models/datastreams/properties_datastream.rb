@@ -6,10 +6,15 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     t.og_reference
     t.project_members
     t.drupal_access
+    t.html_type
   end
 
   def to_solr(hsh = {})
     hsh = super(hsh)
+
+    if self.html_type.first 
+      hsh["html_type_ssim"] = self.html_type.first
+    end
 
     if self.og_reference.first
       hsh["drupal_og_reference_ssim"] = self.og_reference.first 
