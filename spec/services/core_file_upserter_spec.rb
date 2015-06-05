@@ -14,8 +14,8 @@ describe CoreFileUpserter do
 
       upserter = CoreFileUpserter.new @params
       upserter.mods_path = fixture_file "mods.xml" 
-      @core = CoreFile.new 
-      upserter.update_metadata! @core
+      upserter.core_file = @core = CoreFile.new
+      upserter.update_metadata!
       @core.reload
     end
 
@@ -52,10 +52,10 @@ describe CoreFileUpserter do
   describe "#update_xml_file!" do
     context "when creating a tfc file" do 
       before(:all) do 
-        @core = FactoryGirl.create(:core_file)
         u = CoreFileUpserter.new({})
         u.tfc_path = fixture_file "tei.xml"
-        u.update_xml_file!(@core, u.tfc_path, :tfc)
+        u.core_file = @core = FactoryGirl.create(:core_file)
+        u.update_xml_file!(u.tfc_path, :tfc)
       end
 
       let(:tfc) { @core.reload.tfc.first }
@@ -78,10 +78,10 @@ describe CoreFileUpserter do
 
     context "when creating a tei file" do 
       before(:all) do 
-        @core = FactoryGirl.create(:core_file)
         u = CoreFileUpserter.new({})
+        u.core_file = @core = FactoryGirl.create(:core_file)
         u.tei_path = fixture_file "tei.xml" 
-        u.update_xml_file!(@core, u.tei_path, :tei) 
+        u.update_xml_file!(u.tei_path, :tei) 
       end
 
       let(:tei) { @core.reload.canonical_object } 
@@ -105,8 +105,8 @@ describe CoreFileUpserter do
 
     context "when updating an xml file" do 
       before(:all) do 
-        @core = FactoryGirl.create(:core_file)
         u = CoreFileUpserter.new({})
+        u.core_file = @core = FactoryGirl.create(:core_file)
         u.tei_path = fixture_file "tei.xml" 
 
         @tei = TEIFile.create(:depositor => @core.depositor)
@@ -115,7 +115,7 @@ describe CoreFileUpserter do
         @tei.core_file = @core 
         @tei.save!
 
-        u.update_xml_file!(@core, u.tei_path, :tei)
+        u.update_xml_file!(u.tei_path, :tei)
       end
 
       after(:all) { @core.delete }
@@ -132,8 +132,8 @@ describe CoreFileUpserter do
 
   describe "#update_support_files!" do 
     before(:all) do 
-      @core = FactoryGirl.create(:core_file)
       u = CoreFileUpserter.new({})
+      u.core_file = @core = FactoryGirl.create(:core_file)
       u.support_file_paths = [fixture_file("image.jpg"), 
         fixture_file("other_image.jpg")]
 
@@ -145,7 +145,7 @@ describe CoreFileUpserter do
       imf = ImageMasterFile.create(:depositor => "system") 
       imf.core_file = @core 
       imf.save!
-      u.update_support_files!(@core) 
+      u.update_support_files!
       @core.reload
     end
 

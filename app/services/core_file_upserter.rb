@@ -2,6 +2,7 @@ require "zip"
 
 class CoreFileUpserter
   include Concerns::Upserter
+  attr_accessor :core_file # Saves the core file this upserter is handling
   attr_accessor :mods_path
   attr_accessor :tei_path
   attr_accessor :tfc_path
@@ -35,10 +36,10 @@ class CoreFileUpserter
         ensure_complete_upload!
       end
 
-      update_metadata!(core_file)
-      update_xml_file!(core_file, tei_path, :tei) if tei_path
-      update_xml_file!(core_file, tfc_path, :tfc) if tfc_path
-      update_support_files!(core_file) if support_file_paths
+      update_metadata!
+      update_xml_file!(tei_path, :tei) if tei_path
+      update_xml_file!(tfc_path, :tfc) if tfc_path
+      update_support_files! if support_file_paths
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
@@ -51,7 +52,8 @@ class CoreFileUpserter
   end
 
 
-  def update_metadata!(core_file)
+
+  def update_metadata!
     did = core_file.did
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
@@ -79,24 +81,24 @@ class CoreFileUpserter
     if params[:file_type].present?
       case params[:file_type]
       when "otherography"
-        clear_and_update_ography!(core_file, :otherography_for=) 
+        clear_and_update_ography! :otherography_for=
       when "personography"
-        clear_and_update_ography!(core_file, :personography_for=)
+        clear_and_update_ography! :personography_for=
       when "orgography"
-        clear_and_update_ography!(core_file, :orgography_for=)
+        clear_and_update_ography! :orgography_for=
       when "bibliography"
-        clear_and_update_ography!(core_file, :bibliography_for=)
+        clear_and_update_ography! :bibliography_for=
       when "odd_file"
-        clear_and_update_ography!(core_file, :odd_file_for=)
+        clear_and_update_ography! :odd_file_for=
       when "tei_content"
-        clear_and_update_ography!(core_file)
+        clear_and_update_ography!
       end
     end
 
     core_file.save! 
   end
 
-  def update_xml_file!(core_file, filepath, file_type)
+  def update_xml_file!(filepath, file_type)
     if file_type == :tei
       content = core_file.canonical_object
     elsif file_type == :tfc 
@@ -131,7 +133,7 @@ class CoreFileUpserter
     content.save!
   end
 
-  def update_support_files!(core_file)
+  def update_support_files!
     # First, remove all current support files
     core_file.content_objects.each do |content|
       unless content.instance_of? TEIFile
@@ -162,7 +164,7 @@ class CoreFileUpserter
       end 
     end
 
-    def clear_and_update_ography!(core_file, ography_assignment = nil)
+    def clear_and_update_ography!(ography_assignment = nil)
       core_file.personography_for = []
       core_file.orgography_for = []
       core_file.bibliography_for = []
