@@ -2,6 +2,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include Did
   include OGReference
   include DrupalAccess
+  include TapasQueries
   
   parent_collection_relationship :collection 
 

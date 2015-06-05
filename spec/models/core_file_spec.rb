@@ -71,4 +71,40 @@ describe CoreFile do
       end
     end
   end
+
+  describe "HTML Object Queries" do 
+    let(:core_file) { FactoryGirl.create(:core_file) } 
+    before(:each) { setup_html_tests }
+    after(:each) { core_file.destroy } 
+
+    def setup_html_tests
+      @teibp = HTMLFile.create(:depositor => core_file.depositor)
+      @teibp.html_for << core_file 
+      @teibp.core_file = core_file
+      @teibp.html_type = "teibp"
+      @teibp.save!
+
+      @tapas_generic = HTMLFile.create(:depositor => core_file.depositor) 
+      @tapas_generic.html_for << core_file 
+      @tapas_generic.core_file = core_file
+      @tapas_generic.html_type = "tapas_generic" 
+      @tapas_generic.save!
+    end
+
+    it "can retrieve this CoreFile's teibp object" do 
+      expect(core_file.teibp.class).to eq HTMLFile
+      expect(core_file.teibp.pid).to eq @teibp.pid 
+
+      expect(core_file.teibp(:raw)['id']).to eq @teibp.pid 
+      expect(core_file.teibp(:solr_doc).pid).to eq @teibp.pid
+    end
+
+    it "can retrieve this CoreFile's tapas_generic object" do 
+      expect(core_file.tapas_generic.class).to eq HTMLFile 
+      expect(core_file.tapas_generic.pid).to eq @tapas_generic.pid
+
+      expect(core_file.tapas_generic(:raw)['id']).to eq @tapas_generic.pid
+      expect(core_file.tapas_generic(:solr_doc).pid).to eq @tapas_generic.pid 
+    end
+  end
 end
