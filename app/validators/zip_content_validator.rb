@@ -54,9 +54,11 @@ class ZipContentValidator
       results.xpath("p").each do |error| 
         errors << error.text
       end
-
-      raise Exceptions::InvalidZipError.new "TEI or TFC file at #{path} did " \
-        "not validate as TEI!  Errors were:\n #{errors.join("\n")}"
+      
+      unless errors.empty?
+        raise Exceptions::InvalidZipError.new "TEI or TFC file at #{path} did " \
+          "not validate as TEI!  Errors were:\n #{errors.join("\n")}"
+      end
     end
 
     def self.validate_extension(path, valid_exts, file_type)
