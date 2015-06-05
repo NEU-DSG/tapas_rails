@@ -6,6 +6,8 @@ class CoreFileUpserter
   attr_accessor :mods_path
   attr_accessor :tei_path
   attr_accessor :tfc_path
+  attr_accessor :teibp_path 
+  attr_accessor :tapas_generic_path
   attr_accessor :support_file_paths
 
   def initialize(params)
@@ -24,6 +26,8 @@ class CoreFileUpserter
       ZipContentValidator.mods(mods_path) if mods_path
       ZipContentValidator.tei(tei_path) if tei_path
       ZipContentValidator.tfc(tfc_path) if tfc_path 
+      ZipContentValidator.html(teibp_path) if teibp_path
+      ZipContentValidator.html(tapas_generic_path) if tapas_generic_path
       
       if support_file_paths.any?
         ZipContentValidator.support_files(support_file_paths)
@@ -37,6 +41,8 @@ class CoreFileUpserter
       end
 
       update_metadata!
+      update_html_file!("teibp") 
+      update_html_file!("tapas_generic")
       update_xml_file!(tei_path, :tei) if tei_path
       update_xml_file!(tfc_path, :tfc) if tfc_path
       update_support_files! if support_file_paths
@@ -47,11 +53,34 @@ class CoreFileUpserter
       FileUtils.rm mods_path if mods_path
       FileUtils.rm tei_path if tei_path
       FileUtils.rm tfc_path if tfc_path
+      FileUtils.rm teibp_path if teibp_path
+      FileUtils.rm tapas_generic_path if tapas_generic_path
       support_file_paths.each { |sf| FileUtils.rm sf }
     end
   end
 
+  def update_html_file!(html_type)
+    if html_type == "teibp" 
+      return nil unless teibp_path
+      path = teibp_path
+    elsif html_type == "tapas_generic" 
+      return nil unless tapas_generic_path 
+      path = tapas_generic_path
+    else
+      raise "Invalid HTML file type specified" 
+    end
 
+    if core_file.send(html_type.to_sym, :raw)
+      html = core_file.send(html.to_sym)
+    else
+      html = HTMLFile.create
+      html.core_file = core_file
+      html.html_for << core_file 
+      html.html_type = html_type 
+    end
+
+    add_unique_file!(html, path)
+  end
 
   def update_metadata!
     did = core_file.did
@@ -120,17 +149,7 @@ class CoreFileUpserter
       content.core_file = core_file 
     end
 
-    filename = Pathname.new(filepath).basename.to_s
-    filecontent = File.read(filepath)
-    current_filename = content.content.label 
-    current_filecontent = content.content.content 
-    content.content.mimeType = "application/xml" 
-
-    unless (current_filename == filename) && (current_filecontent == filecontent) 
-      content.add_file(filecontent, "content", filename)
-    end
-
-    content.save!
+    add_unique_file!(content, filepath)
   end
 
   def update_support_files!
@@ -152,6 +171,23 @@ class CoreFileUpserter
   end
 
   private 
+
+    def add_unique_file!(content_object, filepath)
+      new_filename = Pathname.new(filepath).basename.to_s 
+      new_filecontent = File.read filepath 
+
+      current_filename = content_object.content.label 
+      current_filecontent = content_object.content.content 
+
+      fnames_match = (current_filename == new_filename)
+      fcontent_matches = (new_filecontent == current_filecontent) 
+
+      unless fnames_match && fcontent_matches 
+        content_object.add_file(new_filecontent, "content", new_filename)
+      end
+      
+      content_object.save!
+    end
 
     # If we have a new Core File being created, raise an error unless all needed 
     # files are present
