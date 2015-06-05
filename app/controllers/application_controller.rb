@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
 
     if object
       if object.respond_to?(:descendents)
-        object.descendents(:return_as => :models).each { |d| d.delete }
+        object.descendents(:models).each { |d| d.delete }
       end
 
       object.destroy 
