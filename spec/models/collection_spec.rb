@@ -4,6 +4,7 @@ describe Collection do
   describe "phantom collection" do 
     let(:phantom) { Collection.phantom_collection }
 
+    before(:each) { Collection.destroy_all }
     after(:each) { Collection.destroy_all }
 
     it "is created when referenced before existence" do 
