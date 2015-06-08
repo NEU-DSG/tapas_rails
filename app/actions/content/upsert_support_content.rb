@@ -1,4 +1,4 @@
-class UpsertSupportFiles 
+class UpsertSupportContent
   attr_reader :core_file, :new_files
   include Content
 

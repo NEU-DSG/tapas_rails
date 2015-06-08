@@ -1,6 +1,6 @@
 require 'spec_helper' 
 
-describe UpsertSupportFiles do 
+describe UpsertSupportContent do 
   include FileHelpers 
 
   context '#upsert!' do 
@@ -8,7 +8,7 @@ describe UpsertSupportFiles do
       cf = FactoryGirl.create(:core_file)
       imgs = [copy_fixture('tei.xml', "#{SecureRandom.hex}.xml")]
 
-      expect { UpsertSupportFiles.upsert!(cf, imgs) }.
+      expect { UpsertSupportContent.upsert!(cf, imgs) }.
         to raise_error Exceptions::InvalidZipError
       expect(File.exists? imgs.first).to be false
     end
@@ -30,7 +30,7 @@ describe UpsertSupportFiles do
 
         @old_image_pid = @old_image.pid
 
-        UpsertSupportFiles.upsert!(@core_file, [@file, @file_two])
+        UpsertSupportContent.upsert!(@core_file, [@file, @file_two])
         @core_file.reload
       end
 
