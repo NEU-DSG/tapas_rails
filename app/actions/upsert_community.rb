@@ -1,4 +1,4 @@
-class CommunityUpserter
+class UpsertCommunity
   include Concerns::Upserter
 
   def upsert 

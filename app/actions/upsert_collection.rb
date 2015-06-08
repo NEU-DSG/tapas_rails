@@ -1,4 +1,4 @@
-class CollectionUpserter
+class UpsertCollection
   include Concerns::Upserter 
 
   def upsert 

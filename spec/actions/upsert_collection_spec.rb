@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe CollectionUpserter do 
+describe UpsertCollection do
   def params
     { :did => "111",
       :description => "This is a test collection",
@@ -32,7 +32,7 @@ describe CollectionUpserter do
     context "with a preexisting community." do 
       before(:all) do 
         build_parent_community
-        CollectionUpserter.upsert params
+        UpsertCollection.upsert params
       end
 
       after(:all) { ActiveFedora::Base.delete_all } 
@@ -49,7 +49,7 @@ describe CollectionUpserter do
     end
 
     context "without a preexisting community." do 
-      before(:all) { CollectionUpserter.upsert params } 
+      before(:all) { UpsertCollection.upsert params } 
       after(:all) { ActiveFedora::Base.delete_all } 
       it "assigns the collection to the phantom collection bucket" do 
         pid = Rails.configuration.phantom_collection_pid
@@ -69,7 +69,7 @@ describe CollectionUpserter do
       collection_old.depositor = "#{params[:depositor]}_old"
       collection_old.save!
 
-      CollectionUpserter.upsert params
+      UpsertCollection.upsert params
     end
 
     after(:all) { ActiveFedora::Base.delete_all } 
