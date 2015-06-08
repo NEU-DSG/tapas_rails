@@ -1,6 +1,6 @@
 require "spec_helper" 
 
-describe CoreFileUpserter do 
+describe UpsertCoreFile do 
   include FileHelpers
 
   describe "#update_metadata!" do
@@ -12,7 +12,7 @@ describe CoreFileUpserter do
         :file_type => "otherography",
       }
 
-      upserter = CoreFileUpserter.new @params
+      upserter = UpsertCoreFile.new @params
       upserter.mods_path = fixture_file "mods.xml" 
       upserter.core_file = @core = CoreFile.new
       upserter.update_metadata!
@@ -52,7 +52,7 @@ describe CoreFileUpserter do
   describe "#update_html_file!" do 
     context "when creating a teibp file" do 
       before(:all) do 
-        u = CoreFileUpserter.new({})
+        u = UpsertCoreFile.new({})
         u.core_file = @core = FactoryGirl.create(:core_file)
         u.teibp_path = fixture_file "teibp.html" 
         u.update_html_file!("teibp")
@@ -70,7 +70,7 @@ describe CoreFileUpserter do
 
     context "when creating a tapas_generic file" do 
       before(:all) do 
-        u = CoreFileUpserter.new({})
+        u = UpsertCoreFile.new({})
         u.core_file = @core = FactoryGirl.create(:core_file) 
         u.tapas_generic_path = fixture_file "tapas_generic.html" 
         u.update_html_file!("tapas_generic") 
@@ -90,7 +90,7 @@ describe CoreFileUpserter do
   describe "#update_xml_file!" do
     context "when creating a tfc file" do 
       before(:all) do 
-        u = CoreFileUpserter.new({})
+        u = UpsertCoreFile.new({})
         u.tfc_path = fixture_file "tei.xml"
         u.core_file = @core = FactoryGirl.create(:core_file)
         u.update_xml_file!(u.tfc_path, :tfc)
@@ -116,7 +116,7 @@ describe CoreFileUpserter do
 
     context "when creating a tei file" do 
       before(:all) do 
-        u = CoreFileUpserter.new({})
+        u = UpsertCoreFile.new({})
         u.core_file = @core = FactoryGirl.create(:core_file)
         u.tei_path = fixture_file "tei.xml" 
         u.update_xml_file!(u.tei_path, :tei) 
@@ -143,7 +143,7 @@ describe CoreFileUpserter do
 
     context "when updating an xml file" do 
       before(:all) do 
-        u = CoreFileUpserter.new({})
+        u = UpsertCoreFile.new({})
         u.core_file = @core = FactoryGirl.create(:core_file)
         u.tei_path = fixture_file "tei.xml" 
 
@@ -170,7 +170,7 @@ describe CoreFileUpserter do
 
   describe "#update_support_files!" do 
     before(:all) do 
-      u = CoreFileUpserter.new({})
+      u = UpsertCoreFile.new({})
       u.core_file = @core = FactoryGirl.create(:core_file)
       u.support_file_paths = [fixture_file("image.jpg"), 
         fixture_file("other_image.jpg")]

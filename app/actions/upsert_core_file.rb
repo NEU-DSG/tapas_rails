@@ -1,6 +1,6 @@
 require "zip"
 
-class CoreFileUpserter
+class UpsertCoreFile
   include Concerns::Upserter
   attr_accessor :core_file # Saves the core file this upserter is handling
   attr_accessor :mods_path

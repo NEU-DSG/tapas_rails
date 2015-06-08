@@ -1,6 +1,6 @@
 require 'spec_helper' 
 
-describe CommunityUpserter do 
+describe UpsertCommunity do 
   def params 
     { :did => "123",
       :depositor => "011",
@@ -22,7 +22,7 @@ describe CommunityUpserter do
   end
 
   context "Create" do 
-    before(:all) { CommunityUpserter.upsert params } 
+    before(:all) { UpsertCommunity.upsert params } 
     after(:all) { ActiveFedora::Base.delete_all } 
 
     it "builds the requested community" do 
@@ -44,7 +44,7 @@ describe CommunityUpserter do
       community.project_members = ["011"]
       community.drupal_access = "private" 
 
-      CommunityUpserter.upsert params
+      UpsertCommunity.upsert params
     end
 
     after(:all) { ActiveFedora::Base.delete_all } 

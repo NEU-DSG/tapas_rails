@@ -7,6 +7,6 @@ class TapasObjectUpsertJob
 
   def run 
     model = params[:controller].singularize.camelcase
-    "#{model}Upserter".constantize.upsert(params)
+    "Upsert#{model}".constantize.upsert(params)
   end
 end
