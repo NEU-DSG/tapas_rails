@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe CoreFilesController do
   include FileHelpers
-
-  let (:user) { FactoryGirl.create(:user) }
-  let(:params) { { email: user.email, token: "test_api_key" } } 
+  include ValidAuthToken
 
   def test_file(fname)
     pth = Rails.root.join("spec", "fixtures", "files", fname)
@@ -16,19 +14,19 @@ describe CoreFilesController do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "422s for nonexistant dids" do 
-      delete :destroy, params.merge(:did => "not a real did") 
+      delete :destroy, { :did => "not a real did" }
       expect(response.status).to eq 422
     end
 
     it "422s for dids that don't belong to a CoreFile" do 
       community = Community.create(:did => "115", :depositor => "test")
-      delete :destroy, params.merge(:did => community.did)
+      delete :destroy, { :did => community.did }
       expect(response.status).to eq 422
     end
 
     it "200s for dids that belong to a CoreFile and removes the resource" do 
       core = CoreFile.create(:did => "78382", :depositor => "test")
-      delete :destroy, params.merge(:did => core.did)
+      delete :destroy, { :did => core.did }
       expect(response.status).to eq 200
       expect(CoreFile.find_by_did core.did).to be nil 
     end
@@ -48,7 +46,7 @@ describe CoreFilesController do
 
     it "returns a 202 and creates the desired file on a valid request." do 
       Resque.inline = true
-      post :upsert, params.merge(post_defaults)
+      post :upsert, post_defaults
 
       expect(response.status).to eq 202
 

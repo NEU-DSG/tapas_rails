@@ -5,8 +5,6 @@ class CoreFilesController < ApplicationController
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   before_filter :load_core_file, :only => %i(show_teibp show_tapas_generic)
 
-  skip_before_filter :authenticate_api_request, :only => [:show_teibp, :show_tapas_generic]
-
   def show_teibp 
     render_asset(@core_file.teibp)
   end

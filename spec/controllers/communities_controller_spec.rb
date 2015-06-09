@@ -1,23 +1,19 @@
 require 'spec_helper'
 
 describe CommunitiesController do
-  let(:user)   { FactoryGirl.create(:user) } 
+  include ValidAuthToken
 
   describe "#DELETE destroy" do 
     after(:each) { ActiveFedora::Base.delete_all }
-    
-    let(:params) do 
-      { :email => user.email, :token => "test_api_key" }
-    end
 
     it "422s for dids that don't exist" do 
-      delete :destroy, params.merge(:did => "doesn't exist")
+      delete :destroy, { :did => 'doesnt_exist' }
       expect(response.status).to eq 422
     end
 
     it "422s for dids that don't belong to a Community" do 
       core_file = CoreFile.create(:did => "123", :depositor => "test")
-      delete :destroy, params.merge(:did => core_file.did)
+      delete :destroy, { :did => core_file.did }
       expect(response.status).to eq 422
     end
 
@@ -25,7 +21,7 @@ describe CommunitiesController do
       community = Community.create(:did => "123575", :depositor => "test")
       collection = Collection.create(:did => "128654", :depositor => "test") 
       collection.save! ; collection.community = community ; collection.save!
-      delete :destroy, params.merge(:did => community.did)
+      delete :destroy, { :did => community.did }
       expect(response.status).to eq 200
       expect(Community.find_by_did community.did).to be nil 
       expect(Collection.find_by_did collection.did).to be nil
@@ -39,9 +35,7 @@ describe CommunitiesController do
     let(:community) { Community.find_by_did params[:did] }
 
     let(:params) do 
-      { :email => user.email, 
-        :token => "test_api_key",
-        :title => "Test Community",
+      { :title => "Test Community",
         :depositor => "000000000",
         :description => "This is a test community.",
         :members => %w(1 2 3),
