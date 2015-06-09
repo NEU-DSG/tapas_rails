@@ -8,35 +8,26 @@ module ApiAccessible
     # But enforce credential checks on each and every request.
     # Note that this and the csrf disable up top will have to be 
     # reworked once tapas_rails is the actual frontend for tapas.
-    if Rails.env.development?
-      before_action :authenticate_api_request, except: [:show_tfc] 
-    else
-      before_action :authenticate_api_request
-    end
+    before_action :authenticate
 
     before_action :validate_request_params, only: [:upsert]
   end
 
   private
 
+  def authenticate
+    authenticate_api_request || render_403
+  end
+
   def authenticate_api_request
-    email   = params[:email]
-    api_key = params[:token]
-
-    render_json_403 = Proc.new do 
-      render(json: { message: "Access denied" }, status: 403) and return 
+    authenticate_with_http_token do |token, options| 
+      hash = Digest::SHA512.hexdigest token
+      return User.exists?(:encrypted_api_key => hash)
     end
+  end
 
-    if User.where(:email => email).any?
-      user = User.where(:email => email).first
-      render_json_403.call and return unless (user.api_key == api_key)
-    else
-      render_json_403.call and return
-    end
-
-    # Strip api_key and validation email so they're never 
-    # displayed/used past this point
-    params.except!(:token, :email)
+  def render_403
+    render(:json => "Access denied", :status => 403) and return 
   end
 
   # Validate the params associated with update and create API requests
