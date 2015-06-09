@@ -6,14 +6,13 @@ shared_examples_for "an API enabled controller" do
   describe "authentication" do 
 
     it "raises a 403 for requests with no authorization header" do
-      request.env['HTTP_AUTHORIZATION'] = nil
+      set_auth_token(nil)
       post :upsert
       expect(response.status).to eq 403
     end
 
     it "raises a 403 for requests with an invalid token" do 
-      request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::
-        Token.encode_credentials(SecureRandom.hex)
+      set_auth_token('bupkes')
       post :upsert
       expect(response.status).to eq 403
     end

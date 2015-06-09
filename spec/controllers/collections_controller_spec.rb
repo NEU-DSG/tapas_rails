@@ -35,8 +35,7 @@ describe CollectionsController do
     after(:all) { ActiveFedora::Base.delete_all } 
 
     it "403s for unauthorized requests" do 
-      request.env['HTTP_AUTHORIZATION'] = ActionController::HttpAuthentication::
-        Token.encode_credentials('not_an_api_key')
+      set_auth_token('bupkes')
       post :upsert
       expect(response.status).to eq 403
     end
