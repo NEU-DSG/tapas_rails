@@ -2,15 +2,7 @@ require 'spec_helper'
 
 describe CoreFilesController do
   include FileHelpers
-
-  before(:each) do 
-    # Instatiate the test user before we try to use his credentials 
-    FactoryGirl.create(:user) 
-
-    t = ActionController::HttpAuthentication::Token.
-      encode_credentials('test_api_key')
-    request.env['HTTP_AUTHORIZATION'] = t 
-  end
+  include ValidAuthToken
 
   def test_file(fname)
     pth = Rails.root.join("spec", "fixtures", "files", fname)

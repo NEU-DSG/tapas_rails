@@ -1,14 +1,7 @@
 require 'spec_helper'
 
 describe CommunitiesController do
-  
-  before(:each) do 
-    FactoryGirl.create(:user)
-
-    t = ActionController::HttpAuthentication::Token.
-      encode_credentials('test_api_key') 
-    request.env['HTTP_AUTHORIZATION'] = t
-  end
+  include ValidAuthToken
 
   describe "#DELETE destroy" do 
     after(:each) { ActiveFedora::Base.delete_all }

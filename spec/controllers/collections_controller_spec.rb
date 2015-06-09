@@ -1,16 +1,9 @@
 require 'spec_helper'
 
 describe CollectionsController do
+  include ValidAuthToken
+
   it_should_behave_like "an API enabled controller"
-
-  before(:each) do 
-    # Instatiate the test user before we try to use his credentials
-    FactoryGirl.create(:user)
-
-    t = ActionController::HttpAuthentication::Token.
-      encode_credentials('test_api_key')
-    request.env['HTTP_AUTHORIZATION'] = t
-  end
 
   describe "DELETE destroy" do 
     after(:each) { ActiveFedora::Base.delete_all }
