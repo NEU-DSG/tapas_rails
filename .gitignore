@@ -21,6 +21,7 @@
 # Ignore Figaro generated configuration file 
 /config/application.yml
 
+<<<<<<< HEAD
 # Ignore Redis generated dump file
 dump.rdb
 
