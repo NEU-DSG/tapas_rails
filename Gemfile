@@ -9,6 +9,9 @@ gem 'sqlite3'
 # Use rubyzip to handle Zipped content files from Drupal
 gem 'rubyzip'
 
+# Use passenger as the application server
+gem 'passenger'
+
 # Use mysql2 for the staging environment 
 gem 'mysql2'
 
