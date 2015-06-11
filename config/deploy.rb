@@ -2,7 +2,7 @@
 lock '3.2.1'
 
 set :application, 'tapas_rails'
-set :repo_url, 'https://github.com/neu-libraries/tapas_rails'
+set :repo_url, 'https://github.com/neu-dsg/tapas_rails'
 
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
