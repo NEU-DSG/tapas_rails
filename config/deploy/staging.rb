@@ -46,7 +46,7 @@ server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db}
 
 
 set :deploy_to, '/home/tapas_rails/tapas_rails'
-set :branch, 'develop'
+set :branch, 'feature/staging_deploy_considerations'
 set :rails_env, 'staging'
 
 after 'deploy:updating', 'deploy:copy_figaro_conf'
