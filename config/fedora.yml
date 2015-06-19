@@ -4,8 +4,8 @@ development:
   url: http://127.0.0.1:8983/fedora
 staging: 
   user: fedoraAdmin
-  password: fedoraAdmin 
-  url: http://127.0.0.1:8987/fedora
+  password: <%= ENV['STAGING_FEDORA_PASSWORD'] %>
+  url: http://127.0.0.1:8080/fedora
 test: &TEST  
   user: fedoraAdmin
   password: fedoraAdmin
