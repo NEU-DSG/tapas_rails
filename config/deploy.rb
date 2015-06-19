@@ -52,7 +52,7 @@ namespace :deploy do
     on roles(:app), in: :sequence, wait: 5 do
       execute :mkdir, "#{release_path}/tmp"
       execute :touch, "#{release_path}/tmp/restart.txt"
-      execute "service tomcat restart"
+      execute "/sbin/service tomcat restart"
     end
   end
 
