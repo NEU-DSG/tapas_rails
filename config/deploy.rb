@@ -50,7 +50,8 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      execute "touch #{release_path}/tmp/restart.txt"
+      execute :mkdir, "#{release_paty}/tmp"
+      execute :touch, "#{release_path}/tmp/restart.txt"
       execute "service tomcat restart"
     end
   end
