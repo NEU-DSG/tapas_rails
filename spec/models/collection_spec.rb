@@ -1,6 +1,32 @@
 require 'spec_helper'
 
 describe Collection do 
+  describe "Core File drupal access" do 
+    let(:coll) { FactoryGirl.create(:collection) }
+    
+    context "on a collection that has been made public" do 
+      
+      it 'is set to public' do 
+        one, two = FactoryGirl.create_list(:core_file, 2)
+        one.drupal_access = 'private' ; one.collection = coll ; one.save!
+        two.drupal_access = 'private' ; two.collection = coll ; two.save! 
+
+        expect(one.reload.drupal_access).to eq 'private'
+        expect(two.reload.drupal_access).to eq 'private' 
+
+        coll.drupal_access = 'public'
+        coll.save! 
+
+        expect(one.reload.drupal_access).to eq 'public' 
+        expect(two.reload.drupal_access).to eq 'public'
+      end
+    end
+
+    context "on a collection that has been made private" do 
+
+    end
+  end
+
   describe "phantom collection" do 
     let(:phantom) { Collection.phantom_collection }
 
