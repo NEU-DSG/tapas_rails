@@ -9,7 +9,7 @@ describe CoreFileValidator do
       { :files => "default",
         :did => "default",
         :access => "public",
-        :collection_did => "default",
+        :collection_dids => ["default", "default2"],
         :file_type => "tei_content",
         :depositor => "default",
         :action => "upsert" }
@@ -59,7 +59,7 @@ describe CoreFileValidator do
       end
 
       it "raises an error if no collection id is present" do 
-        expect(validation_errors(params.except :collection_did).length).to eq 1
+        expect(validation_errors(params.except :collection_dids).length).to eq 1
       end
 
       it "raises an error with no files param" do 
