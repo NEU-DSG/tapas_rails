@@ -14,14 +14,14 @@ describe "The OG Reference module" do
   let(:tester) { OGReferenceTester.new }
 
   it "implements setters/getters for the OG module" do 
-    tester.og_reference = "tapas_og"
-    expect(tester.og_reference).to eq "tapas_og"
+    tester.og_reference = ["tapas_og"]
+    expect(tester.og_reference).to eq ['tapas_og']
   end
 
   it "allows us to look up all objects with a certain og_reference" do 
     make_tester = Proc.new do |og_ref|
       o = OGReferenceTester.new
-      o.og_reference = og_ref
+      o.og_reference = [og_ref]
       o.save!
       o
     end
@@ -31,7 +31,7 @@ describe "The OG Reference module" do
     c = make_tester.call('112')
 
     d = OGReferenceTesterTwo.new
-    d.og_reference = "111" 
+    d.og_reference = ['111']
     d.save! 
 
     result = OGReference.find_all_in_og('111')
