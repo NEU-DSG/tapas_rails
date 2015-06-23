@@ -3,6 +3,8 @@ class Collection < CerberusCore::BaseModels::Collection
   include OGReference
   include DrupalAccess
 
+  before_save :update_core_files
+
   has_core_file_types  ["CoreFile"]
   has_collection_types ["Collection"]
 
@@ -39,4 +41,27 @@ class Collection < CerberusCore::BaseModels::Collection
       return c
     end 
   end
+
+  def drupal_access=(level)
+    properties.drupal_access = level 
+    @drupal_access_changed = true 
+  end
+
+  private 
+
+    def update_core_files
+      return true unless @drupal_access_changed 
+
+      if drupal_access == 'private' 
+
+      elsif drupal_access == 'public' 
+        self.descendent_records(:raw).each do |record| 
+          unless record['drupal_access_ssim'] == 'public'
+            core_file = CoreFile.find(record['id'])
+            core_file.drupal_access = 'public' 
+            core_file.save! 
+          end
+        end
+      end
+    end
 end
