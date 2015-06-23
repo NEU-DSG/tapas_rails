@@ -26,12 +26,14 @@ describe PropertiesDatastream do
 
   it "solrizes correctly" do 
     properties.depositor = "William Jackson"
-    properties.og_reference = "321" 
+    properties.drupal_access = 'public'
+    properties.og_reference = ['321']
     properties.project_members = ["1", "2"]
     properties.html_type = "teibp"
 
+    expect(solr_hash["drupal_access_ssim"]).to eq 'public'
     expect(solr_hash["depositor_tesim"]).to eq ["William Jackson"]
-    expect(solr_hash["drupal_og_reference_ssim"]).to eq "321"
+    expect(solr_hash["drupal_og_reference_ssim"]).to eq ["321"]
     expect(solr_hash["html_type_ssi"]).to eq "teibp" 
   end
 end

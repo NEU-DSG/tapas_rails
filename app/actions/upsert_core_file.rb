@@ -54,7 +54,7 @@ class UpsertCoreFile
     did = core_file.did
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
-    core_file.og_reference = params[:collection_did] if params[:collection_did].present?
+    core_file.og_reference = params[:collection_dids] if params[:collection_dids].present?
 
     # Make sure to rewrite the did/pid after updating MODS.
     if file_hash[:mods]
@@ -63,14 +63,15 @@ class UpsertCoreFile
       core_file.mods.identifier = core_file.pid 
     end
 
-    if params[:collection_did].present?
-      core_file.save! unless core_file.persisted?
-
-      if Did.exists_by_did? params[:collection_did]
-        core_file.collection = Collection.find_by_did params[:collection_did]
-      else
-        core_file.collection = Collection.phantom_collection
+    if params[:collection_dids].present? 
+      core_file.save!
+      params[:collection_dids].each do |did| 
+        if Did.exists_by_did?(did)
+          core_file.collections << Collection.find_by_did(did)
+        end
       end
+
+      core_file.save!
     end
 
     # Rewrite the ography relationship that this core file has
@@ -122,7 +123,7 @@ class UpsertCoreFile
     core_file.odd_file_for = []
 
     if ography_assignment
-      core_file.send(ography_assignment, [core_file.collection])
+      core_file.send(ography_assignment, [*core_file.collections])
     end
   end
 end

@@ -23,7 +23,7 @@ class UpsertCollection
       collection.mods.abstract = params[:description] if params[:description].present?
       collection.depositor = params[:depositor] if params[:depositor].present?
       collection.drupal_access = params[:access] if params[:access].present?
-      collection.og_reference = params[:project_did] if params[:project_did].present?
+      collection.og_reference = [params[:project_did]] if params[:project_did].present?
 
       if params[:project_did].present?
         collection.save! unless collection.persisted?

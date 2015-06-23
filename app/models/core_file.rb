@@ -4,7 +4,8 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include DrupalAccess
   include TapasQueries
   
-  parent_collection_relationship :collection 
+  has_and_belongs_to_many :collections, :property => :is_member_of, 
+    :class_name => "Collection"
 
   has_many :page_images, :property => :is_page_image_for, 
     :class_name => "ImageMasterFile"

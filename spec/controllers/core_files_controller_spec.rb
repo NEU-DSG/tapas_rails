@@ -34,18 +34,28 @@ describe CoreFilesController do
 
   describe "POST #upsert" do
     let(:post_defaults) do 
-      { :collection_did => "12345",
-        :did            => "111",
-        :access         => "private",
-        :depositor      => "wjackson",
-        :files          => test_file(fixture_file("all_files.zip")),
-        :file_type      => "tei_content", }
+      { :collection_dids => ["12345", "22345"],
+        :did             => "111",
+        :access          => "private",
+        :depositor       => "wjackson",
+        :files           => test_file(fixture_file("all_files.zip")),
+        :file_type       => "tei_content", }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
 
     it "returns a 202 and creates the desired file on a valid request." do 
       Resque.inline = true
+
+      # Create the relevant collections
+      collection_one = FactoryGirl.create :collection
+      collection_one.did = post_defaults[:collection_dids][0]
+      collection_one.save! 
+
+      collection_two = FactoryGirl.create :collection
+      collection_two.did = post_defaults[:collection_dids][1]
+      collection_two.save!
+
       post :upsert, post_defaults
 
       expect(response.status).to eq 202
@@ -53,6 +63,11 @@ describe CoreFilesController do
       core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:model)
       tfc  = core.tfc.first
+
+      collection_pids = core.collections.map { |x| x.pid } 
+
+      expected_pids = [collection_one.pid, collection_two.pid]
+      expect(collection_pids).to match_array expected_pids
 
       expect(tei.class).to eq TEIFile
       expect(tei.content.content.size).not_to eq 0 

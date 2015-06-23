@@ -5,12 +5,18 @@ describe UpsertCoreFile do
 
   describe "#update_metadata!" do
     before(:all) do 
+      ActiveFedora::Base.delete_all
+
       @params = { 
         :depositor => "tapas@neu.edu",
         :access => "public",
-        :collection_did => "111",
+        :collection_dids => ["111"],
         :file_type => "otherography",
       }
+
+      @collection = FactoryGirl.create(:collection)
+      @collection.did = @params[:collection_dids].first
+      @collection.save!
 
       upserter = UpsertCoreFile.new @params
       upserter.file_hash = {}
@@ -20,7 +26,7 @@ describe UpsertCoreFile do
       @core.reload
     end
 
-    after(:all) { @core.delete } 
+    after(:all) { ActiveFedora::Base.delete_all } 
 
     it "sets the depositor equal to params[:depositor]" do 
       expect(@core.depositor).to eq @params[:depositor]
@@ -30,10 +36,12 @@ describe UpsertCoreFile do
       expect(@core.drupal_access).to eq @params[:access] 
     end
 
-    it "assigns the object to the phantom collection when no collection" \
-      "with params[:collection_did] exists" do 
-      pid = Rails.configuration.phantom_collection_pid
-      expect(@core.collection.pid).to eq pid
+    it "assigns the object to all collections listed in collection_dids" do 
+      expect(@core.collections).to match_array [@collection]
+    end
+
+    it "sets og reference to the provided collection_dids" do 
+      expect(@core.og_reference).to match_array @params[:collection_dids]
     end
 
     # This test relies on usage of the mods.xml file
@@ -46,7 +54,7 @@ describe UpsertCoreFile do
     end
 
     it "writes the object's file type" do 
-      expect(@core.otherography_for.first).to eq Collection.phantom_collection
+      expect(@core.otherography_for.first.pid).to eq @collection.pid
     end
   end
 end
