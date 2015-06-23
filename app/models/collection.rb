@@ -3,7 +3,7 @@ class Collection < CerberusCore::BaseModels::Collection
   include OGReference
   include DrupalAccess
 
-  before_save :update_core_files
+  after_save :update_core_files
 
   has_core_file_types  ["CoreFile"]
   has_collection_types ["Collection"]
