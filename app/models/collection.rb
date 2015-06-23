@@ -43,12 +43,17 @@ class Collection < CerberusCore::BaseModels::Collection
   end
 
   def drupal_access=(level)
+    # Because we override the methods provided by the DrupalAccess module here,
+    # we need to manually ensure that the multiple: false flag is enforced on 
+    # set.
+    error = 'Drupal access cannot have multiple values'
+    raise error if level.instance_of? Array
+
     properties.drupal_access = level 
     @drupal_access_changed = true 
   end
 
   private 
-
     def update_core_files
       return true unless @drupal_access_changed 
 
