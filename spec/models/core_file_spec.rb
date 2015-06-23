@@ -1,6 +1,26 @@
 require "spec_helper" 
 
 describe CoreFile do 
+  describe "Collections relationship" do 
+    let(:core_file) { FactoryGirl.create :core_file }
+
+    it { respond_to :collections }
+    it { respond_to :collections= }
+    it { should_not respond_to :collection } 
+    it { should_not respond_to :collection= }
+
+    after(:each) { ActiveFedora::Base.delete_all }
+
+    it "are manipulated as arrays" do 
+      c, d = FactoryGirl.create_list(:collection, 2)
+
+      core_file.collections << c 
+      core_file.collections << d 
+
+      expect(core_file.collections).to match_array [c, d]
+    end
+  end
+
   describe "TFC relationship" do 
     it { respond_to :tfc } 
     it { respond_to :tfc= } 
