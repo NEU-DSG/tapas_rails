@@ -54,7 +54,7 @@ class UpsertCoreFile
     did = core_file.did
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
-    core_file.og_reference = params[:collection_did] if params[:collection_did].present?
+    core_file.og_reference = params[:collection_dids] if params[:collection_dids].present?
 
     # Make sure to rewrite the did/pid after updating MODS.
     if file_hash[:mods]

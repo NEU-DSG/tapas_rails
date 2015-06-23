@@ -40,6 +40,10 @@ describe UpsertCoreFile do
       expect(@core.collections).to match_array [@collection]
     end
 
+    it "sets og reference to the provided collection_dids" do 
+      expect(@core.og_reference).to match_array @params[:collection_dids]
+    end
+
     # This test relies on usage of the mods.xml file
     it "assigns the metadata from the mods_path field to the mods record" do 
       expect(@core.mods.title.first).to eq "Test X, private"
