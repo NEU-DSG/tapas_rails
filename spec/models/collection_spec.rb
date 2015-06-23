@@ -3,14 +3,14 @@ require 'spec_helper'
 describe Collection do 
   describe "Core File drupal access" do 
     let(:coll) { FactoryGirl.create(:collection) }
+
+    after(:each) { ActiveFedora::Base.delete_all }
     
     context "on a collection that has been made public" do 
-      
       it 'is set to public' do 
         one, two = FactoryGirl.create_list(:core_file, 2)
         one.drupal_access = 'private' ; one.collections << coll ; one.save!
-        two.drupal_access = 'private' ; two.collections << coll ; two.save! 
-
+        two.drupal_access = 'private' ; two.collections << coll ; two.save!
         expect(one.reload.drupal_access).to eq 'private'
         expect(two.reload.drupal_access).to eq 'private' 
 
@@ -23,7 +23,31 @@ describe Collection do
     end
 
     context "on a collection that has been made private" do 
+      it 'is set to private unless the object has other public collections' do
+        one, two = FactoryGirl.create_list(:core_file, 2)
 
+        public_collection = FactoryGirl.create(:collection)
+        public_collection.drupal_access = 'public' 
+        public_collection.save! 
+
+        private_collection = FactoryGirl.create(:collection) 
+        private_collection.drupal_access = 'private' 
+        private_collection.save! 
+
+        one.collections = [coll, public_collection] 
+        one.drupal_access = 'public' 
+        one.save!
+
+        two.collections = [coll, private_collection] 
+        two.drupal_access = 'public' 
+        two.save!
+
+        coll.drupal_access = 'private'
+        coll.save!
+
+        expect(one.reload.drupal_access).to eq 'public' 
+        expect(two.reload.drupal_access).to eq 'private'
+      end
     end
   end
 

@@ -57,8 +57,21 @@ class Collection < CerberusCore::BaseModels::Collection
     def update_core_files
       return true unless @drupal_access_changed 
 
+      # If this collection is now private, we have to check to see if any other
+      # collection that this object's CoreFiles belong to are public.  If none
+      # are, we change that CoreFile to now also be private.
       if drupal_access == 'private' 
-
+        self.descendent_records(:solr_docs).each do |solr_doc|
+          unless solr_doc.any_public_collections?
+            puts "Private update being run"
+            core_file = CoreFile.find(solr_doc.pid)
+            core_file.drupal_access = 'private' 
+            core_file.save!
+          end
+        end
+      # In this case we simply change all CoreFiles that this collection has
+      # to be public, because a CoreFile has the least restrictive permission
+      # level set by one of its parents 
       elsif drupal_access == 'public' 
         self.descendent_records(:raw).each do |record| 
           unless record['drupal_access_ssim'] == 'public'
