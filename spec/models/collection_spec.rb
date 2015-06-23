@@ -8,8 +8,8 @@ describe Collection do
       
       it 'is set to public' do 
         one, two = FactoryGirl.create_list(:core_file, 2)
-        one.drupal_access = 'private' ; one.collection = coll ; one.save!
-        two.drupal_access = 'private' ; two.collection = coll ; two.save! 
+        one.drupal_access = 'private' ; one.collections << coll ; one.save!
+        two.drupal_access = 'private' ; two.collections << coll ; two.save! 
 
         expect(one.reload.drupal_access).to eq 'private'
         expect(two.reload.drupal_access).to eq 'private' 
