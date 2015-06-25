@@ -63,6 +63,9 @@ gem 'exception_notification'
 # Use ParseConfig to do some exception mailer related conf
 gem 'parseconfig'
 
+# Use rest-client to handle building calls to eXist 
+gem 'rest-client'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

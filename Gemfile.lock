@@ -443,6 +443,7 @@ DEPENDENCIES
   passenger
   rails (= 4.0.8)
   resque
+  rest-client
   rspec-rails
   rubyzip
   sass-rails (~> 4.0.2)
