@@ -1,6 +1,4 @@
 development: 
-  base_path: "localhost:8983/exist/rest/db/apps/development"
+  base_path: 'http://localhost:8868/exist/apps/tapas-xq'
 test: 
-  base_path: "localhost:8983/exist/rest/db/apps/test"
-staging:
-  base_path: "localhost:8983/exist/rest/db/apps/staging"
+  base_path: 'http://localhost:8868/exist/apps/tapas-xq'
