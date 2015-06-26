@@ -6,12 +6,13 @@ describe CoreFileValidator do
 
   describe "on POST #upsert" do 
     let(:params) do 
-      { :files => "default",
+      { :tei => "default",
         :did => "default",
         :access => "public",
         :collection_dids => ["default", "default2"],
         :file_type => "tei_content",
         :depositor => "default",
+        :support_files => "files.zip",
         :action => "upsert" }
     end
 
@@ -62,8 +63,12 @@ describe CoreFileValidator do
         expect(validation_errors(params.except :collection_dids).length).to eq 1
       end
 
-      it "raises an error with no files param" do 
-        expect(validation_errors(params.except :files).length).to eq 1 
+      it "raises an error with no tei param" do 
+        expect(validation_errors(params.except :tei).length).to eq 1
+      end
+
+      it "doesn't raise an error with no support_files param" do 
+        expect(validation_errors(params.except :support_files).length).to eq 0
       end
     end
 
