@@ -3,7 +3,6 @@ require "zip"
 class UpsertCoreFile
   include Concerns::Upserter
   attr_accessor :core_file # Saves the core file this upserter is handling
-  attr_accessor :file_hash
 
   def initialize(params)
     @params = params
@@ -22,20 +21,8 @@ class UpsertCoreFile
 
       update_metadata!
 
-      if file_hash[:teibp]
-        UpsertHTMLContent.upsert!(core_file, file_hash[:teibp], :teibp)
-      end
-      
-      if file_hash[:tapas_generic]
-        UpsertHTMLContent.upsert!(core_file, file_hash[:tapas_generic], :tapas_generic)
-      end
-
-      if file_hash[:tei]
-        UpsertXMLContent.upsert!(core_file, file_hash[:tei], :tei)
-      end
-
-      if file_hash[:tfc]
-        UpsertXMLContent.upsert!(core_file, file_hash[:tfc], :tfc)
+      if params[:tei] 
+        UpsertXMLContent.upsert!(core_file, params[:tei], :tei)
       end
 
       if file_hash[:support_files]
@@ -45,7 +32,8 @@ class UpsertCoreFile
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
-      FileUtils.rm_rf file_hash[:directory]
+      FileUtils.rm params[:tei] if params[:tei]
+      FileUtils.rm params[:support_files] if params[:support_files]
     end
   end
 
@@ -55,13 +43,6 @@ class UpsertCoreFile
     core_file.depositor = params[:depositor] if params[:depositor].present?
     core_file.drupal_access = params[:access] if params[:access].present?
     core_file.og_reference = params[:collection_dids] if params[:collection_dids].present?
-
-    # Make sure to rewrite the did/pid after updating MODS.
-    if file_hash[:mods]
-      core_file.mods.content = File.read(file_hash[:mods])
-      core_file.did = did 
-      core_file.mods.identifier = core_file.pid 
-    end
 
     if params[:collection_dids].present? 
       core_file.save!
@@ -97,23 +78,6 @@ class UpsertCoreFile
   end
 
   private 
-
-  # If we have a new Core File being created, raise an error unless all needed 
-  # files are present
-  def ensure_complete_upload! 
-    mods = file_hash[:mods] 
-    tei = file_hash[:tei]
-    tfc = file_hash[:tfc]
-    teibp = file_hash[:teibp]
-    tapas_generic = file_hash[:tapas_generic]
-
-    unless mods && tei && tfc && teibp && tapas_generic
-      raise "Could not create a new Core File using the zipped content!" \
-        " Mods file found at #{mods || 'NOT FOUND'}," \
-        " TEI file found at #{tei || 'NOT FOUND'}," \
-        " TFC file found at #{tfc || 'NOT FOUND'}"
-    end 
-  end
 
   def clear_and_update_ography!(ography_assignment = nil)
     core_file.personography_for = []
