@@ -21,6 +21,42 @@ describe CoreFile do
     end
   end
 
+  describe "#project" do 
+
+    after(:each) { ActiveFedora::Base.delete_all } 
+
+    it "returns nil for CoreFiles that belong to no collections" do 
+      core_file = FactoryGirl.create :core_file 
+
+      expect(core_file.project).to be nil
+    end
+
+    it "returns nil for CoreFiles that belong to orphaned collections" do 
+      core_file = FactoryGirl.create :core_file
+      collection = FactoryGirl.create :collection
+
+      core_file.collections << collection
+      core_file.save! 
+
+      expect(core_file.project).to be nil
+    end
+
+    it "returns a project for CoreFiles that belong to an OK collection" do 
+      core_file = FactoryGirl.create :core_file 
+      collection = FactoryGirl.create :collection 
+      community = FactoryGirl.create :community 
+
+      core_file.collections << collection 
+      core_file.save! 
+
+      collection.community = community 
+      collection.save! 
+
+      expect(core_file.project.pid).to eq community.pid
+    end
+
+  end
+
   describe "TFC relationship" do 
     it { respond_to :tfc } 
     it { respond_to :tfc= } 

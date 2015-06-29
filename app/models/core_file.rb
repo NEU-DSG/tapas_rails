@@ -25,4 +25,17 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
+
+
+  # Return the project that this CoreFile belongs to.  Necessary for easily 
+  # finding all of the project level ographies that exist.
+  def project 
+    return nil if collections.blank?
+
+    collection = collections.first 
+
+    return nil if collection.community.blank?
+
+    return collection.community
+  end
 end
