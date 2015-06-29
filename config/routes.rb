@@ -21,15 +21,21 @@ TapasRails::Application.routes.draw do
     mount Resque::Server, at: "/resque" 
   end
 
+  # Communities
   post "communities/upsert" => "communities#upsert"
   delete "communities/:did" => "communities#destroy"
+
+  # Collections
   post "collections/upsert" => "collections#upsert" 
   delete "collections/:did" => "collections#destroy"
 
+  # CoreFiles
   get 'files/:did/teibp' => 'core_files#show_teibp'
   get 'files/:did/tapas_generic' => 'core_files#show_tapas_generic'
   post 'files/upsert' => 'core_files#upsert', as: "upsert"
   delete "files/:did" => "core_files#destroy"
+
+  resources :downloads, :only => 'show'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
