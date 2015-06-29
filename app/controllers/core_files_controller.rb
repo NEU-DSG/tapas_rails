@@ -14,11 +14,11 @@ class CoreFilesController < ApplicationController
   end
 
   def upsert
-    if params[:files].present?
-      params[:files] = create_temp_file params[:files]
+    if params[:tei].present?
+      params[:tei] = create_temp_file params[:tei]
     end
 
-    if params[:support_files.present?
+    if params[:support_files].present?
       params[:support_files] = create_temp_file params[:support_files]    
     end
 
@@ -35,8 +35,7 @@ class CoreFilesController < ApplicationController
     
     tmp = Rails.root.join('tmp', "#{SecureRandom.hex}-#{fname}").to_s 
     FileUtils.mv(fpath, tmp) 
-
-    tmp 
+    return tmp
   end
 
   def load_core_file

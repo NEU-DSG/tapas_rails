@@ -10,13 +10,10 @@ class UpsertCoreFile
 
   def upsert
     begin 
-      self.file_hash = ExtractFiles.extract!(params[:files])
-
       if Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did])
       else
         self.core_file = CoreFile.create(:did => params[:did])
-        ensure_complete_upload!
       end
 
       update_metadata!
@@ -25,14 +22,14 @@ class UpsertCoreFile
         UpsertXMLContent.upsert!(core_file, params[:tei], :tei)
       end
 
-      if file_hash[:support_files]
+      if params[:support_files]
         UpsertSupportContent.upsert!(core_file, file_hash[:support_files])
       end
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
-      FileUtils.rm params[:tei] if params[:tei]
+      FileUtils.rm params[:tei] if params[:tei] && File.exists?(params[:tei])
       FileUtils.rm params[:support_files] if params[:support_files]
     end
   end
