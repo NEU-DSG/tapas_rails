@@ -14,23 +14,29 @@ class CoreFilesController < ApplicationController
   end
 
   def upsert
-    # If params[:file] is set to anything, we assume 
-    # we need to perform a file content update - extract 
-    # filepath and filename
-    if params[:files].present?
-      fpath = params[:files].path
-      fname = params[:files].original_filename
-      tmp = Rails.root.join("tmp", "#{SecureRandom.hex}-#{fname}").to_s
-      FileUtils.mv(fpath, tmp)
-      params[:files] = tmp
+    if params[:tei].present?
+      params[:tei] = create_temp_file params[:tei]
+    end
+
+    if params[:support_files].present?
+      params[:support_files] = create_temp_file params[:support_files]    
     end
 
     TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 
-    @response[:message] = "CoreFile create/update in progress" 
-    pretty_json(202) and return 
+    @response[:message] = "CoreFile update/create in progress" 
+    pretty_json(202) and return
   end
 
   private
+
+  def create_temp_file(file)
+    fpath = file.path
+    fname = file.original_filename 
+    
+    tmp = Rails.root.join('tmp', "#{SecureRandom.hex}-#{fname}").to_s 
+    FileUtils.mv(fpath, tmp) 
+    return tmp
+  end
 
   def load_core_file
     @core_file = CoreFile.find_by_did(params[:did]) 

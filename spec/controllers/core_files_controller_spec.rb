@@ -38,7 +38,7 @@ describe CoreFilesController do
         :did             => "111",
         :access          => "private",
         :depositor       => "wjackson",
-        :files           => test_file(fixture_file("all_files.zip")),
+        :tei             => test_file(fixture_file('tei.xml')),
         :file_type       => "tei_content", }
     end
 
@@ -62,7 +62,6 @@ describe CoreFilesController do
 
       core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:model)
-      tfc  = core.tfc.first
 
       collection_pids = core.collections.map { |x| x.pid } 
 
@@ -71,10 +70,6 @@ describe CoreFilesController do
 
       expect(tei.class).to eq TEIFile
       expect(tei.content.content.size).not_to eq 0 
-
-      expect(tfc.class).to eq TEIFile
-      expect(tfc.content.content.size).not_to eq 0
-
 
       Resque.inline = false
     end 
