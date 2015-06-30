@@ -33,9 +33,9 @@ describe BuildSupportFileMap do
       b = BuildSupportFileMap.new(core_file, community) 
 
       b.create_file_level_map
-      expect(b.result[:file_level]['file_one.jpeg']).to eq b.download_url one
-      expect(b.result[:file_level]['file_two.png']).to eq b.download_url two 
-      expect(b.result[:file_level]['file_three.jpg']).to eq b.download_url three
+      expect(b.result[:file]['file_one.jpeg']).to eq b.download_url one
+      expect(b.result[:file]['file_two.png']).to eq b.download_url two 
+      expect(b.result[:file]['file_three.jpg']).to eq b.download_url three
     end
   end
 
