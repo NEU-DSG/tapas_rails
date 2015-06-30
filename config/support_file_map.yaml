@@ -1,0 +1,3 @@
+development: "rails_api.localhost:8080" 
+test: 'rails_api.localhost:8080'
+staging: "rails_api.tapasdev.neu.edu" 
