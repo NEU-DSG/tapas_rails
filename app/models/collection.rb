@@ -2,6 +2,7 @@ class Collection < CerberusCore::BaseModels::Collection
   include Did
   include OGReference
   include DrupalAccess
+  include TapasQueries
 
   after_save :update_core_files
 

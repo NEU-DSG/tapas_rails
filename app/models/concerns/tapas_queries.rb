@@ -21,7 +21,64 @@ module TapasQueries
       load_specified_type(tg, as)
     end
 
+    # Returns all of the TEIFile objects that are declared as ographies
+    # for this Community
+    def all_ography_tei_files(as = :models)
+      pid = get_pid
+      unless expected_class? Collection
+        raise "all_ographies expects a Community Object." 
+      end
+      
+      pid = RSolr.solr_escape("info:fedora/#{pid}")
+
+      all_verbs = ["is_personography_for_ssim:#{pid}",
+        "is_orgography_for_ssim:#{pid}",
+        "is_bibliography_for_ssim:#{pid}", 
+        "is_otherography_for_ssim:#{pid}",
+        "is_odd_file_for_ssim:#{pid}",]
+
+      all_verbs = all_verbs.join("  OR ") 
+      all_core_files = ActiveFedora::SolrService.query(all_verbs)
+
+      new_query = all_core_files.map do |core_file| 
+        id = RSolr.solr_escape("info:fedora/#{core_file['id']}")
+        "(canonical_tesim:yes AND is_part_of_ssim:#{id})"
+      end
+
+      tei_files = ActiveFedora::SolrService.query(new_query.join(' OR '))
+      tei_files.map { |x| load_specified_type(x, as) }
+    end
+
     private 
+
+    def expected_class?(class_constant)
+      matches_class = false 
+
+      if self.is_a? ActiveFedora::Base 
+        return self.instance_of? class_constant
+      elsif self.is_a? SolrDocument
+        return (self.klass == class_constant.to_s)
+      elsif self.is_a? Hash 
+        return (self['active_fedora_model_ssi'] == class_constant.to_s)
+      else
+        raise QueryObjectError.new "Passed a TapasQuery a #{self.class}.  "\
+          "Must use an ActiveFedora model, a SolrDocument, or a to_solr Hash."
+      end
+    end
+
+
+    def get_pid
+      if self.is_a? ActiveFedora::Base
+        pid = self.pid 
+      elsif self.is_a?(SolrDocument) || self.is_a?(Hash)
+        pid = self[:id] || self['id']
+      else
+        raise QueryObjectError.new "Passed a TapasQuery a #{self.class}.  "\
+          "Must use an ActiveFedora model, a SolrDocument, or a to_solr Hash." 
+      end
+
+      pid
+    end
 
     def load_specified_type(solr_response, type) 
       return nil unless solr_response

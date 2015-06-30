@@ -91,6 +91,7 @@ describe Collection do
         collection.save!
 
         expect(core_file.orgography_for.first.pid).to eq collection.pid
+        expect(collection.reload.orgographies).to match_array [core_file]
       ensure
         collection.delete if collection.persisted?
         core_file.delete if core_file.persisted?
