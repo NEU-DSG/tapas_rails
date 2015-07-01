@@ -49,7 +49,7 @@ describe UpsertSupportContent do
       it 'adds content to all page image objects' do 
         @core_file.page_images.each do |page_image| 
           expect(page_image.content.content.size).not_to eq 0 
-          expect(page_image.content.label).not_to eq ''
+          expect(page_image.filename).not_to eq ''
         end
       end
     end

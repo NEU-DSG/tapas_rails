@@ -45,7 +45,7 @@ describe UpsertHTMLContent do
       it "writes the file to the content datastream" do 
         expected_content = File.read(fixture_file("teibp.html"))
         expect(teibp.content.content).to eq expected_content
-        expect(teibp.content.label).to eq @filename
+        expect(teibp.filename).to eq @filename
       end
     end
 
@@ -72,7 +72,7 @@ describe UpsertHTMLContent do
       it "writes the file to the content datastream" do 
         expected_content = File.read(fixture_file("tapas_generic.html"))
         expect(tapas_generic.content.content).to eq expected_content 
-        expect(tapas_generic.content.label).to eq @filename
+        expect(tapas_generic.filename).to eq @filename
       end
     end
   end
