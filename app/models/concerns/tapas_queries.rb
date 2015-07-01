@@ -25,7 +25,7 @@ module TapasQueries
     # for this Community
     def all_ography_tei_files(as = :models)
       pid = get_pid
-      unless expected_class? Collection
+      unless expected_class? Community
         raise "all_ographies expects a Community Object." 
       end
       

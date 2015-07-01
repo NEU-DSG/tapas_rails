@@ -2,23 +2,11 @@ class Collection < CerberusCore::BaseModels::Collection
   include Did
   include OGReference
   include DrupalAccess
-  include TapasQueries
 
   after_save :update_core_files
 
   has_core_file_types  ["CoreFile"]
   has_collection_types ["Collection"]
-
-  has_many :personographies, :property => :is_personography_for, 
-    :class_name => "CoreFile"
-  has_many :orgographies, :property => :is_orgography_for, 
-    :class_name => "CoreFile"
-  has_many :bibliographies, :property => :is_bibliography_for, 
-    :class_name => "CoreFile"
-  has_many :otherographies, :property => :is_otherography_for, 
-    :class_name => "CoreFile"
-  has_many :odd_files, :property => :is_odd_file_for, 
-    :class_name => "CoreFile"
 
   parent_community_relationship  :community 
   parent_collection_relationship :collection
