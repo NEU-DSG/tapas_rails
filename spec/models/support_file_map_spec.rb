@@ -13,7 +13,7 @@ describe SupportFileMap do
       x = SupportFileMap.new(nil, nil) 
       img = FactoryGirl.create :image_master_file
 
-      expected_url = "rails_api.localhost:8080/downloads/#{img.pid}/?datastream_id=content"
+      expected_url = "http://rails_api.localhost:8080/downloads/#{img.pid}/?datastream_id=content"
       expect(x.download_url img).to eq expected_url
     end
   end
