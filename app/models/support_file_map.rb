@@ -1,4 +1,4 @@
-# This action handles building a map of filenames to download urls in the 
+# This model handles building a map of filenames to download urls in the 
 # repository, which is used to modify the URLs in a teibp/tapas_generic 
 # html rendition of a TEI file returned from eXist.  To avoid potential 
 # collisions, each source of support files (currently just page images 
@@ -7,11 +7,9 @@
 # support files are sent to map[:file][filename_here] while project level 
 # support files are sent to map[:project][filename_here].  
 #
-# What to do in the case where a project level support file and a TEI File 
-# level support file have the same name is an arbitrary decision.  The one 
-# I have currently made is to always prefer loading the URL specified at the 
-# file level.
-class BuildSupportFileMap 
+# In the case where the :file and :project scope both have a support file 
+# with a given name we always load the :file level url.
+class SupportFileMap 
   attr_reader :base_url, :core_file, :project
   attr_accessor :result
 
@@ -24,27 +22,31 @@ class BuildSupportFileMap
   end
 
   def self.build_map(core_file, project) 
-    BuildSupportFileMap.new(core_file, project).build_map
+    s = SupportFileMap.new(core_file, project)
+    s.build_map 
+    return s
   end
 
   def build_map
-    create_file_level_map
-    create_project_level_map
+    build_map_scope(:file, core_file.page_images)
+    build_map_scope(:project, project.all_ography_tei_files(:models))
   end
 
-  def create_file_level_map 
-    result[:file] = {}
-    core_file.page_images.each do |page_image| 
-      result[:file][page_image.content.label] = download_url page_image
-    end
-  end
-
-  def create_project_level_map 
-    result[:project] = {}
+  def get_url(filename)
+    return result[:file][filename] if result[:file][filename]
+    return result[:project][filename] if result[:project][filename]
   end
 
   def download_url(page_image)
     path = Pathname.new(base_url)
     path.join('downloads', page_image.pid, '?datastream_id=content').to_s
   end
+
+  private
+    def build_map_scope(scope, all_af_objects) 
+      result[scope] = {}
+      all_af_objects.each do |content| 
+        result[scope][content.filename] = download_url content
+      end
+    end
 end
