@@ -19,8 +19,6 @@ describe UpsertCoreFile do
       @collection.save!
 
       upserter = UpsertCoreFile.new @params
-      upserter.file_hash = {}
-      upserter.file_hash[:mods] = fixture_file "mods.xml" 
       upserter.core_file = @core = CoreFile.new
       upserter.update_metadata!
       @core.reload
@@ -42,11 +40,6 @@ describe UpsertCoreFile do
 
     it "sets og reference to the provided collection_dids" do 
       expect(@core.og_reference).to match_array @params[:collection_dids]
-    end
-
-    # This test relies on usage of the mods.xml file
-    it "assigns the metadata from the mods_path field to the mods record" do 
-      expect(@core.mods.title.first).to eq "Test X, private"
     end
     
     it "writes the object's did to the MODS record" do 
