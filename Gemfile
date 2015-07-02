@@ -66,6 +66,9 @@ gem 'parseconfig'
 # Use rest-client to handle building calls to eXist 
 gem 'rest-client'
 
+# Use rails_config gem for less crappy custom config 
+gem 'rails_config'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
