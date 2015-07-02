@@ -10,12 +10,10 @@
 # In the case where the :file and :project scope both have a support file 
 # with a given name we always load the :file level url.
 class SupportFileMap 
-  attr_reader :base_url, :core_file, :project
+  attr_reader :core_file, :project
   attr_accessor :result
 
   def initialize(core_file, project)
-    conf_file = "#{Rails.root}/config/base_urls.yaml"
-    @base_url = YAML.load(File.read(conf_file))[Rails.env]
     @core_file = core_file
     @project = project
     @result = {}
@@ -38,7 +36,7 @@ class SupportFileMap
   end
 
   def download_url(page_image)
-    path = Pathname.new(base_url)
+    path = Pathname.new Settings['base_url']
     path.join('downloads', page_image.pid, '?datastream_id=content').to_s
   end
 

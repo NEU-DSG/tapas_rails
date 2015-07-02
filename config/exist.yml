@@ -1,4 +1,0 @@
-development: 
-  base_path: 'http://localhost:8868/exist/apps/tapas-xq'
-test: 
-  base_path: 'http://localhost:8868/exist/apps/tapas-xq'

@@ -19,24 +19,11 @@ class ExistService
   end
 
   private
-    def self.exist_base
-      conf_file = "#{Rails.root}/config/exist.yml"
-      config = YAML.load(File.read conf_file)
-      base_url = config[Rails.env]['base_path']
-
-      if URI.parse(base_url).absolute?
-        base_url
-      else
-        raise "Relative or invalid URL detected in #{conf_file} "\
-          "Please fix before attempting to communicate with eXist again"
-      end
-    end
-
     def self.build_authorization_header 
       {}
     end
   
     def self.build_url(relative_path)
-      "#{exist_base}/#{relative_path}"
+      "#{Settings['exist']['url']}/#{relative_path}"
     end
 end
