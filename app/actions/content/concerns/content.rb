@@ -7,7 +7,7 @@ module Content
       new_name = Pathname.new(new_content_path).basename.to_s
       new_content = File.read new_content_path
 
-      current_name = content.content.label 
+      current_name = content.filename
       current_content = content.content.content 
 
       names_match = (new_name == current_name)

@@ -2,6 +2,7 @@ class Community < CerberusCore::BaseModels::Community
   include Did
   include OGReference
   include DrupalAccess
+  include TapasQueries
 
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
@@ -13,6 +14,17 @@ class Community < CerberusCore::BaseModels::Community
   has_metadata :name => "properties", :type => PropertiesDatastream
 
   has_attributes :project_members, datastream: "properties", multiple: true
+
+  has_many :personographies, :property => :is_personography_for, 
+    :class_name => "CoreFile"
+  has_many :orgographies, :property => :is_orgography_for, 
+    :class_name => "CoreFile"
+  has_many :bibliographies, :property => :is_bibliography_for, 
+    :class_name => "CoreFile"
+  has_many :otherographies, :property => :is_otherography_for, 
+    :class_name => "CoreFile"
+  has_many :odd_files, :property => :is_odd_file_for, 
+    :class_name => "CoreFile"
 
   # Look up or create the root community of the graph
   def self.root_community

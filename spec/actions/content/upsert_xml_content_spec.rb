@@ -70,7 +70,7 @@ describe UpsertXMLContent do
       it "updates the object's content and label" do 
         expect(tfc.content.versions.length).to eq 2 
         expect(tfc.content.content).to eq File.read(fixture_file('tei.xml'))
-        expect(tfc.content.label).to eq @filename
+        expect(tfc.filename).to eq @filename
       end
 
       it "doesn't update the content datastream when given identical data" do 
