@@ -18,6 +18,13 @@ describe UpsertCoreFile do
       @collection.did = @params[:collection_dids].first
       @collection.save!
 
+      # Ography assignment depends on a given TEI File 
+      # being able to determine which project it belongs to, 
+      # hence bothering to create a community here.
+      @community = FactoryGirl.create(:community)
+      @collection.community = @community
+      @collection.save!
+
       upserter = UpsertCoreFile.new @params
       upserter.core_file = @core = CoreFile.new
       upserter.update_metadata!
@@ -47,7 +54,7 @@ describe UpsertCoreFile do
     end
 
     it "writes the object's file type" do 
-      expect(@core.otherography_for.first.pid).to eq @collection.pid
+      expect(@core.otherography_for.first.pid).to eq @community.pid
     end
   end
 end

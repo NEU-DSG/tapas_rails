@@ -41,7 +41,7 @@ describe FileRevisionJob do
     end
 
     it "sets the content datastream label to the original filename" do 
-      expect(@tei.content.label).to eq @filename
+      expect(@tei.filename).to eq @filename
     end
 
     it "keeps the previous revision" do 

@@ -21,6 +21,42 @@ describe CoreFile do
     end
   end
 
+  describe "#project" do 
+
+    after(:each) { ActiveFedora::Base.delete_all } 
+
+    it "returns nil for CoreFiles that belong to no collections" do 
+      core_file = FactoryGirl.create :core_file 
+
+      expect(core_file.project).to be nil
+    end
+
+    it "returns nil for CoreFiles that belong to orphaned collections" do 
+      core_file = FactoryGirl.create :core_file
+      collection = FactoryGirl.create :collection
+
+      core_file.collections << collection
+      core_file.save! 
+
+      expect(core_file.project).to be nil
+    end
+
+    it "returns a project for CoreFiles that belong to an OK collection" do 
+      core_file = FactoryGirl.create :core_file 
+      collection = FactoryGirl.create :collection 
+      community = FactoryGirl.create :community 
+
+      core_file.collections << collection 
+      core_file.save! 
+
+      collection.community = community 
+      collection.save! 
+
+      expect(core_file.project.pid).to eq community.pid
+    end
+
+  end
+
   describe "TFC relationship" do 
     it { respond_to :tfc } 
     it { respond_to :tfc= } 
@@ -51,21 +87,21 @@ describe CoreFile do
     it "are manipulated as arrays" do 
       begin
         core = CoreFile.create(:depositor => "Will", :did => "1175")
-        collection = Collection.create(:depositor => "Will", :did => "1176")
-        other_collection = Collection.create(:depositor => "Will", :did => "1177")
+        community = Community.create(:depositor => "Will", :did => "1176")
+        other_community = Community.create(:depositor => "Will", :did => "1177")
 
-        core.otherography_for << collection
-        core.otherography_for << other_collection 
+        core.otherography_for << community
+        core.otherography_for << other_community 
 
-        expect(core.otherography_for).to match_array [collection, other_collection]
+        expect(core.otherography_for).to match_array [community, other_community]
 
-        core.otherography_for = [collection]
+        core.otherography_for = [community]
 
-        expect(core.otherography_for).to match_array [collection]
+        expect(core.otherography_for).to match_array [community]
       ensure
         core.delete if core.persisted?
-        collection.delete if collection.persisted?
-        other_collection.delete if other_collection.persisted?
+        community.delete if community.persisted?
+        other_community.delete if other_community.persisted?
       end
     end
   end

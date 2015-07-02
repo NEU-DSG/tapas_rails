@@ -84,7 +84,7 @@ class UpsertCoreFile
     core_file.odd_file_for = []
 
     if ography_assignment
-      core_file.send(ography_assignment, [*core_file.collections])
+      core_file.send(ography_assignment, [core_file.project])
     end
   end
 end
