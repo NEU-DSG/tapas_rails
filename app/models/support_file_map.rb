@@ -14,7 +14,7 @@ class SupportFileMap
   attr_accessor :result
 
   def initialize(core_file, project)
-    conf_file = "#{Rails.root}/config/support_file_map.yaml"
+    conf_file = "#{Rails.root}/config/base_urls.yaml"
     @base_url = YAML.load(File.read(conf_file))[Rails.env]
     @core_file = core_file
     @project = project
