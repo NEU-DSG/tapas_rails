@@ -14,6 +14,7 @@ module TapasRails
     end
 
     config.autoload_paths += Dir[Rails.root.join('app', 'models', '**/')]
+    config.autoload_paths += Dir[Rails.root.join('app', 'validators', '**/')]
     config.autoload_paths += Dir[Rails.root.join('app', 'actions', '**/')]
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
