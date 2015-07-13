@@ -32,6 +32,12 @@ module TapasObjectValidations
     end
   end
 
+  def validate_access_level 
+    unless ['public', 'private', nil].include? params[:access]
+      errors << "If specified, access must be one of: 'public', 'private'."
+    end
+  end
+
   def validate_required_attributes
     attrs = (create_or_update == :create) ? create_attrs : update_attrs
 
