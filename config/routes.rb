@@ -32,7 +32,9 @@ TapasRails::Application.routes.draw do
   # CoreFiles
   get 'files/:did/teibp' => 'core_files#show_teibp'
   get 'files/:did/tapas_generic' => 'core_files#show_tapas_generic'
-  post 'files/upsert' => 'core_files#upsert', as: "upsert"
+  get 'files/:did/tei' => 'core_files#show_tei'
+  post 'files/:did' => 'core_files#upsert'
+  post 'files/:did/metadata' => 'core_files#add_metadata'
   delete "files/:did" => "core_files#destroy"
 
   resources :downloads, :only => 'show'

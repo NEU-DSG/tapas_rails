@@ -13,6 +13,10 @@ class CoreFilesController < ApplicationController
     render_asset(@core_file.tapas_generic)
   end
 
+  def show_tei
+    render_asset(@core_file.canonical_object)
+  end
+
   def upsert
     if params[:tei].present?
       params[:tei] = create_temp_file params[:tei]
@@ -25,6 +29,10 @@ class CoreFilesController < ApplicationController
     TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 
     @response[:message] = "CoreFile update/create in progress" 
     pretty_json(202) and return
+  end
+
+  def add_metadata
+    #TODO
   end
 
   private
