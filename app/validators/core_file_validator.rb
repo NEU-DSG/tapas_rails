@@ -7,13 +7,13 @@ class CoreFileValidator
 
   def validate_upsert
     validate_class_correctness CoreFile
-    return errors if errors.present?
+    return errors if errors.any?
 
     validate_file_type
-    return errors if errors.present?
+    return errors if errors.any?
 
     validate_required_attributes
-    return errors if errors.present?
+    return errors
   end
 
   def validate_file_type

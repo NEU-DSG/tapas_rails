@@ -13,7 +13,7 @@ class CollectionValidator
     return errors if errors.any?
 
     validate_access_level
-    return errors if errors.any?
+    return errors
   end
 
   def create_attrs
