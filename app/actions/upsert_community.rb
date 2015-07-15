@@ -3,13 +3,15 @@ class UpsertCommunity
 
   def upsert 
     begin 
-      if Did.exists_by_did?(params[:did])
-        comm = Community.find_by_did(params[:did])
-        update_metadata!(comm)
+      community = Community.find_by_did(params[:did])
+      if community
+        update_metadata! community
       else
-        comm = Community.new(:did => params[:did])
-        update_metadata!(comm)
-        comm.community = Community.root_community ; comm.save!
+        community = Community.new(:did => params[:did])
+        community.depositor = params[:depositor]
+        community.save! 
+        community.community = Community.root_community 
+        update_metadata! community
       end
     rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
@@ -22,7 +24,6 @@ class UpsertCommunity
     def update_metadata!(community) 
       community.mods.title = params[:title] if params[:title].present?
       community.mods.abstract = params[:description] if params[:description].present?
-      community.depositor = params[:depositor] if params[:depositor].present?
       community.project_members = params[:members] if params[:members].present?
       community.drupal_access = params[:access] if params[:access].present?
       community.save!
