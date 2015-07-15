@@ -1,6 +1,10 @@
 require "spec_helper" 
 
 describe CoreFile do 
+  let(:core_file) { FactoryGirl.create :core_file }
+  let(:collection) { FactoryGirl.create :collection } 
+  let(:community) { FactoryGirl.create :community }
+
   describe "Collections relationship" do 
     let(:core_file) { FactoryGirl.create :core_file }
 
@@ -26,15 +30,10 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all } 
 
     it "returns nil for CoreFiles that belong to no collections" do 
-      core_file = FactoryGirl.create :core_file 
-
       expect(core_file.project).to be nil
     end
 
     it "returns nil for CoreFiles that belong to orphaned collections" do 
-      core_file = FactoryGirl.create :core_file
-      collection = FactoryGirl.create :collection
-
       core_file.collections << collection
       core_file.save! 
 
@@ -42,10 +41,6 @@ describe CoreFile do
     end
 
     it "returns a project for CoreFiles that belong to an OK collection" do 
-      core_file = FactoryGirl.create :core_file 
-      collection = FactoryGirl.create :collection 
-      community = FactoryGirl.create :community 
-
       core_file.collections << collection 
       core_file.save! 
 
@@ -54,7 +49,6 @@ describe CoreFile do
 
       expect(core_file.project.pid).to eq community.pid
     end
-
   end
 
   describe "TFC relationship" do 
@@ -64,12 +58,9 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "can be set on the CoreFile but is written to the TEIFile" do 
-      core = CoreFile.create(:depositor => "will", :did => SecureRandom.hex) 
-      tei  = TEIFile.create(:depositor => "Will") 
-
-      core.tfc << tei ; core.save! 
-
-      expect(tei.tfc_for).to match_array [core]
+      tei  = FactoryGirl.create :tei_file
+      core_file.tfc << tei ; core_file.save! 
+      expect(tei.tfc_for).to match_array [core_file]
     end
   end
 
@@ -84,25 +75,19 @@ describe CoreFile do
     it { respond_to :odd_file_for }
     it { respond_to :odd_file_for= }
 
+    after(:each) { ActiveFedora::Base.delete_all }
+
     it "are manipulated as arrays" do 
-      begin
-        core = CoreFile.create(:depositor => "Will", :did => "1175")
-        community = Community.create(:depositor => "Will", :did => "1176")
-        other_community = Community.create(:depositor => "Will", :did => "1177")
+      other_community = FactoryGirl.create :community
 
-        core.otherography_for << community
-        core.otherography_for << other_community 
+      core_file.otherography_for << community
+      core_file.otherography_for << other_community 
 
-        expect(core.otherography_for).to match_array [community, other_community]
+      expect(core_file.otherography_for).to match_array [community, other_community]
 
-        core.otherography_for = [community]
+      core_file.otherography_for = [community]
 
-        expect(core.otherography_for).to match_array [community]
-      ensure
-        core.delete if core.persisted?
-        community.delete if community.persisted?
-        other_community.delete if other_community.persisted?
-      end
+      expect(core_file.otherography_for).to match_array [community]
     end
   end
 
@@ -110,37 +95,32 @@ describe CoreFile do
     it { respond_to :page_images }
     it { respond_to :page_images= }
 
+    after(:each) { ActiveFedora::Base.delete_all }
+
     it "can be set on the Core File object but are written to the IMF" do 
-      begin
-        core_file = CoreFile.create(:did => "123", :depositor => "Will")
-        imf = ImageMasterFile.create(:depositor => "Will")
+      imf = FactoryGirl.create :image_master_file
 
-        expect(core_file.page_images).to eq []
+      expect(core_file.page_images).to eq []
 
-        core_file.page_images << imf 
-        core_file.save!
+      core_file.page_images << imf 
+      core_file.save!
 
-        expect(imf.page_image_for.first.pid).to eq core_file.pid
-      ensure
-        core_file.delete if core_file.persisted?
-        imf.delete if imf.persisted?
-      end
+      expect(imf.page_image_for.first.pid).to eq core_file.pid
     end
   end
 
   describe "HTML Object Queries" do 
-    let(:core_file) { FactoryGirl.create(:core_file) } 
     before(:each) { setup_html_tests }
     after(:each) { core_file.destroy } 
 
     def setup_html_tests
-      @teibp = HTMLFile.create(:depositor => core_file.depositor)
+      @teibp = FactoryGirl.create :html_file
       @teibp.html_for << core_file 
       @teibp.core_file = core_file
       @teibp.html_type = "teibp"
       @teibp.save!
 
-      @tapas_generic = HTMLFile.create(:depositor => core_file.depositor) 
+      @tapas_generic = FactoryGirl.create :html_file
       @tapas_generic.html_for << core_file 
       @tapas_generic.core_file = core_file
       @tapas_generic.html_type = "tapas_generic" 
