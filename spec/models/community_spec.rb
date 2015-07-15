@@ -1,9 +1,7 @@
 require 'spec_helper'
 
 describe Community do 
-  let(:community) { Community.new }
-
-  after(:each) { Community.delete_all }
+  after(:each) { ActiveFedora::Base.delete_all }
 
   it "can create the root community when it doesn't exist" do 
     expect{ Community.root_community }.to change{ Community.count }.from(0).to(1)
@@ -29,19 +27,14 @@ describe Community do
     it { respond_to :odd_files= }
 
     it "can be set on core files from the community" do 
-      begin
-        community = Community.create(:depositor => "x", :did => "y")
-        core_file = CoreFile.create(:depositor => "x", :did => "z")
+      community = FactoryGirl.create :community
+      core_file = FactoryGirl.create :core_file
 
-        community.orgographies << core_file
-        community.save!
+      community.orgographies << core_file
+      community.save!
 
-        expect(core_file.orgography_for.first.pid).to eq community.pid
-        expect(community.reload.orgographies).to match_array [core_file]
-      ensure
-        community.delete if community.persisted?
-        core_file.delete if core_file.persisted?
-      end
+      expect(core_file.orgography_for.first.pid).to eq community.pid
+      expect(community.reload.orgographies).to match_array [core_file]
     end
   end
 end
