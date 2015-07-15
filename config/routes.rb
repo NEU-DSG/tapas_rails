@@ -30,9 +30,9 @@ TapasRails::Application.routes.draw do
   delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
-  get 'files/:did/teibp' => 'core_files#show_teibp'
-  get 'files/:did/tapas_generic' => 'core_files#show_tapas_generic'
-  get 'files/:did/tei' => 'core_files#show_tei'
+  get 'files/:did/teibp' => 'core_files#teibp'
+  get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
+  get 'files/:did/tei' => 'core_files#tei'
   post 'files/:did' => 'core_files#upsert'
   post 'files/:did/metadata' => 'core_files#add_metadata'
   delete "files/:did" => "core_files#destroy"

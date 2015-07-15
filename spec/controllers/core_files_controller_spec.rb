@@ -4,10 +4,71 @@ describe CoreFilesController do
   include FileHelpers
   include ValidAuthToken
 
+  let(:core_file) { FactoryGirl.create :core_file }
+
   def test_file(fname)
     pth = Rails.root.join("spec", "fixtures", "files", fname)
     @file = Rack::Test::UploadedFile.new pth 
     return @file 
+  end
+
+  RSpec.shared_examples "a content displaying route" do 
+    let(:route) { requested_content.to_sym }
+
+    after(:each) { ActiveFedora::Base.delete_all }
+    
+    it '404s when no CoreFile can be found' do 
+      get route, { :did => SecureRandom.uuid } 
+  
+      expect(response.status).to eq 404 
+      expected_msg = 'No record associated with this did was found.' 
+      expect(response.body).to eq expected_msg
+    end
+
+    it "404s when the CoreFile lacks the requested display type." do
+      get route, { :did => core_file.did } 
+      expect(response.status).to eq 404 
+      expect(response.body).not_to be nil
+    end
+
+    it '200s and returns the content when it exists' do 
+      html = FactoryGirl.create :html_file
+      html.core_file = core_file 
+      html.html_for << core_file 
+
+      if requested_content == 'tei'
+        html.canonize
+      else
+        html.html_type = requested_content
+      end
+
+      html_content = '<h1>Hello!</h1>' 
+      html.content.content = html_content 
+      html.save!
+
+      get route, { :did => core_file.did } 
+
+      expect(response.status).to eq 200 
+      expect(response.body).to eq html_content
+    end
+  end
+
+  describe 'GET teibp' do 
+    it_behaves_like 'a content displaying route' do 
+      let(:requested_content) { 'teibp' }
+    end
+  end
+
+  describe 'GET tapas_generic' do 
+    it_behaves_like 'a content displaying route' do 
+      let(:requested_content) { 'tapas_generic' }
+    end
+  end
+
+  describe 'GET tei' do 
+    it_behaves_like 'a content displaying route' do 
+      let(:requested_content) { 'tei' }
+    end
   end
 
   describe "DELETE destroy" do 
