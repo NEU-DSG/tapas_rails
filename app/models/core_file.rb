@@ -3,6 +3,8 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include OGReference
   include DrupalAccess
   include TapasQueries
+
+  before_save :ensure_unique_did
   
   has_and_belongs_to_many :collections, :property => :is_member_of, 
     :class_name => "Collection"

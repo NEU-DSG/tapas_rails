@@ -2,7 +2,8 @@ class Collection < CerberusCore::BaseModels::Collection
   include Did
   include OGReference
   include DrupalAccess
-
+  
+  before_save :ensure_unique_did
   after_save :update_core_files
 
   has_core_file_types  ["CoreFile"]

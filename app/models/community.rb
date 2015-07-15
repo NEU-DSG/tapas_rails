@@ -4,6 +4,8 @@ class Community < CerberusCore::BaseModels::Community
   include DrupalAccess
   include TapasQueries
 
+  before_save :ensure_unique_did
+
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
   has_core_file_types  ["CoreFile"]
