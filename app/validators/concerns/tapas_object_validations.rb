@@ -23,7 +23,7 @@ module TapasObjectValidations
       return true
     end
 
-    if klass.where('did_ssim' => did).first?
+    if klass.where('did_ssim' => did).any?
       self.create_or_update = :update
       return true
     else
