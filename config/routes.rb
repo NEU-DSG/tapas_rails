@@ -22,11 +22,11 @@ TapasRails::Application.routes.draw do
   end
 
   # Communities
-  post "communities/upsert" => "communities#upsert"
+  post "communities/:did" => "communities#upsert"
   delete "communities/:did" => "communities#destroy"
 
   # Collections
-  post "collections/upsert" => "collections#upsert" 
+  post "collections/:did" => "collections#upsert" 
   delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
