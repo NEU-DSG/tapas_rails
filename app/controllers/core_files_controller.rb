@@ -23,6 +23,34 @@ class CoreFilesController < ApplicationController
   end
 
   def upsert
+    # Step 1: Extract uploaded files to temporary locations if they exist
+    if params[:tei]
+      params[:tei] = create_temp_file params[:tei]
+    end
+
+    if params[:support_files]
+      params[:support_files] = create_temp_file params[:support_files] 
+    end
+
+    # Step 2: If TEI was provided, generate a MODS record that can be sent back
+    # to Drupal to populate the validate metadata page provided after initial
+    # file upload
+    if params[:tei] 
+      @mods = GetMODSFromExist.execute(params[:tei]) 
+    end
+
+    # Step 3: Kick off an upsert job 
+    job = TapasObjectUpsertJob.new params
+    TapasRails::Application::Queue.push job 
+
+    # Step 4: Respond with MODS if it is available, otherwise send a generic
+    # success message
+    if @mods
+      render :xml => @mods, :status => 202 
+    else
+      @response[:message] = "Job processing" 
+      pretty_json(202) and return
+    end
   end
 
   def add_metadata
