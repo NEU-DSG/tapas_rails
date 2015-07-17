@@ -1,6 +1,0 @@
-development: 
-  base_path: "localhost:8983/exist/rest/db/apps/development"
-test: 
-  base_path: "localhost:8983/exist/rest/db/apps/test"
-staging:
-  base_path: "localhost:8983/exist/rest/db/apps/staging"
