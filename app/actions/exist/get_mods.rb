@@ -1,30 +1,33 @@
-# Note that this action does NOT return the mods metadata that we store and use
-# Rather, it gives us back a MODS record derived from a given TEI File that is
-# then immediately passed back to Drupal to populate its 'finalize metadata'
-# page.  When the metadata from *this* page is passed through to eXist via the
-# UpdateTEIMetadata action, the actual MODS record that both systems will use
-# is generated and returned.
-class GetMODS
-  attr_reader :tei_file_path
-  attr_accessor :response
+# Takes a filepath pointing at a TEI XML document and sends it to eXist.
+# Returns a raw string of the resulting XML data.
+# Does not move, delete, modify, or validate the file you provide.
+module Exist
+  class GetMods
+    include Exist::Concerns::Helpers
 
-  def initialize(tei_file_path)
-    @tei_file_path = tei_file_path
-  end
+    attr_reader :tei_filepath
 
-  def self.execute(file_path)
-    GetMODS.new(file_path).execute
-  end
+    def initialize(tei_filepath)
+      @tei_filepath = tei_filepath
+    end
 
-  def execute 
-    response = ExistService.post('mods', {
-      :file => File.new(tei_file_path, 'rb')
-    })
+    def self.execute(tei_filepath)
+      self.new(tei_filepath).execute
+    end
 
+    def build_resource 
+      url = build_url 'derive-mods'
+      hash = options_hash 
 
-    case response.status 
-    when 200 
-      response.body
+      hash[:headers][:content_type] = 'application/xml'
+      hash[:headers][:accept] = 'application/xml'
+
+      self.resource = RestClient::Resource.new(url, hash)
+    end
+
+    def execute
+      build_resource
+      resource.post File.read(tei_filepath)
     end
   end
 end
