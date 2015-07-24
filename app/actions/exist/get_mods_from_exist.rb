@@ -2,17 +2,30 @@
 # Returns a raw string of the resulting XML data.
 # Does not move, delete, modify, or validate the file you provide.
 class GetMODSFromExist
-  attr_reader :mods_filepath
+  include ExistActions
 
-  def initialize(mods_filepath)
-    @mods_filepath = mods_filepath
+  attr_reader :tei_filepath
+
+  def initialize(tei_filepath)
+    @tei_filepath = tei_filepath
   end
 
-  def self.execute(mods_filepath)
-    self.new(mods_filepath).execute
+  def self.execute(tei_filepath)
+    self.new(tei_filepath).execute
+  end
+
+  def build_resource 
+    url = ExistActions.build_url 'derive-mods'
+    hash = ExistActions.options_hash 
+
+    hash[:headers][:content_type] = 'application/xml'
+    hash[:headers][:accept] = 'application/xml'
+
+    self.resource = RestClient::Resource.new(url, hash)
   end
 
   def execute
-    "<dummy> I don't do anything! </dummy>"
+    build_resource
+    resource.post File.read(tei_filepath)
   end
 end
