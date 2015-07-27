@@ -35,7 +35,7 @@ module Exist
         :file => File.read(tei_path), 
         :"assets-base" => Settings['base_url']
       }
-      resource.post params
+      send_request { resource.post params }
     end
   end
 end

@@ -7,6 +7,23 @@ module Exist
         attr_accessor :resource 
       end
 
+      def exist_logger
+        @@exist_logger ||= Logger.new("#{Rails.root}/log/#{Rails.env}_exist.log")
+      end
+
+      # RestClient does an interesting thing where non-200 status codes are
+      # intercepted and turned into a fairly generic exception, which makes 
+      # it impossible to know what error was raised and what the response 
+      # was.
+      def send_request
+        begin
+          yield
+        rescue RestClient::BadRequest => e 
+          exist_logger.error("#{e.http_code} error raised. \n"\
+                             "Response was: \n #{e.response}")
+          raise e
+        end
+      end
 
       def build_url(url_fragment)
         base = Settings['exist']['url']
