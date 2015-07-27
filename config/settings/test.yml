@@ -1,5 +1,5 @@
 exist:
-  username: 'admin' 
-  password: 'dsgT@pas'
+  username: 'tapas'
+  password: 'tapas'
   url: 'http://localhost:8868/exist/apps/tapas-xq'
 base_url: 'http://rails_api.localhost:8080'
