@@ -33,7 +33,7 @@ module Exist
       build_resource
       params = { 
         :file => File.read(tei_path), 
-        :"assets-base" => Settings['base_url']
+        :"assets-base" => Settings['base_url'] + "/reading_interface"
       }
       send_request { resource.post params }
     end
