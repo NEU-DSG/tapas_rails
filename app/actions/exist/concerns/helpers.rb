@@ -18,7 +18,7 @@ module Exist
       def send_request
         begin
           yield
-        rescue RestClient::BadRequest => e 
+        rescue RestClient::Exception => e
           exist_logger.error("#{e.http_code} error raised. \n"\
                              "Response was: \n #{e.response}")
           raise e

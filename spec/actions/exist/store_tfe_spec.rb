@@ -15,11 +15,13 @@ describe Exist::StoreTfe do
     expect { Exist::StoreTfe.execute(did, '1', '3,4', 'pub') }.to raise_error e
   end
 
-  it 'returns a 200 when TFE is correctly added to an existing TEI document' do 
+  it 'returns a 201 when TFE is correctly added to an existing TEI document' do 
     tei = fixture_file 'tei.xml'
     did = SecureRandom.uuid 
     Exist::StoreTei.execute(tei, did)
     response = Exist::StoreTfe.execute(did, '1', '3, 5, 6', 'true')
-    expect(response.status).to eq 200 
+    expect(response.code).to eq 201
+
+    Exist::DeleteRecord.execute(did)
   end
 end

@@ -4,13 +4,8 @@ describe Exist::GetMods, :existdb => true do
   include FileHelpers
 
   describe '#execute' do 
-    it 'raises an error when passed a bad path' do 
-      error = Errno::ENOENT
-      expect { Exist::GetMods.execute('no/such/file') }.to raise_error error
-    end
-
     it 'raises a 400 when given a file that is not TEI XML' do 
-      path = fixture_file 'image.jpg' 
+      path = fixture_file 'xml_malformed.xml'
       error = RestClient::BadRequest
       expect { Exist::GetMods.execute path  }.to raise_error error
     end
