@@ -33,11 +33,8 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   # finding all of the project level ographies that exist.
   def project 
     return nil if collections.blank?
-
     collection = collections.first 
-
     return nil if collection.community.blank?
-
     return collection.community
   end
 end
