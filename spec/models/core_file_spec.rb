@@ -143,4 +143,40 @@ describe CoreFile do
       expect(core_file.tapas_generic(:solr_doc).pid).to eq @tapas_generic.pid 
     end
   end
+
+  describe "#file_type" do 
+    after(:each) { ActiveFedora::Base.delete_all } 
+
+    it 'returns :ography for files that have a specified ography type' do 
+      CoreFile.all_ography_types.each do |ography|
+        core_file.send(:"#{ography}=", [community])
+        expect(core_file.file_type).to eq :ography
+        core_file.clear_ographies!
+      end
+    end
+
+    it 'returns :tei_content for files with no specified ography type' do 
+      expect(core_file.file_type).to eq :tei_content
+    end
+  end
+
+  describe "#clear_ographies!" do 
+    after(:each) { ActiveFedora::Base.delete_all } 
+
+    it 'clears all set ographies' do 
+      core_file.personography_for << community
+      core_file.orgography_for << community
+      core_file.bibliography_for << community
+      core_file.otherography_for << community 
+      core_file.odd_file_for << community
+
+      core_file.clear_ographies! 
+
+      any_ographies = CoreFile.all_ography_types.any? do |ography_type|
+        core_file.send(ography_type).any?
+      end
+
+      expect(any_ographies).to be false
+    end
+  end
 end

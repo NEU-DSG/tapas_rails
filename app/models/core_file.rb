@@ -5,7 +5,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include TapasQueries
 
   before_save :ensure_unique_did
-  
+
   has_and_belongs_to_many :collections, :property => :is_member_of, 
     :class_name => "Collection"
 
@@ -28,6 +28,17 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
 
+  def self.all_ography_types
+    [:personography_for, :orgography_for, :bibliography_for,
+     :otherography_for, :odd_file_for]
+  end
+
+  def clear_ographies!
+    CoreFile.all_ography_types.each do |ography_type|
+      assignment = :"#{ography_type}="
+      self.send(assignment, [])
+    end
+  end
 
   # Return the project that this CoreFile belongs to.  Necessary for easily 
   # finding all of the project level ographies that exist.
@@ -37,4 +48,23 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     return nil if collection.community.blank?
     return collection.community
   end
+
+  # Check to see if this is an ography-type upload or a tei file type
+  # upload
+  def file_type
+    if (personography_for.any? || orgography_for.any? || bibliography_for.any? ||
+        otherography_for.any? || odd_file_for.any?)
+      :ography
+    else
+      :tei_content
+    end
+  end
+
+  private
+
+    def is_ography?
+      CoreFile.all_ography_types.any? do |ography_type| 
+        self.send(ography_type).any?
+      end
+    end  
 end
