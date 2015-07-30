@@ -69,4 +69,30 @@ describe Collection do
       expect(Collection.count).to eq 1 
     end
   end
+
+  describe "Ography relationships" do 
+    it { respond_to :personographies } 
+    it { respond_to :orgographies } 
+    it { respond_to :bibliographies }
+    it { respond_to :otherographies } 
+    it { respond_to :odd_files }
+    it { respond_to :personographies= }
+    it { respond_to :orgographies= }
+    it { respond_to :bibliographies= }
+    it { respond_to :otherographies= }
+    it { respond_to :odd_files= }
+    it { respond_to :placeographies }
+    it { respond_to :placeographies= }
+
+    it "can be set on core files from the collection" do 
+      collection = FactoryGirl.create :collection
+      core_file = FactoryGirl.create :core_file
+
+      collection.orgographies << core_file
+      collection.save!
+
+      expect(core_file.orgography_for.first.pid).to eq collection.pid
+      expect(collection.reload.orgographies).to match_array [core_file]
+    end
+  end
 end

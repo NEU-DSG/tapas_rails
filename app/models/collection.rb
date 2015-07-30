@@ -15,6 +15,19 @@ class Collection < CerberusCore::BaseModels::Collection
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
 
+  has_many :personographies, :property => :is_personography_for, 
+    :class_name => "CoreFile"
+  has_many :orgographies, :property => :is_orgography_for, 
+    :class_name => "CoreFile"
+  has_many :bibliographies, :property => :is_bibliography_for, 
+    :class_name => "CoreFile"
+  has_many :otherographies, :property => :is_otherography_for, 
+    :class_name => "CoreFile"
+  has_many :odd_files, :property => :is_odd_file_for, 
+    :class_name => "CoreFile"
+  has_many :placeographies, :property => :is_placeography_for, 
+    :class_name => 'CoreFile'
+
   # Return the collection where we store TEI files that reference 
   # non-existant collections.  If it doesn't exist create it.
   def self.phantom_collection
