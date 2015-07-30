@@ -78,16 +78,16 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "are manipulated as arrays" do 
-      other_community = FactoryGirl.create :community
+      other_collection = FactoryGirl.create :collection
 
-      core_file.otherography_for << community
-      core_file.otherography_for << other_community 
+      core_file.otherography_for << collection
+      core_file.otherography_for << other_collection 
 
-      expect(core_file.otherography_for).to match_array [community, other_community]
+      expect(core_file.otherography_for).to match_array [collection, other_collection]
 
-      core_file.otherography_for = [community]
+      core_file.otherography_for = [collection]
 
-      expect(core_file.otherography_for).to match_array [community]
+      expect(core_file.otherography_for).to match_array [collection]
     end
   end
 
@@ -149,7 +149,7 @@ describe CoreFile do
 
     it 'returns :ography for files that have a specified ography type' do 
       CoreFile.all_ography_types.each do |ography|
-        core_file.send(:"#{ography}=", [community])
+        core_file.send(:"#{ography}=", [collection])
         expect(core_file.file_type).to eq :ography
         core_file.clear_ographies!
       end
@@ -164,11 +164,12 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all } 
 
     it 'clears all set ographies' do 
-      core_file.personography_for << community
-      core_file.orgography_for << community
-      core_file.bibliography_for << community
-      core_file.otherography_for << community 
-      core_file.odd_file_for << community
+      core_file.personography_for << collection
+      core_file.orgography_for << collection
+      core_file.bibliography_for << collection
+      core_file.otherography_for << collection 
+      core_file.odd_file_for << collection
+      core_file.placeography_for << collection
 
       core_file.clear_ographies! 
 
