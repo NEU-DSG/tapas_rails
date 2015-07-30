@@ -74,6 +74,8 @@ describe CoreFile do
     it { respond_to :otherography_for= }
     it { respond_to :odd_file_for }
     it { respond_to :odd_file_for= }
+    it { respond_to :placeography_for } 
+    it { respond_to :placeography_for= }
 
     after(:each) { ActiveFedora::Base.delete_all }
 
