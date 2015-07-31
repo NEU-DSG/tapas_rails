@@ -35,6 +35,8 @@ module TapasQueries
         collections = self['is_member_of_ssim']
       end
 
+      return [] if collections.blank?
+
       collections.map! { |x| RSolr.solr_escape x }
       collections = "(#{collections.join(' OR ')})"
 
