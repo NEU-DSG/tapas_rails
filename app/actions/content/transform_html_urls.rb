@@ -14,7 +14,7 @@ class TransformHTMLUrls
   end
 
   def transform 
-    support_file_map = SupportFileMap.build_map(core_file, core_file.project)
+    support_file_map = SupportFileMap.build_map core_file
 
     all_links = html.css('a, img')
 

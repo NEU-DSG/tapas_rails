@@ -24,13 +24,14 @@ describe TransformHTMLUrls do
       @html = Nokogiri::HTML(File.read(fixture_file 'teibp_simple.html'))
 
       # Create a single Ography object and attach it to the 
-      # core_file's project
+      # core_file's collection
       @og_core = FactoryGirl.create :core_file 
       @biblio = FactoryGirl.create :tei_file 
       @biblio.add_file('<xml>a</xml>', 'content', 'bibliography.xml')
       @biblio.canonize
       @biblio.core_file = @og_core
-      @og_core.bibliography_for << @community 
+      @og_core.collections << @collection
+      @og_core.bibliography_for << @collection
       
       @core_file.save!
       @community.save!
@@ -44,7 +45,7 @@ describe TransformHTMLUrls do
     end
 
     it 'uses the repository link for the bibliography' do
-      expected_url = SupportFileMap.new(nil, nil).download_url @biblio 
+      expected_url = SupportFileMap.new(nil).download_url @biblio 
       element = @html.xpath("//*[text()='bibliography']")
       expect(element.count).to eq 1 
       element = element.first
@@ -52,7 +53,7 @@ describe TransformHTMLUrls do
     end
 
     it 'uses the repository link for image one' do 
-      expected_url = SupportFileMap.new(nil, nil).download_url @pimg1
+      expected_url = SupportFileMap.new(nil).download_url @pimg1
       element = @html.xpath("//*[@originally='image_one.jpg']")
       expect(element.count).to eq 1 
       element = element.first
