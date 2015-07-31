@@ -27,7 +27,7 @@ module Content
           content.save! 
         end
 
-        add_unique_file(content, file)
+        add_unique_file(content, :filepath => file)
       ensure
         FileUtils.rm_f file
       end

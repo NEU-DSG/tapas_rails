@@ -3,9 +3,17 @@ module Content
 
   included do 
 
-    def add_unique_file(content, new_content_path)
-      new_name = Pathname.new(new_content_path).basename.to_s
-      new_content = File.read new_content_path
+    def add_unique_file(content, opts)
+      # If we have a blob and a name use those
+      if opts[:blob] && opts[:filename]
+        new_name = opts[:filename]
+        new_content = opts[:blob]
+      elsif opts[:filepath]
+        new_name = Pathname.new(opts[:filepath]).basename.to_s
+        new_content = File.read opts[:filepath]
+      else
+        raise "Invalid usage"
+      end
 
       current_name = content.filename
       current_content = content.content.content 
