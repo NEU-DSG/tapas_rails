@@ -1,6 +1,6 @@
 FactoryGirl.define do 
   factory :community do 
     depositor "test_user" 
-    sequence(:did) { |did| "#{did}" }
+    did { unique_did }
   end
 end

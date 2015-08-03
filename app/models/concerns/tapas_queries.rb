@@ -22,22 +22,32 @@ module TapasQueries
     end
 
     # Returns all of the TEIFile objects that are declared as ographies
-    # for this Community
+    # for Collections to which this CoreFile belongs
     def all_ography_tei_files(as = :models)
       pid = get_pid
-      unless expected_class? Community
-        raise "all_ographies expects a Community Object." 
+      unless expected_class? CoreFile
+        raise "all_ographies expects a CoreFile Object." 
       end
       
-      pid = RSolr.solr_escape("info:fedora/#{pid}")
+      if self.is_a? ActiveFedora::Base
+        collections = self.collection_ids.map { |pid| "info:fedora/#{pid}" }
+      elsif self.is_a?(SolrDocument) || self.is_a?(Hash)
+        collections = self['is_member_of_ssim']
+      end
 
-      all_verbs = ["is_personography_for_ssim:#{pid}",
-        "is_orgography_for_ssim:#{pid}",
-        "is_bibliography_for_ssim:#{pid}", 
-        "is_otherography_for_ssim:#{pid}",
-        "is_odd_file_for_ssim:#{pid}",]
+      return [] if collections.blank?
 
-      all_verbs = all_verbs.join("  OR ") 
+      collections.map! { |x| RSolr.solr_escape x }
+      collections = "(#{collections.join(' OR ')})"
+
+      all_verbs = ["is_personography_for_ssim:#{collections}",
+        "is_orgography_for_ssim:#{collections}",
+        "is_bibliography_for_ssim:#{collections}", 
+        "is_otherography_for_ssim:#{collections}",
+        "is_odd_file_for_ssim:#{collections}",
+        "is_placeography_for_ssim:#{collections}",]
+
+      all_verbs = all_verbs.join(" OR ") 
       all_core_files = ActiveFedora::SolrService.query(all_verbs)
 
       new_query = all_core_files.map do |core_file| 

@@ -3,42 +3,39 @@
 # html rendition of a TEI file returned from eXist.  To avoid potential 
 # collisions, each source of support files (currently just page images 
 # associated with an individual TEI File and *ography objects associated 
-# with a Project) is mapped to a different key in the hash.  File level 
+# with Collections) is mapped to a different key in the hash.  File level 
 # support files are sent to map[:file][filename_here] while project level 
-# support files are sent to map[:project][filename_here].  
+# support files are sent to map[:collection][filename_here].  
 #
 # In the case where the :file and :project scope both have a support file 
 # with a given name we always load the :file level url.
 class SupportFileMap 
-  attr_reader :base_url, :core_file, :project
+  attr_reader :core_file
   attr_accessor :result
 
-  def initialize(core_file, project)
-    conf_file = "#{Rails.root}/config/support_file_map.yaml"
-    @base_url = YAML.load(File.read(conf_file))[Rails.env]
+  def initialize(core_file)
     @core_file = core_file
-    @project = project
     @result = {}
   end
 
-  def self.build_map(core_file, project) 
-    s = SupportFileMap.new(core_file, project)
+  def self.build_map(core_file)
+    s = SupportFileMap.new(core_file)
     s.build_map 
     return s
   end
 
   def build_map
     build_map_scope(:file, core_file.page_images)
-    build_map_scope(:project, project.all_ography_tei_files(:models))
+    build_map_scope(:collection, core_file.all_ography_tei_files(:models))
   end
 
   def get_url(filename)
     return result[:file][filename] if result[:file][filename]
-    return result[:project][filename] if result[:project][filename]
+    return result[:collection][filename] if result[:collection][filename]
   end
 
   def download_url(page_image)
-    path = Pathname.new(base_url)
+    path = Pathname.new Settings['base_url']
     path.join('downloads', page_image.pid, '?datastream_id=content').to_s
   end
 

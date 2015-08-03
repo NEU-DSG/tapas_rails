@@ -53,4 +53,17 @@ describe "The Did module" do
   it "doesn't define a per-model existence check" do 
     expect(DidTester.respond_to?(:exists_by_did?)).to be false 
   end
+
+  it "raises an error if we attempt to reuse a did" do 
+    collection = FactoryGirl.create :collection
+    core_file = FactoryGirl.create :core_file 
+    core_file.did = collection.did
+    expect { core_file.save! }.to raise_error Exceptions::DuplicateDidError
+  end
+
+  it "doesn't raise an error when we 'reuse a did' by updating an object" do 
+    collection = FactoryGirl.create :collection
+    collection.depositor = 'Changed' 
+    expect { collection.save! }.not_to raise_error
+  end
 end

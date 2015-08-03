@@ -1,30 +1,59 @@
 class CoreFilesController < ApplicationController
   include ApiAccessible
-  include Hydra::Controller::DownloadBehavior
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
-  before_filter :load_core_file, :only => %i(show_teibp show_tapas_generic)
+  before_filter :load_core_file, :only => %i(teibp tapas_generic tei)
 
-  def show_teibp 
-    render_asset(@core_file.teibp)
+  def teibp 
+    e = "Could not find TEI Boilerplate representation of this object.  "\
+      "Please retry in a few minutes."
+    render_content_asset @core_file.teibp, e
   end
 
-  def show_tapas_generic 
-    render_asset(@core_file.tapas_generic)
+  def tapas_generic 
+    e = "Could not find a Tapas Generic representation of this object.  "\
+      "Please retry in a few minutes."
+    render_content_asset @core_file.tapas_generic, e
+  end
+
+  def tei
+    e = "Could not find TEI associated with this file.  Please retry in a "\
+      "few minutes and contact an administrator if the problem persists."
+    render_content_asset @core_file.canonical_object, e
   end
 
   def upsert
-    if params[:tei].present?
+    # Step 1: Extract uploaded files to temporary locations if they exist
+    if params[:tei]
       params[:tei] = create_temp_file params[:tei]
     end
 
-    if params[:support_files].present?
-      params[:support_files] = create_temp_file params[:support_files]    
+    if params[:support_files]
+      params[:support_files] = create_temp_file params[:support_files] 
     end
 
-    TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 
-    @response[:message] = "CoreFile update/create in progress" 
-    pretty_json(202) and return
+    # Step 2: If TEI was provided, generate a MODS record that can be sent back
+    # to Drupal to populate the validate metadata page provided after initial
+    # file upload
+    if params[:tei] 
+      @mods = GetMODSFromExist.execute(params[:tei]) 
+    end
+
+    # Step 3: Kick off an upsert job 
+    job = TapasObjectUpsertJob.new params
+    TapasRails::Application::Queue.push job 
+
+    # Step 4: Respond with MODS if it is available, otherwise send a generic
+    # success message
+    if @mods
+      render :xml => @mods, :status => 202 
+    else
+      @response[:message] = "Job processing" 
+      pretty_json(202) and return
+    end
+  end
+
+  def add_metadata
   end
 
   private
@@ -41,20 +70,17 @@ class CoreFilesController < ApplicationController
   def load_core_file
     @core_file = CoreFile.find_by_did(params[:did]) 
 
-    unless @core_file 
-      @response[:message] = "No content with that did exists" 
-      pretty_json(422) and return 
+    unless @core_file
+      message = 'No record associated with this did was found.'
+      render :text => message, :status => 404
     end
   end
 
-  def render_asset(asset)
-    unless asset 
-      @response[:message] = "That content doesn't exist!" 
-      pretty_json(422) and return 
+  def render_content_asset(asset, error_msg)
+    if asset && asset.content.content.present?
+      render :text => asset.content.content 
+    else 
+      render :text => error_msg, :status => 404 
     end
-
-    @asset = asset 
-    @ds = asset.datastreams["content"]
-    send_content
-  end
+  end    
 end

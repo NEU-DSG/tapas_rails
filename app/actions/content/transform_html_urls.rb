@@ -1,23 +1,20 @@
-# Takes an HTMLFile object and maps all URLs within it that point at 
-# images/ographies to their repository locations
+# Takes a Nokogiri::HTML document and the CoreFile that this html will 
+# eventually be attached to and rewrites all image/link tags to point 
+# at repository assets
 class TransformHTMLUrls 
-  attr_reader :html_file 
+  attr_reader :core_file, :html
 
-  def initialize(html_file) 
-    @html_file = html_file 
+  def initialize(core_file, html) 
+    @core_file = core_file
+    @html = html
   end
 
-  def self.transform(html)
-    self.new(html).transform 
+  def self.transform(core_file, html)
+    self.new(core_file, html).transform 
   end
 
   def transform 
-    # Build the SupportFileMap that we'll use 
-    core = html_file.core_file 
-    project = core.project 
-    support_file_map = SupportFileMap.build_map(core, project)
-
-    html = Nokogiri::HTML(html_file.content.content)
+    support_file_map = SupportFileMap.build_map core_file
 
     all_links = html.css('a, img')
 
@@ -43,7 +40,6 @@ class TransformHTMLUrls
       end
     end
 
-    html_file.add_file(html.to_html, 'content', html_file.filename)
-    html_file.save!
+    return html
   end
 end
