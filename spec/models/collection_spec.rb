@@ -95,4 +95,6 @@ describe Collection do
       expect(collection.reload.orgographies).to match_array [core_file]
     end
   end
+
+  it_behaves_like 'InlineThumbnails'
 end

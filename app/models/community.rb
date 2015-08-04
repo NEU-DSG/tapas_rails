@@ -3,6 +3,7 @@ class Community < CerberusCore::BaseModels::Community
   include OGReference
   include DrupalAccess
   include TapasQueries
+  include InlineThumbnail
 
   before_save :ensure_unique_did
 

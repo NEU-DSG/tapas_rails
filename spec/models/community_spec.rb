@@ -13,4 +13,6 @@ describe Community do
     expect{ Community.root_community }.not_to change{ Community.count }.from(1)
     expect(Community.root_community.pid).to eq Rails.configuration.tap_root
   end
+
+  it_behaves_like 'InlineThumbnails'
 end
