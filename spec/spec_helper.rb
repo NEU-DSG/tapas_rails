@@ -11,9 +11,6 @@ Dir[Rails.root.join("spec/support/**/*.rb")].each { |f| require f }
 # Load shared example groups 
 Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f }
 
-# Load support methods/matchers/etc
-Dir[Rails.root.join("spec/shared/**/*.rb")].each { |f| require f } 
-
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.check_pending! if defined?(ActiveRecord::Migration)
