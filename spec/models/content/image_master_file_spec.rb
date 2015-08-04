@@ -18,4 +18,6 @@ describe ImageMasterFile do
       end
     end
   end
+
+  it_behaves_like 'DownloadPath'
 end
