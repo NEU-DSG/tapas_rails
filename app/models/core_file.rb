@@ -53,7 +53,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   # Check to see if this is an ography-type upload or a tei file type
   # upload
   def file_type
-    if CoreFile.all_ography_types.any? { |x| self.send(x).any? }
+    if is_ography?
       :ography
     else
       :tei_content
