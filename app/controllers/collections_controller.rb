@@ -7,16 +7,16 @@ class CollectionsController < ApplicationController
     pretty_json(202) and return 
   end
 
-  def delete
+  def destroy
     collection = Collection.find_by_did(params[:did]) 
 
     if collection
       collection.delete
-      @response[:message] = "#{collection.title} successfully deleted."
+      @response[:message] = "Collection successfully deleted."
       pretty_json(200) and return
     else
       @response[:message] = "No collection with did #{params[:did]} found."
-      pretty_json(404) and return 
+      pretty_json(422) and return 
     end
   end
 end

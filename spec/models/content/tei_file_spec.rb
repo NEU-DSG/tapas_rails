@@ -13,4 +13,6 @@ describe TEIFile do
       expect(tei.tfc_for).to match_array [core]
     end
   end
+
+  it_behaves_like 'DownloadPath'
 end

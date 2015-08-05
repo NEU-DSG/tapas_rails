@@ -15,4 +15,6 @@ describe HTMLFile do
       expect(html_file.html_type).to eq "teibp" 
     end
   end
+
+  it_behaves_like 'DownloadPath'
 end

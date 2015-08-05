@@ -21,6 +21,14 @@ module TapasQueries
       load_specified_type(tg, as)
     end
 
+    def thumbnail(as = :models)
+      thumb = self.content_objects(:raw).find do |x| 
+        x['active_fedora_model_ssi'] == 'ImageThumbnailFile'
+      end
+
+      load_specified_type(thumb, as)
+    end
+
     # Returns all of the TEIFile objects that are declared as ographies
     # for Collections to which this CoreFile belongs
     def all_ography_tei_files(as = :models)

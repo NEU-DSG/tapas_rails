@@ -36,7 +36,7 @@ class CoreFilesController < ApplicationController
     # to Drupal to populate the validate metadata page provided after initial
     # file upload
     if params[:tei] 
-      @mods = GetMODSFromExist.execute(params[:tei]) 
+      @mods = Exist::GetMods.execute(params[:tei]) 
     end
 
     # Step 3: Kick off an upsert job 
@@ -54,6 +54,19 @@ class CoreFilesController < ApplicationController
   end
 
   def add_metadata
+  end
+
+  def destroy
+    core_file = CoreFile.find_by_did(params[:did])
+
+    if core_file
+      core_file.destroy
+      @response[:message] = 'Resource destroyed'
+      pretty_json(200) and return
+    else
+      @response[:message] = 'Could not find requested resource' 
+      pretty_json(422) and return
+    end
   end
 
   private

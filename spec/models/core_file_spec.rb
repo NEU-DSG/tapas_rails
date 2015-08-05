@@ -182,4 +182,36 @@ describe CoreFile do
       expect(any_ographies).to be false
     end
   end
+
+  describe '#calculate_drupal_access' do 
+    after(:all) { ActiveFedora::Base.delete_all } 
+
+    it 'saves the object as private if it has no collections' do 
+      core_file.save!
+      expect(core_file.drupal_access).to eq 'private'
+    end
+
+    it 'saves the object as public if it has a single public collection' do 
+      c1, c2, c3 = FactoryGirl.create_list :collection, 3
+      c1.drupal_access = 'private' ; c1.save!
+      c1.drupal_access = 'private' ; c2.save! 
+      c3.drupal_access = 'public'  ; c3.save! 
+
+      core_file.collections = [c1, c2, c3]
+      core_file.save!
+      expect(core_file.drupal_access).to eq 'public'
+    end
+
+    it 'saves the object as private if it has all private collections' do 
+      collections = FactoryGirl.create_list :collection, 2
+      collections.each do |collection|
+        collection.drupal_access = 'private' 
+        collection.save!
+      end
+
+      core_file.collections = collections
+      core_file.save!
+      expect(core_file.drupal_access).to eq 'private'
+    end
+  end
 end
