@@ -10,7 +10,7 @@ class UpsertCoreFile
 
   def upsert
     begin 
-      if CoreFile.exists_by_did?(params[:did])
+      if Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did]) 
       else
         self.core_file = CoreFile.create(:did => params[:did], 
@@ -21,16 +21,40 @@ class UpsertCoreFile
         author = params[:display_author]
         contributors = params[:display_contributors]
         mods_record = Exist::GetMods.execute(params[:tei])
+        core_file.mods.content = mods_record
+        # Rewrite did to mods after update
+        core_file.did = params[:did]
       end
 
       update_associations!
 
+      if params[:tei].present?
+        Content::UpsertTei.execute(core_file, params[:tei])
+        Content::UpsertReadingInterface.execute_all(core_file, params[:tei])
+      end
+
+      if params[:support_files].present?
+        # extract files to a hash of temporary directories
+        all_files = ExtractFiles.execute(params[:support_files])
+        @directory = all_files[:directory]
+        
+        thumbnail = all_files[:thumbnail]
+        if thumbnail.present?
+          Content::UpsertThumbnail.execute(core_file, thumbnail)
+        end
+
+        page_imgs = all_files[:page_images]
+        if page_imgs.present?
+          Content::UpsertPageImages.execute(core_file, page_imgs)
+        end
+      end
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
       FileUtils.rm params[:tei] if params[:tei] && File.exists?(params[:tei])
       FileUtils.rm params[:support_files] if params[:support_files]
+      FileUtils.rm_rf @directory if @directory
     end
   end
 
@@ -65,7 +89,7 @@ class UpsertCoreFile
     # ography relationships are declared but use the collections 
     # that the CoreFile is already a member of
     elsif params[:file_types].present?
-      old_collections = core_file.collections
+      old_collections = core_file.collections.to_a
       core_file.clear_ographies!
       params[:file_types].each do |ography|
         core_file.send(:"#{ography}_for=", old_collections)

@@ -9,14 +9,14 @@ describe UpsertCoreFile do
         c_one, c_two, c_three = FactoryGirl.create_list(:collection, 3)
         did = SecureRandom.uuid
         @params = { 
-          :file_types => ['otherography', 'placeography', 'odd_file_for'],
+          :file_types => ['otherography', 'placeography', 'odd_file'],
           :collection_dids => [c_one.did, c_two.did, c_three.did]
         }
 
         upserter = UpsertCoreFile.new @params
         @core_file = CoreFile.create(:did => did, :depositor => 'test')
         upserter.core_file = @core_file
-        upserter.update_associations
+        upserter.update_associations!
         @core_file.reload
       end
 
@@ -45,11 +45,11 @@ describe UpsertCoreFile do
 
     context 'on update with new :collection_dids && no :file_types' do 
       before(:all) do 
-        old_collections = FactoryGirl.create_list(:collection, 2)
+        @old_collections = FactoryGirl.create_list(:collection, 2)
         @core_file = FactoryGirl.create :core_file
-        @core_file.collections = old_collections
-        @core_file.bibliography_for = old_collections
-        @core_file.orgography_for = old_collections
+        @core_file.collections = @old_collections
+        @core_file.bibliography_for = @old_collections
+        @core_file.orgography_for = @old_collections
         @core_file.save!
 
         @new_collections = FactoryGirl.create_list(:collection, 3)
@@ -89,9 +89,9 @@ describe UpsertCoreFile do
       before(:all) do 
         @old_collections = FactoryGirl.create_list(:collection, 2)
         @core_file = FactoryGirl.create :core_file 
-        @core_file.collections = old_collections
-        @core_file.bibliography_for = old_collections
-        @core_file.placeography_for = old_collections
+        @core_file.collections = @old_collections
+        @core_file.bibliography_for = @old_collections
+        @core_file.placeography_for = @old_collections
         @core_file.save! 
 
         @params = { 
@@ -128,58 +128,81 @@ describe UpsertCoreFile do
     end
   end
 
-  describe "#update_metadata!" do
+  describe '#upsert' do 
     before(:all) do 
-      ActiveFedora::Base.delete_all
+      @zip = copy_fixture('all_files.zip', "zip_copy.zip")
+      @tei = copy_fixture('tei.xml', 'tei_copy.xml')
 
-      @params = { 
-        :depositor => "tapas@neu.edu",
-        :access => "public",
-        :collection_dids => ["111"],
-        :file_type => "otherography",
+      @collections = FactoryGirl.create_list(:collection, 3)
+
+      # Make all the collections private
+      @collections.each do |collection|
+        collection.drupal_access = 'private'
+        collection.save!
+      end
+
+      @params = {
+        :did => SecureRandom.uuid, 
+        :collection_dids => @collections.map { |x| x.did },
+        :file_types => [:personography, :placeography], 
+        :depositor => "William Jackson",
+        :support_files => @zip,
+        :display_author => 'Wallace & Grommit', 
+        :display_contributors => ['A', 'B', 'C'],
+        :tei => @tei
       }
 
-      @collection = FactoryGirl.create(:collection)
-      @collection.did = @params[:collection_dids].first
-      @collection.save!
+      UpsertCoreFile.upsert(@params)
 
-      # Ography assignment depends on a given TEI File 
-      # being able to determine which project it belongs to, 
-      # hence bothering to create a community here.
-      @community = FactoryGirl.create(:community)
-      @collection.community = @community
-      @collection.save!
-
-      upserter = UpsertCoreFile.new @params
-      upserter.core_file = @core = CoreFile.new
-      upserter.update_metadata!
-      @core.reload
+      @core_file = CoreFile.find_by_did(@params[:did])
     end
 
-    after(:all) { ActiveFedora::Base.delete_all } 
-
-    it "sets the depositor equal to params[:depositor]" do 
-      expect(@core.depositor).to eq @params[:depositor]
+    it 'creates the CoreFile and associates it with its drupal id' do 
+      expect(@core_file).not_to be nil 
     end
 
-    it "sets the drupal access level equal to params[:access]" do 
-      expect(@core.drupal_access).to eq @params[:access] 
+    it 'attaches a TEIFile object with the expected content' do 
+      tei = @core_file.canonical_object
+      expect(tei.content.content).to eq File.read(fixture_file('tei.xml'))
     end
 
-    it "assigns the object to all collections listed in collection_dids" do 
-      expect(@core.collections).to match_array [@collection]
+    it 'adds a ImageThumbnailFile object with the expected content' do 
+      thumb = @core_file.thumbnail
+      expect(thumb.thumbnail_1.label).to eq 'thumbnail.jpg'
+      expect(thumb.thumbnail_1.content.size).not_to eq 0 
     end
 
-    it "sets og reference to the provided collection_dids" do 
-      expect(@core.og_reference).to match_array @params[:collection_dids]
-    end
-    
-    it "writes the object's did to the MODS record" do 
-      expect(@core.did).to eq @params[:did] 
+    it 'adds PageImage files with content' do 
+      page_images = @core_file.page_images
+      expect(page_images.count).to eq 3
+      expect(page_images.all? { |x| x.content.content.present? }).to be true
     end
 
-    it "writes the object's file type" do 
-      expect(@core.otherography_for.first.pid).to eq @community.pid
+    it 'generates a teibp reading interface object' do 
+      teibp = @core_file.teibp 
+      expect(teibp.content.label).to eq 'teibp.xhtml' 
+    end
+
+    it 'generates a tapas-generic reading interface object' do 
+      tapas_generic = @core_file.tapas_generic
+      expect(tapas_generic.content.label).to eq 'tapas-generic.xhtml' 
+    end
+
+    it 'assigns the object a drupal_access level' do 
+      expect(@core_file.drupal_access).to eq 'private'
+    end
+
+    it 'assigns a depositor to the core file' do 
+      expect(@core_file.depositor).to eq @params[:depositor]
+    end
+
+    it 'makes the CoreFile a member of the specified collections' do 
+      expect(@core_file.collections).to eq @collections
+    end
+
+    it 'makes the CoreFile each type of specified ography' do 
+      expect(@core_file.placeography_for).to eq @collections
+      expect(@core_file.personography_for).to eq @collections
     end
   end
 end
