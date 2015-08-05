@@ -16,12 +16,10 @@ class ExtractFiles
 
   # Returns a hash with each of the following keys set to a file path assuming
   # that some content could be found: 
-  # - mods: The MODS XML metadata record for this upload 
-  # - tei: The TEI XML content for this upload 
-  # - tfc: The Tapas Friendly Copy of the TEI document in this upload 
+  # - thumbnail: The image thumbnail associated with this TEIFile.
   # Also returns the following key set to an array of files paths: 
-  # - support_files: All support files (at this point, this basically means 
-  # images) associated with this upload
+  # - page_images: All page images associated with this TEI File.  May be 
+  # jpegs or pngs.
   def execute
     response = {} 
     @tmp_dir = "#{Rails.root}/tmp/extracted_files/#{SecureRandom.hex}"
@@ -29,16 +27,16 @@ class ExtractFiles
 
     response[:directory] = @tmp_dir
 
-    # Ensure support_files is always initialized to an empty array
-    response[:support_files] = []
+    # Ensure page_images is always initialized to an empty array
+    response[:page_images] = []
 
     Zip::File.open(zip_path) do |zip|
       zip.each do |entry| 
         name = entry.name
         if name.split('/').second == 'thumbnail' && real_file?(entry)
           response[:thumbnail] = write_to_file entry
-        elsif name.split("/").second == "support_files" && real_file?(entry)
-          response[:support_files] << write_to_file(entry)
+        elsif name.split("/").second == "page_images" && real_file?(entry)
+          response[:page_images] << write_to_file(entry)
         end
       end
     end

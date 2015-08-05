@@ -13,8 +13,8 @@ describe ExtractFiles do
         FileUtils.rm_r("#{Rails.root}/tmp/extracted_files")
       end  
 
-      it "creates multiple files holding support image content" do 
-        @response[:support_files].each do |sf| 
+      it "creates multiple files holding page image content" do 
+        @response[:page_images].each do |sf| 
           expect(File.exists?(sf)).to be true 
         end 
       end
