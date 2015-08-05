@@ -4,7 +4,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include DrupalAccess
   include TapasQueries
 
-  before_save :ensure_unique_did
+  before_save :ensure_unique_did, :calculate_drupal_access
 
   has_and_belongs_to_many :collections, :property => :is_member_of, 
     :class_name => 'Collection'
@@ -66,4 +66,12 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
         self.send(ography_type).any?
       end
     end  
+
+    def calculate_drupal_access
+      if collections.any? { |collection| collection.drupal_access == 'public' }
+        self.drupal_access = 'public'
+      else
+        self.drupal_access = 'private'
+      end
+    end
 end
