@@ -13,9 +13,16 @@ class UpsertCommunity
         community.community = Community.root_community 
         update_metadata! community
       end
+
+      if params[:thumbnail]
+        community.add_thumbnail(:filepath => params[:thumbnail])
+        community.save!
+      end
     rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e
+    ensure
+      FileUtils.rm(params[:thumbnail]) if File.exists?(params[:thumbnail])
     end  
   end
 

@@ -1,13 +1,17 @@
 require 'spec_helper' 
 
 describe UpsertCommunity do 
+  include FileHelpers
+
   def params 
     { :did => '123',
       :depositor => '011',
       :description => 'This community is a test',
       :title => 'A sample community',
       :access => 'public', 
-      :members => ['011', '023', '034']  }
+      :members => ['011', '023', '034'], 
+      :thumbnail => fixture_file('image_copy.jpg'),
+    }
   end
 
   subject(:community) { Community.find_by_did(params[:did]) }
@@ -20,8 +24,20 @@ describe UpsertCommunity do
     its(:project_members) { should match_array params[:members] } 
   end
 
+  RSpec.shared_examples 'a thumbnail updating operation' do 
+    its('thumbnail_1.content') { should_not be nil } 
+    its('thumbnail_1.label') { should eq 'image_copy.jpg' }
+
+    it 'deletes the file' do 
+      expect(File.exists?(fixture_file('image_copy.jpg'))).to be false
+    end
+  end
+
   context 'Create' do 
-    before(:all) { UpsertCommunity.upsert params } 
+    before(:all)  do
+      copy_fixture('image.jpg', 'image_copy.jpg')
+      UpsertCommunity.upsert params
+    end
     after(:all) { ActiveFedora::Base.delete_all } 
 
     it 'builds the requested community' do 
@@ -33,10 +49,12 @@ describe UpsertCommunity do
     end
 
     it_should_behave_like 'a metadata assigning operation'
+    it_should_behave_like 'a thumbnail updating operation'
   end
 
   context 'Update' do 
     before(:all) do 
+      copy_fixture('image.jpg', 'image_copy.jpg')
       community = Community.new
       community.did = params[:did]
       community.depositor = 'The Previous Depositor'
@@ -61,5 +79,6 @@ describe UpsertCommunity do
     end
 
     it_should_behave_like 'a metadata assigning operation' 
+    it_should_behave_like 'a thumbnail updating operation'
   end
 end
