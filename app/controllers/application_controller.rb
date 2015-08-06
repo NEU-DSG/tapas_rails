@@ -13,6 +13,15 @@ class ApplicationController < ActionController::Base
 
   before_action :create_response_object
 
+  def create_temp_file(file)
+    fpath = file.path
+    fname = file.original_filename 
+    
+    tmp = Rails.root.join('tmp', "#{SecureRandom.hex}-#{fname}").to_s 
+    FileUtils.mv(fpath, tmp) 
+    return tmp
+  end
+
   def pretty_json(status)
     render json: JSON.pretty_generate(@response), status: status
   end
