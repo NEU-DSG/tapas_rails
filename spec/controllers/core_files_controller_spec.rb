@@ -100,6 +100,7 @@ describe CoreFilesController do
         :access          => "private",
         :depositor       => "wjackson",
         :tei             => test_file(fixture_file('tei.xml')),
+        :support_files   => test_file(fixture_file('all_files.zip')),
         :file_type       => "tei_content", }
     end
 
@@ -123,6 +124,9 @@ describe CoreFilesController do
 
       core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:model)
+
+      expect(core.thumbnail).to be_instance_of ImageThumbnailFile
+      expect(core.page_images.count).to eq 3
 
       collection_pids = core.collections.map { |x| x.pid } 
 
