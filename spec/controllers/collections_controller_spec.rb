@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CollectionsController do
   include ValidAuthToken
+  include FileHelpers
 
   it_should_behave_like 'an API enabled controller'
 
@@ -48,7 +49,8 @@ describe CollectionsController do
         did: '8018', 
         project_did: 'invalid', 
         description: 'This is a test collection',
-        depositor: '101' }
+        depositor: '101',
+        thumbnail: Rack::Test::UploadedFile.new(fixture_file('image.jpg')), }
 
       post :upsert, post_params
 
