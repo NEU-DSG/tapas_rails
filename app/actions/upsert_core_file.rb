@@ -24,6 +24,8 @@ class UpsertCoreFile
         core_file.mods.content = mods_record
         # Rewrite did to mods after update
         core_file.did = params[:did]
+        # Rewrite identifier to mods after update
+        core_file.mods.identifier = core_file.pid
       end
 
       update_associations!

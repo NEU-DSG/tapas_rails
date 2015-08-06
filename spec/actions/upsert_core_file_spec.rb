@@ -161,6 +161,10 @@ describe UpsertCoreFile do
       expect(@core_file).not_to be nil 
     end
 
+    it 'writes the pid of the object to the MODS datastream' do 
+      expect(@core_file.mods.identifier.first).to eq @core_file.pid
+    end
+
     it 'attaches a TEIFile object with the expected content' do 
       tei = @core_file.canonical_object
       expect(tei.content.content).to eq File.read(fixture_file('tei.xml'))
