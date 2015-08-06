@@ -3,6 +3,15 @@ require 'spec_helper'
 describe Content::UpsertReadingInterface do 
   include FileHelpers
 
+  let(:core_file) { FactoryGirl.create :core_file }
+
+  it 'raises an error when given invalid TEI' do 
+    file = fixture_file('xml.xml')
+    action = Content::UpsertReadingInterface 
+    error = Exceptions::InvalidZipError
+    expect { action.execute_all(core_file, file) }.to raise_error error
+  end
+
   describe '.execute_all' do 
     before(:all) do 
       @core_file = FactoryGirl.create :core_file 
