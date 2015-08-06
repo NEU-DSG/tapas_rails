@@ -1,13 +1,16 @@
 require 'spec_helper'
 
 describe UpsertCollection do
+  include FileHelpers
+
   def params
     { :did => '111',
       :description => 'This is a test collection',
       :depositor => '011', 
       :title => 'A Test Collection',
       :access => 'public',
-      :project_did => '333'
+      :project_did => '333', 
+      :thumbnail => fixture_file('image_copy.jpg'),
     }
   end
 
@@ -26,9 +29,15 @@ describe UpsertCollection do
     its(:mass_permissions) { should eq 'private' }
   end
 
+  RSpec.shared_examples 'a thumbnail updating operation' do 
+    its('thumbnail_1.content') { should_not be nil } 
+    its('thumbnail_1.label') { should eq 'image_copy.jpg' }
+  end
+
   context 'When creating a collection' do 
     context 'with a preexisting community.' do 
       before(:all) do 
+        copy_fixture('image.jpg', 'image_copy.jpg')
         build_parent_community
         UpsertCollection.upsert params
       end
@@ -52,10 +61,14 @@ describe UpsertCollection do
       end
 
       it_should_behave_like 'a metadata assigning operation' 
+      it_should_behave_like 'a thumbnail updating operation'
     end
 
     context 'without a preexisting community.' do 
-      before(:all) { UpsertCollection.upsert params } 
+      before(:all) do 
+        copy_fixture('image.jpg', 'image_copy.jpg')
+        UpsertCollection.upsert params
+      end
       after(:all) { ActiveFedora::Base.delete_all } 
       it 'assigns the collection to the phantom collection bucket' do 
         pid = Rails.configuration.phantom_collection_pid
@@ -69,6 +82,7 @@ describe UpsertCollection do
 
   context 'when updating a collection that already exists' do 
     before(:all) do 
+      copy_fixture('image.jpg', 'image_copy.jpg')
       build_parent_community
       collection = Collection.new
       collection.did = params[:did]
@@ -100,5 +114,6 @@ describe UpsertCollection do
     end
 
     it_should_behave_like 'a metadata assigning operation' 
+    it_should_behave_like 'a thumbnail updating operation'
   end
 end

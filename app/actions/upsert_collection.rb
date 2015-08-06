@@ -7,7 +7,6 @@ class UpsertCollection
 
       if collection
         collection = Collection.find_by_did params[:did]
-        update_metadata!(collection)
       else
         collection = Collection.new
         collection.did = params[:did]
@@ -21,12 +20,18 @@ class UpsertCollection
         else
           collection.collection = Collection.phantom_collection
         end
-
-        update_metadata!(collection)
       end
+
+      if params[:thumbnail].present?
+        collection.add_thumbnail(:filepath => params[:thumbnail])
+      end
+
+      update_metadata!(collection)
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
+    ensure
+      FileUtils.rm(params[:thumbnail]) if File.exists?(params[:thumbnail])
     end
   end
 
