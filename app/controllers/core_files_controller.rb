@@ -53,9 +53,6 @@ class CoreFilesController < ApplicationController
     end
   end
 
-  def add_metadata
-  end
-
   def destroy
     core_file = CoreFile.find_by_did(params[:did])
 

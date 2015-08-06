@@ -34,7 +34,6 @@ TapasRails::Application.routes.draw do
   get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
   get 'files/:did/tei' => 'core_files#tei'
   post 'files/:did' => 'core_files#upsert'
-  post 'files/:did/metadata' => 'core_files#add_metadata'
   delete "files/:did" => "core_files#destroy"
 
   resources :downloads, :only => 'show'
