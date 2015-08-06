@@ -4,12 +4,12 @@ module Concerns::Upserter
   included do 
     attr_reader :params 
 
-    def initialize(params)
-      @params = params 
-    end
-
     def self.execute(params)
       self.new(params).execute
     end
+  end
+
+  def initialize(params)
+    @params = params 
   end
 end

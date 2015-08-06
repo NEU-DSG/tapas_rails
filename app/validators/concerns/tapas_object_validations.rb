@@ -4,11 +4,11 @@ module TapasObjectValidations
   included do 
     attr_reader   :params
     attr_accessor :errors, :create_or_update
+  end
 
-    def initialize(object_params)
-      @params = (object_params || {}).with_indifferent_access
-      @errors = []
-    end
+  def initialize(object_params)
+    @params = (object_params || {}).with_indifferent_access
+    @errors = []
   end
 
   # This ensures that we are either using a did that doesn't exist 

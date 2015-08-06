@@ -7,10 +7,8 @@
 module Filename
   extend ActiveSupport::Concern 
 
-  included do 
-    def filename 
-      return self.content.label 
-    end
+  def filename 
+    return self.content.label 
   end
 end
 
