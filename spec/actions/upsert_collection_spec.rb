@@ -82,6 +82,8 @@ describe UpsertCollection do
 
   context 'when updating a collection that already exists' do 
     before(:all) do 
+      ActiveFedora::Base.delete_all
+
       copy_fixture('image.jpg', 'image_copy.jpg')
       build_parent_community
       collection = Collection.new

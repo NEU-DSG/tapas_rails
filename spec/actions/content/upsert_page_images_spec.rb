@@ -6,7 +6,7 @@ describe Content::UpsertPageImages do
   let(:core_file) { FactoryGirl.create(:core_file) }
 
   it 'raises an error and deletes all files when invalid files are passed' do 
-    imgs = [copy_fixture('tei.xml', "#{SecureRandom.hex}.xml")]
+    imgs = [fixture_file('tei.xml')]
     e = Exceptions::InvalidZipError
     action = Content::UpsertPageImages
     expect { action.execute(core_file, imgs) }.to raise_error e
