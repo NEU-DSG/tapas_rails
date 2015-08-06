@@ -31,12 +31,6 @@ class ZipContentValidator
     validate_tei(xml, tei_path)
   end
 
-  def self.tfc(tfc_path)
-    validate_extension(tfc_path, %w(xml), "TFC File") 
-    xml = load_and_validate_xml tfc_path
-    validate_tei(xml, tfc_path)
-  end
-
   def self.support_files(support_file_paths)
     support_file_paths.each do |sf| 
       validate_extension(sf, %w(jpeg jpg png), "Page Image File")
