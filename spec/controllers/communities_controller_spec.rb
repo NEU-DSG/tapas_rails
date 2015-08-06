@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CommunitiesController do
   include ValidAuthToken
+  include FileHelpers
 
   describe 'DELETE #destroy' do 
     after(:each) { ActiveFedora::Base.delete_all }
@@ -42,6 +43,7 @@ describe CommunitiesController do
         :members => %w(1 2 3),
         :access => 'public',
         :did => '12',
+        :thumbnail => Rack::Test::UploadedFile.new(fixture_file('image.jpg')),
       } 
     end
 
