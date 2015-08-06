@@ -19,7 +19,7 @@ module InlineThumbnail
 
     if opts[:filepath].present?
       filename = Pathname.new(opts[:filepath]).basename.to_s
-      content = File.read(opts[:filepath])
+      content = IO.binread(opts[:filepath])
     elsif opts[:name].present? && content_present
       filename = opts[:name]
       content  = opts[:content]
