@@ -152,7 +152,7 @@ describe UpsertCoreFile do
         :tei => @tei
       }
 
-      UpsertCoreFile.upsert(@params)
+      UpsertCoreFile.execute(@params)
 
       @core_file = CoreFile.find_by_did(@params[:did])
     end

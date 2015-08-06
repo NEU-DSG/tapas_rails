@@ -36,7 +36,7 @@ describe UpsertCommunity do
   context 'Create' do 
     before(:all)  do
       copy_fixture('image.jpg', 'image_copy.jpg')
-      UpsertCommunity.upsert params
+      UpsertCommunity.execute params
     end
     after(:all) { ActiveFedora::Base.delete_all } 
 
@@ -65,7 +65,7 @@ describe UpsertCommunity do
       community.community = Community.root_community
       community.save!
 
-      UpsertCommunity.upsert params
+      UpsertCommunity.execute params
     end
 
     after(:all) { ActiveFedora::Base.delete_all } 

@@ -8,7 +8,7 @@ class UpsertCoreFile
     @params = params
   end
 
-  def upsert
+  def execute
     begin 
       if Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did]) 

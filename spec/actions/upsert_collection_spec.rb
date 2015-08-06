@@ -39,7 +39,7 @@ describe UpsertCollection do
       before(:all) do 
         copy_fixture('image.jpg', 'image_copy.jpg')
         build_parent_community
-        UpsertCollection.upsert params
+        UpsertCollection.execute params
       end
 
       after(:all) { ActiveFedora::Base.delete_all } 
@@ -67,7 +67,7 @@ describe UpsertCollection do
     context 'without a preexisting community.' do 
       before(:all) do 
         copy_fixture('image.jpg', 'image_copy.jpg')
-        UpsertCollection.upsert params
+        UpsertCollection.execute params
       end
       after(:all) { ActiveFedora::Base.delete_all } 
       it 'assigns the collection to the phantom collection bucket' do 
@@ -94,7 +94,7 @@ describe UpsertCollection do
       collection.og_reference = [collection.community.did]
       collection.save!
 
-      UpsertCollection.upsert params
+      UpsertCollection.execute params
     end
 
     after(:all) { ActiveFedora::Base.delete_all } 

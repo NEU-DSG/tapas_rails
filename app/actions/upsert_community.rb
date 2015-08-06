@@ -1,7 +1,7 @@
 class UpsertCommunity
   include Concerns::Upserter
 
-  def upsert 
+  def execute
     begin 
       community = Community.find_by_did(params[:did])
       if community

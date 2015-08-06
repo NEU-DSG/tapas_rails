@@ -1,7 +1,7 @@
 class UpsertCollection
   include Concerns::Upserter 
 
-  def upsert 
+  def execute
     begin 
       collection = Collection.find_by_did params[:did]
 

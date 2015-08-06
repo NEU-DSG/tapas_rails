@@ -8,8 +8,8 @@ module Concerns::Upserter
       @params = params 
     end
 
-    def self.upsert(params)
-      self.new(params).upsert 
+    def self.execute(params)
+      self.new(params).execute
     end
   end
 end
