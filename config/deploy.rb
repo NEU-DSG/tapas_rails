@@ -65,11 +65,9 @@ namespace :deploy do
 
   desc 'Create the API user'
   task :create_api_user do 
-    on roles(:all), in: :sequence, wait: 5 do 
+    on roles(:app), in: :sequence, wait: 5 do 
       with rails_env: fetch(:rails_env) do 
-        within release_path do 
-          execute "thor tapas_rails:create_api_user" 
-        end
+        execute "cd #{release_path} && thor tapas_rails:create_api_user" 
       end
     end
   end
