@@ -1,15 +1,15 @@
 # Takes a presumed complete CoreFile and handles indexing it into exist.
 module Exist
   class IndexCoreFile 
-    attr_accessor :core_file 
+    attr_accessor :core_file, :filepath
 
     def initialize(core_file, filepath = nil)
       self.core_file = core_file
       self.filepath  = filepath
     end
 
-    def self.execute(core_file)
-      self.new(core_file).execute
+    def self.execute(core_file, filepath = nil)
+      self.new(core_file, filepath).execute
     end
 
     def execute
@@ -17,11 +17,13 @@ module Exist
       did = core_file.did
       
       if filepath
-        Exist::StoreTei.execute(did, filepath)
+        Exist::StoreTei.execute(filepath, did)
       else
-        content = core_file.tei.content.content
-        @file = TempFile.new(['tei', '.xml']) { |io| io.write(content) }
-        Exist::StoreTei.execute(did, @file.path)
+        content = core_file.canonical_object.content.content
+        @file = Tempfile.new(['tei', '.xml'])
+        @file.write(content)
+        @file.rewind
+        Exist::StoreTei.execute(@file.path, did)
       end
 
       # Index the TFE metadata
