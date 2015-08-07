@@ -50,3 +50,4 @@ set :branch, 'develop'
 set :rails_env, 'staging'
 
 after 'deploy:updating', 'deploy:copy_figaro_conf'
+after 'deploy:copy_figaro_conf', 'deploy:create_api_user'
