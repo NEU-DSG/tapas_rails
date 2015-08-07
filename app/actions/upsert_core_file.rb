@@ -50,6 +50,10 @@ class UpsertCoreFile
           Content::UpsertPageImages.execute(core_file, page_imgs)
         end
       end
+
+      core_file.save!
+
+      Exist::IndexCoreFile.execute(core_file, params[:tei])
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 

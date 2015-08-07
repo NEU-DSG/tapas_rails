@@ -135,9 +135,12 @@ describe UpsertCoreFile do
 
       @collections = FactoryGirl.create_list(:collection, 3)
 
+      @community   = FactoryGirl.create :community
+
       # Make all the collections private
       @collections.each do |collection|
         collection.drupal_access = 'private'
+        collection.community = @community
         collection.save!
       end
 
