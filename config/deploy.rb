@@ -66,9 +66,9 @@ namespace :deploy do
   desc 'Create the API user'
   task :create_api_user do 
     on roles(:app), in: :sequence, wait: 5 do 
-      with rails_env: fetch(:rails_env) do 
-        execute "cd #{current_path} && bundle exec thor tapas_rails:create_api_user" 
-      end
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)}"\
+              " ~/.rvm/bin/rvm default do bundle exec thor"\
+              " tapas_rails:create_api_user"
     end
   end
 
