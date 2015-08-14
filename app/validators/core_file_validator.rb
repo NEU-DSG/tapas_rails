@@ -14,6 +14,9 @@ class CoreFileValidator
 
     validate_required_attributes
     return errors
+
+    validate_attributes
+    return errors
   end
 
   def validate_file_type
@@ -42,6 +45,20 @@ class CoreFileValidator
 
     return true
   end
+
+  def validate_attributes
+    # If params[:display_date] is present, ensure that it is something Ruby 
+    # understands as a date.
+    if params[:display_date].present?
+      begin
+        Date.iso8601(params[:display_date])
+      rescue ArgumentError => e 
+        errors << "display_date must be an ISO 8601 compliant date"
+      end
+    end 
+
+  end
+
 
   # In the case where params that definitely will not be used are passed during
   # an update request, note that instead of returning an error we simply ignore

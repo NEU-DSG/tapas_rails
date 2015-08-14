@@ -4,6 +4,28 @@ describe CoreFileValidator do
   include ValidatorHelpers
   include FileHelpers
 
+  describe '#validate_attributes' do 
+    let(:params) do 
+      { :display_date => "2010-10-10" }
+    end
+
+    def validate_attributes
+      validator = CoreFileValidator.new params
+      validator.create_or_update = :create
+      validator.validate_attributes
+      validator
+    end
+
+    it 'raises an error when display_date is not an ISO 8601 date' do 
+      params[:display_date] = 'September 21, 2015'
+      validator = validate_attributes
+      expect(validator.errors.length).to eq 1 
+
+      params[:display_date] = '2010-10-10' 
+      validator = validate_attributes 
+      expect(validator.errors.length).to eq 0 
+    end
+  end
 
   describe '#validate_file_type' do 
     let(:params) do
