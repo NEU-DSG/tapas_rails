@@ -18,9 +18,11 @@ class UpsertCoreFile
       end
 
       if mods_needs_updating
-        author = params[:display_author]
-        contributors = params[:display_contributors]
-        mods_record = Exist::GetMods.execute(params[:tei])
+        opts = {}
+        opts[:author] = params[:display_author]
+        opts[:contributors] = params[:display_contributors]
+        opts[:date] = params[:display_date]
+        mods_record = Exist::GetMods.execute(params[:tei], opts)
         core_file.mods.content = mods_record
         # Rewrite did to mods after update
         core_file.did = params[:did]
