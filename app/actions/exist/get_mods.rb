@@ -5,14 +5,15 @@ module Exist
   class GetMods
     include Exist::Concerns::Helpers
 
-    attr_reader :tei_filepath
+    attr_reader :tei_filepath, :opts
 
-    def initialize(tei_filepath)
+    def initialize(tei_filepath, **opts)
       @tei_filepath = tei_filepath
+      @opts         = opts
     end
 
-    def self.execute(tei_filepath)
-      self.new(tei_filepath).execute
+    def self.execute(tei_filepath, **opts)
+      self.new(tei_filepath, opts).execute
     end
 
     def build_resource 

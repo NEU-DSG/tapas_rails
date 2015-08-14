@@ -16,5 +16,7 @@ describe Exist::GetMods, :existdb => true do
       response = Exist::GetMods.execute path 
       expect { Nokogiri::XML(response) { |c| c.strict } }.not_to raise_error
     end
+
+    pending 'write tests against display options when eXist API supports it'
   end
 end
