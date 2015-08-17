@@ -47,7 +47,7 @@ server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db}
 
 set :deploy_to, '/home/tapas_rails/tapas_rails'
 set :branch, 'feature/staging_is_production'
-set :rails_env, 'production'
+set :rails_env, 'develop'
 
 after 'deploy:updating', 'deploy:copy_figaro_conf'
 after 'deploy:published', 'deploy:create_api_user'
