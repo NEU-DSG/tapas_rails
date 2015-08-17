@@ -2,7 +2,7 @@ development:
   email:    tapas@neu.edu
   api_key:  tapas12345
   password: tapas12345
-staging: 
+production:
   email: tapas@neu.edu 
-  api_key: <%= ENV["STAGING_TAPAS_API_KEY"] %>
-  password: <%= ENV["STAGING_TAPAS_PASSWORD"] %>
+  api_key: <%= ENV["PRODUCTION_TAPAS_API_KEY"] %>
+  password: <%= ENV["PRODUCTION_TAPAS_PASSWORD"] %>

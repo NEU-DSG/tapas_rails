@@ -3,5 +3,5 @@ development: &defaults
   port: 6379
 test:
   <<: *defaults
-staging: 
+production:
   <<: *defaults
