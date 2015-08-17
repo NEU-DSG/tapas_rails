@@ -3,7 +3,7 @@ default:
   java_opts:
     - "-XX:MaxPermSize=128m" 
     - "-Xmx256m"
-staging: 
+production:
   jetty_port: 8987
   java_opts: 
     - "-XX:MaxPermSize=128m"
