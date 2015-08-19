@@ -84,6 +84,7 @@ end
 gem 'capistrano', '~> 3.1', group: :development
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
+gem 'capistrano-resque', '~> 0.2.2', :require => false
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

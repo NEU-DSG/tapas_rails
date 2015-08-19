@@ -17,6 +17,11 @@
 
 server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db}
 
+# Start our Resque workers on the app domain
+role :resque_worker, 'app_domain'
+role :resque_scheduler, 'app_domain'
+
+set :workers, { "*" => 4 }
 
 # Custom SSH Options
 # ==================
@@ -49,5 +54,6 @@ set :deploy_to, '/home/tapas_rails/tapas_rails'
 set :branch, 'feature/staging_is_production'
 set :rails_env, 'develop'
 
+after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
 after 'deploy:published', 'deploy:create_api_user'
