@@ -54,6 +54,8 @@ set :deploy_to, '/home/tapas_rails/tapas_rails'
 set :branch, 'feature/staging_is_production'
 set :rails_env, 'develop'
 
+set :resque_log_file, 'log/resque.log'
+
 after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
 after 'deploy:published', 'deploy:create_api_user'
