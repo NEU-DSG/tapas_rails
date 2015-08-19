@@ -30,4 +30,4 @@ Nest.class_eval do
   end
 end
 
-TapasRails::Application::Queue = TapasRails::Resque::Queue.new('drs')
+TapasRails::Application::Queue = TapasRails::Resque::Queue.new('tapas_rails')
