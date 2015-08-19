@@ -47,8 +47,8 @@ set :workers, { "*" => 4 }
 
 
 set :deploy_to, '/home/tapas_rails/tapas_rails'
-set :branch, 'feature/staging_is_production'
-set :rails_env, 'develop'
+set :branch, 'develop'
+set :rails_env, 'production'
 
 set :resque_log_file, 'log/resque.log'
 
