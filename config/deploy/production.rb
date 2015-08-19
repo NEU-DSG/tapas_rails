@@ -15,11 +15,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db}
-
-# Start our Resque workers on the app domain
-role :resque_worker, 'tapasdev.neu.edu'
-role :resque_scheduler, 'tapasdev.neu.edu'
+server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db resque_worker resque_scheduler}
 
 set :workers, { "*" => 4 }
 
