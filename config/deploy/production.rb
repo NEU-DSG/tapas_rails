@@ -52,6 +52,8 @@ set :rails_env, 'production'
 
 set :resque_log_file, 'log/resque.log'
 
+set :passenger_in_gemfile, true
+
 after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
 after 'deploy:published', 'deploy:create_api_user'
