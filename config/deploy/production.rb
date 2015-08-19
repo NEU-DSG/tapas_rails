@@ -18,8 +18,8 @@
 server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db}
 
 # Start our Resque workers on the app domain
-role :resque_worker, 'app_domain'
-role :resque_scheduler, 'app_domain'
+role :resque_worker, 'tapasdev.neu.edu'
+role :resque_scheduler, 'tapasdev.neu.edu'
 
 set :workers, { "*" => 4 }
 
