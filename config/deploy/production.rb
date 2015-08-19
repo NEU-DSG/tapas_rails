@@ -53,6 +53,7 @@ set :rails_env, 'production'
 set :resque_log_file, 'log/resque.log'
 
 set :passenger_in_gemfile, true
+set :passenger_restart_with_sudo, true
 
 after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
