@@ -243,11 +243,11 @@ GEM
       solrizer (~> 3.3)
     orm_adapter (0.5.0)
     parseconfig (1.0.6)
-    passenger (5.0.10)
+    passenger (5.0.15)
       rack
       rake (>= 0.8.1)
     polyglot (0.3.5)
-    rack (1.5.3)
+    rack (1.5.5)
     rack-protection (1.5.0)
       rack
     rack-test (0.6.3)
