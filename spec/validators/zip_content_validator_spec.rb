@@ -43,11 +43,6 @@ describe ZipContentValidator do
     it_should_behave_like "a TEI validating operation", :tei
   end
 
-  describe ".tfc" do 
-    it_should_behave_like "an xml validating operation", :tfc
-    it_should_behave_like "a TEI validating operation", :tfc
-  end
-
   describe ".html" do 
     it "raises an error if the file doesn't have an .html extension" do
       p = fixture_file "image.jpg" 
