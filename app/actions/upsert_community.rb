@@ -22,7 +22,7 @@ class UpsertCommunity
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e
     ensure
-      FileUtils.rm(params[:thumbnail]) if File.exists?(params[:thumbnail])
+      FileUtils.rm(params[:thumbnail]) if should_delete_file? params[:thumbnail]
     end  
   end
 

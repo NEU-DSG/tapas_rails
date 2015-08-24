@@ -10,7 +10,7 @@ describe UpsertCollection do
       :title => 'A Test Collection',
       :access => 'public',
       :project_did => '333', 
-      :thumbnail => fixture_file('image_copy.jpg'),
+      :thumbnail => tmp_fixture_file('image_copy.jpg'),
     }
   end
 
@@ -117,5 +117,23 @@ describe UpsertCollection do
 
     it_should_behave_like 'a metadata assigning operation' 
     it_should_behave_like 'a thumbnail updating operation'
+  end
+
+  context 'without a thumbnail' do 
+    before(:all) do 
+      ActiveFedora::Base.delete_all 
+      build_parent_community
+      UpsertCollection.execute(params.except(:thumbnail))
+    end
+
+    after(:all) { ActiveFedora::Base.delete_all } 
+
+    it 'creates the desired collection' do 
+      expect(Collection.find_by_did(params[:did])).not_to be nil
+    end
+
+    it 'assigns no thumbnail' do 
+      expect(collection.thumbnail_1.content).to be nil
+    end
   end
 end
