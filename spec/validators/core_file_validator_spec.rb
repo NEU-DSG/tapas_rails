@@ -6,95 +6,80 @@ describe CoreFileValidator do
 
 
   describe '#validate_file_type' do 
-    let(:params) do
+    let(:base_params) do
       { :tei => 'file.xml', :depositor => 'test' }
     end
 
-    def validate_file_type(params, create_or_update)
+    def validate_file_types(params, create_or_update)
       validator = CoreFileValidator.new params 
       validator.create_or_update = create_or_update 
       validator.validate_file_type
       validator
     end
 
-    it "raises an error when no file_type is specified" do 
-      params.merge!(:collection_dids => [1, 2], :project_did => 3)
-      validator = validate_file_type(params, :create)
-      expect(validator.errors.length).to eq 1
+    it 'raises an error when an invalid file type is passed' do 
+      params = base_params.merge(:file_types => ['notography', 'personography'])
+      validator = validate_file_types(params, :create)
+      expect(validator.errors.length).to eq 1 
+      
+      error_msg = 'Invalid ography types were specified'
+      expect(validator.errors.first).to eq error_msg
     end
 
-    context 'when creating a TEI Content file' do 
-      it 'raises an error if no collection_dids are specified' do 
-        params.merge!(:file_type => 'tei_content', :project_did => '111')
-        validator = validate_file_type(params, :create)
+    it 'raises no error if no file types are passed' do 
+      validator = validate_file_types(base_params, :create) 
+      expect(validator.errors.length).to eq 0 
+    end
+
+    it 'casts strings to single item arrays' do 
+      params = base_params.merge(:file_types => 'odd_file')
+      validator = validate_file_types(params, :create) 
+      expect(validator.errors.length).to eq 0 
+    end
+  end
+
+  describe '#validate_required_attributes' do 
+    context "on update" do 
+      it 'does not require any params' do 
+        params = {}
+        validator = CoreFileValidator.new(params)
+        validator.create_or_update = :update 
+        validator.validate_required_attributes
+        expect(validator.errors.length).to eq 0 
+      end
+    end
+
+    context "on create" do 
+      let(:params) do 
+        {:tei => Rack::Test::UploadedFile.new(fixture_file('image.jpg')),
+         :collection_dids => ['1', '2', '3'], 
+         :depositor => SecureRandom.uuid }
+      end
+
+      def it_raises_one_error_without(param)
+        validator = CoreFileValidator.new(params.except(param))
+        validator.create_or_update = :create 
+        validator.validate_required_attributes
         expect(validator.errors.length).to eq 1
       end
 
-      it 'raises no errors if collection_dids is specified' do 
-        params.merge!(:file_type => 'tei_content', 
-                      :collection_dids => ['1', '2', '3'])
-        validator = validate_file_type(params, :create)
+      it 'raises an error when no depositor is specified' do 
+        it_raises_one_error_without :depositor
+      end
+
+      it 'raises an error when no collection_dids are present' do 
+        it_raises_one_error_without :collection_dids
+      end
+
+      it 'raises an error when no tei is present' do 
+        it_raises_one_error_without :tei
+      end
+
+      it 'raises no error when collection_dids and depositor are specified' do 
+        validator = CoreFileValidator.new(params)
+        validator.create_or_update = :create 
+        validator.validate_required_attributes
         expect(validator.errors.length).to eq 0
-      end
-
-      context 'when creating an ography' do 
-        it 'raises an error if no project_did is specified' do 
-          params.merge!(:file_type => 'ography', :collection_dids => [1])
-          validator = validate_file_type(params, :create)
-          expect(validator.errors.length).to eq 1
-        end
-
-        it 'raises no error if project_did is specified' do 
-          params.merge!(:file_type => 'ography', :project_did => '111')
-          validator = validate_file_type(params, :create) 
-          expect(validator.errors.length).to eq 0
-        end
-      end
-
-      context 'when updating a TEI Content file' do 
-        it 'raises no errors' do 
-          params.merge!(:file_type => 'tei_content', :project_did => '111')
-          validator = validate_file_type(params, :update)
-          expect(validator.errors.length).to eq 0 
-        end
-      end
-
-      context 'when updating an ography' do 
-        it 'raises no errors' do 
-          params.merge!(:file_type => 'ography', :project_did => '123') 
-          validator = validate_file_type(params, :update)
-          expect(validator.errors.length).to eq 0 
-        end
-      end
-    end
-
-    describe '#validate_required_attributes' do 
-      context "on update" do 
-        it 'does not require any params' do 
-          params = {}
-          validator = CoreFileValidator.new(params)
-          validator.create_or_update = :update 
-          validator.validate_required_attributes
-          expect(validator.errors.length).to eq 0 
-        end
-      end
-
-      context "on create" do 
-        it 'raises errors when did and depositor are not specified' do 
-          params = {}
-          validator = CoreFileValidator.new(params)
-          validator.create_or_update = :create
-          validator.validate_required_attributes
-          expect(validator.errors.length).to eq 2 
-        end
-
-        it 'raises no error when did and depositor are specified' do 
-          params = { :tei => "12", :depositor => "432" }
-          validator = CoreFileValidator.new(params)
-          validator.create_or_update = :create 
-          validator.validate_required_attributes
-          expect(validator.errors.length).to eq 0
-        end
       end
     end
   end

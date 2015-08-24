@@ -17,30 +17,24 @@ class CoreFileValidator
   end
 
   def validate_file_type
-    if create_or_update == :create && params[:file_type].blank?
-      errors << "On create a file_type must be specified"
-      return false
-    end 
+    return true if !(params[:file_types].present?)
 
-    unless %w(tei_content ography).include? params[:file_type]
-      errors << "File type must be one of: 'tei_content', 'ography'"
-      return false
+    # Convert file_types to an array if it was passed as a singular string
+    if params[:file_types].instance_of? String 
+      params[:file_types] = [params[:file_types]]
     end
 
-    if params[:file_type] == 'tei_content' && create_or_update == :create
-      unless params[:collection_dids].present?
-        errors << "TEI Content must belong to at least one collection, "\
-          "specify collection_dids"
-        return false
-      end
-    elsif params[:file_type] == 'ography' && create_or_update == :create 
-      unless params[:project_did].present?
-        errors << "Ographies must belong to a project, specify project_did."
-        return false
-      end
+    unless params[:file_types].all? { |x| valid_ography_types.include? x }
+      errors << "Invalid ography types were specified"
+      return false
     end
 
     return true
+  end
+
+  def valid_ography_types
+    %w(personography bibliography otherography
+       placeography odd_file orgography)
   end
 
   # In the case where params that definitely will not be used are passed during
@@ -56,6 +50,6 @@ class CoreFileValidator
   # Note that the existence of correctly set :file_type and :project_did or 
   # :collection_dids params is checked in validate_file_type.
   def create_attrs
-    [:tei, :depositor]
+    [:tei, :depositor, :collection_dids]
   end
 end
