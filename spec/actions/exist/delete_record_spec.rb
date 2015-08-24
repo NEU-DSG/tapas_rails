@@ -3,8 +3,8 @@ require 'spec_helper'
 describe Exist::DeleteRecord do 
   include FileHelpers
 
-  it 'returns a 404 for dids that are not indexed in exist' do 
-    e = RestClient::BadRequest 
+  it 'returns a 500 for dids that are not indexed in exist' do 
+    e = RestClient::InternalServerError
     expect { Exist::DeleteRecord.execute(SecureRandom.uuid) }.to raise_error e
   end
 
