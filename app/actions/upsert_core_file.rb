@@ -58,8 +58,8 @@ class UpsertCoreFile
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
     ensure
-      FileUtils.rm params[:tei] if params[:tei] && File.exists?(params[:tei])
-      FileUtils.rm params[:support_files] if params[:support_files]
+      FileUtils.rm params[:tei] if should_delete_file? params[:tei]
+      FileUtils.rm params[:support_files] if should_delete_file? params[:support_files]
       FileUtils.rm_rf @directory if @directory
     end
   end
