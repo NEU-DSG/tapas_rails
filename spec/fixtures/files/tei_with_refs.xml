@@ -1,0 +1,32 @@
+<TEI xmlns='http://www.tei-c.org/ns/1.0'>
+  <teiHeader>
+    <fileDesc>
+      <titleStmt>
+        <title>TEI Document with external refs</title>
+      </titleStmt>
+      <publicationStmt>
+        <p>Example used for tests</p>
+      </publicationStmt>
+      <sourceDesc>
+        <p>No source, born digital</p>
+      </sourceDesc>
+    </fileDesc>
+  </teiHeader>
+  <text>
+    <body>
+      <head>Review</head>
+      <p> It's alright </p>
+      <name ref="ftp://example.net#billy path/to/placeography.xml#ted">
+        Test One
+      </name>
+      <graphic url='http://absolute.url' />
+      <graphic url='path/to/image_one.jpg' />
+      <note ref="path/otherography.xml#test http://www.google.com">
+        Lorem ipsum
+      </note>
+      <someTag xml:base='otherography.xml'>
+        <ref corresp='#tod'></ref>
+      </someTag>
+    </body>
+  </text>
+</TEI>
