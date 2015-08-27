@@ -3,7 +3,7 @@ require 'spec_helper'
 describe PrepareReadingInterfaceXML do 
   include FileHelpers
 
-  describe ".transform" do 
+  describe ".execute" do 
     after(:all) { ActiveFedora::Base.delete_all } 
 
     def build_and_attach_ography(type_assignment, collection, filename)

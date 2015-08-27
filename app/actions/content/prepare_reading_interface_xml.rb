@@ -20,24 +20,23 @@ class PrepareReadingInterfaceXML
 
     xml.traverse do |node| 
       all_relevant_attrs.each do |attr|
-        if node[attr].present?
-          all_urls = node[attr].split(" ")
-          all_urls.map! do |url|
-            url = process_individual_url(url)
-          end
-
-          node[attr] = all_urls.join(' ')
-        end
+        node[attr] = transform_urls(node[attr]) if node[attr].present?
       end
     end
 
     return xml
   end
 
+  def transform_urls(urls)
+    urls = urls.split(" ")
+    urls.map! { |url| url = process_individual_url(url) } 
+    urls.join(' ')
+  end
+
   private 
 
     def process_individual_url(url)
-      if url.starts_with? *%w(http:// https:// ftp:// #)
+      if url.starts_with?('#') || URI.parse(url).absolute?
         return url
       else
         filename, frag = Pathname.new(url).basename.to_s.split('#', 2)
