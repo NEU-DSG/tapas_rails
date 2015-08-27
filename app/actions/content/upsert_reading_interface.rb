@@ -39,14 +39,12 @@ module Content
 
       filename = "#{interface_type}.xhtml"
 
-
       # Prepare the tei file for eXist by handling relative urls
-      xml_updated = ::PrepareReadingInterfaceXML.execute(
-        Nokogiri::XML(File.read(filepath)),
-        core_file).to_xml
+      xml_updated = ::PrepareReadingInterfaceXML.execute(core_file,
+        Nokogiri::XML(File.read(file_path))).to_xml
 
       # Pass the updated TEI File to eXist
-      html = Exist::GetReadingInterface.execute(xml_updated, interface_type))
+      html = Exist::GetReadingInterface.execute(xml_updated, interface_type)
 
       # Add the HTML to the html_file object
       add_unique_file(html_file, :filename => filename, :blob => html)
