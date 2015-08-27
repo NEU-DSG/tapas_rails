@@ -39,16 +39,15 @@ module Content
 
       filename = "#{interface_type}.xhtml"
 
-      # Get the Reading Interface version of this tei content from exist
-      html = Nokogiri::HTML(Exist::GetReadingInterface.execute(file_path, 
-                                                               interface_type))
+      # Prepare the tei file for eXist by handling relative urls
+      xml_updated = ::PrepareReadingInterfaceXML.execute(core_file,
+        Nokogiri::XML(File.read(file_path))).to_xml
 
-      # Now update the URLs within the object
-      html = ::TransformHTMLUrls.transform(core_file, html)
+      # Pass the updated TEI File to eXist
+      html = Exist::GetReadingInterface.execute(xml_updated, interface_type)
 
-      # Now add the fully correct document to the html_file
-      add_unique_file(html_file, :filename => filename, :blob => html.to_html)
+      # Add the HTML to the html_file object
+      add_unique_file(html_file, :filename => filename, :blob => html)
     end
   end
 end
-
