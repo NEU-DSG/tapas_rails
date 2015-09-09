@@ -20,7 +20,9 @@ module Exist
       url = build_url 'derive-mods'
       hash = options_hash 
 
-      hash[:headers][:content_type] = 'application/xml'
+      puts url
+
+      hash[:headers][:content_type] = 'multipart/form-data'
       hash[:headers][:accept] = 'application/xml'
 
       self.resource = RestClient::Resource.new(url, hash)
@@ -28,7 +30,31 @@ module Exist
 
     def execute
       build_resource
-      send_request { resource.post File.read(tei_filepath) }
+
+      contributors, authors = nil
+
+      post_params = {}
+      post_params[:file] = File.new(tei_filepath, 'rb')
+
+      if opts[:contributors].present?
+        post_params[:displayContributors] = opts[:contributors].join(' | ')
+      end
+
+      if opts[:authors].present?
+        post_params[:displayAuthors] = opts[:authors].join(' | ')
+      end
+
+      if opts[:date].present?
+        post_params[:timelineDate] = opts[:date]
+      end
+
+      if opts[:title].present?
+        post_params[:displayTitle] = opts[:title]
+      end
+
+      puts post_params
+
+      send_request { resource.post post_params }
     end
   end
 end
