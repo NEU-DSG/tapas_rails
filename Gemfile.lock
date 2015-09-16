@@ -456,7 +456,7 @@ DEPENDENCIES
   namae
   nest
   parseconfig
-  passenger
+  passenger (= 5.0.15)
   rails (= 4.0.8)
   rails_config
   resque

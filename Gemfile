@@ -10,7 +10,7 @@ gem 'sqlite3'
 gem 'rubyzip'
 
 # Use passenger as the application server
-gem 'passenger'
+gem 'passenger', '5.0.15'
 
 # Use mysql2 for the staging environment 
 gem 'mysql2'
