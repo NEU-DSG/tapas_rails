@@ -18,12 +18,14 @@ module Exist
       
       if filepath
         Exist::StoreTei.execute(filepath, did)
+        Exist::StoreMods.execute(core_file, filepath)
       else
         content = core_file.canonical_object.content.content
         @file = Tempfile.new(['tei', '.xml'])
         @file.write(content)
         @file.rewind
         Exist::StoreTei.execute(@file.path, did)
+        Exist::StoreMods.execute(core_file, @file.path)
       end
 
       # Index the TFE metadata

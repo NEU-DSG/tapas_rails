@@ -13,7 +13,8 @@ module Exist
     end
 
     def build_resource 
-      url = build_url "#{did}/tei" 
+      proj_did = CoreFile.find_by_did(did).project.did
+      url = build_url "#{proj_did}/#{did}/tei" 
       options = options_hash.merge({ 
         :headers => { 
           :content_type => 'application/xml', 
