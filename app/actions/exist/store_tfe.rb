@@ -22,7 +22,7 @@ module Exist
     end
 
     def build_resource
-      url = build_url "#{did}/tfe" 
+      url = build_url "#{project_did}/#{did}/tfe" 
       options = options_hash
       options[:headers][:content_type] = 'multipart/form-data' 
 
@@ -32,7 +32,7 @@ module Exist
     def execute 
       build_resource 
 
-      params = { :"proj-id" => project_did,
+      params = { :transforms => 'teibp, tapas-generic',
         :collections => collection_dids, 
         :"is-public" => is_public }
 
