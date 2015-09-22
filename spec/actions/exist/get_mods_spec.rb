@@ -36,8 +36,8 @@ describe Exist::GetMods, :existdb => true do
         # structure of the XML that eXist returns (too fragile), we should
         # at least make sure that our additional params are in some way 
         # making it into the returned XML document.
-        expect(authors.all? { |a| response.include? a }.to be true)
-        expect(contributors.all? { |c| response.include? c }.to be true)
+        expect(authors.all? { |a| response.include? a }).to be true
+        expect(contributors.all? { |c| response.include? c }).to be true
         expect(response.include? title).to be true 
         expect(response.include? date).to be true
       end

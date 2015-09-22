@@ -20,8 +20,6 @@ module Exist
       url = build_url 'derive-mods'
       hash = options_hash 
 
-      puts url
-
       hash[:headers][:content_type] = 'multipart/form-data'
       hash[:headers][:accept] = 'application/xml'
 
@@ -34,25 +32,23 @@ module Exist
       contributors, authors = nil
 
       post_params = {}
-      post_params[:file] = File.new(tei_filepath, 'rb')
+      post_params[:file] = File.read(tei_filepath)
 
       if opts[:contributors].present?
-        post_params[:displayContributors] = opts[:contributors].join(' | ')
+        post_params[:contributors] = opts[:contributors].join(' | ')
       end
 
       if opts[:authors].present?
-        post_params[:displayAuthors] = opts[:authors].join(' | ')
+        post_params[:authors] = opts[:authors].join(' | ')
       end
 
       if opts[:date].present?
-        post_params[:timelineDate] = opts[:date]
+        post_params[:"timeline-date"] = opts[:date]
       end
 
       if opts[:title].present?
-        post_params[:displayTitle] = opts[:title]
+        post_params[:title] = opts[:title]
       end
-
-      puts post_params
 
       send_request { resource.post post_params }
     end
