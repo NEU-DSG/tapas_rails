@@ -1,12 +1,12 @@
 module Exist
   class GetReadingInterface
     include Exist::Concerns::Helpers 
-    attr_reader :tei_path, :type
+    attr_reader :xml_blob, :type
 
-    def initialize(tei_path, type) 
+    def initialize(xml_blob, type) 
       valid_types = %w(teibp tapas-generic)
 
-      @tei_path = tei_path 
+      @xml_blob = xml_blob 
       if type.in? valid_types
         @type = type 
       else
@@ -15,8 +15,8 @@ module Exist
       end
     end
 
-    def self.execute(tei_path, type)
-      self.new(tei_path, type).execute
+    def self.execute(xml_blob, type)
+      self.new(xml_blob, type).execute
     end
 
     def build_resource
@@ -32,7 +32,7 @@ module Exist
     def execute
       build_resource
       params = { 
-        :file => File.read(tei_path), 
+        :file => xml_blob,
         :"assets-base" => Settings['base_url'] + "/reading_interface"
       }
       send_request { resource.post params }

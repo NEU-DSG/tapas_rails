@@ -10,7 +10,7 @@ describe UpsertCommunity do
       :title => 'A sample community',
       :access => 'public', 
       :members => ['011', '023', '034'], 
-      :thumbnail => fixture_file('image_copy.jpg'),
+      :thumbnail => tmp_fixture_file('image_copy.jpg'),
     }
   end
 
@@ -29,27 +29,44 @@ describe UpsertCommunity do
     its('thumbnail_1.label') { should eq 'image_copy.jpg' }
 
     it 'deletes the file' do 
-      expect(File.exists?(fixture_file('image_copy.jpg'))).to be false
+      expect(File.exists?(tmp_fixture_file('image_copy.jpg'))).to be false
     end
   end
 
   context 'Create' do 
-    before(:all)  do
-      copy_fixture('image.jpg', 'image_copy.jpg')
-      UpsertCommunity.execute params
-    end
-    after(:all) { ActiveFedora::Base.delete_all } 
+    context 'with a thumbnail specified' do 
+      before(:all)  do
+        copy_fixture('image.jpg', 'image_copy.jpg')
+        UpsertCommunity.execute params
+      end
 
-    it 'builds the requested community' do 
-      expect(community.class).to eq Community 
+      after(:all) { ActiveFedora::Base.delete_all } 
+    
+      it 'builds the requested community' do 
+        expect(community.class).to eq Community 
+      end
+
+      it 'assigns the community as a child of the root community' do 
+        expect(community.community.pid).to eq Community.root_community.pid
+      end
+
+      it_should_behave_like 'a metadata assigning operation'
+      it_should_behave_like 'a thumbnail updating operation'
     end
 
-    it 'assigns the community as a child of the root community' do 
-      expect(community.community.pid).to eq Community.root_community.pid
-    end
+    context 'with no thumbnail specified' do 
+      before(:all) do 
+        UpsertCommunity.execute(params.except(:thumbnail))
+      end
 
-    it_should_behave_like 'a metadata assigning operation'
-    it_should_behave_like 'a thumbnail updating operation'
+      after(:all) { ActiveFedora::Base.delete_all }
+
+      it 'assigns no content to the thumbnail' do 
+        expect(community.thumbnail_1.content).to be nil 
+      end
+
+      it_should_behave_like 'a metadata assigning operation'
+    end
   end
 
   context 'Update' do 

@@ -12,4 +12,8 @@ module Concerns::Upserter
   def initialize(params)
     @params = params 
   end
+
+  def should_delete_file?(filepath)
+    filepath.present? && File.exists?(filepath) && filepath.include?('tmp')
+  end
 end

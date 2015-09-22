@@ -15,7 +15,9 @@ module Exist
     end
 
     def build_resource
-      self.resource = RestClient::Resource.new(build_url(did), options_hash)
+      proj_did = CoreFile.find_by_did(did).project.did 
+      url = build_url("#{proj_did}/#{did}")
+      self.resource = RestClient::Resource.new(url, options_hash)
     end
 
     def execute

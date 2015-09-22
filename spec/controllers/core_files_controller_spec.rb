@@ -101,7 +101,7 @@ describe CoreFilesController do
         :depositor       => "wjackson",
         :tei             => test_file(fixture_file('tei.xml')),
         :support_files   => test_file(fixture_file('all_files.zip')),
-        :file_type       => "tei_content", }
+        :file_types      => ['personography', 'bibliography'] }
     end
 
     after(:all) { ActiveFedora::Base.delete_all }
@@ -109,13 +109,18 @@ describe CoreFilesController do
     it "returns a 202 and creates the desired file on a valid request." do 
       Resque.inline = true
 
+      # Create a community for our collections to be attached to 
+      community = FactoryGirl.create :community
+
       # Create the relevant collections
       collection_one = FactoryGirl.create :collection
       collection_one.did = post_defaults[:collection_dids][0]
+      collection_one.community = community
       collection_one.save! 
 
       collection_two = FactoryGirl.create :collection
       collection_two.did = post_defaults[:collection_dids][1]
+      collection_two.community = community
       collection_two.save!
 
       post :upsert, post_defaults
@@ -125,16 +130,25 @@ describe CoreFilesController do
       core = CoreFile.find(CoreFile.find_by_did("111").id)
       tei  = core.canonical_object(:model)
 
+      # Ensure support file content has been attached
       expect(core.thumbnail).to be_instance_of ImageThumbnailFile
       expect(core.page_images.count).to eq 3
 
       collection_pids = core.collections.map { |x| x.pid } 
 
+      # Ensure collections have been attached
       expected_pids = [collection_one.pid, collection_two.pid]
       expect(collection_pids).to match_array expected_pids
 
+      # Ensure TEI File content has been attached
       expect(tei.class).to eq TEIFile
       expect(tei.content.content.size).not_to eq 0 
+
+      # Ensure file_types are set
+      expect(collection_one.personographies).to eq [core]
+      expect(collection_two.personographies).to eq [core] 
+      expect(collection_one.bibliographies).to eq  [core]
+      expect(collection_two.bibliographies).to eq  [core]
 
       Resque.inline = false
     end 

@@ -4,8 +4,8 @@ describe Exist::GetReadingInterface, :existdb => true do
   include FileHelpers
 
   def valid_request_test(type)
-    path = fixture_file 'tei.xml' 
-    response = Exist::GetReadingInterface.execute(path, type)
+    blob = File.read(fixture_file 'tei.xml')
+    response = Exist::GetReadingInterface.execute(blob, type)
     expect(response.code).to eq 200 
     expect { 
       Nokogiri::XML(response) { |c| c.strict }

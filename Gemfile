@@ -10,7 +10,7 @@ gem 'sqlite3'
 gem 'rubyzip'
 
 # Use passenger as the application server
-gem 'passenger'
+gem 'passenger', '5.0.15'
 
 # Use mysql2 for the staging environment 
 gem 'mysql2'
@@ -84,6 +84,8 @@ end
 gem 'capistrano', '~> 3.1', group: :development
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
+gem 'capistrano-resque', '~> 0.2.2', :require => false
+gem 'capistrano-passenger'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

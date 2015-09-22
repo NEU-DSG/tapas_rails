@@ -164,6 +164,14 @@ describe UpsertCoreFile do
       expect(@core_file).not_to be nil 
     end
 
+    it 'deletes the tei temp file' do 
+      expect(File.exists? @tei).to be false 
+    end
+
+    it 'deletes the support_files zip' do 
+      expect(File.exists? @zip).to be false 
+    end
+
     it 'writes the pid of the object to the MODS datastream' do 
       expect(@core_file.mods.identifier.first).to eq @core_file.pid
     end
