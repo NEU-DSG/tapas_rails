@@ -4,8 +4,7 @@
 module Exist
   class GetMods
     include Exist::Concerns::Helpers
-
-    attr_reader :tei_filepath, :opts
+    include Exist::Concerns::Mods
 
     def initialize(tei_filepath, **opts)
       @tei_filepath = tei_filepath
@@ -16,41 +15,9 @@ module Exist
       self.new(tei_filepath, opts).execute
     end
 
-    def build_resource 
-      url = build_url 'derive-mods'
-      hash = options_hash 
-
-      hash[:headers][:content_type] = 'multipart/form-data'
-      hash[:headers][:accept] = 'application/xml'
-
-      self.resource = RestClient::Resource.new(url, hash)
-    end
-
     def execute
-      build_resource
-
-      contributors, authors = nil
-
-      post_params = {}
-      post_params[:file] = File.read(tei_filepath)
-
-      if opts[:contributors].present?
-        post_params[:contributors] = opts[:contributors].join(' | ')
-      end
-
-      if opts[:authors].present?
-        post_params[:authors] = opts[:authors].join(' | ')
-      end
-
-      if opts[:date].present?
-        post_params[:"timeline-date"] = opts[:date]
-      end
-
-      if opts[:title].present?
-        post_params[:title] = opts[:title]
-      end
-
-      send_request { resource.post post_params }
+      build_resource(build_url('derive-mods'))
+      send_mods_request
     end
   end
 end
