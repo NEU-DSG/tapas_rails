@@ -9,8 +9,8 @@ module Exist
       self.mod_opts = mod_opts
     end
 
-    def self.execute(core_file, filepath = nil)
-      self.new(core_file, filepath).execute
+    def self.execute(core_file, filepath = nil, **mod_opts)
+      self.new(core_file, filepath, mod_opts).execute
     end
 
     def execute
