@@ -19,7 +19,27 @@ describe Exist::StoreMods do
     file = fixture_file 'tei.xml' 
     Exist::StoreTei.execute(file, @core_file.did)
 
-    response = Exist::StoreMods.execute(@core_file, file)
+    response = Exist::StoreMods.execute(file, @core_file)
     expect(response.code).to eq 201
+  end
+
+  it 'passes optional params correctly' do 
+    file = fixture_file 'tei.xml' 
+    Exist::StoreTei.execute(file, @core_file.did) 
+
+    opts = { 
+      :authors => ['Bob Jenkins'],
+      :contributors => ['Cotton Mathers'],
+      :date => Time.now.iso8601, 
+      :title => 'Test Store Mods Request'
+    }
+
+    response = Exist::StoreMods.execute(file, @core_file, opts)
+
+    expect(response.code).to eq 201
+    expect(response.include?(opts[:authors].first)).to be true
+    expect(response.include?(opts[:contributors].first)).to be true
+    expect(response.include?(opts[:date].first)).to be true
+    expect(response.include?(opts[:title].first)).to be true
   end
 end
