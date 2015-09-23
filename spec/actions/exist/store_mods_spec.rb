@@ -2,18 +2,13 @@ require 'spec_helper'
 
 describe Exist::StoreMods do 
   include FileHelpers
+  include FixtureBuilders
 
   before(:all) do 
-    @community = FactoryGirl.create :community
-
-    @collection = FactoryGirl.create :collection
-    @collection.community = @community
-    @collection.save!
-
-    @core_file = FactoryGirl.create :core_file 
-    @core_file.collections << @collection 
-    @core_file.save! 
+    @core_file, @collections, @community = FixtureBuilders.create_all
   end
+
+  after(:all) { ActiveFedora::Base.delete_all }
 
   it 'returns a 201 for valid storage requests' do 
     file = fixture_file 'tei.xml' 

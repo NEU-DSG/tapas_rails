@@ -2,22 +2,15 @@ require 'spec_helper'
 
 describe Exist::StoreTei do 
   include FileHelpers
+  include FixtureBuilders
+
+  after(:all) { ActiveFedora::Base.delete_all }
 
   it 'returns a 201 for valid uploads' do 
     file = fixture_file 'tei.xml' 
-    
-    community = FactoryGirl.create :community
+    core_file, collections, community = FixtureBuilders.create_all
 
-    collection = FactoryGirl.create :collection
-    collection.community = community 
-    collection.save!
-
-    core_file = FactoryGirl.create :core_file 
-    core_file.collections << collection
-    core_file.save!
-
-    did  = core_file.did
-    response = Exist::StoreTei.execute(file, did) 
+    response = Exist::StoreTei.execute(file, core_file.did)
     expect(response.code).to eq 201
   end
 end
