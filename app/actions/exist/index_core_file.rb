@@ -1,11 +1,12 @@
 # Takes a presumed complete CoreFile and handles indexing it into exist.
 module Exist
   class IndexCoreFile 
-    attr_accessor :core_file, :filepath
+    attr_accessor :core_file, :filepath, :mod_opts
 
-    def initialize(core_file, filepath = nil)
+    def initialize(core_file, filepath, **mod_opts)
       self.core_file = core_file
       self.filepath  = filepath
+      self.mod_opts = mod_opts
     end
 
     def self.execute(core_file, filepath = nil)
@@ -13,26 +14,19 @@ module Exist
     end
 
     def execute
-      # Index the TEI record
-      did = core_file.did
-      
       if filepath
-        Exist::StoreTei.execute(filepath, did)
-        Exist::StoreMods.execute(core_file, filepath)
+        Exist::StoreTei.execute(filepath, core_file.did)
+        Exist::StoreMods.execute(filepath, core_file, mod_opts)
       else
         content = core_file.canonical_object.content.content
         @file = Tempfile.new(['tei', '.xml'])
         @file.write(content)
         @file.rewind
-        Exist::StoreTei.execute(@file.path, did)
-        Exist::StoreMods.execute(core_file, @file.path)
+        Exist::StoreTei.execute(@file.path, core_file.did)
+        Exist::StoreMods.execute(@file.path, core_file, mod_opts)
       end
 
-      # Index the TFE metadata
-      project_did = core_file.project.did
-      collections = core_file.collections.map { |x| x.did }
-      is_public   = (core_file.drupal_access == 'public').to_s
-      Exist::StoreTfe.execute(did, project_did, collections, is_public)
+      Exist::StoreTfe.execute(core_file)
     ensure
       @file.unlink if @file
     end

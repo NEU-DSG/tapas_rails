@@ -17,8 +17,9 @@ class UpsertCoreFile
                                          :depositor => params[:depositor])
       end
 
+      opts = {}
+
       if mods_needs_updating
-        opts = {}
         opts[:authors] = params[:display_authors]
         opts[:contributors] = params[:display_contributors]
         opts[:date] = params[:display_date]
@@ -56,7 +57,7 @@ class UpsertCoreFile
 
       core_file.save!
 
-      Exist::IndexCoreFile.execute(core_file, params[:tei])
+      Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
