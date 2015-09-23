@@ -12,7 +12,7 @@ describe Exist::StoreMods do
 
   it 'returns a 201 for valid storage requests' do 
     file = fixture_file 'tei.xml' 
-    Exist::StoreTei.execute(file, @core_file.did)
+    Exist::StoreTei.execute(file, @core_file)
 
     response = Exist::StoreMods.execute(file, @core_file)
     expect(response.code).to eq 201
@@ -20,7 +20,7 @@ describe Exist::StoreMods do
 
   it 'passes optional params correctly' do 
     file = fixture_file 'tei.xml' 
-    Exist::StoreTei.execute(file, @core_file.did) 
+    Exist::StoreTei.execute(file, @core_file)
 
     opts = { 
       :authors => ['Bob Jenkins'],
