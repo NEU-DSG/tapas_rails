@@ -15,14 +15,14 @@ module Exist
 
     def execute
       if filepath
-        Exist::StoreTei.execute(filepath, core_file.did)
+        Exist::StoreTei.execute(filepath, core_file)
         Exist::StoreMods.execute(filepath, core_file, mod_opts)
       else
         content = core_file.canonical_object.content.content
         @file = Tempfile.new(['tei', '.xml'])
         @file.write(content)
         @file.rewind
-        Exist::StoreTei.execute(@file.path, core_file.did)
+        Exist::StoreTei.execute(@file.path, core_file)
         Exist::StoreMods.execute(@file.path, core_file, mod_opts)
       end
 
