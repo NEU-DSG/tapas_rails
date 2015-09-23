@@ -4,30 +4,20 @@
 module Exist
   class GetMods
     include Exist::Concerns::Helpers
+    include Exist::Concerns::Mods
 
-    attr_reader :tei_filepath
-
-    def initialize(tei_filepath)
+    def initialize(tei_filepath, **opts)
       @tei_filepath = tei_filepath
+      @opts         = opts
     end
 
-    def self.execute(tei_filepath)
-      self.new(tei_filepath).execute
-    end
-
-    def build_resource 
-      url = build_url 'derive-mods'
-      hash = options_hash 
-
-      hash[:headers][:content_type] = 'application/xml'
-      hash[:headers][:accept] = 'application/xml'
-
-      self.resource = RestClient::Resource.new(url, hash)
+    def self.execute(tei_filepath, **opts)
+      self.new(tei_filepath, opts).execute
     end
 
     def execute
-      build_resource
-      send_request { resource.post({ file: File.read(tei_filepath) }) }
+      build_resource(build_url('derive-mods'))
+      send_mods_request
     end
   end
 end

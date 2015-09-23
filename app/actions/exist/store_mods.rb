@@ -1,30 +1,24 @@
 module Exist
   class StoreMods 
-    attr_reader :tei_path, :core_file
     include Exist::Concerns::Helpers
+    include Exist::Concerns::Mods
 
-    def initialize(core_file, tei_path)
-      @core_file = core_file 
-      @tei_path  = tei_path
+    attr_reader :core_file
+
+    def initialize(tei_filepath, core_file, **opts)
+      @tei_filepath = tei_filepath
+      @core_file = core_file
+      @opts = opts
     end
 
-    def self.execute(core_file, tei_path)
-      self.new(core_file, tei_path).execute
-    end
-
-    def build_resource
-      url = build_url "#{core_file.project.did}/#{core_file.did}/mods"
-      hash = options_hash
-
-      hash[:headers][:content_type] = "multipart/form-data"
-      hash[:headers][:accept] = "application/xml" 
-
-      self.resource = RestClient::Resource.new(url, hash) 
+    def self.execute(core_file, tei_path, **opts)
+      self.new(core_file, tei_path, opts).execute
     end
 
     def execute
-      build_resource
-      send_request { resource.post({ file: File.read(tei_path)}) } 
+      url = build_url "#{core_file.project.did}/#{core_file.did}/mods"
+      build_resource(url)
+      send_mods_request
     end
   end
 end

@@ -17,10 +17,14 @@ class UpsertCoreFile
                                          :depositor => params[:depositor])
       end
 
+      opts = {}
+
       if mods_needs_updating
-        author = params[:display_author]
-        contributors = params[:display_contributors]
-        mods_record = Exist::GetMods.execute(params[:tei])
+        opts[:authors] = params[:display_authors]
+        opts[:contributors] = params[:display_contributors]
+        opts[:date] = params[:display_date]
+        opts[:title] = params[:display_title]
+        mods_record = Exist::GetMods.execute(params[:tei], opts)
         core_file.mods.content = mods_record
         # Rewrite did to mods after update
         core_file.did = params[:did]
@@ -53,7 +57,7 @@ class UpsertCoreFile
 
       core_file.save!
 
-      Exist::IndexCoreFile.execute(core_file, params[:tei])
+      Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e 
@@ -107,8 +111,9 @@ class UpsertCoreFile
 
   private
     def mods_needs_updating
-      params[:tei].present? || params[:display_authors].present? ||
-        params[:display_contributors].present?
+      keys = [:tei, :display_authors, :display_contributors, :display_date,
+              :display_title]
+      keys.any? { |key| params[key].present? }
     end
 end
 

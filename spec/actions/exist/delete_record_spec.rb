@@ -27,7 +27,7 @@ describe Exist::DeleteRecord do
 
 
   it 'returns a 200 when a record is successfully deleted' do 
-    Exist::StoreTei.execute(fixture_file('tei.xml'), @core_file.did)
+    Exist::StoreTei.execute(fixture_file('tei.xml'), @core_file)
     response = Exist::DeleteRecord.execute(@core_file.did)
     expect(response.code).to eq 200 
   end

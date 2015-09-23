@@ -2,23 +2,11 @@ require 'spec_helper'
 
 describe Exist::IndexCoreFile do 
   include FileHelpers
+  include FixtureBuilders
 
   describe "With a filepath" do 
     before(:all) do 
-      @community = FactoryGirl.create :community
-
-      puts @community.did
-
-      @collection = FactoryGirl.create :collection
-      @collection.community = @community
-      @collection.save! 
-
-      @core_file = FactoryGirl.create :core_file
-      @core_file.collections << @collection
-      @core_file.save!
-
-      puts @core_file.did
-
+      @core_file, @collections, @community = FixtureBuilders.create_all
       @filepath = fixture_file 'tei.xml'
     end
 

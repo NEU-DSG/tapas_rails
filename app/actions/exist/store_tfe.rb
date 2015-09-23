@@ -5,24 +5,18 @@
 module Exist
   class StoreTfe 
     include Exist::Concerns::Helpers 
-    attr_reader :did, :project_did, :collection_dids, :is_public 
+    attr_reader :core_file
 
-    def initialize(did, proj_id, collections, is_public)
-      @did = did 
-      @project_did = proj_id 
-      if collections.is_a? Array 
-        collections = collections.join(',') 
-      end
-      @collection_dids = collections 
-      @is_public = is_public 
+    def initialize(core_file)
+      @core_file = core_file
     end
 
-    def self.execute(did, project_did, collection_dids, is_public)
-      self.new(did, project_did, collection_dids, is_public).execute
+    def self.execute(core_file)
+      self.new(core_file).execute
     end
 
     def build_resource
-      url = build_url "#{project_did}/#{did}/tfe" 
+      url = build_url "#{core_file.project.did}/#{core_file.did}/tfe" 
       options = options_hash
       options[:headers][:content_type] = 'multipart/form-data' 
 
@@ -32,8 +26,11 @@ module Exist
     def execute 
       build_resource 
 
+      is_public = (@core_file.drupal_access == 'public').to_s
+      collections = @core_file.collections.map(&:did).join(',')
+
       params = { :transforms => 'teibp, tapas-generic',
-        :collections => collection_dids, 
+        :collections => collections,
         :"is-public" => is_public }
 
       send_request { resource.post params }
