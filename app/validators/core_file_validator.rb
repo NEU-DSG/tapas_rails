@@ -1,71 +1,86 @@
-class CoreFileValidator
-  include TapasObjectValidations
+class CoreFileValidator 
+  include ValidatorHelpers
+
+  attr_accessor :errors
+  attr_reader :params
+
+  def initialize(params)
+    @params = params 
+    self.errors = []
+  end
 
   def self.validate_upsert(params)
     self.new(params).validate_upsert
   end
 
   def validate_upsert
-    validate_class_correctness CoreFile
-    return errors if errors.any?
-
-    validate_file_type
-    return errors if errors.any?
-
-    validate_required_attributes
-    return errors
-
-    validate_attributes
-    return errors
+    validate_did_and_create_reqs(CoreFile, %i(collection_dids tei depositor
+                                 file_type))
+    validate_all_present_params
   end
 
-  def validate_file_type
-    return true if !(params[:file_types].present?)
+  def validate_collection_dids
+    collections = params[:collection_dids]
 
-    # Convert file_types to an array if it was passed as a singular string
-    if params[:file_types].instance_of? String 
-      params[:file_types] = [params[:file_types]]
+    unless collections.is_a? Array
+      self.errors << 'collection_dids must be an array, was a '\
+       "#{collections.class}"
     end
 
-    unless params[:file_types].all? { |x| valid_ography_types.include? x }
-      errors << "Invalid ography types were specified"
-      return false
-    end
-
-    return true
-  end
-
-  def validate_attributes
-    # If params[:display_date] is present, ensure that it is something Ruby 
-    # understands as a date.
-    if params[:display_date].present?
-      begin
-        Date.iso8601(params[:display_date])
-      rescue ArgumentError => e 
-        errors << "display_date must be an ISO 8601 compliant date"
+    # :collection_dids must be an array of Drupal IDs belonging to Collections that 
+    # have already been ingested into the repository
+    collections.each do |cdid|
+      unless Collection.exists_by_did?(cdid)
+        self.errors << 'collection_dids contained a did that belonged to no '\
+          "collection, mystery did was: #{cdid}"
       end
-    end 
-
+    end
   end
 
-  def valid_ography_types
-    %w(personography bibliography otherography
-       placeography odd_file orgography)
+  def validate_tei
+    puts 'tei validation executed'
+    validate_file_and_type(:tei, %w(xml))
   end
 
-  # In the case where params that definitely will not be used are passed during
-  # an update request, note that instead of returning an error we simply ignore
-  # them during processing.  This behavior is useful because it allows the 
-  # Drupal system to (if necessary) simply always send requests that comply to
-  # the create requirements and trust that the repository will sort things out
-  # from there. 
-  def update_attrs
-    []
+  # Display title must be a non-blank string
+  def validate_display_title
+    validate_nonblank_string :display_title
   end
 
-  # Note that the existence of correctly set :file_type and :project_did or 
-  # :collection_dids params is checked in validate_file_type.
-  def create_attrs
-    [:tei, :depositor, :collection_dids]
+  def validate_display_authors
+    validate_array_of_strings :display_authors
+  end
+
+  def validate_display_contributors
+    validate_array_of_strings :display_contributors
+  end
+
+  def validate_display_date
+    date = params[:display_date]
+    begin
+      Date.iso8601(date)
+    rescue ArgumentError
+      self.errors << "display_date must be ISO8601 formatted, was #{date}"
+    end
+  end
+
+  def validate_support_files
+    validate_file_and_type(:support_files, %w(zip))
+  end
+
+  def validate_depositor
+    validate_nonblank_string :depositor
+  end
+
+  def validate_file_types
+    file_types = params[:file_types]
+
+    self.errors << 'file_types must be an array' unless file_types.is_a? Array
+
+    file_types.each do |file_type|
+      unless file_type.in? CoreFile.all_ography_types
+        self.errors << "#{file_type} is not a valid option for file_types"
+      end
+    end
   end
 end
