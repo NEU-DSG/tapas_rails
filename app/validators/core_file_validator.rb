@@ -1,5 +1,5 @@
 class CoreFileValidator 
-  include ValidatorHelpers
+  include Validations
 
   attr_accessor :errors
   attr_reader :params
@@ -14,9 +14,13 @@ class CoreFileValidator
   end
 
   def validate_upsert
-    validate_did_and_create_reqs(CoreFile, %i(collection_dids tei depositor
-                                 file_type))
+    required_fields = %i(collection_dids tei depositor file_types)
+    validate_did_and_create_reqs(CoreFile, required_fields)
+    # If any of these validations fail, there is no reason to proceed
+    return errors if errors.any?
+
     validate_all_present_params
+    return errors
   end
 
   def validate_collection_dids
@@ -25,6 +29,7 @@ class CoreFileValidator
     unless collections.is_a? Array
       self.errors << 'collection_dids must be an array, was a '\
        "#{collections.class}"
+      return
     end
 
     # :collection_dids must be an array of Drupal IDs belonging to Collections that 
@@ -38,7 +43,6 @@ class CoreFileValidator
   end
 
   def validate_tei
-    puts 'tei validation executed'
     validate_file_and_type(:tei, %w(xml))
   end
 
@@ -75,7 +79,10 @@ class CoreFileValidator
   def validate_file_types
     file_types = params[:file_types]
 
-    self.errors << 'file_types must be an array' unless file_types.is_a? Array
+    unless file_types.is_a? Array
+      self.errors << 'file_types must be an array' 
+      return
+    end
 
     file_types.each do |file_type|
       unless file_type.in? CoreFile.all_ography_types

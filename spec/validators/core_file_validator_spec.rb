@@ -2,107 +2,57 @@ require 'spec_helper'
 
 describe CoreFileValidator do 
   include ValidatorHelpers
+  include FixtureBuilders
   include FileHelpers
 
-  describe '#validate_attributes' do 
-    let(:params) do 
-      { :display_date => "2010-10-10" }
-    end
+  # Sets up a valid repository structure
+  before(:all) do 
+    @core_file, @collections, @project = FixtureBuilders.create_all 2
+  end
 
-    def validate_attributes
-      validator = CoreFileValidator.new params
-      validator.create_or_update = :create
-      validator.validate_attributes
-      validator
-    end
+  let(:valid_params_all) do
+    { :depositor => 'test_depositor',
+      :did => SecureRandom.uuid, 
+      :file_types => ['personography'], #Indicates a file that is tei content only
+      :tei => Rack::Test::UploadedFile.new(
+        fixture_file('tei.xml'),
+        'application/xml'),
+      :collection_dids => @collections.map(&:did),
+      :display_title => "A Valid Display Title", 
+      :display_authors => ['Mickey', 'Minnie', 'Goofie'],
+      :display_contributors => ['Donald', 'Scrooge'],
+      :display_date => DateTime.now.iso8601.to_s, 
+      :support_files => Rack::Test::UploadedFile.new(
+        fixture_file('all_files.zip'),
+        'application/zip') }
+  end
 
-    it 'raises an error when display_date is not an ISO 8601 date' do 
-      params[:display_date] = 'September 21, 2015'
-      validator = validate_attributes
-      expect(validator.errors.length).to eq 1 
+  def validate_with_params(params)
+    return CoreFileValidator.validate_upsert(params)
+  end
 
-      params[:display_date] = '2010-10-10' 
-      validator = validate_attributes 
-      expect(validator.errors.length).to eq 0 
+  context 'Create with all valid params' do 
+    it 'raises no errors' do 
+      errors = validate_with_params(valid_params_all)
+      expect(errors.length).to eq 0
     end
   end
 
-  describe '#validate_file_type' do 
-    let(:base_params) do
-      { :tei => 'file.xml', :depositor => 'test' }
-    end
-
-    def validate_file_types(params, create_or_update)
-      validator = CoreFileValidator.new params 
-      validator.create_or_update = create_or_update 
-      validator.validate_file_type
-      validator
-    end
-
-    it 'raises an error when an invalid file type is passed' do 
-      params = base_params.merge(:file_types => ['notography', 'personography'])
-      validator = validate_file_types(params, :create)
-      expect(validator.errors.length).to eq 1 
-      
-      error_msg = 'Invalid ography types were specified'
-      expect(validator.errors.first).to eq error_msg
-    end
-
-    it 'raises no error if no file types are passed' do 
-      validator = validate_file_types(base_params, :create) 
-      expect(validator.errors.length).to eq 0 
-    end
-
-    it 'casts strings to single item arrays' do 
-      params = base_params.merge(:file_types => 'odd_file')
-      validator = validate_file_types(params, :create) 
-      expect(validator.errors.length).to eq 0 
+  context 'Update with all valid params' do 
+    it 'raises no errors' do 
+      valid_params_all[:did] = @core_file.did 
+      errors = validate_with_params(valid_params_all.except(:collection_dids,
+                                                            :depositor, 
+                                                            :tei))
+      expect(errors.length).to eq 0
     end
   end
 
-  describe '#validate_required_attributes' do 
-    context "on update" do 
-      it 'does not require any params' do 
-        params = {}
-        validator = CoreFileValidator.new(params)
-        validator.create_or_update = :update 
-        validator.validate_required_attributes
-        expect(validator.errors.length).to eq 0 
-      end
-    end
+  context 'Create with invalid data' do 
 
-    context "on create" do 
-      let(:params) do 
-        {:tei => Rack::Test::UploadedFile.new(fixture_file('image.jpg')),
-         :collection_dids => ['1', '2', '3'], 
-         :depositor => SecureRandom.uuid }
-      end
+  end
 
-      def it_raises_one_error_without(param)
-        validator = CoreFileValidator.new(params.except(param))
-        validator.create_or_update = :create 
-        validator.validate_required_attributes
-        expect(validator.errors.length).to eq 1
-      end
+  context 'Update with invalid data' do 
 
-      it 'raises an error when no depositor is specified' do 
-        it_raises_one_error_without :depositor
-      end
-
-      it 'raises an error when no collection_dids are present' do 
-        it_raises_one_error_without :collection_dids
-      end
-
-      it 'raises an error when no tei is present' do 
-        it_raises_one_error_without :tei
-      end
-
-      it 'raises no error when collection_dids and depositor are specified' do 
-        validator = CoreFileValidator.new(params)
-        validator.create_or_update = :create 
-        validator.validate_required_attributes
-        expect(validator.errors.length).to eq 0
-      end
-    end
   end
 end
