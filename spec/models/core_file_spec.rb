@@ -150,7 +150,7 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all } 
 
     it 'returns :ography for files that have a specified ography type' do 
-      CoreFile.all_ography_types.each do |ography|
+      CoreFile.all_ography_read_methods.each do |ography|
         core_file.send(:"#{ography}=", [collection])
         expect(core_file.file_type).to eq :ography
         core_file.clear_ographies!
@@ -175,7 +175,7 @@ describe CoreFile do
 
       core_file.clear_ographies! 
 
-      any_ographies = CoreFile.all_ography_types.any? do |ography_type|
+      any_ographies = CoreFile.all_ography_read_methods.any? do |ography_type|
         core_file.send(ography_type).any?
       end
 
