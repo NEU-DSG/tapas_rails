@@ -44,10 +44,12 @@ describe CollectionsController do
 
     it 'returns a 202 and creates the requested collection on a valid request' do 
       Resque.inline = true 
+      community = FactoryGirl.create :community
+
       post_params = { title: 'Collection', 
         access: 'private',  
         did: '8018', 
-        project_did: 'invalid', 
+        project_did: community.did, 
         description: 'This is a test collection',
         depositor: '101',
         thumbnail: Rack::Test::UploadedFile.new(fixture_file('image.jpg')), }
