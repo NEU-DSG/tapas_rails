@@ -38,6 +38,13 @@ module Validations
     end
   end
 
+  def validate_access_level
+    access = params[:access]
+    unless params[:access].in? %w(public private)
+      self.errors << ":access must be one of: public or private.  Was #{access}"
+    end
+  end
+
   def validate_nonblank_string(param)
     unless params[param].present? && params[param].is_a?(String)
       self.errors << "#{param} must be nonblank string" 
