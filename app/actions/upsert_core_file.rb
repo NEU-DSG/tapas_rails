@@ -90,7 +90,7 @@ class UpsertCoreFile
     # are updated to point at the new set of collections
     elsif params[:collection_dids].present?
       core_file.collections = collections 
-      CoreFile.all_ography_types.each do |ography|
+      CoreFile.all_ography_read_methods.each do |ography|
         if core_file.send(ography).any?
           core_file.send(:"#{ography}=", collections)
         end

@@ -27,6 +27,10 @@ module Did
       return self.where("did_ssim" => did).first
     end
 
+    def self.exists_by_did?(did)
+      return self.exists?('did_ssim' => did)
+    end
+
     has_attributes :did, datastream: "mods", multiple: false 
   end
 end

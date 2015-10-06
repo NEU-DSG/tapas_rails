@@ -31,12 +31,16 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   has_metadata :name => "properties", :type => PropertiesDatastream
 
   def self.all_ography_types
-    [:personography_for, :orgography_for, :bibliography_for,
-     :otherography_for, :odd_file_for, :placeography_for]
+    ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
+     'placeography']
+  end
+
+  def self.all_ography_read_methods
+    all_ography_types.map { |x| :"#{x}_for" }
   end
 
   def clear_ographies!
-    CoreFile.all_ography_types.each do |ography_type|
+    CoreFile.all_ography_read_methods.each do |ography_type|
       self.send(:"#{ography_type}=", [])
     end
   end
@@ -62,7 +66,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   private
     def is_ography?
-      CoreFile.all_ography_types.any? do |ography_type| 
+      CoreFile.all_ography_read_methods.any? do |ography_type| 
         self.send(ography_type).any?
       end
     end  
