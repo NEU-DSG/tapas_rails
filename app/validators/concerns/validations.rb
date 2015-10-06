@@ -1,6 +1,20 @@
 module Validations
   extend ActiveSupport::Concern
 
+  included do 
+    attr_reader :params
+    attr_accessor :errors 
+
+    def initialize(params)
+      @params = params
+      self.errors = []
+    end
+
+    def self.validate_upsert(params)
+      self.new(params).validate_upsert
+    end
+  end
+
   def validate_did_and_create_reqs(klass, required_params)
     did_in_use = Did.exists_by_did?(params[:did])
     right_class = klass.exists_by_did?(params[:did])
@@ -25,7 +39,7 @@ module Validations
   end
 
   def validate_nonblank_string(param)
-    unless params[param].present?
+    unless params[param].present? && params[param].is_a?(String)
       self.errors << "#{param} must be nonblank string" 
     end
   end

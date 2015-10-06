@@ -1,18 +1,6 @@
 class CoreFileValidator 
   include Validations
 
-  attr_accessor :errors
-  attr_reader :params
-
-  def initialize(params)
-    @params = params 
-    self.errors = []
-  end
-
-  def self.validate_upsert(params)
-    self.new(params).validate_upsert
-  end
-
   def validate_upsert
     required_fields = %i(collection_dids tei depositor)
     validate_did_and_create_reqs(CoreFile, required_fields)
@@ -79,6 +67,13 @@ class CoreFileValidator
       Date.iso8601(date)
     rescue ArgumentError
       self.errors << "display_date must be ISO8601 formatted, was #{date}"
+    end
+  end
+
+  def validate_access_level
+    unless params[:access].in? %w(public private)
+      self.errors << "Access param needs to be one of: "\
+        "public or private.  Was #{params[:access]}"
     end
   end
 

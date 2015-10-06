@@ -1,18 +1,6 @@
 class CommunityValidator
   include Validations
 
-  attr_accessor :errors
-  attr_reader :params
-
-  def initialize(params)
-    @params = params
-    self.errors = []
-  end
-
-  def self.validate_upsert(params)
-    self.new(params).validate_upsert
-  end
-
   def validate_upsert
     required_fields = %i(members depositor access title description)
     validate_did_and_create_reqs(Community, required_fields)
