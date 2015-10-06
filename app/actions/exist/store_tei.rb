@@ -25,7 +25,7 @@ module Exist
 
     def execute 
       build_resource
-      send_request { resource.put File.read(tei_path) }
+      send_request { resource.post({ file: File.open(tei_path)}) }
     end
   end
 end
