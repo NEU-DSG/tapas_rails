@@ -14,7 +14,7 @@ class CoreFileValidator
   end
 
   def validate_upsert
-    required_fields = %i(collection_dids tei depositor file_types)
+    required_fields = %i(collection_dids tei depositor)
     validate_did_and_create_reqs(CoreFile, required_fields)
     # If any of these validations fail, there is no reason to proceed
     return errors if errors.any?
@@ -24,21 +24,35 @@ class CoreFileValidator
   end
 
   def validate_collection_dids
-    collections = params[:collection_dids]
+    collection_dids = params[:collection_dids]
 
-    unless collections.is_a? Array
+    unless collection_dids.is_a? Array
       self.errors << 'collection_dids must be an array, was a '\
-       "#{collections.class}"
+       "#{collection_dids.class}"
       return
     end
 
-    # :collection_dids must be an array of Drupal IDs belonging to Collections that 
-    # have already been ingested into the repository
-    collections.each do |cdid|
-      unless Collection.exists_by_did?(cdid)
-        self.errors << 'collection_dids contained a did that belonged to no '\
-          "collection, mystery did was: #{cdid}"
-      end
+    unless collection_dids.length > 0 
+      self.errors << "collection_dids must have some values"
+      return
+    end
+
+    # Retrieve solr documents for every collection did passed in.
+    qs = collection_dids.map { |x| "did_ssim:#{RSolr.solr_escape(x)}" }
+    qs = "(#{qs.join(' OR ')})" + ' AND active_fedora_model_ssi:Collection'
+    collections = ActiveFedora::SolrService.query(qs)
+
+    # Raise an error if there are fewer collections than collection_dids
+    unless collection_dids.length == collections.length 
+      self.errors << 'collection_dids references collections that do not exist'
+      return
+    end
+
+    # Raise an error if there are collections that belong to multiple projects
+    project_did = collections.first['is_member_of_ssim']
+    unless collections.all? { |c| c['is_member_of_ssim'] == project_did }
+      self.errors << 'collection_dids has collections that belong to multiple '\
+        'projects'
     end
   end
 

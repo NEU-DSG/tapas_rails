@@ -8,51 +8,108 @@ describe CoreFileValidator do
   # Sets up a valid repository structure
   before(:all) do 
     @core_file, @collections, @project = FixtureBuilders.create_all 2
+    @core_file, @other_collection, @other_project = FixtureBuilders.create_all
   end
 
-  let(:valid_params_all) do
+  after(:all) { ActiveFedora::Base.delete_all }
+  before(:each) { @errors = nil } 
+
+  def valid_params
     { :depositor => 'test_depositor',
-      :did => SecureRandom.uuid, 
+      :did => 'test_did',
       :file_types => ['personography'], #Indicates a file that is tei content only
       :tei => Rack::Test::UploadedFile.new(
         fixture_file('tei.xml'),
         'application/xml'),
-      :collection_dids => @collections.map(&:did),
-      :display_title => "A Valid Display Title", 
-      :display_authors => ['Mickey', 'Minnie', 'Goofie'],
-      :display_contributors => ['Donald', 'Scrooge'],
-      :display_date => DateTime.now.iso8601.to_s, 
-      :support_files => Rack::Test::UploadedFile.new(
-        fixture_file('all_files.zip'),
-        'application/zip') }
+        :collection_dids => @collections.map(&:did),
+        :display_title => "A Valid Display Title", 
+        :display_authors => ['Mickey', 'Minnie', 'Goofie'],
+        :display_contributors => ['Donald', 'Scrooge'],
+        :display_date => DateTime.now.iso8601.to_s, 
+        :support_files => Rack::Test::UploadedFile.new(
+          fixture_file('all_files.zip'),
+          'application/zip') }
   end
 
   def validate_with_params(params)
-    return CoreFileValidator.validate_upsert(params)
+    @errors = CoreFileValidator.validate_upsert(params)
+  end
+
+  def has_single_error(string)
+    expect(@errors.length).to eq 1 
+    expect(@errors.first).to include string 
   end
 
   context 'Create with all valid params' do 
     it 'raises no errors' do 
-      errors = validate_with_params(valid_params_all)
-      expect(errors.length).to eq 0
+      validate_with_params(valid_params)
+      expect(@errors.length).to eq 0
     end
   end
 
   context 'Update with all valid params' do 
     it 'raises no errors' do 
-      valid_params_all[:did] = @core_file.did 
-      errors = validate_with_params(valid_params_all.except(:collection_dids,
-                                                            :depositor, 
-                                                            :tei))
-      expect(errors.length).to eq 0
+      removed = %i(collection_dids depositor tei file_types)
+      valid = valid_params.except removed
+      valid[:did] = @core_file.did
+      validate_with_params valid
+      expect(@errors.length).to eq 0
     end
   end
 
-  context 'Create with invalid data' do 
+  context 'Create with missing required data' do 
+    it 'raises an error when tei is missing' do 
+      validate_with_params(valid_params.except(:tei))
+      expect(@errors.length).to eq 1
+    end
 
+    it 'raises an error when depositor is missing' do 
+      validate_with_params(valid_params.except(:depositor))
+      expect(@errors.length).to eq 1
+    end
+
+    it 'raises an error when collection_dids is missing' do 
+      validate_with_params(valid_params.except(:collection_dids))
+      expect(@errors.length).to eq 1 
+    end
   end
 
-  context 'Update with invalid data' do 
+  context 'Update with invalid params' do 
+    before(:each) do 
+      valid_params[:did] = @core_file.did
+    end
 
+    it 'raises an error when display_date is not an iso8601 date' do 
+      validate_with_params(valid_params.merge(:display_date => 'Jan 12, 1901'))
+      has_single_error('display_date must be ISO8601 formatted')
+    end
+
+    it 'raises an error when file_types is not an array' do 
+      validate_with_params(valid_params.merge(:file_types => 'personography'))
+      has_single_error('file_types must be an array') 
+    end
+    
+    it 'raises an error when an invalid file_type is passed' do 
+      validate_with_params(valid_params.merge(:file_types => ['bobography']))
+      has_single_error("bobography is not a valid option for file_types")
+    end
+
+    it 'raises an error when collection_dids is not an array' do 
+      validate_with_params(valid_params.merge(:collection_dids => '1'))
+      has_single_error('collection_dids must be an array')
+    end
+
+    it 'raises an error when collection_dids references nonexistent collections' do 
+      validate_with_params(valid_params.merge(collection_dids: ['111-111']))
+      has_single_error('collections that do not exist')
+    end
+
+    it 'raises an error when collection_dids references collections that '\
+      'belong to multiple projects' do 
+      collections = (@collections + @other_collection).map(&:did)
+      validate_with_params(valid_params.merge collection_dids: collections)
+
+      has_single_error('collections that belong to multiple projects')
+    end
   end
 end
