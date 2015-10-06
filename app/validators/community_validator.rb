@@ -1,23 +1,48 @@
 class CommunityValidator
-  include TapasObjectValidations
+  include Validations
+
+  attr_accessor :errors
+  attr_reader :params
+
+  def initialize(params)
+    @params = params
+    self.errors = []
+  end
 
   def self.validate_upsert(params)
     self.new(params).validate_upsert
   end
 
   def validate_upsert
-    validate_class_correctness Community
+    required_fields = %i(members depositor access title description)
+    validate_did_and_create_reqs(Community, required_fields)
     return errors if errors.any?
 
-    validate_required_attributes
+    validate_all_present_params
     return errors
   end
 
-  def update_attrs
-    []
+  def validate_members
+    validate_array_of_strings :members
   end
 
-  def create_attrs
-    [:members, :depositor, :access, :title, :description]
+  def validate_depositor
+    validate_nonblank_string :depositor
+  end
+
+  def validate_access
+    validate_access_level
+  end
+
+  def validate_title
+    validate_nonblank_string :title
+  end
+
+  def validate_thumbnail
+    validate_file_and_type(:thumbnail, %w(png jpg jpeg))
+  end
+
+  def validate_description
+    validate_nonblank_string :description
   end
 end
