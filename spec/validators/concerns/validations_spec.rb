@@ -27,8 +27,9 @@ class TestObjectValidator
   end
 end
 
-describe Validations do 
+describe TestObjectValidator do
   include FileHelpers
+  include ValidatorHelpers
 
   let(:params) do 
     { :string => "A nonblank string", 
@@ -39,56 +40,44 @@ describe Validations do
       ) }
   end
 
-  def validate(params)
-    ::TestObjectValidator.validate_upsert(params)
-  end
-
   it 'raises no errors when all fields are valid' do 
     expect(validate(params).length).to eq 0 
   end
 
   it 'raises an error when an array of strings is not an array' do 
-    errors = validate(params.merge(string_array: 'string_one'))
-    expect(errors.length).to eq 1 
-    expect(errors.first).to include 'string_array expects an array'
+    validate(params.merge(string_array: 'string_one'))
+    it_raises_a_single_error 'string_array expects an array'
   end
 
   it 'raises an error when an array of strings contains nonstrings' do 
-    errors = validate(params.merge(string_array: ['string', ['string_two']]))
-    expect(errors.length).to eq 1
-    expect(errors.first).to include 'contained blank or non-string values' 
+    validate(params.merge(string_array: ['string', ['string_two']]))
+    it_raises_a_single_error 'contained blank or non-string values' 
   end
 
   it 'raises an error when a string is blank' do 
-    errors = validate(params.merge(string: '     '))
-    expect(errors.length).to eq 1 
-    expect(errors.first).to include 'must be nonblank string'
+    validate(params.merge(string: '     '))
+    it_raises_a_single_error 'must be nonblank string'
   end
 
   it 'raises an error when a string is not a string' do 
-    errors = validate(params.merge(string: %w(array of strings)))
-    expect(errors.length).to eq 1 
-    expect(errors.first).to include 'must be nonblank string'
+    validate(params.merge(string: %w(array of strings)))
+    it_raises_a_single_error 'must be nonblank string'
   end
 
   it 'raises an error when access is not "public" or "private"' do 
-    errors = validate(params.merge(access: 'secret'))
-    expect(errors.length).to eq 1
-    expect(errors.first).to include 'access must be one of: ' 
+    validate(params.merge(access: 'secret'))
+    it_raises_a_single_error 'access must be one of: ' 
   end
 
   it 'raises an error when a file is not a file' do 
-    errors = validate(params.merge(file: 'path/to/file'))
-    expect(errors.length).to eq 1 
-    expect(errors.first).to include 'must be a file upload' 
+    validate(params.merge(file: 'path/to/file'))
+    it_raises_a_single_error 'must be a file upload' 
   end
 
   it 'raises an error when a file has an invalid extension' do 
-    errors = validate(params.merge(file: Rack::Test::UploadedFile.new(
+    validate(params.merge(file: Rack::Test::UploadedFile.new(
       fixture_file('image.jpg'), 'image/jpeg')))
 
-    expect(errors.length).to eq 1 
-    expect(errors.first).to include 'must be file with extension' 
+    it_raises_a_single_error 'must be file with extension' 
   end
 end
-

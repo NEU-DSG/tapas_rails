@@ -4,10 +4,6 @@ describe CollectionValidator do
   include ValidatorHelpers
   include FileHelpers
 
-  def validate_attributes(params)
-    CollectionValidator.validate_upsert(params)
-  end
-
   before(:all) do 
     @community = FactoryGirl.create :community 
   end
@@ -28,7 +24,7 @@ describe CollectionValidator do
 
   context 'create with valid data' do 
     it 'raises no errors' do 
-      expect(validate_attributes(params).length).to eq 0 
+      expect(validate(params).length).to eq 0 
     end
   end
 
@@ -38,42 +34,41 @@ describe CollectionValidator do
 
     it 'raises no errors' do 
       update_params = {:did => @collection.did }
-      expect(validate_attributes(update_params).length).to eq 0 
+      expect(validate(update_params).length).to eq 0 
     end
   end
 
   context 'create with missing required params' do 
     it "raises an error with no title" do 
-      errors = validate_attributes(params.except(:title))
-      expect(errors.length).to eq 1 
+      validate(params.except(:title))
+      expect(@errors.length).to eq 1 
     end
 
     it "raises an error with no description" do 
-      errors = validate_attributes(params.except(:description))
-      expect(errors.length).to eq 1
+      validate(params.except(:description))
+      expect(@errors.length).to eq 1
     end
 
     it 'raises an error with depositor' do 
-      errors = validate_attributes(params.except(:depositor))
-      expect(errors.length).to eq 1 
+      validate(params.except(:depositor))
+      expect(@errors.length).to eq 1 
     end
 
     it 'raises an error with no access param' do 
-      errors = validate_attributes(params.except(:access))
-      expect(errors.length).to eq 1 
+      validate(params.except(:access))
+      expect(@errors.length).to eq 1 
     end
 
     it 'raises an error with no project_did' do 
-      errors = validate_attributes(params.except(:project_did))
-      expect(errors.length).to eq 1 
+      validate(params.except(:project_did))
+      expect(@errors.length).to eq 1 
     end
   end
 
   context 'create with invalid data' do 
     it 'raises an error when a bad project_did is passed' do 
-      errors = validate_attributes(params.merge(project_did: SecureRandom.uuid))
-      expect(errors.length).to eq 1
-      expect(errors.first).to include 'project with specified did' 
+      validate(params.merge(project_did: SecureRandom.uuid))
+      it_raises_a_single_error 'project with specified did'
     end
   end
 end

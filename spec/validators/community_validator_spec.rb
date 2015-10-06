@@ -3,11 +3,6 @@ require 'spec_helper'
 describe CommunityValidator do 
   include ValidatorHelpers
 
-  def validate_attributes(params)
-    validator = CommunityValidator.new params
-    validator.validate_upsert
-  end
-
   context 'on create' do 
     let(:params) do 
       { :members => %w(peter paul mary),
@@ -19,33 +14,28 @@ describe CommunityValidator do
     end
 
     it 'requires members' do 
-      errors = validate_attributes(params.except(:members))
-      expect(errors.length).to eq 1 
-      expect(errors.first).to include 'members'
+      validate(params.except(:members))
+      it_raises_a_single_error 'members'
     end
 
     it 'requires a depositor' do 
-      errors = validate_attributes(params.except(:depositor))
-      expect(errors.length).to eq 1
-      expect(errors.first).to include 'depositor'
+      validate(params.except(:depositor))
+      it_raises_a_single_error 'depositor'
     end
 
     it 'requires an access level' do 
-      errors = validate_attributes(params.except(:access))
-      expect(errors.length).to eq 1 
-      expect(errors.first).to include 'access'
+      validate(params.except(:access))
+      it_raises_a_single_error 'access'
     end
 
     it 'requires a title' do 
-      errors = validate_attributes(params.except(:title))
-      expect(errors.length).to eq 1 
-      expect(errors.first).to include 'title' 
+      validate(params.except(:title))
+      it_raises_a_single_error 'title'
     end
 
     it 'requires a description' do 
-      errors = validate_attributes(params.except(:description))
-      expect(errors.length).to eq 1 
-      expect(errors.first).to include 'description'
+      validate(params.except(:description))
+      it_raises_a_single_error 'description'
     end
   end
 
@@ -57,8 +47,8 @@ describe CommunityValidator do
     after(:all) { @community.destroy }
 
     it 'requires no params' do 
-      errors = validate_attributes({:did => @community.did})
-      expect(errors.length).to eq 0
+      validate({:did => @community.did})
+      expect(@errors.length).to eq 0
     end
   end
 end

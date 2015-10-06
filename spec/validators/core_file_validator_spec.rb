@@ -14,7 +14,7 @@ describe CoreFileValidator do
   after(:all) { ActiveFedora::Base.delete_all }
   before(:each) { @errors = nil } 
 
-  def valid_params
+  def params
     { :depositor => 'test_depositor',
       :did => 'test_did',
       :file_types => ['personography'], #Indicates a file that is tei content only
@@ -31,18 +31,9 @@ describe CoreFileValidator do
           'application/zip') }
   end
 
-  def validate_with_params(params)
-    @errors = CoreFileValidator.validate_upsert(params)
-  end
-
-  def has_single_error(string)
-    expect(@errors.length).to eq 1 
-    expect(@errors.first).to include string 
-  end
-
   context 'Create with all valid params' do 
     it 'raises no errors' do 
-      validate_with_params(valid_params)
+      validate(params)
       expect(@errors.length).to eq 0
     end
   end
@@ -50,66 +41,67 @@ describe CoreFileValidator do
   context 'Update with all valid params' do 
     it 'raises no errors' do 
       removed = %i(collection_dids depositor tei file_types)
-      valid = valid_params.except removed
+      valid = params.except removed
       valid[:did] = @core_file.did
-      validate_with_params valid
+
+      validate(valid)
       expect(@errors.length).to eq 0
     end
   end
 
   context 'Create with missing required data' do 
     it 'raises an error when tei is missing' do 
-      validate_with_params(valid_params.except(:tei))
+      validate(params.except(:tei))
       expect(@errors.length).to eq 1
     end
 
     it 'raises an error when depositor is missing' do 
-      validate_with_params(valid_params.except(:depositor))
+      validate(params.except(:depositor))
       expect(@errors.length).to eq 1
     end
 
     it 'raises an error when collection_dids is missing' do 
-      validate_with_params(valid_params.except(:collection_dids))
+      validate(params.except(:collection_dids))
       expect(@errors.length).to eq 1 
     end
   end
 
   context 'Update with invalid params' do 
     before(:each) do 
-      valid_params[:did] = @core_file.did
+      params[:did] = @core_file.did
     end
 
     it 'raises an error when display_date is not an iso8601 date' do 
-      validate_with_params(valid_params.merge(:display_date => 'Jan 12, 1901'))
-      has_single_error('display_date must be ISO8601 formatted')
+      validate(params.merge(:display_date => 'Jan 12, 1901'))
+      it_raises_a_single_error('display_date must be ISO8601 formatted')
     end
 
     it 'raises an error when file_types is not an array' do 
-      validate_with_params(valid_params.merge(:file_types => 'personography'))
-      has_single_error('file_types must be an array') 
+      validate(params.merge(:file_types => 'personography'))
+      it_raises_a_single_error('file_types must be an array') 
     end
     
     it 'raises an error when an invalid file_type is passed' do 
-      validate_with_params(valid_params.merge(:file_types => ['bobography']))
-      has_single_error("bobography is not a valid option for file_types")
+      validate(params.merge(:file_types => ['bobography']))
+      it_raises_a_single_error("bobography is not a valid option")
     end
 
     it 'raises an error when collection_dids is not an array' do 
-      validate_with_params(valid_params.merge(:collection_dids => '1'))
-      has_single_error('collection_dids must be an array')
+      validate(params.merge(:collection_dids => '1'))
+      it_raises_a_single_error('collection_dids must be an array')
     end
 
     it 'raises an error when collection_dids references nonexistent collections' do 
-      validate_with_params(valid_params.merge(collection_dids: ['111-111']))
-      has_single_error('collections that do not exist')
+      validate(params.merge(collection_dids: ['111-111']))
+      it_raises_a_single_error('collections that do not exist')
     end
 
     it 'raises an error when collection_dids references collections that '\
       'belong to multiple projects' do 
       collections = (@collections + @other_collection).map(&:did)
-      validate_with_params(valid_params.merge collection_dids: collections)
+      validate(params.merge collection_dids: collections)
 
-      has_single_error('collections that belong to multiple projects')
+      it_raises_a_single_error('collections that belong to multiple projects')
     end
   end
 end
