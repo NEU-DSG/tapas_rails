@@ -10,6 +10,11 @@ module ApiAccessible
     # reworked once tapas_rails is the actual frontend for tapas.
     before_action :authenticate
 
+    # This is necessary because of apparent limitations in Drupal.
+    # Ensure that numerically keyed hashes are transformed into 
+    # arrays before passing them further down the chain.
+    before_action :associative_array_to_array
+
     before_action :validate_upsert, :only => [:upsert]
   end
 
@@ -28,6 +33,14 @@ module ApiAccessible
 
   def render_403
     render(:json => "Access denied", :status => 403) and return 
+  end
+
+  def associative_array_to_array
+    params.each do |key, value|
+      if value.is_a?(Hash) && value.keys.all? { |k| is_numeric?(k) }
+        params[key] = value.values 
+      end
+    end
   end
 
   # Validate the params associated with update and create API requests
@@ -66,5 +79,9 @@ module ApiAccessible
     end
 
     return pcopy
+  end
+
+  def is_numeric?(str)
+    /\A[-+]?\d+\z/ === str
   end
 end
