@@ -36,7 +36,14 @@ class CoreFilesController < ApplicationController
     # to Drupal to populate the validate metadata page provided after initial
     # file upload
     if params[:tei] 
-      @mods = Exist::GetMods.execute(params[:tei]) 
+      opts = {
+        :authors => params[:display_authors],
+        :contributors => params[:display_contributors],
+        :"timeline-date" => params[:display_date],
+        :title => params[:title]
+      }
+
+      @mods = Exist::GetMods.execute(params[:tei], opts)
     end
 
     # Step 3: Kick off an upsert job 
