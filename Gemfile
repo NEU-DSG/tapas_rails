@@ -69,6 +69,9 @@ gem 'rest-client'
 # Use rails_config gem for less crappy custom config 
 gem 'rails_config'
 
+# Use mods_display to generate html from mods
+gem 'mods_display', '~> 0.3'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
