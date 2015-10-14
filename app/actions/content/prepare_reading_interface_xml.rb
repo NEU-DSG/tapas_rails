@@ -16,7 +16,7 @@ class PrepareReadingInterfaceXML
 
   def execute 
     support_file_map = SupportFileMap.build_map core_file
-    all_relevant_attrs = %w(target url ref corresp facs xml:base)
+    all_relevant_attrs = %w(target url ref corresp facs xml:base persName orgName)
 
     xml.traverse do |node| 
       all_relevant_attrs.each do |attr|
