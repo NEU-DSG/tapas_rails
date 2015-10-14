@@ -4,6 +4,12 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include DrupalAccess
   include TapasQueries
 
+  # Configure mods_display gem
+  include ModsDisplay::ModelExtension
+  mods_xml_source do |model|
+    model.mods.content
+  end
+
   before_save :ensure_unique_did, :calculate_drupal_access
 
   has_and_belongs_to_many :collections, :property => :is_member_of, 
