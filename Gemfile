@@ -91,6 +91,7 @@ gem 'capistrano-passenger'
 # gem 'debugger', group: [:development, :test]
 
 group :development, :test do
+  gem "pry"
   gem "rspec-rails"
   gem "jettywrapper"
   gem "factory_girl_rails"
