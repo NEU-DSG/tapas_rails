@@ -71,6 +71,24 @@ describe CoreFilesController do
     end
   end
 
+  describe 'GET mods' do 
+    # Given that we are mostly trusting display_mods to output the right thing, 
+    # this is a pretty light spec.
+    it 'returns some content for nonempty metadata' do 
+      core = FactoryGirl.create :core_file 
+      did = core.did
+      pid = core.pid
+      core.mods.content = File.read(fixture_file('mods.xml'))
+      core.did = did
+      core.mods.identifier = pid
+      core.save! 
+
+      get :mods, { :did => core.did } 
+
+      expect(response.body).to include 'Collection Ia, public'
+    end
+  end
+
   describe "DELETE destroy" do 
     after(:each) { ActiveFedora::Base.delete_all }
 

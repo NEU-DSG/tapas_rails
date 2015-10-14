@@ -1,8 +1,13 @@
 class CoreFilesController < ApplicationController
   include ApiAccessible
+  include ModsDisplay::ControllerExtension
+
+  configure_mods_display do 
+    identifier { ignore! } 
+  end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
-  before_filter :load_core_file, :only => %i(teibp tapas_generic tei)
+  before_filter :load_core_file, :only => %i(teibp tapas_generic tei mods)
 
   def teibp 
     e = "Could not find TEI Boilerplate representation of this object.  "\
@@ -14,6 +19,11 @@ class CoreFilesController < ApplicationController
     e = "Could not find a Tapas Generic representation of this object.  "\
       "Please retry in a few minutes."
     render_content_asset @core_file.tapas_generic, e
+  end
+
+  def mods
+    @html = render_mods_display(@core_file).to_html
+    render :text => @html
   end
 
   def tei

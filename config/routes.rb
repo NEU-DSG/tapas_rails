@@ -32,6 +32,7 @@ TapasRails::Application.routes.draw do
   delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
+  get 'files/:did/mods' => 'core_files#mods'
   get 'files/:did/teibp' => 'core_files#teibp'
   get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
   get 'files/:did/tei' => 'core_files#tei'
