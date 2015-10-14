@@ -30,4 +30,15 @@ class Community < CerberusCore::BaseModels::Community
       return community
     end
   end
+
+  def as_json
+    fname = (thumbnail_1.label == 'File Datastream' ? '' : thumbnail_1.label)
+    { :members => project_members, 
+      :depositor => depositor, 
+      :access => drupal_access, 
+      :thumbnail => fname, 
+      :title => mods.title.first, 
+      :description => mods.abstract.first
+    }
+  end
 end
