@@ -20,7 +20,7 @@ module Content
       content = core_file.canonical_object
 
       unless content 
-        content = TEIFile.create
+        content = ::TEIFile.create
         content.canonize
         content.core_file = core_file
         content.save! 
