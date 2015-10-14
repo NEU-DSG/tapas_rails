@@ -38,7 +38,7 @@ module TapasQueries
     end
 
     if self.is_a? ActiveFedora::Base
-      collections = self.collection_ids.map { |pid| "info:fedora/#{pid}" }
+      collections = self.collections.map { |c| "info:fedora/#{c.pid}" }
     elsif self.is_a?(SolrDocument) || self.is_a?(Hash)
       collections = self['is_member_of_ssim']
     end
