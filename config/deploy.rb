@@ -73,6 +73,13 @@ namespace :deploy do
     end
   end
 
+  desc 'Create a release specific tmp directory'
+  task :create_tmp_dir do 
+    on roles(:all), in: :sequence, wait: 5 do 
+      execute "cd #{release_path} && mkdir tmp" 
+    end
+  end
+
   after :publishing, :restart
 
   after :restart, :clear_cache do
