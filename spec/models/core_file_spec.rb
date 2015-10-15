@@ -1,6 +1,9 @@
 require "spec_helper" 
 
 describe CoreFile do 
+  include FileHelpers
+  include FixtureBuilders
+
   let(:core_file) { FactoryGirl.create :core_file }
   let(:collection) { FactoryGirl.create :collection } 
   let(:community) { FactoryGirl.create :community }
@@ -22,6 +25,41 @@ describe CoreFile do
       core_file.collections << d 
 
       expect(core_file.collections).to match_array [c, d]
+    end
+  end
+
+  describe '#as_json' do 
+    before(:each) { ActiveFedora::Base.delete_all }
+
+    it 'returns a valueless hash for empty CoreFiles' do 
+      result = CoreFile.new.as_json
+      keys = %i(collection_dids tei support_files depositor access)
+
+      expect(keys.all? { |k| result.has_key?(k) }).to be true 
+      expect(result.all? { |k, v| v.blank?}).to be true
+    end
+
+    it 'returns a populated hash when given values' do 
+      core_file, collections, project = FixtureBuilders.create_all
+
+      # Add TEI to the file 
+      Content::UpsertTei.execute(core_file, fixture_file('tei.xml'))
+
+      # Add page images to the file
+      images = [fixture_file('image.jpg'), fixture_file('other_image.jpg')]
+      Content::UpsertPageImages.execute(core_file, images)
+
+      core_file.reload
+
+      core_file.depositor = 'William'
+
+      result = core_file.as_json
+
+      expect(result[:depositor]).to eq 'William'
+      expect(result[:tei]).to eq 'tei.xml'
+      expect(result[:support_files]).to eq %w(image.jpg other_image.jpg)
+      expect(result[:access]).to eq 'private'
+      expect(result[:collection_dids]).to eq collections.map(&:did)
     end
   end
 

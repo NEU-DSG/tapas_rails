@@ -58,6 +58,18 @@ class Collection < CerberusCore::BaseModels::Collection
     @drupal_access_changed = true 
   end
 
+  def as_json
+    fname = (thumbnail_1.label == "File Datastream" ? '' : thumbnail_1.label)
+
+    { :project_did => (community ? community.did : ''),
+      :depositor => depositor,
+      :title => mods.title.first,
+      :access => drupal_access,
+      :thumbnail => fname,
+      :description => mods.abstract.first
+    }
+  end
+
   private 
     def update_core_files
       return true unless @drupal_access_changed 

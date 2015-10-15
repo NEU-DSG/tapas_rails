@@ -70,18 +70,29 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
-  private
-    def is_ography?
-      CoreFile.all_ography_read_methods.any? do |ography_type| 
-        self.send(ography_type).any?
-      end
-    end  
+  def as_json 
+    tei_name = (canonical_object ? canonical_object.filename : '')
 
-    def calculate_drupal_access
-      if collections.any? { |collection| collection.drupal_access == 'public' }
-        self.drupal_access = 'public'
-      else
-        self.drupal_access = 'private'
-      end
+    { :collection_dids => collections.map(&:did),
+      :tei => tei_name, 
+      :support_files => page_images.map(&:filename),
+      :depositor => depositor,
+      :access => drupal_access,
+    }
+  end
+
+  private
+  def is_ography?
+    CoreFile.all_ography_read_methods.any? do |ography_type| 
+      self.send(ography_type).any?
     end
+  end  
+
+  def calculate_drupal_access
+    if collections.any? { |collection| collection.drupal_access == 'public' }
+      self.drupal_access = 'public'
+    else
+      self.drupal_access = 'private'
+    end
+  end
 end

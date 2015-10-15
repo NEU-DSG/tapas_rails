@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Collection do 
+  include FileHelpers
+
   describe "Core File drupal access" do 
     let(:coll) { FactoryGirl.create(:collection) }
 
@@ -93,6 +95,41 @@ describe Collection do
 
       expect(core_file.orgography_for.first.pid).to eq collection.pid
       expect(collection.reload.orgographies).to match_array [core_file]
+    end
+  end
+
+  describe "#as_json" do 
+    after(:each) { ActiveFedora::Base.delete_all }
+
+    it 'returns a valueless hash with no data' do 
+      result = Collection.new.as_json
+      
+      expect(result[:project_did]).to be_blank
+      expect(result[:depositor]).to be_blank
+      expect(result[:title]).to be_blank
+      expect(result[:access]).to be_blank
+      expect(result[:thumbnail]).to be_blank
+      expect(result[:description]).to be_blank
+    end
+
+    it 'returns the correct values where data exists' do 
+      community = FactoryGirl.create :community
+
+      collection = FactoryGirl.create :collection
+      collection.mods.title = "The Most Dangerous Game" 
+      collection.mods.abstract = "Spoopy" 
+      collection.add_thumbnail(:filepath => fixture_file('image.jpg'))
+      collection.community = community
+      collection.drupal_access = 'private'
+
+      result = collection.as_json
+
+      expect(result[:project_did]).to eq community.did
+      expect(result[:depositor]).to eq community.depositor
+      expect(result[:title]).to eq 'The Most Dangerous Game'
+      expect(result[:description]).to eq 'Spoopy'
+      expect(result[:access]).to eq 'private'
+      expect(result[:thumbnail]).to eq 'image.jpg'
     end
   end
 
