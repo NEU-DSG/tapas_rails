@@ -21,8 +21,7 @@ describe CoreFilesController do
       get route, { :did => SecureRandom.uuid } 
   
       expect(response.status).to eq 404 
-      expected_msg = 'No record associated with this did was found.' 
-      expect(response.body).to eq expected_msg
+      expect(response.body).to include 'Resource not found'
     end
 
     it "404s when the CoreFile lacks the requested display type." do
@@ -92,15 +91,15 @@ describe CoreFilesController do
   describe "DELETE destroy" do 
     after(:each) { ActiveFedora::Base.delete_all }
 
-    it "422s for nonexistant dids" do 
+    it "404s for nonexistant dids" do 
       delete :destroy, { :did => "not a real did" }
-      expect(response.status).to eq 422
+      expect(response.status).to eq 404
     end
 
-    it "422s for dids that don't belong to a CoreFile" do 
+    it "404s for dids that don't belong to a CoreFile" do 
       community = Community.create(:did => "115", :depositor => "test")
       delete :destroy, { :did => community.did }
-      expect(response.status).to eq 422
+      expect(response.status).to eq 404
     end
 
     it "200s for dids that belong to a CoreFile and removes the resource" do 

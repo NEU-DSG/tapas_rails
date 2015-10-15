@@ -7,7 +7,6 @@ class CoreFilesController < ApplicationController
   end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
-  before_filter :load_core_file, :only => %i(teibp tapas_generic tei mods)
 
   def teibp 
     e = "Could not find TEI Boilerplate representation of this object.  "\
@@ -67,19 +66,6 @@ class CoreFilesController < ApplicationController
     else
       @response[:message] = "Job processing" 
       pretty_json(202) and return
-    end
-  end
-
-  def destroy
-    core_file = CoreFile.find_by_did(params[:did])
-
-    if core_file
-      core_file.destroy
-      @response[:message] = 'Resource destroyed'
-      pretty_json(200) and return
-    else
-      @response[:message] = 'Could not find requested resource' 
-      pretty_json(422) and return
     end
   end
 

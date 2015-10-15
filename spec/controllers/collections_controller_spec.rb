@@ -9,15 +9,15 @@ describe CollectionsController do
   describe 'DELETE destroy' do 
     after(:each) { ActiveFedora::Base.delete_all }
 
-    it '422s for nonexistant dids' do 
+    it '404s for nonexistant dids' do 
       delete :destroy, { :did => 'not a real did' }
-      expect(response.status).to eq 422
+      expect(response.status).to eq 404
     end
 
-    it '422s for dids that do not belong to a Collection' do 
+    it '404s for dids that do not belong to a Collection' do 
       community = FactoryGirl.create :community
       delete :destroy, { :did => community.did }
-      expect(response.status).to eq 422
+      expect(response.status).to eq 404
     end
 
     it '200s for dids that belong to a Collection and removes the resource' do 

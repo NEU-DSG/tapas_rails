@@ -15,10 +15,34 @@ module ApiAccessible
     # arrays before passing them further down the chain.
     before_action :associative_array_to_array
 
+    before_action :load_resource_by_did, :except => [:upsert]
+
     before_action :validate_upsert, :only => [:upsert]
   end
 
+  def destroy
+    resource = instance_variable_get("@#{controller_path.classify.underscore}")
+
+    if resource.destroy
+      @response[:message] = 'Resource successfully deleted'
+      pretty_json(200) and return 
+    end
+  end
+      
+
   private
+
+  def load_resource_by_did
+    model  = controller_path.classify.constantize
+    object = model.find_by_did(params[:did]) 
+
+    if object
+      instance_variable_set("@#{model.to_s.underscore}", object)
+    else
+      @response[:message] = "Resource not found"
+      pretty_json(404) and return
+    end
+  end
 
   def authenticate
     authenticate_api_request || render_403
