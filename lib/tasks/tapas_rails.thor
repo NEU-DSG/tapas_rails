@@ -11,8 +11,8 @@ class TapasRails < Thor
   eos
 
   def create_api_user
-
-    api_config = YAML.load_file("#{::Rails.root}/config/tapas_api.yml")
+    processed  = ERB.new(File.read("#{::Rails.root}/config/tapas_api.yml")).result
+    api_config = YAML.load_file(processed)
 
     u = User.new
     u.email    = api_config[::Rails.env]["email"]
