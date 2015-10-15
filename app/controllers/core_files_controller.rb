@@ -71,15 +71,6 @@ class CoreFilesController < ApplicationController
 
   private
 
-  def load_core_file
-    @core_file = CoreFile.find_by_did(params[:did]) 
-
-    unless @core_file
-      message = 'No record associated with this did was found.'
-      render :text => message, :status => 404
-    end
-  end
-
   def render_content_asset(asset, error_msg)
     if asset && asset.content.content.present?
       render :text => asset.content.content 

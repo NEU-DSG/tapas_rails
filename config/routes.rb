@@ -24,10 +24,12 @@ TapasRails::Application.routes.draw do
   mount Resque::Server, :at => '/resque'
 
   # Communities
+  get 'communities/:did' => 'communities#show'
   post "communities/:did" => "communities#upsert"
   delete "communities/:did" => "communities#destroy"
 
   # Collections
+  get 'collections/:did' => 'collections#show'
   post "collections/:did" => "collections#upsert" 
   delete "collections/:did" => "collections#destroy"
 
@@ -36,6 +38,7 @@ TapasRails::Application.routes.draw do
   get 'files/:did/teibp' => 'core_files#teibp'
   get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
   get 'files/:did/tei' => 'core_files#tei'
+  get 'files/:did' => 'core_files#show'
   post 'files/:did' => 'core_files#upsert'
   delete "files/:did" => "core_files#destroy"
 

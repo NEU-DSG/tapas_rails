@@ -20,8 +20,14 @@ module ApiAccessible
     before_action :validate_upsert, :only => [:upsert]
   end
 
+  def show 
+    resource = get_loaded_resource
+    @response[:message] = resource.as_json
+    pretty_json(200) and return
+  end
+
   def destroy
-    resource = instance_variable_get("@#{controller_path.classify.underscore}")
+    resource = get_loaded_resource
 
     if resource.destroy
       @response[:message] = 'Resource successfully deleted'
@@ -42,6 +48,10 @@ module ApiAccessible
       @response[:message] = "Resource not found"
       pretty_json(404) and return
     end
+  end
+
+  def get_loaded_resource
+    instance_variable_get("@#{controller_path.classify.underscore}")
   end
 
   def authenticate

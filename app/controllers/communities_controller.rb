@@ -1,10 +1,6 @@
 class CommunitiesController < ApplicationController
   include ApiAccessible
 
-  def show
-
-  end
-
   def upsert 
     if params[:thumbnail]
       params[:thumbnail] = create_temp_file(params[:thumbnail])
