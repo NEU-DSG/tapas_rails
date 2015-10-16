@@ -10,8 +10,12 @@ class TestObjectValidator
     errors 
   end
 
-  def validate_string
-    validate_nonblank_string :string
+  def validate_empty_string
+    validate_string :empty_string
+  end
+
+  def validate_present_string
+    validate_nonblank_string :present_string
   end
 
   def validate_string_array
@@ -32,7 +36,8 @@ describe TestObjectValidator do
   include ValidatorHelpers
 
   let(:params) do 
-    { :string => "A nonblank string", 
+    { :empty_string => '',
+      :present_string => "A nonblank string", 
       :string_array => %w(an array of strings),
       :access => 'public',
       :file => Rack::Test::UploadedFile.new(
@@ -42,6 +47,10 @@ describe TestObjectValidator do
 
   it 'raises no errors when all fields are valid' do 
     expect(validate(params).length).to eq 0 
+  end
+
+  it 'raises no error the string array is empty' do 
+    expect(validate(params.merge(string_array: [])).length).to eq 0
   end
 
   it 'raises an error when an array of strings is not an array' do 
@@ -54,13 +63,13 @@ describe TestObjectValidator do
     it_raises_a_single_error 'contained blank or non-string values' 
   end
 
-  it 'raises an error when a string is blank' do 
-    validate(params.merge(string: '     '))
+  it 'raises an error when a nonblank string is blank' do 
+    validate(params.merge(present_string: '     '))
     it_raises_a_single_error 'must be nonblank string'
   end
 
   it 'raises an error when a string is not a string' do 
-    validate(params.merge(string: %w(array of strings)))
+    validate(params.merge(present_string: %w(array of strings)))
     it_raises_a_single_error 'must be nonblank string'
   end
 

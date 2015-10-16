@@ -45,6 +45,12 @@ module Validations
     end
   end
 
+  def validate_string(param)
+    unless params[param].is_a?(String)
+      self.errors << "#{param} must be some string" 
+    end
+  end
+
   def validate_nonblank_string(param)
     unless params[param].present? && params[param].is_a?(String)
       self.errors << "#{param} must be nonblank string" 
