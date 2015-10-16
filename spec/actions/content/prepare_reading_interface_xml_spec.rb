@@ -81,11 +81,5 @@ describe PrepareReadingInterfaceXML do
       actual = @xml.xpath('//tei:note/@ref', tei_namespace).to_s
       expect(actual).to eq expected
     end
-
-    it 'rewrites the url in the xml:base attr on someTag' do 
-      expected = "#{map.download_url(@other)}"
-      actual = @xml.xpath('//tei:someTag/@xml:base', tei_namespace).to_s
-      expect(actual).to eq expected
-    end
   end
 end
