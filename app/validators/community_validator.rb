@@ -2,7 +2,7 @@ class CommunityValidator
   include Validations
 
   def validate_upsert
-    required_fields = %i(members depositor access title description)
+    required_fields = %i(members depositor access title)
     validate_did_and_create_reqs(Community, required_fields)
     return errors if errors.any?
 

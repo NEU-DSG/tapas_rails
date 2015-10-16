@@ -32,11 +32,6 @@ describe CommunityValidator do
       validate(params.except(:title))
       it_raises_a_single_error 'title'
     end
-
-    it 'requires a description' do 
-      validate(params.except(:description))
-      it_raises_a_single_error 'description'
-    end
   end
 
   context 'on update' do 

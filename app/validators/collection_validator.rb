@@ -2,7 +2,7 @@ class CollectionValidator
   include Validations
 
   def validate_upsert 
-    required = %i(project_did title description depositor access)
+    required = %i(project_did title depositor access)
     validate_did_and_create_reqs(Collection, required)
     return errors if errors.any?
 

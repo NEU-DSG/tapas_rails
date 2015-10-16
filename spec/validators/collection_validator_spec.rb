@@ -44,11 +44,6 @@ describe CollectionValidator do
       expect(@errors.length).to eq 1 
     end
 
-    it "raises an error with no description" do 
-      validate(params.except(:description))
-      expect(@errors.length).to eq 1
-    end
-
     it 'raises an error with depositor' do 
       validate(params.except(:depositor))
       expect(@errors.length).to eq 1 
