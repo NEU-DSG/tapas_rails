@@ -31,6 +31,6 @@ class CommunityValidator
   end
 
   def validate_description
-    validate_nonblank_string :description
+    validate_string :description
   end
 end

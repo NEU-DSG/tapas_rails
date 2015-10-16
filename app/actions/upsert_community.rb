@@ -29,10 +29,10 @@ class UpsertCommunity
   private 
 
     def update_metadata!(community) 
-      community.mods.title = params[:title] if params[:title].present?
-      community.mods.abstract = params[:description] if params[:description].present?
-      community.project_members = params[:members] if params[:members].present?
-      community.drupal_access = params[:access] if params[:access].present?
+      community.mods.title = params[:title] if params.has_key? :title
+      community.mods.abstract = params[:description] if params.has_key? :description
+      community.project_members = params[:members] if params.has_key? :members
+      community.drupal_access = params[:access] if params.has_key? :access
       community.save!
     end
 end
