@@ -13,6 +13,13 @@ class DrupalJetty < Thor
   eos
 
   def init 
+    unless File.directory?('/vagrant/requirements/solr-4.x')
+      say 'No /vagrant/requirements/solr-4.x found.  Note that this'\
+        ' task does not currently work on the production server, and'\
+        ' cannot be configured to do so.', :red 
+      exit 1
+    end
+
     conf_path = "#{::Rails.root}/jetty/solr/drupal-core/conf"
     FileUtils.mkdir_p(conf_path) unless File.directory?(conf_path)
 
@@ -33,7 +40,7 @@ class DrupalJetty < Thor
 
     # Copy over the three required config files from the apachesolr module
     # in drupal tapas
-    druconf = "/var/www/html/tapas/sites/all/modules/apachesolr/solr-conf/solr-4.x"
+    druconf = "/vagrant/requirements/solr-4.x"
 
     safe_copy("solrconfig.xml", druconf, conf_path)
     safe_copy("protwords.txt", druconf, conf_path)
