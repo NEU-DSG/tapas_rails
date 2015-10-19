@@ -69,7 +69,7 @@ class UpsertCoreFile
   end
 
   def update_associations!
-    if params[:collection_dids].present?
+    if params[:collection_dids].is_a?(Array)
       collections = params[:collection_dids].map do |did|
         Collection.find_by_did(did)
       end
@@ -78,7 +78,7 @@ class UpsertCoreFile
     # In the case where new collection_dids and new file_types are provided, 
     # overwrite both the ography types and the collection memberships this
     # record declares
-    if params[:file_types].present? && params[:collection_dids].present?
+    if params[:file_types].is_a?(Array) && params[:collection_dids].is_a?(Array)
       core_file.clear_ographies!
       core_file.collections = collections
       params[:file_types].each do |ography|
@@ -88,7 +88,7 @@ class UpsertCoreFile
     # collections association to use the new collections AND make sure
     # that any previous ography relationships that this core_file had
     # are updated to point at the new set of collections
-    elsif params[:collection_dids].present?
+    elsif params[:collection_dids].is_a?(Array)
       core_file.collections = collections 
       CoreFile.all_ography_read_methods.each do |ography|
         if core_file.send(ography).any?
@@ -98,7 +98,7 @@ class UpsertCoreFile
     # In the case where only file_types are provided, update which 
     # ography relationships are declared but use the collections 
     # that the CoreFile is already a member of
-    elsif params[:file_types].present?
+    elsif params[:file_types].is_a?(Array)
       old_collections = core_file.collections.to_a
       core_file.clear_ographies!
       params[:file_types].each do |ography|

@@ -15,6 +15,12 @@ module ApiAccessible
     # arrays before passing them further down the chain.
     before_action :associative_array_to_array
 
+    # Certain actions in the API rely on an empty array, but we 
+    # disallow arrays populated with blank strings.  The quick/dirty
+    # fix for this is to strip out blank strings from the array and 
+    # then send it along.
+    before_action :remove_empty_strings_from_array
+
     before_action :load_resource_by_did, :except => [:upsert]
 
     before_action :validate_upsert, :only => [:upsert]
@@ -74,6 +80,12 @@ module ApiAccessible
       if value.is_a?(Hash) && value.keys.all? { |k| is_numeric?(k) }
         params[key] = value.values 
       end
+    end
+  end
+
+  def remove_empty_strings_from_array
+    params.each do |key, value|
+      value.delete_if { |x| x.blank? } if value.is_a?(Array)
     end
   end
 
