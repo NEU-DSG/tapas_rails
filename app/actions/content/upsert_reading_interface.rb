@@ -27,7 +27,7 @@ module Content
       ZipContentValidator.tei file_path
 
       interface_type_internal = interface_type.gsub('-', '_')
-      html_file = @core_file.send(interface_type_internal)
+      html_file = core_file.send(interface_type_internal)
 
       unless html_file 
         html_file = ::HTMLFile.create
