@@ -36,7 +36,6 @@ class UpsertCoreFile
 
       if params[:tei].present?
         Content::UpsertTei.execute(core_file, params[:tei])
-        Content::UpsertReadingInterface.execute_all(core_file, params[:tei])
       end
 
       if params[:support_files].present?
@@ -53,6 +52,14 @@ class UpsertCoreFile
         if page_imgs.present?
           Content::UpsertPageImages.execute(core_file, page_imgs)
         end
+      end
+
+      core_file.save!
+
+      # Correct reading interface generation relies on support content being
+      # in place, so this needs to happen down here.
+      if params[:tei].present?
+        Content::UpsertReadingInterface.execute_all(core_file, params[:tei])
       end
 
       core_file.save!

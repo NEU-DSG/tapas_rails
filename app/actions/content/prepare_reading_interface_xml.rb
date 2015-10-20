@@ -5,7 +5,7 @@ class PrepareReadingInterfaceXML
   attr_reader :core_file, :xml, :support_file_map
 
   def initialize(core_file, xml)
-    @core_file = core_file
+    @core_file = core_file.reload # Ensure CoreFile is not stale
     @xml = xml
     @support_file_map = SupportFileMap.build_map @core_file
   end
@@ -16,6 +16,7 @@ class PrepareReadingInterfaceXML
 
   def execute 
     support_file_map = SupportFileMap.build_map core_file
+    puts support_file_map.result
     all_relevant_attrs = %w(target url ref corresp facs)
 
     xml.traverse do |node| 
@@ -38,11 +39,18 @@ class PrepareReadingInterfaceXML
   private 
 
     def process_individual_url(url)
+      puts "<<<<<"
+      puts "processing url #{url}" 
+      puts "<<<<<"
       if url.starts_with?('#') || URI.parse(url).absolute?
         return url
+        puts "URL was absolute - skipping"
       else
         filename, frag = Pathname.new(url).basename.to_s.split('#', 2)
+        puts "filename was #{filename}"
+        puts "frag was #{frag}"
         new_url = support_file_map.get_url(filename)
+        puts "new url was #{new_url}" 
       end
 
       if new_url.present?
