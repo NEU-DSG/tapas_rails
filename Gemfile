@@ -89,6 +89,7 @@ gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
 gem 'capistrano-resque', '~> 0.2.2', :require => false
 gem 'capistrano-passenger'
+gem 'capistrano-git-submodule-strategy', '~> 0.1', :github => 'ekho/capistrano-git-submodule-strategy'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
