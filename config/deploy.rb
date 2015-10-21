@@ -7,6 +7,8 @@ set :repo_url, 'https://github.com/neu-dsg/tapas_rails'
 # Ensure that the Rails environment is always loaded for Resque workers
 set :resque_environment_task, true
 
+set :scm, :git
+set :git_strategy, Capistrano::Git::SubmoduleStrategy
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
