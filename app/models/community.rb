@@ -4,6 +4,7 @@ class Community < CerberusCore::BaseModels::Community
   include DrupalAccess
   include TapasQueries
   include InlineThumbnail
+  include StatusTracking
 
   before_save :ensure_unique_did
 

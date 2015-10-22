@@ -3,6 +3,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include OGReference
   include DrupalAccess
   include TapasQueries
+  include StatusTracking
 
   # Configure mods_display gem
   include ModsDisplay::ModelExtension
