@@ -29,4 +29,32 @@ describe StatusTracking do
       expect(tracker.upload_status_time).not_to be_blank
     end
   end
+
+  describe '#stuck_in_progress?' do 
+    let(:tracker) { StatusTrackerTest.new } 
+
+    it 'returns false when no previous status time is set' do 
+      expect(tracker.stuck_in_progress?).to be false 
+    end
+
+    it 'returns false when the object is not in progress' do 
+      # Access properties directly to HACK TIME
+      tracker.upload_status = 'SUCCESS' 
+      tracker.upload_status_time = 20.minutes.ago.iso8601.to_s 
+
+      expect(tracker.stuck_in_progress?).to be false 
+    end
+
+    it 'returns false when the object has not been processing for five mins' do
+      tracker.set_status_code('INPROGRESS')
+      expect(tracker.stuck_in_progress?).to be false 
+    end
+
+    it 'returns true when the object has been processing for 5+ mins' do 
+      tracker.upload_status = 'INPROGRESS'
+      tracker.upload_status_time = 20.minutes.ago.iso8601.to_s
+
+      expect(tracker.stuck_in_progress?).to be true 
+    end
+  end
 end

@@ -7,7 +7,7 @@ module StatusTracking
   end
 
   def self.valid_status_code?(code)
-    code.in? %w(SUCCESS INPROGRESS FAILED_INVALID FAILED_SYSTEMERR)
+    code.in? %w(SUCCESS INPROGRESS FAILED_USERERR FAILED_SYSTEMERR)
   end
 
   def set_status_code(code)
@@ -22,5 +22,16 @@ module StatusTracking
   def set_status_code!(code)
     set_status_code(code)
     save!
+  end
+
+  # Checks if an object has been sitting in the 'in progress'
+  # state for more than five minutes, which is a good indication
+  # that something has gone wrong and upload should be retried.
+  def stuck_in_progress?
+    if upload_status_time.present? && upload_status == 'INPROGRESS'
+      5.minutes.ago > upload_status_time
+    else
+      return false
+    end
   end
 end
