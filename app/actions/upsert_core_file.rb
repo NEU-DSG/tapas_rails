@@ -82,12 +82,9 @@ class UpsertCoreFile
       core_file.mark_upload_complete!
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
-      core_file.errors_display = ['A system error occurred while processing'\
-        ' your file.  Please attempt reupload and contact an administrator'\
-        ' if the problem continues.']
 
-      error_str = "#{e.backtrace.first}: #{e.message} (#{e.class}) \n #{e.backtrace.join("\n")}"
-      core_file.stacktrace = error_str
+      core_file.set_default_display_error
+      core_file.set_stacktrace_message(e)
       core_file.mark_upload_failed!
       raise e
     ensure

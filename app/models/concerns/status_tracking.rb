@@ -21,6 +21,18 @@ module StatusTracking
     end
   end
 
+  def set_default_display_error
+    self.errors_display = ['A system error occurred while processing'\
+                           ' your file.  Please reattempt upload and contact'\
+                           ' an administrator if the problem continues.']
+  end
+
+  def set_stacktrace_message(e)
+    error_str = "#{e.backtrace.first} : #{e.message} (#{e.class}) \n"\
+    "#{e.backtrace.drop(1).join("\n")}"
+    self.stacktrace = error_str
+  end
+
   def mark_upload_failed
     set_status_code('FAILED')
   end
