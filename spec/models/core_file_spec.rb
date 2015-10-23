@@ -41,6 +41,8 @@ describe CoreFile do
         # Add page images to the file
         images = [fixture_file('image.jpg'), fixture_file('other_image.jpg')]
         Content::UpsertPageImages.execute(core_file, images)
+        
+        core_file.mark_upload_complete!
 
         core_file.reload
 
