@@ -20,8 +20,7 @@ class UpsertCoreFile
       core_file.mark_upload_in_progress!
 
       # Validate TEI
-      tei_errors = Exist::ValidateTei.execute(params[:tei])
-
+      tei_errors = Exist::ValidateTei.execute params[:tei]
       if tei_errors.any?
         core_file.errors_display << 'Your TEI File was invalid.'\
           '  Please reupload once you have fixed all errors.'
@@ -29,17 +28,17 @@ class UpsertCoreFile
         core_file.mark_upload_failed! 
         return false
       end
-        
 
       opts = {}
+      opts[:authors] = params[:display_authors]
+      opts[:date] = params[:display_date]
+      opts[:title] = params[:display_title]
+      opts[:contributors] = params[:display_contributors]
 
       if mods_needs_updating
-        opts[:authors] = params[:display_authors]
-        opts[:contributors] = params[:display_contributors]
-        opts[:date] = params[:display_date]
-        opts[:title] = params[:display_title]
         mods_record = Exist::GetMods.execute(params[:tei], opts)
         core_file.mods.content = mods_record
+
         # Rewrite did to mods after update
         core_file.did = params[:did]
         # Rewrite identifier to mods after update
@@ -83,10 +82,12 @@ class UpsertCoreFile
       core_file.mark_upload_complete!
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
-      core_file.errors_display = 'A system error occurred while processing'\
+      core_file.errors_display = ['A system error occurred while processing'\
         ' your file.  Please attempt reupload and contact an administrator'\
-        ' if this error message reoccurs.'
-      core_file.stacktrace = e.backtrace
+        ' if the problem continues.']
+
+      error_str = "#{e.backtrace.first}: #{e.message} (#{e.class}) \n #{e.backtrace.join("\n")}"
+      core_file.stacktrace = error_str
       core_file.mark_upload_failed!
       raise e
     ensure
