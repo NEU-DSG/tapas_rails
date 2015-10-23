@@ -72,17 +72,45 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   end
 
   def as_json 
-    tei_name = (canonical_object ? canonical_object.filename : '')
-
-    { :collection_dids => collections.map(&:did),
-      :tei => tei_name, 
-      :support_files => page_images.map(&:filename),
-      :depositor => depositor,
-      :access => drupal_access,
-    }
+    if upload_failed?
+      render_failure_json
+    elsif upload_complete?
+      render_success_json
+    elsif upload_in_progress?
+      render_inprogress_json
+    end
   end
 
   private
+
+  def render_failure_json
+    { :status => upload_status, 
+      :errors_display => errors_display, 
+      :errors_system => errors_system, 
+      :stacktrace => stacktrace, 
+      :since => upload_status_time 
+    }
+  end
+
+  def render_inprogress_json
+    { :status => upload_status, 
+      :since  => upload_status_time }
+  end
+
+
+  def render_success_json 
+    tei_name = (canonical_object ? canonical_object.filename : '')
+
+    { :status => upload_status,
+      :since => upload_status_time,
+      :collection_dids => collections.map(&:did),
+      :tei => tei_name, 
+      :support_files => page_images.map(&:filename),
+      :depositor => depositor, 
+      :access => drupal_access 
+    }
+  end
+
   def is_ography?
     CoreFile.all_ography_read_methods.any? do |ography_type| 
       self.send(ography_type).any?

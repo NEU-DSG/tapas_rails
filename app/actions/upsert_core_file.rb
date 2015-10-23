@@ -17,6 +17,20 @@ class UpsertCoreFile
                                          :depositor => params[:depositor])
       end
 
+      core_file.mark_upload_in_progress!
+
+      # Validate TEI
+      tei_errors = Exist::ValidateTei.execute(params[:tei])
+
+      if tei_errors.any?
+        core_file.errors_display << 'Your TEI File was invalid.'\
+          '  Please reupload once you have fixed all errors.'
+        core_file.errors_display = core_files.errors_display + tei_errors
+        core_file.mark_upload_failed! 
+        return false
+      end
+        
+
       opts = {}
 
       if mods_needs_updating
@@ -65,9 +79,16 @@ class UpsertCoreFile
       core_file.save!
 
       Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
+
+      core_file.mark_upload_complete!
     rescue => e 
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
-      raise e 
+      core_file.errors_display = 'A system error occurred while processing'\
+        ' your file.  Please attempt reupload and contact an administrator'\
+        ' if this error message reoccurs.'
+      core_file.stacktrace = e.backtrace
+      core_file.mark_upload_failed!
+      raise e
     ensure
       FileUtils.rm params[:tei] if should_delete_file? params[:tei]
       FileUtils.rm params[:support_files] if should_delete_file? params[:support_files]

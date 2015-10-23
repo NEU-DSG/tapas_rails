@@ -31,35 +31,30 @@ describe CoreFile do
   describe '#as_json' do 
     before(:each) { ActiveFedora::Base.delete_all }
 
-    it 'returns a valueless hash for empty CoreFiles' do 
-      result = CoreFile.new.as_json
-      keys = %i(collection_dids tei support_files depositor access)
+    context 'with a complete record' do 
+      it 'returns a populated hash when given values' do 
+        core_file, collections, project = FixtureBuilders.create_all
 
-      expect(keys.all? { |k| result.has_key?(k) }).to be true 
-      expect(result.all? { |k, v| v.blank?}).to be true
-    end
+        # Add TEI to the file 
+        Content::UpsertTei.execute(core_file, fixture_file('tei.xml'))
 
-    it 'returns a populated hash when given values' do 
-      core_file, collections, project = FixtureBuilders.create_all
+        # Add page images to the file
+        images = [fixture_file('image.jpg'), fixture_file('other_image.jpg')]
+        Content::UpsertPageImages.execute(core_file, images)
 
-      # Add TEI to the file 
-      Content::UpsertTei.execute(core_file, fixture_file('tei.xml'))
+        core_file.reload
 
-      # Add page images to the file
-      images = [fixture_file('image.jpg'), fixture_file('other_image.jpg')]
-      Content::UpsertPageImages.execute(core_file, images)
+        core_file.depositor = 'William'
+        core_file.mark_upload_complete
 
-      core_file.reload
+        result = core_file.as_json
 
-      core_file.depositor = 'William'
-
-      result = core_file.as_json
-
-      expect(result[:depositor]).to eq 'William'
-      expect(result[:tei]).to eq 'tei.xml'
-      expect(result[:support_files]).to eq %w(image.jpg other_image.jpg)
-      expect(result[:access]).to eq 'private'
-      expect(result[:collection_dids]).to eq collections.map(&:did)
+        expect(result[:depositor]).to eq 'William'
+        expect(result[:tei]).to eq 'tei.xml'
+        expect(result[:support_files]).to eq %w(image.jpg other_image.jpg)
+        expect(result[:access]).to eq 'private'
+        expect(result[:collection_dids]).to eq collections.map(&:did)
+      end
     end
   end
 
