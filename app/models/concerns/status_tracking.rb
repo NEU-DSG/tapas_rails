@@ -2,8 +2,10 @@ module StatusTracking
   extend ActiveSupport::Concern 
 
   included do 
-    has_attributes :upload_status, :upload_status_time, :validation_errors,
-      :stacktrace, :datastream => :properties, :multiple => false  
+    has_attributes :upload_status, :upload_status_time, :stacktrace,
+      :datastream => :properties, :multiple => false  
+    has_attributes :validation_errors, :datastream => :properties, 
+      :multiple => true
   end
 
   def self.valid_status_code?(code)
