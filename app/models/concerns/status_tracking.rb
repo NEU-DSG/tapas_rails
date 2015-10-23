@@ -4,12 +4,12 @@ module StatusTracking
   included do 
     has_attributes :upload_status, :upload_status_time, :stacktrace,
       :datastream => :properties, :multiple => false  
-    has_attributes :validation_errors, :datastream => :properties, 
+    has_attributes :errors_display, :errors_system, :datastream => :properties,
       :multiple => true
   end
 
   def self.valid_status_code?(code)
-    code.in? %w(SUCCESS INPROGRESS FAILED_USERERR FAILED_SYSTEMERR)
+    code.in? %w(COMPLETE INPROGRESS FAILED)
   end
 
   def set_status_code(code)
