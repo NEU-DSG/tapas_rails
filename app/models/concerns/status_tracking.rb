@@ -15,10 +15,46 @@ module StatusTracking
   def set_status_code(code)
     if StatusTracking.valid_status_code?(code)
       self.upload_status = code 
-      self.upload_status_time = DateTime.now.iso8601.to_s
+      self.upload_status_time = Time.now.utc.iso8601
     else
       raise "Invalid status code passed" 
     end
+  end
+
+  def mark_upload_failed
+    set_status_code('FAILED')
+  end
+
+  def mark_upload_in_progress
+    set_status_code('INPROGRESS')
+  end
+
+  def mark_upload_complete
+    set_status_code('COMPLETE')
+  end
+
+  def mark_upload_failed!
+    set_status_code!('FAILED')
+  end
+
+  def mark_upload_in_progress!
+    set_status_code!('INPROGRESS')
+  end
+
+  def mark_upload_complete!
+    set_status_code!('COMPLETE')
+  end
+
+  def upload_failed?
+    upload_status == 'FAILED'
+  end
+
+  def upload_complete?
+    upload_status == 'COMPLETE'
+  end
+
+  def upload_in_progress?
+    upload_status == 'INPROGRESS'
   end
 
   def set_status_code!(code)
