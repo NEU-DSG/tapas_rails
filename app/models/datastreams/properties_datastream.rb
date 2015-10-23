@@ -9,7 +9,8 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     t.html_type
     t.upload_status
     t.upload_status_time
-    t.validation_errors
+    t.errors_display
+    t.errors_system
     t.stacktrace
   end
 

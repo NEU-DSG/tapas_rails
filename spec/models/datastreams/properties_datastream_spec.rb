@@ -35,14 +35,19 @@ describe PropertiesDatastream do
     expect(properties.upload_status_time.first).to eq now 
   end
 
-  it 'implements the validation_errors field' do 
-    properties.validation_errors = %w(one two three) 
-    expect(properties.validation_errors).to eq %w(one two three)
-  end
-
   it 'implements the stacktrace field' do 
     properties.stacktrace = 'Big hueg stacktraec' 
     expect(properties.stacktrace.first).to eq 'Big hueg stacktraec'
+  end
+
+  it 'implements the errors_display field' do 
+    properties.errors_display = %w(one two three)
+    expect(properties.errors_display).to eq %w(one two three)
+  end
+
+  it 'implements the errors_system field' do 
+    properties.errors_system = %w(one two three)
+    expect(properties.errors_system).to eq %w(one two three)
   end
 
   it "solrizes correctly" do 
