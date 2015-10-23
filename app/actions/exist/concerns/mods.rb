@@ -19,7 +19,7 @@ module Exist
       def send_mods_request
         post_params = {}
 
-        post_params[:file] = File.read(tei_filepath)
+        post_params[:file] = File.open(tei_filepath)
         add_param(post_params, :contributors)
         add_param(post_params, :authors)
         add_param(post_params, :date, :"timeline-date")
