@@ -17,9 +17,11 @@ class ApplicationController < ActionController::Base
     fpath = file.path
     fname = file.original_filename 
     
-    tmp = Rails.root.join('tmp', "#{SecureRandom.hex}-#{fname}").to_s 
-    FileUtils.mv(fpath, tmp) 
-    return tmp
+    tmpdir = Rails.root.join("tmp", "#{Time.now.to_i}")
+    FileUtils.mkdir_p(tmpdir)
+    tmpfile = Rails.root.join(tmpdir, fname)
+    FileUtils.mv(fpath, tmpfile)
+    return tmpfile.to_s
   end
 
   def pretty_json(status)
