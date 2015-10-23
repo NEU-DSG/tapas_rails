@@ -6,7 +6,9 @@ shared_examples_for "an API enabled controller" do
   describe 'GET #show' do 
     let(:resource) do 
       model = described_class.to_s.sub('Controller', '').singularize.underscore
-      FactoryGirl.create :"#{model}"
+      resource = FactoryGirl.create :"#{model}"
+      resource.mark_upload_complete!
+      resource
     end
 
     before(:each) { ActiveFedora::Base.destroy_all }
