@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe CoreFilesController do
   include FileHelpers
+  include FixtureBuilders
   include ValidAuthToken
 
   let(:core_file) { FactoryGirl.create :core_file }
@@ -109,6 +110,69 @@ describe CoreFilesController do
       expect(CoreFile.find_by_did core.did).to be nil 
     end
   end
+
+  describe 'GET #show' do 
+
+    after(:all) { ActiveFedora::Base.delete_all } 
+
+    it 'returns the success representation of the object for valid records' do 
+      cf, col, proj = FixtureBuilders.create_all
+      cf.mark_upload_complete!
+      get :show, did: cf.did 
+
+      expect(response.status).to eq 200 
+      json = JSON.parse(response.body)
+      expect(json['status']).to eq 'COMPLETE' 
+    end
+
+    it 'returns the in_progress representation of the object for processing records' do
+      cf = FactoryGirl.create :core_file  
+      cf.mark_upload_in_progress!
+
+      get :show, did: cf.did 
+
+      expect(response.status).to eq 200 
+      json = JSON.parse(response.body) 
+      expect(json['status']).to eq 'INPROGRESS'
+    end
+
+    it 'returns the failed representation of the object for failed records' do 
+      cf = FactoryGirl.create :core_file
+      cf.mark_upload_failed!
+
+      get :show, did: cf.did 
+
+      expect(response.status).to eq 200 
+      json = JSON.parse(response.body)
+      expect(json['status']).to eq 'FAILED'
+    end
+
+    it 'marks invalid tagless records as failed' do 
+      cf = FactoryGirl.create :core_file # No associated collections, invalid
+
+      get :show, did: cf.did 
+
+      expect(response.status).to eq 200 
+      json = JSON.parse(response.body)
+      puts json
+      expect(json['status']).to eq 'FAILED'
+    end
+
+    it 'flags records that are stuck in progress as failed' do 
+      cf = FactoryGirl.create :core_file
+      cf.mark_upload_in_progress
+      cf.upload_status_time = 20.minutes.ago.utc.iso8601
+      cf.save!
+
+      get :show, did: cf.did 
+
+      expect(response.status).to eq 200 
+      json = JSON.parse(response.body)
+      expect(json['status']).to eq 'FAILED'
+      expect(json['errors_system'].first).to include 'more than five minutes'
+    end
+  end
+
 
   describe "POST #upsert" do
     let(:post_defaults) do 

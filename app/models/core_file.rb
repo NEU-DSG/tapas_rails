@@ -52,6 +52,20 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
+  def retroactively_set_status!
+    has_tei = canonical_object && canonical_object.content.size > 0 
+    has_teibp = teibp && teibp.content.size > 0
+    has_tg = tapas_generic && tapas_generic.content.size > 0 
+    has_collections = collections.any?
+
+    if has_tei && has_teibp && has_tg && has_collections
+      mark_upload_complete! 
+    else
+      set_default_display_error
+      mark_upload_failed!
+    end
+  end
+
   # Return the project that this CoreFile belongs to.  Necessary for easily 
   # finding all of the project level ographies that exist.
   def project 
