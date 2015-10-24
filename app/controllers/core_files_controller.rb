@@ -31,41 +31,77 @@ class CoreFilesController < ApplicationController
     render_content_asset @core_file.canonical_object, e
   end
 
+  def show 
+    @core_file = CoreFile.find_by_did(params[:did])
+
+    if @core_file.upload_status.blank?
+      @core_file.retroactively_set_status!
+    end
+
+    if @core_file.stuck_in_progress?
+      @core_file.set_default_display_error
+      @core_file.errors_system = ['Object was processing for more than five minutes']
+      @core_file.mark_upload_failed!
+    end
+
+    @response = @core_file.as_json
+    pretty_json(200) and return
+  end
+
   def upsert
-    # Step 1: Extract uploaded files to temporary locations if they exist
-    if params[:tei]
-      params[:tei] = create_temp_file params[:tei]
-    end
+    begin
+      # Step 1: Find or create the CoreFile Object - 
+      # we do this here so that we have a stub record to 
+      # attach error messages & status tracking to. 
+      if CoreFile.exists_by_did?(params[:did])
+        core_file = CoreFile.find_by_did(params[:did])
+        core_file.mark_upload_in_progress! 
+      else
+        core_file = CoreFile.create(did: params[:did], 
+                                    depositor: params[:depositor])
+        core_file.mark_upload_in_progress!
+      end
 
-    if params[:support_files]
-      params[:support_files] = create_temp_file params[:support_files] 
-    end
+      # Step 1: Extract uploaded files to temporary locations if they exist
+      if params[:tei]
+        params[:tei] = create_temp_file params[:tei]
+      end
 
-    # Step 2: If TEI was provided, generate a MODS record that can be sent back
-    # to Drupal to populate the validate metadata page provided after initial
-    # file upload
-    if params[:tei] 
-      opts = {
-        :authors => params[:display_authors],
-        :contributors => params[:display_contributors],
-        :"timeline-date" => params[:display_date],
-        :title => params[:title]
-      }
+      if params[:support_files]
+        params[:support_files] = create_temp_file params[:support_files] 
+      end
 
-      @mods = Exist::GetMods.execute(params[:tei], opts)
-    end
+      # Step 2: If TEI was provided, generate a MODS record that can be sent back
+      # to Drupal to populate the validate metadata page provided after initial
+      # file upload
+      if params[:tei] 
+        opts = {
+          :authors => params[:display_authors],
+          :contributors => params[:display_contributors],
+          :"timeline-date" => params[:display_date],
+          :title => params[:title]
+        }
 
-    # Step 3: Kick off an upsert job 
-    job = TapasObjectUpsertJob.new params
-    TapasRails::Application::Queue.push job 
+        @mods = Exist::GetMods.execute(params[:tei], opts)
+      end
 
-    # Step 4: Respond with MODS if it is available, otherwise send a generic
-    # success message
-    if @mods
-      render :xml => @mods, :status => 202 
-    else
-      @response[:message] = "Job processing" 
-      pretty_json(202) and return
+      # Step 3: Kick off an upsert job 
+      job = TapasObjectUpsertJob.new params
+      TapasRails::Application::Queue.push job 
+
+      # Step 4: Respond with MODS if it is available, otherwise send a generic
+      # success message
+      if @mods
+        render :xml => @mods, :status => 202 
+      else
+        @response[:message] = "Job processing" 
+        pretty_json(202) and return
+      end
+    rescue e 
+      core_file.set_default_display_error
+      core_file.set_stacktrace_message(e)
+      core_file.mark_upload_failed!
+      raise e
     end
   end
 

@@ -4,6 +4,7 @@ class Collection < CerberusCore::BaseModels::Collection
   include DrupalAccess
   include InlineThumbnail
   include TapasQueries
+  include StatusTracking
   
   before_save :ensure_unique_did
   after_save :update_core_files

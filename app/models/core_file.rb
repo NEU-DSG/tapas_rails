@@ -3,6 +3,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include OGReference
   include DrupalAccess
   include TapasQueries
+  include StatusTracking
 
   # Configure mods_display gem
   include ModsDisplay::ModelExtension
@@ -51,6 +52,20 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
+  def retroactively_set_status!
+    has_tei = canonical_object && canonical_object.content.size > 0 
+    has_teibp = teibp && teibp.content.size > 0
+    has_tg = tapas_generic && tapas_generic.content.size > 0 
+    has_collections = collections.any?
+
+    if has_tei && has_teibp && has_tg && has_collections
+      mark_upload_complete! 
+    else
+      set_default_display_error
+      mark_upload_failed!
+    end
+  end
+
   # Return the project that this CoreFile belongs to.  Necessary for easily 
   # finding all of the project level ographies that exist.
   def project 
@@ -71,17 +86,45 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   end
 
   def as_json 
-    tei_name = (canonical_object ? canonical_object.filename : '')
-
-    { :collection_dids => collections.map(&:did),
-      :tei => tei_name, 
-      :support_files => page_images.map(&:filename),
-      :depositor => depositor,
-      :access => drupal_access,
-    }
+    if upload_failed?
+      render_failure_json
+    elsif upload_complete?
+      render_success_json
+    elsif upload_in_progress?
+      render_inprogress_json
+    end
   end
 
   private
+
+  def render_failure_json
+    { :status => upload_status, 
+      :errors_display => errors_display, 
+      :errors_system => errors_system, 
+      :stacktrace => stacktrace, 
+      :since => upload_status_time 
+    }
+  end
+
+  def render_inprogress_json
+    { :status => upload_status, 
+      :since  => upload_status_time }
+  end
+
+
+  def render_success_json 
+    tei_name = (canonical_object ? canonical_object.filename : '')
+
+    { :status => upload_status,
+      :since => upload_status_time,
+      :collection_dids => collections.map(&:did),
+      :tei => tei_name, 
+      :support_files => page_images.map(&:filename),
+      :depositor => depositor, 
+      :access => drupal_access 
+    }
+  end
+
   def is_ography?
     CoreFile.all_ography_read_methods.any? do |ography_type| 
       self.send(ography_type).any?
