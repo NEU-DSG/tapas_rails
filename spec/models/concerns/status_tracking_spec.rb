@@ -58,4 +58,20 @@ describe StatusTracking do
       expect(tracker.stuck_in_progress?).to be true 
     end
   end
+
+  describe '#mark_upload_complete' do 
+    let(:tracker) { StatusTrackerTest.new }
+
+    it 'clears previously set errors' do 
+      tracker.stacktrace = "Some stacktrace" 
+      tracker.errors_system = ['some errors']
+      tracker.errors_display = ['more errors'] 
+      
+      tracker.mark_upload_complete!
+
+      expect(tracker.stacktrace).to be_blank
+      expect(tracker.errors_system).to be_blank
+      expect(tracker.errors_display).to be_blank
+    end
+  end
 end

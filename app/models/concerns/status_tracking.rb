@@ -42,6 +42,10 @@ module StatusTracking
   end
 
   def mark_upload_complete
+    # Clear any previously set errors
+    self.stacktrace = ''
+    self.errors_display = []
+    self.errors_system = []
     set_status_code('COMPLETE')
   end
 
@@ -54,7 +58,8 @@ module StatusTracking
   end
 
   def mark_upload_complete!
-    set_status_code!('COMPLETE')
+    mark_upload_complete
+    save!
   end
 
   def upload_failed?
