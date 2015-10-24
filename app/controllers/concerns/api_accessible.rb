@@ -28,20 +28,6 @@ module ApiAccessible
 
   def show 
     resource = get_loaded_resource
-
-    if resource.upload_status.blank?
-      resource.retroactively_set_status
-    end
-
-    # If the resource has been 'processing' for more than five minutes, 
-    # decide that it's probably broken
-    if resource.stuck_in_progress?
-      resource.set_default_display_error
-      resource.errors_system = resource.errors_system +
-        ['Object was processing for more than five minutes']
-      resource.mark_upload_failed!
-    end
-
     @response[:message] = resource.as_json
     pretty_json(200) and return
   end
