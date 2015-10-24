@@ -173,6 +173,13 @@ describe CoreFilesController do
     end
   end
 
+  describe "PUT #rebuild_reading_interfaces" do 
+    it 'raises a 404 for dids that do not exist' do
+      put :rebuild_reading_interfaces, did: 'no-such-did' 
+
+      expect(response.status).to eq 404
+    end
+  end
 
   describe "POST #upsert" do
     let(:post_defaults) do 

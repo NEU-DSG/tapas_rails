@@ -31,6 +31,12 @@ class CoreFilesController < ApplicationController
     render_content_asset @core_file.canonical_object, e
   end
 
+  def rebuild_reading_interfaces
+    # Calling perform directly causes the job to execute inline, 
+    # rather than being queued for processing later.
+    RebuildReadingInterfaceJob.perform(params[:did])
+  end
+
   def show 
     @core_file = CoreFile.find_by_did(params[:did])
 
