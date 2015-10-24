@@ -5,13 +5,12 @@ class RebuildReadingInterfaceJob
     begin
       core_file = CoreFile.find_by_did(did)
       return false unless core_file && core_file.project
-
-      core_file.mark_upload_in_progress!
-
       tei = core_file.canonical_object
       return false unless tei
 
-      tmpfile = Tempfile.new('ri_rebuild')
+      core_file.mark_upload_in_progress!
+
+      tmpfile = Tempfile.new(['ri_rebuild', '.xml'])
       tmpfile.write(tei.content.content.force_encoding('UTF-8'))
       tmpfile.rewind
 
