@@ -4,11 +4,19 @@ class RebuildReadingInterfaceJob
   def self.perform(did)
     begin
       core_file = CoreFile.find_by_did(did)
-      return false unless core_file && core_file.project
-      tei = core_file.canonical_object
-      return false unless tei
+
+      if !(core_file)
+        raise 'Could not find record with specified Drupal ID'
+      elsif !(core_file.project)
+        raise 'Attempted to rebuild reading interface for record'
+          ' not associated with any project'
+      elsif !(core_file.canonical_object.content.content.present?)
+        raise 'Attempted to rebuild reading interface for object'\
+          ' with no tei content'
+      end
 
       core_file.mark_upload_in_progress!
+      tei = core_file.canonical_object
 
       tmpfile = Tempfile.new(['ri_rebuild', '.xml'])
       tmpfile.write(tei.content.content.force_encoding('UTF-8'))
@@ -17,7 +25,9 @@ class RebuildReadingInterfaceJob
       Content::UpsertReadingInterface.execute_all(core_file, tmpfile.path)
       core_file.mark_upload_complete!
     rescue => e
-      core_file.set_default_display_error
+      msg = 'Reading interface rebuild failed.  Please reattempt'\
+        ' and contact an administrator if the problem continues'
+      core_file.errors_display = [msg]
       core_file.set_stacktrace_message(e)
       core_file.mark_upload_failed!
       raise e
