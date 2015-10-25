@@ -174,10 +174,26 @@ describe CoreFilesController do
   end
 
   describe "PUT #rebuild_reading_interfaces" do 
+    after(:each) { ActiveFedora::Base.delete_all }
+
     it 'raises a 404 for dids that do not exist' do
       put :rebuild_reading_interfaces, did: 'no-such-did' 
 
       expect(response.status).to eq 404
+    end
+
+    it 'returns a 200 on successful reading interface rebuild' do 
+      core, collections, community = FixtureBuilders.create_all
+      tei = FactoryGirl.create :tei_file
+
+      tei.core_file = core
+      tei.canonize
+      tei.add_file(File.read(fixture_file('tei.xml')), 'content', 'tei.xml')
+      tei.save! 
+
+      put :rebuild_reading_interfaces, did: core.did 
+
+      expect(response.status).to eq 200 
     end
   end
 

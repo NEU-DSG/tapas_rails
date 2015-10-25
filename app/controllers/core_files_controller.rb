@@ -32,9 +32,9 @@ class CoreFilesController < ApplicationController
   end
 
   def rebuild_reading_interfaces
-    # Calling perform directly causes the job to execute inline, 
-    # rather than being queued for processing later.
     RebuildReadingInterfaceJob.perform(params[:did])
+    @response[:message] = "Record updated successfully"
+    pretty_json(200) and return
   end
 
   def show 
