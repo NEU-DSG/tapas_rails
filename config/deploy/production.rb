@@ -17,7 +17,7 @@
 
 server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db resque_worker resque_scheduler}
 
-set :workers, { "*" => 4 }
+set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
 
 # Custom SSH Options
 # ==================
