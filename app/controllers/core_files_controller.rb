@@ -31,6 +31,12 @@ class CoreFilesController < ApplicationController
     render_content_asset @core_file.canonical_object, e
   end
 
+  def rebuild_reading_interfaces
+    RebuildReadingInterfaceJob.perform(params[:did])
+    @response[:message] = "Record updated successfully"
+    pretty_json(200) and return
+  end
+
   def show 
     @core_file = CoreFile.find_by_did(params[:did])
 

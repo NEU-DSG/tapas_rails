@@ -26,4 +26,25 @@ class TapasRails < Thor
       say "User #{u.email} created successfully!", :blue 
     end
   end
+
+  desc 'rebuild_reading_interfaces', <<-eos 
+    Rebuilds the reading interfaces for every TEI File uploaded to the repo
+
+    Uses a separate 'tapas_rails_maintenance' queue to avoid clogging the main
+    work queue (which handles things like processing uploads).
+  eos
+
+  def rebuild_reading_interfaces
+    q = "active_fedora_model_ssi:CoreFile"
+
+    all_dids = ActiveFedora::SolrService.query(q, fl: 'did_ssim').map do |doc|
+      doc['did_ssim'].first
+    end
+
+    say "Updating #{all_dids.count} records", :blue
+
+    all_dids.each do |did|
+      Resque.enqueue(RebuildReadingInterfaceJob, did)
+    end
+  end
 end

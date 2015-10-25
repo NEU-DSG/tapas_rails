@@ -39,6 +39,7 @@ TapasRails::Application.routes.draw do
   get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
   get 'files/:did/tei' => 'core_files#tei'
   get 'files/:did' => 'core_files#show'
+  put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
   post 'files/:did' => 'core_files#upsert'
   delete "files/:did" => "core_files#destroy"
 
