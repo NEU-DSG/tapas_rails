@@ -9,14 +9,6 @@ describe RebuildReadingInterfaceJob do
   let(:core) { FactoryGirl.create :core_file } 
   let(:tei) { FactoryGirl.create :tei_file }
 
-  it 'returns false when called on a nonexistent did' do 
-    expect(RebuildReadingInterfaceJob.perform('no_did')).to be false
-  end
-
-  it 'returns false when called on a CoreFile with no TEI' do 
-    expect(RebuildReadingInterfaceJob.perform(core.did)).to be false
-  end
-
   it 'rebuilds the reading interface when given a valid CoreFile' do
     cf, cl, p = FixtureBuilders.create_all
     tei.core_file = cf

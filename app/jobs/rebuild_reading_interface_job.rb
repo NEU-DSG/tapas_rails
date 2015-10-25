@@ -25,11 +25,13 @@ class RebuildReadingInterfaceJob
       Content::UpsertReadingInterface.execute_all(core_file, tmpfile.path)
       core_file.mark_upload_complete!
     rescue => e
-      msg = 'Reading interface rebuild failed.  Please reattempt'\
-        ' and contact an administrator if the problem continues'
-      core_file.errors_display = [msg]
-      core_file.set_stacktrace_message(e)
-      core_file.mark_upload_failed!
+      if core_file
+        msg = 'Reading interface rebuild failed.  Please reattempt'\
+          ' and contact an administrator if the problem continues'
+        core_file.errors_display = [msg]
+        core_file.set_stacktrace_message(e)
+        core_file.mark_upload_failed!
+      end
       raise e
     ensure
       tmpfile.close if tmpfile
