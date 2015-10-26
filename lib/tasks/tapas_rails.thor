@@ -28,16 +28,19 @@ class TapasRails < Thor
   end
 
   desc 'rebuild_reading_interfaces', <<-eos 
-    Rebuilds the reading interfaces for every TEI File uploaded to the repo
+    Rebuilds the reading interfaces for every TEI File uploaded to the repo.
 
     Uses a separate 'tapas_rails_maintenance' queue to avoid clogging the main
-    work queue (which handles things like processing uploads).
+    work queue (which handles things like processing uploads).  Can specify a 
+    number of rows to process over, default is set to 500.
   eos
 
-  def rebuild_reading_interfaces
+  def rebuild_reading_interfaces(rows=500)
     q = "active_fedora_model_ssi:CoreFile"
 
-    all_dids = ActiveFedora::SolrService.query(q, fl: 'did_ssim').map do |doc|
+    say "Requesting #{rows} IDS from solr for rebuid", :blue
+
+    all_dids = ActiveFedora::SolrService.query(q, fl: 'did_ssim', rows: rows).map do |doc|
       doc['did_ssim'].first
     end
 
