@@ -42,20 +42,23 @@ class PrepareReadingInterfaceXML
       puts "<<<<<"
       puts "processing url #{url}" 
       puts "<<<<<"
-      if url.starts_with?('#') || URI.parse(url).absolute?
-        return url
-        puts "URL was absolute - skipping"
-      else
-        filename, frag = Pathname.new(url).basename.to_s.split('#', 2)
-        puts "filename was #{filename}"
-        puts "frag was #{frag}"
-        new_url = support_file_map.get_url(filename)
-        puts "new url was #{new_url}" 
-      end
+      begin
+        if url.starts_with?('#') || URI.parse(url).absolute?
+          return url
+        else
+          filename, frag = Pathname.new(url).basename.to_s.split('#', 2)
+          puts "filename was #{filename}"
+          puts "frag was #{frag}"
+          new_url = support_file_map.get_url(filename)
+          puts "new url was #{new_url}" 
+        end
 
-      if new_url.present?
-        return "#{new_url}##{frag}".chomp('#')
-      else
+        if new_url.present?
+          return "#{new_url}##{frag}".chomp('#')
+        else
+          return url
+        end
+      rescue URI::InvalidURIError => e 
         return url
       end
     end
