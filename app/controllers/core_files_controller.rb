@@ -103,7 +103,7 @@ class CoreFilesController < ApplicationController
         @response[:message] = "Job processing" 
         pretty_json(202) and return
       end
-    rescue e 
+    rescue => e
       core_file.set_default_display_error
       core_file.set_stacktrace_message(e)
       core_file.mark_upload_failed!
