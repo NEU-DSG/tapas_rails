@@ -8,7 +8,7 @@ class RebuildReadingInterfaceJob
       if !(core_file)
         raise 'Could not find record with specified Drupal ID'
       elsif !(core_file.project)
-        raise 'Attempted to rebuild reading interface for record'
+        raise 'Attempted to rebuild reading interface for record'\
           ' not associated with any project'
       elsif !(core_file.canonical_object.content.content.present?)
         raise 'Attempted to rebuild reading interface for object'\
