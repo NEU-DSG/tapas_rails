@@ -23,8 +23,8 @@ module Exist
         response = send_mods_request
         return []
       rescue RestClient::Exception => e
-        if e.http_code == 400 
-          return ['Your TEI File was invalid!']
+        if e.http_code == 422
+          Nokogiri::HTML(e.response).css('li').map { |li| li.text }
         else
           raise e 
         end
