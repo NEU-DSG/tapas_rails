@@ -26,7 +26,7 @@ module Exist
         :accept => 'text/html' 
       })
 
-      self.resource = RestClient::Resource.new(url, options)
+      self.resource = RestClient::Resource.new(url, options, :timeout => 300)
     end
 
     def execute
