@@ -17,11 +17,9 @@ TapasRails::Application.routes.draw do
     Rails.env == "development"
   end
 
- # constraints resque_web_constraint do 
- #   mount Resque::Server, at: "/resque" 
- # end
-  
-  mount Resque::Server, :at => '/resque'
+  constraints resque_web_constraint do 
+    mount Resque::Server, at: "/resque" 
+  end
 
   # Communities
   get 'communities/:did' => 'communities#show'
