@@ -1,7 +1,7 @@
 TapasRails::Application.routes.draw do
 
   # At some point we'll want all this, but I'm going to disable these routes
-  # until we're ready to migrate to 100% Hydra-Head usage for tapas. 
+  # until we're ready to migrate to 100% Hydra-Head usage for tapas.
   # root :to => "catalog#index"
   # blacklight_for :catalog
   # devise_for :users
@@ -17,9 +17,9 @@ TapasRails::Application.routes.draw do
     Rails.env == "development"
   end
 
-  constraints resque_web_constraint do 
-    mount Resque::Server, at: "/resque" 
-  end
+  # constraints resque_web_constraint do
+  mount Resque::Server, at: "/resque" 
+  # end
 
   # Communities
   get 'communities/:did' => 'communities#show'
@@ -28,7 +28,7 @@ TapasRails::Application.routes.draw do
 
   # Collections
   get 'collections/:did' => 'collections#show'
-  post "collections/:did" => "collections#upsert" 
+  post "collections/:did" => "collections#upsert"
   delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
