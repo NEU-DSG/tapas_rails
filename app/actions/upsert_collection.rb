@@ -25,8 +25,7 @@ class UpsertCollection
       if params[:thumbnail].present?
         collection.add_thumbnail(:filepath => params[:thumbnail])
       end
-      puts "Collection upsert for #{collection.pid} has did #{collection.did}"
-
+      upsert_logger.info("Collection upsert for #{collection.pid} has did #{collection.did}")
       update_metadata!(collection)
     rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
@@ -43,5 +42,9 @@ class UpsertCollection
       collection.mods.abstract = params[:description] if params.has_key? :description
       collection.drupal_access = params[:access] if params.has_key? :access
       collection.save!
+    end
+
+    def upsert_logger
+      @@upsert_logger ||= Logger.new("#{Rails.root}/log/#{Rails.env}_upsert.log")
     end
 end

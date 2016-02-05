@@ -76,7 +76,7 @@ class UpsertCoreFile
       end
 
       core_file.save!
-      puts "CoreFile upsert for #{core_file.pid} has did #{core_file.did}"
+      upsert_logger.info("CoreFile upsert for #{core_file.pid} has did #{core_file.did}")
 
       Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
 
@@ -141,5 +141,9 @@ class UpsertCoreFile
       keys = [:tei, :display_authors, :display_contributors, :display_date,
               :display_title]
       keys.any? { |key| params[key].present? }
+    end
+
+    def upsert_logger
+      @@upsert_logger ||= Logger.new("#{Rails.root}/log/#{Rails.env}_upsert.log")
     end
 end

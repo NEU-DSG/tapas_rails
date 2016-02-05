@@ -18,7 +18,7 @@ class UpsertCommunity
         community.add_thumbnail(:filepath => params[:thumbnail])
         community.save!
       end
-      puts "Community upsert for #{community.pid} has did #{community.did}"
+      upsert_logger.info("Community upsert for #{community.pid} has did #{community.did}")
     rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e
@@ -35,5 +35,9 @@ class UpsertCommunity
       community.project_members = params[:members] if params.has_key? :members
       community.drupal_access = params[:access] if params.has_key? :access
       community.save!
+    end
+
+    def upsert_logger
+      @@upsert_logger ||= Logger.new("#{Rails.root}/log/#{Rails.env}_upsert.log")
     end
 end
