@@ -18,18 +18,18 @@ TapasRails::Application.routes.draw do
   end
 
   # constraints resque_web_constraint do
-  mount Resque::Server, at: "/resque" 
+  mount Resque::Server, at: "/resque"
   # end
 
   # Communities
   get 'communities/:did' => 'communities#show'
   post "communities/:did" => "communities#upsert"
-  delete "communities/:did" => "communities#destroy"
+  # delete "communities/:did" => "communities#destroy"
 
   # Collections
   get 'collections/:did' => 'collections#show'
   post "collections/:did" => "collections#upsert"
-  delete "collections/:did" => "collections#destroy"
+  # delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
   get 'files/:did/mods' => 'core_files#mods'
@@ -39,7 +39,7 @@ TapasRails::Application.routes.draw do
   get 'files/:did' => 'core_files#show'
   put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
   post 'files/:did' => 'core_files#upsert'
-  delete "files/:did" => "core_files#destroy"
+  # delete "files/:did" => "core_files#destroy"
 
   resources :downloads, :only => 'show'
 

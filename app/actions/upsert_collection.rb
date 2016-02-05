@@ -1,8 +1,8 @@
 class UpsertCollection
-  include Concerns::Upserter 
+  include Concerns::Upserter
 
   def execute
-    begin 
+    begin
       collection = Collection.find_by_did params[:did]
 
       if collection
@@ -10,10 +10,10 @@ class UpsertCollection
       else
         collection = Collection.new
         collection.did = params[:did]
-        collection.depositor = params[:depositor] 
+        collection.depositor = params[:depositor]
         collection.og_reference = [params[:project_did]]
         collection.save!
-        
+
         community = Community.find_by_did(params[:project_did])
         if community
           collection.community = community
@@ -25,17 +25,18 @@ class UpsertCollection
       if params[:thumbnail].present?
         collection.add_thumbnail(:filepath => params[:thumbnail])
       end
+      puts "Collection upsert for #{collection.pid} has did #{collection.did}"
 
       update_metadata!(collection)
-    rescue => e 
+    rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
-      raise e 
+      raise e
     ensure
       FileUtils.rm(params[:thumbnail]) if should_delete_file? params[:thumbnail]
     end
   end
 
-  private 
+  private
 
     def update_metadata!(collection)
       collection.mods.title = params[:title] if params.has_key? :title

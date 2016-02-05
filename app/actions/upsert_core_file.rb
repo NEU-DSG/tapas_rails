@@ -9,11 +9,11 @@ class UpsertCoreFile
   end
 
   def execute
-    begin 
+    begin
       if Did.exists_by_did?(params[:did])
-        self.core_file = CoreFile.find_by_did(params[:did]) 
+        self.core_file = CoreFile.find_by_did(params[:did])
       else
-        self.core_file = CoreFile.create(:did => params[:did], 
+        self.core_file = CoreFile.create(:did => params[:did],
                                          :depositor => params[:depositor])
       end
 
@@ -25,7 +25,7 @@ class UpsertCoreFile
         core_file.errors_display << 'Your TEI File was invalid.'\
           '  Please reupload once you have fixed all errors.'
         core_file.errors_display = core_files.errors_display + tei_errors
-        core_file.mark_upload_failed! 
+        core_file.mark_upload_failed!
         return false
       end
 
@@ -55,7 +55,7 @@ class UpsertCoreFile
         # extract files to a hash of temporary directories
         all_files = ExtractFiles.execute(params[:support_files])
         @directory = all_files[:directory]
-        
+
         thumbnail = all_files[:thumbnail]
         if thumbnail.present?
           Content::UpsertThumbnail.execute(core_file, thumbnail)
@@ -76,11 +76,12 @@ class UpsertCoreFile
       end
 
       core_file.save!
+      puts "CoreFile upsert for #{core_file.pid} has did #{core_file.did}"
 
       Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
 
       core_file.mark_upload_complete!
-    rescue => e 
+    rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
 
       core_file.set_default_display_error
@@ -101,7 +102,7 @@ class UpsertCoreFile
       end
     end
 
-    # In the case where new collection_dids and new file_types are provided, 
+    # In the case where new collection_dids and new file_types are provided,
     # overwrite both the ography types and the collection memberships this
     # record declares
     if params[:file_types].is_a?(Array) && params[:collection_dids].is_a?(Array)
@@ -115,14 +116,14 @@ class UpsertCoreFile
     # that any previous ography relationships that this core_file had
     # are updated to point at the new set of collections
     elsif params[:collection_dids].is_a?(Array)
-      core_file.collections = collections 
+      core_file.collections = collections
       CoreFile.all_ography_read_methods.each do |ography|
         if core_file.send(ography).any?
           core_file.send(:"#{ography}=", collections)
         end
       end
-    # In the case where only file_types are provided, update which 
-    # ography relationships are declared but use the collections 
+    # In the case where only file_types are provided, update which
+    # ography relationships are declared but use the collections
     # that the CoreFile is already a member of
     elsif params[:file_types].is_a?(Array)
       old_collections = core_file.collections.to_a
@@ -142,4 +143,3 @@ class UpsertCoreFile
       keys.any? { |key| params[key].present? }
     end
 end
-

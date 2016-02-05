@@ -1,23 +1,23 @@
-module ApiAccessible 
-  extend ActiveSupport::Concern 
+module ApiAccessible
+  extend ActiveSupport::Concern
 
-  included do 
+  included do
     # Disable CSRF protection...
     skip_before_action :verify_authenticity_token
 
     # But enforce credential checks on each and every request.
-    # Note that this and the csrf disable up top will have to be 
+    # Note that this and the csrf disable up top will have to be
     # reworked once tapas_rails is the actual frontend for tapas.
     before_action :authenticate
 
     # This is necessary because of apparent limitations in Drupal.
-    # Ensure that numerically keyed hashes are transformed into 
+    # Ensure that numerically keyed hashes are transformed into
     # arrays before passing them further down the chain.
     before_action :associative_array_to_array
 
-    # Certain actions in the API rely on an empty array, but we 
+    # Certain actions in the API rely on an empty array, but we
     # disallow arrays populated with blank strings.  The quick/dirty
-    # fix for this is to strip out blank strings from the array and 
+    # fix for this is to strip out blank strings from the array and
     # then send it along.
     before_action :remove_empty_strings_from_array
 
@@ -26,27 +26,27 @@ module ApiAccessible
     before_action :validate_upsert, :only => [:upsert]
   end
 
-  def show 
+  def show
     resource = get_loaded_resource
     @response[:message] = resource.as_json
     pretty_json(200) and return
   end
 
-  def destroy
-    resource = get_loaded_resource
+  # def destroy
+  #   resource = get_loaded_resource
+  #
+  #   if resource.destroy
+  #     @response[:message] = 'Resource successfully deleted'
+  #     pretty_json(200) and return
+  #   end
+  # end
 
-    if resource.destroy
-      @response[:message] = 'Resource successfully deleted'
-      pretty_json(200) and return 
-    end
-  end
-      
 
   private
 
   def load_resource_by_did
     model  = controller_path.classify.constantize
-    object = model.find_by_did(params[:did]) 
+    object = model.find_by_did(params[:did])
 
     if object
       instance_variable_set("@#{model.to_s.underscore}", object)
@@ -65,20 +65,20 @@ module ApiAccessible
   end
 
   def authenticate_api_request
-    authenticate_with_http_token do |token, options| 
+    authenticate_with_http_token do |token, options|
       hash = Digest::SHA512.hexdigest token
       return User.exists?(:encrypted_api_key => hash)
     end
   end
 
   def render_403
-    render(:json => "Access denied", :status => 403) and return 
+    render(:json => "Access denied", :status => 403) and return
   end
 
   def associative_array_to_array
     params.each do |key, value|
       if value.is_a?(Hash) && value.keys.all? { |k| is_numeric?(k) }
-        params[key] = value.values 
+        params[key] = value.values
       end
     end
   end
@@ -96,7 +96,7 @@ module ApiAccessible
     errors    = validator.validate_upsert(params)
 
     if errors.present?
-      # Build a json error response with all errors and the original 
+      # Build a json error response with all errors and the original
       # params of the request as interpreted by the server
       msg = {
         message: "Resource creation failed.  Invalid parameters!",
@@ -111,7 +111,7 @@ module ApiAccessible
     pcopy = params
     # Returns a sanitized json display of original post params
 
-    # Remove controller and action hash elems 
+    # Remove controller and action hash elems
     pcopy.except!(:controller, :action)
 
     # If original request involved a file, clean up what we display
