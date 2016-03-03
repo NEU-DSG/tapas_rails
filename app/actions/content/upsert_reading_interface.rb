@@ -29,11 +29,11 @@ module Content
       interface_type_internal = interface_type.gsub('-', '_')
       html_file = core_file.send(interface_type_internal)
 
-      unless html_file 
+      unless html_file
         html_file = ::HTMLFile.create
         html_file.html_type = interface_type_internal
         html_file.core_file = core_file
-        html_file.html_for << core_file 
+        html_file.html_for << core_file
         html_file.save!
       end
 
@@ -48,6 +48,12 @@ module Content
 
       # Add the HTML to the html_file object
       add_unique_file(html_file, :filename => filename, :blob => html)
+      upsert_logger.info("HTMLFile upsert for cf #{html_file.core_file.pid} has pid #{html_file.pid}")
+    end
+
+    private
+    def upsert_logger
+      @@upsert_logger ||= Logger.new("#{Rails.root}/log/#{Rails.env}_upsert.log")
     end
   end
 end
