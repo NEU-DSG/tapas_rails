@@ -1,15 +1,15 @@
-require 'spec_helper' 
+require 'spec_helper'
 
-describe PrepareReadingInterfaceXML do 
+describe PrepareReadingInterfaceXML do
   include FileHelpers
 
-  describe ".execute" do 
-    after(:all) { ActiveFedora::Base.delete_all } 
+  describe ".execute" do
+    after(:all) { ActiveFedora::Base.delete_all }
 
     def build_and_attach_ography(type_assignment, collection, filename)
       core = FactoryGirl.create :core_file
-      xml  = FactoryGirl.create :tei_file 
-      xml.core_file = core
+      xml  = FactoryGirl.create :tei_file
+      xml.tfc_for << core
       xml.canonize
       xml.add_file('<xml />', 'content', filename)
       xml.save!
@@ -21,24 +21,24 @@ describe PrepareReadingInterfaceXML do
       xml
     end
 
-    before(:all) do 
+    before(:all) do
       @core_file = FactoryGirl.create :core_file
-      @community = FactoryGirl.create :community 
-      @collection = FactoryGirl.create :collection 
+      @community = FactoryGirl.create :community
+      @collection = FactoryGirl.create :collection
 
-      @core_file.collections << @collection 
-      @collection.community = @community 
+      @core_file.collections << @collection
+      @collection.community = @community
 
-      # Create page images 
-      @pimg1, @pimg2 = FactoryGirl.create_list(:image_master_file, 2) 
+      # Create page images
+      @pimg1, @pimg2 = FactoryGirl.create_list(:image_master_file, 2)
       @pimg1.page_image_for << @core_file
       @pimg1.add_file('picture', 'content', 'image_one.jpg')
-      @pimg2.page_image_for << @core_file 
-      @pimg2.add_file('picture', 'content', 'image_two.jpg') 
+      @pimg2.page_image_for << @core_file
+      @pimg2.add_file('picture', 'content', 'image_two.jpg')
 
       @xml  = Nokogiri::XML(File.read(fixture_file 'tei_with_refs.xml'))
 
-      @biblio = build_and_attach_ography(:bibliography_for=, 
+      @biblio = build_and_attach_ography(:bibliography_for=,
                                          @collection, 'bibliography.xml')
       @other = build_and_attach_ography(:otherography_for=,
                                         @collection, 'otherography.xml')
@@ -70,7 +70,7 @@ describe PrepareReadingInterfaceXML do
       expect(actual).to eq expected
     end
 
-    it 'rewrites the relative url in the first graphic element' do 
+    it 'rewrites the relative url in the first graphic element' do
       expected = map.download_url(@pimg1)
       actual = @xml.xpath('//tei:graphic[2]/@url', tei_namespace).to_s
       expect(actual).to eq expected

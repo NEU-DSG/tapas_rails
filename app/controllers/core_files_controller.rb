@@ -2,19 +2,19 @@ class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
 
-  configure_mods_display do 
-    identifier { ignore! } 
+  configure_mods_display do
+    identifier { ignore! }
   end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
 
-  def teibp 
+  def teibp
     e = "Could not find TEI Boilerplate representation of this object.  "\
       "Please retry in a few minutes."
     render_content_asset @core_file.teibp, e
   end
 
-  def tapas_generic 
+  def tapas_generic
     e = "Could not find a Tapas Generic representation of this object.  "\
       "Please retry in a few minutes."
     render_content_asset @core_file.tapas_generic, e
@@ -37,7 +37,7 @@ class CoreFilesController < ApplicationController
     pretty_json(200) and return
   end
 
-  def show 
+  def show
     @core_file = CoreFile.find_by_did(params[:did])
 
     if @core_file.upload_status.blank?
@@ -56,14 +56,14 @@ class CoreFilesController < ApplicationController
 
   def upsert
     begin
-      # Step 1: Find or create the CoreFile Object - 
-      # we do this here so that we have a stub record to 
-      # attach error messages & status tracking to. 
+      # Step 1: Find or create the CoreFile Object -
+      # we do this here so that we have a stub record to
+      # attach error messages & status tracking to.
       if CoreFile.exists_by_did?(params[:did])
         core_file = CoreFile.find_by_did(params[:did])
-        core_file.mark_upload_in_progress! 
+        core_file.mark_upload_in_progress!
       else
-        core_file = CoreFile.create(did: params[:did], 
+        core_file = CoreFile.create(did: params[:did],
                                     depositor: params[:depositor])
         core_file.mark_upload_in_progress!
       end
@@ -74,13 +74,13 @@ class CoreFilesController < ApplicationController
       end
 
       if params[:support_files]
-        params[:support_files] = create_temp_file params[:support_files] 
+        params[:support_files] = create_temp_file params[:support_files]
       end
 
       # Step 2: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload
-      if params[:tei] 
+      if params[:tei]
         opts = {
           :authors => params[:display_authors],
           :contributors => params[:display_contributors],
@@ -91,16 +91,16 @@ class CoreFilesController < ApplicationController
         @mods = Exist::GetMods.execute(params[:tei], opts)
       end
 
-      # Step 3: Kick off an upsert job 
+      # Step 3: Kick off an upsert job
       job = TapasObjectUpsertJob.new params
-      TapasRails::Application::Queue.push job 
+      TapasRails::Application::Queue.push job
 
       # Step 4: Respond with MODS if it is available, otherwise send a generic
       # success message
       if @mods
-        render :xml => @mods, :status => 202 
+        render :xml => @mods, :status => 202
       else
-        @response[:message] = "Job processing" 
+        @response[:message] = "Job processing"
         pretty_json(202) and return
       end
     rescue => e
@@ -115,9 +115,9 @@ class CoreFilesController < ApplicationController
 
   def render_content_asset(asset, error_msg)
     if asset && asset.content.content.present?
-      render :text => asset.content.content 
-    else 
-      render :text => error_msg, :status => 404 
+      render :text => asset.content.content
+    else
+      render :text => error_msg, :status => 404
     end
-  end    
+  end
 end

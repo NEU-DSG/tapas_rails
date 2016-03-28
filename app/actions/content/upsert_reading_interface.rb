@@ -27,12 +27,18 @@ module Content
       ZipContentValidator.tei file_path
 
       interface_type_internal = interface_type.gsub('-', '_')
-      html_file = core_file.send(interface_type_internal)
+      html_file = nil
+      # html_file = core_file.send(interface_type_internal)
+      core_file.html_files.each do |h|
+        if h.html_type == interface_type
+          html_file = h
+        end
+      end
 
       unless html_file
         html_file = ::HTMLFile.create
         html_file.html_type = interface_type_internal
-        html_file.core_file = core_file
+        # html_file.core_file = core_file
         html_file.html_for << core_file
         html_file.save!
       end
@@ -48,7 +54,7 @@ module Content
 
       # Add the HTML to the html_file object
       add_unique_file(html_file, :filename => filename, :blob => html)
-      upsert_logger.info("HTMLFile upsert for cf #{html_file.core_file.pid} has pid #{html_file.pid}")
+      upsert_logger.info("HTMLFile upsert for cf #{core_file.pid} has pid #{html_file.pid}")
     end
 
     private
