@@ -160,8 +160,10 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     models_query = RSolr.escape(models_stringified)
     full_self_id = RSolr.escape("info:fedora/#{self.pid}")
 
-    query_result = ActiveFedora::SolrService.query("active_fedora_model_ssi:(#{models_stringified}) AND (is_part_of_ssim:#{full_self_id} OR is_tfc_for_ssim:#{full_self_id} OR is_html_for_ssim:#{full_self_id} OR is_page_image_for_ssim:#{full_self_id})")
+    query_string = "active_fedora_model_ssi:(#{models_stringified}) AND (is_part_of_ssim:#{full_self_id} OR is_tfc_for_ssim:#{full_self_id} OR is_html_for_ssim:#{full_self_id} OR is_page_image_for_ssim:#{full_self_id})"
 
+    row_count = ActiveFedora::SolrService.count(query_string)
+    query_result = ActiveFedora::SolrService.query(query_string, :rows => row_count)
     return query_result.map { |r| r["active_fedora_model_ssi"].constantize.find(r["id"]) }
   end
 
