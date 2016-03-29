@@ -56,10 +56,10 @@ class UpsertCoreFile
         all_files = ExtractFiles.execute(params[:support_files])
         @directory = all_files[:directory]
 
-        thumbnail = all_files[:thumbnail]
-        if thumbnail.present?
-          Content::UpsertThumbnail.execute(core_file, thumbnail)
-        end
+        # thumbnail = all_files[:thumbnail]
+        # if thumbnail.present?
+        #   Content::UpsertThumbnail.execute(core_file, thumbnail)
+        # end
 
         page_imgs = all_files[:page_images]
         if page_imgs.present?

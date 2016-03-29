@@ -128,13 +128,13 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   end
 
   def thumbnail
+    thumb = nil
     self.content_objects.each do |c|
-      if c.class == 'ImageThumbnailFile'
-        return c
-      else
-        return nil
+      if c.class == "ImageThumbnailFile"
+        thumb = c
       end
     end
+    return thumb
   end
 
   # def tfc

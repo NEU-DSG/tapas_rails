@@ -21,13 +21,17 @@ describe SupportFileMap do
   describe '.build_map' do
     after(:all) { ActiveFedora::Base.delete_all }
 
-    def attach_ography(ography, type, collection)
+    def create_ography(type, collection)
       core_file = FactoryGirl.create :core_file
-
+      core_file.collections = [collection]
       assignment = :"#{type}_for="
       filename = "#{type}.xml"
+      core_file.send(assignment, [collection])
+      core_file.save!
 
+      ography = TEIFile.create(:depositor => 'system')
       ography.canonize
+      ography.tfc_for << core_file
       ography.add_file('<xml>x</xml>', 'content', filename)
       # ography.core_file = core_file
       if type == "personography"
@@ -44,9 +48,7 @@ describe SupportFileMap do
         core_file.odd_file_for << collection
       end
       ography.save!
-
-      core_file.send(assignment, [collection])
-      core_file.save!
+      return ography
     end
 
     def attach_page_image(page_image, filename)
@@ -67,9 +69,6 @@ describe SupportFileMap do
       # Create three unique image files at the file scope
       @one, @two, @three = FactoryGirl.create_list(:image_master_file, 3)
 
-      # Create @three unique xml files at the collection
-      @four, @five, @six = FactoryGirl.create_list(:tei_file, 3)
-
       # Create an image file at the collection scope that will conflict with @two
       @seven = FactoryGirl.create :image_master_file
 
@@ -77,14 +76,14 @@ describe SupportFileMap do
       attach_page_image(@two, 'file_two.png')
       attach_page_image(@three, 'file_three.jpg')
 
-      attach_ography(@four, 'personography', @collection)
-      attach_ography(@five, 'otherography', @collection)
-      attach_ography(@six, 'bibliography', @collection2)
-
-      attach_ography(@seven, 'otherography', @collection2)
+      @four = create_ography('personography', @collection)
+      @five = create_ography('otherography', @collection)
+      @six = create_ography('bibliography', @collection2)
+      @seven = create_ography('otherography', @collection2)
       @seven.add_file('test_content', 'content', 'file_two.png')
       @seven.save!
-
+      @collection.reload
+      @core_file.reload
       @map = SupportFileMap.build_map(@core_file)
     end
 

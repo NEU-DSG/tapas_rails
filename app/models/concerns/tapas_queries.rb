@@ -65,7 +65,6 @@ module TapasQueries
 
       tei_files = ActiveFedora::SolrService.query(new_query.join(' OR '))
       tei_files.map { |x| TEIFile.find("#{x['id']}") }
-      # all_core_files.map { |x| CoreFile.find("#{x['id']}") }
   end
 
   private
