@@ -1,9 +1,9 @@
 module Validations
   extend ActiveSupport::Concern
 
-  included do 
+  included do
     attr_reader :params
-    attr_accessor :errors 
+    attr_accessor :errors
 
     def initialize(params)
       @params = params
@@ -20,7 +20,7 @@ module Validations
     right_class = klass.exists_by_did?(params[:did])
 
     if did_in_use && !right_class
-      self.errors << "Attempted to reuse a drupal id" 
+      self.errors << "Attempted to reuse a drupal id"
     elsif !did_in_use
       required_params.each do |required_param|
         unless params[required_param].present?
@@ -47,13 +47,13 @@ module Validations
 
   def validate_string(param)
     unless params[param].is_a?(String)
-      self.errors << "#{param} must be some string" 
+      self.errors << "#{param} must be some string"
     end
   end
 
   def validate_nonblank_string(param)
     unless params[param].present? && params[param].is_a?(String)
-      self.errors << "#{param} must be nonblank string" 
+      self.errors << "#{param} must be nonblank string"
     end
   end
 
@@ -61,8 +61,8 @@ module Validations
     valid_classes = [ActionDispatch::Http::UploadedFile, Rack::Test::UploadedFile]
     param_class = params[param].class
     if !(param_class.in? valid_classes)
-      self.errors << "#{param} must be a file upload" 
-    elsif !(params[param].original_filename.split('.').last.in? valid_extensions)
+      self.errors << "#{param} must be a file upload"
+    elsif !(params[param].original_filename.split('.').last.downcase.in? valid_extensions)
       all_valid_extensions = valid_extensions.join(' or ')
       errors << "#{param} must be file with extension: #{all_valid_extensions}"
     end
@@ -70,7 +70,7 @@ module Validations
 
   def validate_array_of_strings(param)
     if !(params[param].is_a? Array)
-      self.errors << "#{param} expects an array" 
+      self.errors << "#{param} expects an array"
     elsif !(params[param].all? { |p| p.is_a?(String) && p.present? })
       self.errors << "#{param} contained blank or non-string values"
     end
