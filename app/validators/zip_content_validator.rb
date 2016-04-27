@@ -1,18 +1,18 @@
 # Handles validating the content that we expect to be within zip files
-# handed to the server during CoreFile creation. 
-class ZipContentValidator 
+# handed to the server during CoreFile creation.
+class ZipContentValidator
 
   def self.mods(mods_path)
     validate_extension(mods_path, %w(xml), "MODS metadata")
-    xml = load_and_validate_xml mods_path 
+    xml = load_and_validate_xml mods_path
 
     xsd_path = "#{Rails.root}/lib/assets/xsd/mods-3-5.xsd"
     xsd = Nokogiri::XML::Schema(File.read xsd_path)
 
     errors = []
-    xsd.validate(xml).each do |error| 
+    xsd.validate(xml).each do |error|
       errors << error.message
-    end 
+    end
 
     if errors.any?
       raise Exceptions::InvalidZipError.new \
@@ -26,29 +26,29 @@ class ZipContentValidator
   end
 
   def self.tei(tei_path)
-    validate_extension(tei_path, %w(xml), "TEI File") 
+    validate_extension(tei_path, %w(xml), "TEI File")
     xml = load_and_validate_xml tei_path
     validate_tei(xml, tei_path)
   end
 
   def self.support_files(support_file_paths)
-    support_file_paths.each do |sf| 
+    support_file_paths.each do |sf|
       validate_extension(sf, %w(jpeg jpg png), "Page Image File")
     end
   end
 
   private
-    def self.validate_tei(xml, path) 
-      xsl_path = "#{Rails.root}/lib/assets/xslt/is_tei.xsl" 
+    def self.validate_tei(xml, path)
+      xsl_path = "#{Rails.root}/lib/assets/xslt/is_tei.xsl"
       template = Nokogiri::XSLT(File.read(xsl_path))
-      results = template.transform(xml) 
+      results = template.transform(xml)
 
       errors = []
-      
-      results.xpath("p").each do |error| 
+
+      results.xpath("p").each do |error|
         errors << error.text
       end
-      
+
       unless errors.empty?
         raise Exceptions::InvalidZipError.new "TEI or TFC file at #{path} did " \
           "not validate as TEI!  Errors were:\n #{errors.join("\n")}"
@@ -56,8 +56,8 @@ class ZipContentValidator
     end
 
     def self.validate_extension(path, valid_exts, file_type)
-      extension = path.split('.').last
-      unless valid_exts.include? extension 
+      extension = path.split('.').last.downcase
+      unless valid_exts.include? extension
         raise Exceptions::InvalidZipError.new "Expected #{file_type} received"\
           "through zipfile to have one of the following extensions: "\
           "#{valid_exts}.  Instead it had extension #{extension}."
@@ -66,9 +66,9 @@ class ZipContentValidator
 
     def self.load_and_validate_xml(path)
       begin
-        x = Nokogiri::XML(File.open(path)) do |config| 
+        x = Nokogiri::XML(File.open(path)) do |config|
           config.strict.nonet
-        end 
+        end
       rescue Nokogiri::XML::SyntaxError => error
         raise Exceptions::InvalidZipError.new "#{path} was invalid! "\
           "Error was: #{error.message}"
