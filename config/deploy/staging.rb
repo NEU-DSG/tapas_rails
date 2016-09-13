@@ -4,9 +4,9 @@
 # is considered to be the first unless any hosts have the primary
 # property set.  Don't declare `role :all`, it's a meta role.
 
-# role :app, %w{tapas.neu.edu}
-# role :web, %w{tapas.neu.edu}
-# role :db,  %w{tapas.neu.edu}
+# role :app, %w{tapasdev.neu.edu}
+# role :web, %w{tapasdev.neu.edu}
+# role :db,  %w{tapasdev.neu.edu}
 
 
 # Extended Server Syntax
@@ -15,7 +15,7 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
-server 'tapas.neu.edu', user: 'tapas_rails', roles: %w{web app db resque_worker resque_scheduler}
+server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db resque_worker resque_scheduler}
 
 set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
 
@@ -48,7 +48,7 @@ set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
 
 set :deploy_to, '/home/tapas_rails/tapas_rails'
 set :branch, 'develop'
-set :rails_env, 'production'
+set :rails_env, 'staging'
 
 set :resque_log_file, 'log/resque.log'
 
