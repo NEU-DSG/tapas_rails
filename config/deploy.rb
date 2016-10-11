@@ -40,8 +40,8 @@ set :git_strategy, Capistrano::Git::SubmoduleStrategy
 # set :keep_releases, 5
 
 desc "Verify write access on all servers"
-task :check_write_permissions do 
-  on roles(:all) do |host| 
+task :check_write_permissions do
+  on roles(:all) do |host|
     if test("[ -w #{fetch(:deploy_to)} ]")
       info "#{fetch(:deploy_to)} is writable on #{host}"
     else
@@ -59,15 +59,15 @@ namespace :deploy do
   end
 
   desc 'Copy over application.yml from deploy users home directory'
-  task :copy_figaro_conf do 
-    on roles(:app), in: :sequence, wait: 5 do 
-      execute "cp /home/tapas_rails/application.yml #{release_path}/config/" 
+  task :copy_figaro_conf do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute "cp ~/tapas_rails/application.yml #{release_path}/config/" 
     end
   end
 
   desc 'Create the API user'
-  task :create_api_user do 
-    on roles(:app), in: :sequence, wait: 5 do 
+  task :create_api_user do
+    on roles(:app), in: :sequence, wait: 5 do
       execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)}"\
               " ~/.rvm/bin/rvm default do bundle exec thor"\
               " tapas_rails:create_api_user"
@@ -75,9 +75,9 @@ namespace :deploy do
   end
 
   desc 'Create a release specific tmp directory'
-  task :create_tmp_dir do 
-    on roles(:all), in: :sequence, wait: 5 do 
-      execute "cd #{release_path} && mkdir tmp" 
+  task :create_tmp_dir do
+    on roles(:all), in: :sequence, wait: 5 do
+      execute "cd #{release_path} && mkdir tmp"
     end
   end
 

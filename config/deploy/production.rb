@@ -46,7 +46,7 @@ set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
 #   }
 
 
-set :deploy_to, '/home/tapas_rails/tapas_rails'
+set :deploy_to, '/export/home/tapas_rails/tapas_rails'
 set :branch, 'develop'
 set :rails_env, 'production'
 
