@@ -2,6 +2,7 @@
 lock '3.2.1'
 
 set :application, 'tapas_rails'
+set :stages, ["staging", "production"]
 set :repo_url, 'https://github.com/neu-dsg/tapas_rails'
 
 # Ensure that the Rails environment is always loaded for Resque workers
@@ -61,7 +62,7 @@ namespace :deploy do
   desc 'Copy over application.yml from deploy users home directory'
   task :copy_figaro_conf do
     on roles(:app), in: :sequence, wait: 5 do
-      execute "cp ~/tapas_rails/application.yml #{release_path}/config/" 
+      execute "cp ~/tapas_rails/application.yml #{release_path}/config/"
     end
   end
 
