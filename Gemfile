@@ -10,7 +10,7 @@ gem 'sqlite3'
 gem 'rubyzip'
 
 # Use passenger as the application server
-gem 'passenger', '5.0.15', require: "phusion_passenger/rack_handler"
+gem 'passenger', '5.0.30', require: "phusion_passenger/rack_handler"
 
 # Use mysql2 for the staging environment
 gem 'mysql2'
