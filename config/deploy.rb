@@ -62,7 +62,7 @@ namespace :deploy do
   desc 'Copy over application.yml from deploy users home directory'
   task :copy_figaro_conf do
     on roles(:app), in: :sequence, wait: 5 do
-      execute "cp ~/tapas_rails/application.yml #{release_path}/config/"
+      execute "cp ~/application.yml #{release_path}/config/"
     end
   end
 
