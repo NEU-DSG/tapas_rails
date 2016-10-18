@@ -103,3 +103,5 @@ end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
+
+gem "rsolr", "~> 1.0.6"

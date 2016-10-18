@@ -1,10 +1,14 @@
 class ApplicationController < ActionController::Base
-  # Adds a few additional behaviors into the application controller 
-   include Blacklight::Controller
-  # Please be sure to impelement current_user and user_session. Blacklight depends on 
-  # these methods in order to perform user specific actions. 
+  # Adds a few additional behaviors into the application controller
+  include Blacklight::Controller
+  layout 'blacklight'
 
-  # Uncomment this once there is a frontend. 
+  # Adds a few additional behaviors into the application controller
+   include Blacklight::Controller
+  # Please be sure to impelement current_user and user_session. Blacklight depends on
+  # these methods in order to perform user specific actions.
+
+  # Uncomment this once there is a frontend.
   # layout 'blacklight'
 
   # Prevent CSRF attacks by raising an exception.
@@ -15,8 +19,8 @@ class ApplicationController < ActionController::Base
 
   def create_temp_file(file)
     fpath = file.path
-    fname = file.original_filename 
-    
+    fname = file.original_filename
+
     tmpdir = Rails.root.join("tmp", "#{Time.now.to_i}")
     FileUtils.mkdir_p(tmpdir)
     tmpfile = Rails.root.join(tmpdir, fname)
@@ -30,5 +34,9 @@ class ApplicationController < ActionController::Base
 
   def create_response_object
     @response ||= {}
+  end
+
+  def layout_name
+    "application"
   end
 end
