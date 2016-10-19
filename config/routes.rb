@@ -24,6 +24,7 @@ TapasRails::Application.routes.draw do
   # Communities
   get 'communities/:did' => 'communities#show'
   post "communities/:did" => "communities#upsert"
+  get 'communities' => 'communities#index'
   # delete "communities/:did" => "communities#destroy"
 
   # Collections
