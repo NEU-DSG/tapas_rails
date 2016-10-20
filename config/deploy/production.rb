@@ -52,6 +52,7 @@ set :rails_env, 'production'
 
 set :resque_log_file, 'log/resque.log'
 
+set :passenger_environment_variables, "/export/home/tapas_rails/tapas_rails/shared/bundle/ruby/2.0.0/gems/passenger-5.0.15/bin:$PATH"
 set :passenger_in_gemfile, true
 set :passenger_restart_options, -> { "#{current_path} --ignore-app-not-running" }
 
