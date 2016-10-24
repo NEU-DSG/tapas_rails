@@ -22,6 +22,7 @@ TapasRails::Application.routes.draw do
   # end
 
   # Communities
+  resources :communities
   get 'communities/:did' => 'communities#show'
   post "communities/:did" => "communities#upsert"
   get 'communities' => 'communities#index'
