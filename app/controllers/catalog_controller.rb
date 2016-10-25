@@ -189,6 +189,10 @@ class CatalogController < ApplicationController
     config.spell_max = 5
 
     config.index.document_actions.delete(:bookmark)
+    config.show.document_actions.delete(:citation)
+    config.show.document_actions.delete(:bookmark)
+    config.show.document_actions.delete(:email)
+    config.show.document_actions.delete(:sms)
   end
 
 end
