@@ -42,12 +42,12 @@ module TapasRails
 
       def title=(string)
         if_mods_exists { self.mods.title = string }
-        if_DC_exists { self.DC.nu_title = string }
+        if_DC_exists { self.DC.title = string }
       end
 
       def title
         if_mods_exists { return self.mods.title.first }
-        if_DC_exists { return self.DC.nu_title.first }
+        if_DC_exists { return self.DC.title.first }
       end
 
       def non_sort=(string)
@@ -59,7 +59,7 @@ module TapasRails
       end
 
       def dc_type=(string)
-        if_DC_exists { self.DC.nu_type = string }
+        if_DC_exists { self.DC.type = string }
       end
 
       def mods_type=(string)
@@ -72,24 +72,24 @@ module TapasRails
 
       def identifier=(string)
         if_mods_exists { self.mods.identifier = string }
-        if_DC_exists { self.DC.nu_identifier = string }
+        if_DC_exists { self.DC.identifier = string }
       end
 
       def identifier
         if_mods_exists { return self.mods.identifier.first }
-        if_DC_exists { return self.DC.nu_identifier.first }
+        if_DC_exists { return self.DC.identifier.first }
       end
 
       def description=(string)
         if !string.blank?
           if_mods_exists { self.mods.description = string }
-          if_DC_exists { self.DC.nu_description = string }
+          if_DC_exists { self.DC.description = string }
         end
       end
 
       def description
         if_mods_exists { return self.mods.abstract.first }
-        if_DC_exists { return self.DC.nu_description.first }
+        if_DC_exists { return self.DC.description.first }
       end
 
       def date=(string)
@@ -205,19 +205,19 @@ module TapasRails
     private
 
       def if_mods_exists(&block)
-        verify_datastream_carefree('mods', ModsDatastream, &block)
+        verify_datastream_carefree('mods', CerberusCore::Datastreams::ModsDatastream, &block)
       end
 
       def if_mods_exists_strict(&block)
-        verify_datastream_strict('mods', ModsDatastream, &block)
+        verify_datastream_strict('mods', CerberusCore::Datastreams::ModsDatastream, &block)
       end
 
       def if_DC_exists(&block)
-        verify_datastream_carefree('DC', DublinCoreDatastream, &block)
+        verify_datastream_carefree('DC', CerberusCore::Datastreams::DublinCoreDatastream, &block)
       end
 
       def if_DC_exists_strict(&block)
-        verify_datastream_strict('DC', DublinCoreDatastream, &block)
+        verify_datastream_strict('DC', CerberusCore::Datastreams::DublinCoreDatastream, &block)
       end
 
       def if_properties_exists_strict(&block)
