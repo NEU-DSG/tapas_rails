@@ -31,4 +31,30 @@ class CommunitiesController < CatalogController
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << query
   end
+
+  def new
+    @page_title = "Create New Community"
+    @community = Community.new
+  end
+
+  def create
+    @community = Community.new(params[:community])
+    @community.did = @community.pid
+    @community.save!
+    @community.match_dc_to_mods
+    redirect_to communities_path and return
+  end
+
+  def edit
+    @community = Community.find(params[:id])
+    @page_title = "Edit #{@community.title}"
+  end
+
+  def update
+    @community = Community.find(params[:id])
+    @community.update_attributes(params[:community])
+    @community.match_dc_to_mods
+    @community.save!
+    redirect_to "/catalog/#{@community.pid}"
+  end
 end
