@@ -8,6 +8,7 @@ class Community < CerberusCore::BaseModels::Community
   include TapasRails::MetadataAssignment
 
   before_save :ensure_unique_did
+  before_save :match_dc_to_mods
 
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
@@ -18,7 +19,7 @@ class Community < CerberusCore::BaseModels::Community
   has_metadata :name => "properties", :type => PropertiesDatastream
 
   has_attributes :project_members, datastream: "properties", multiple: true
-  has_attributes :title, datastream: "mods"
+  has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
 
   # Look up or create the root community of the graph
@@ -47,7 +48,9 @@ class Community < CerberusCore::BaseModels::Community
   end
 
   def match_dc_to_mods
-    self.DC.title = self.mods.title.first
-    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    # self.DC.title = self.mods.title.first
+    # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    self.mods.title = self.DC.title.first
+    self.mods.abstract = self.DC.description.first
   end
 end
