@@ -1,0 +1,27 @@
+= form_for @community do |f|
+  %fieldset
+    .row-fluid
+      .span8
+        = f.label :title, "Title", class: "control-label"
+        = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "input-block-level", placeholder: "University Libraries"
+        = f.label :description, "Description"
+        = f.text_area :description, name: 'community[description][]', class: "input-block-level", rows: 5
+    -# %hr
+    -# %legend Permissions
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :mass_permissions, "Mass Permissions"
+    -#       = f.select :mass_permissions, options_for_select(['public', 'private'], @community.mass_permissions)
+    -# %hr
+    -# %legend Thumbnail (Optional)
+    -# - if !@community.properties.thumbnail_list[0].blank?
+    -#   =image_tag @community.properties.thumbnail_list[0]
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :thumbnail, "Thumbnail"
+    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

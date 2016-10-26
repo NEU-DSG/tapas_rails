@@ -8,7 +8,7 @@ Bundler.require(*Rails.groups)
 
 module TapasRails
   class Application < Rails::Application
-    
+
     config.generators do |g|
       g.test_framework :rspec, :spec => true
     end
@@ -20,12 +20,12 @@ module TapasRails
 
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
-    # Pid to use for the Collection that stores TEI files 
+    # Pid to use for the Collection that stores TEI files
     # that reference non-existant collections.
     config.phantom_collection_pid = "tap:phantom"
 
     # Pid to use for the Project that is the graph root for
-    # the tapas repository.  Note that this doesn't map to any 
+    # the tapas repository.  Note that this doesn't map to any
     # project object that exists in the drupal head.
     config.tap_root = "tap:1"
 

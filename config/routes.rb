@@ -1,10 +1,10 @@
 TapasRails::Application.routes.draw do
 
+  root to: "catalog#index"
+  blacklight_for :catalog
   # At some point we'll want all this, but I'm going to disable these routes
   # until we're ready to migrate to 100% Hydra-Head usage for tapas.
-  # root :to => "catalog#index"
-  # blacklight_for :catalog
-  # devise_for :users
+  devise_for :users
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -22,26 +22,32 @@ TapasRails::Application.routes.draw do
   # end
 
   # Communities
+  resources :communities
   get 'communities/:did' => 'communities#show'
   post "communities/:did" => "communities#upsert"
-  # delete "communities/:did" => "communities#destroy"
+  get 'communities' => 'communities#index'
 
   # Collections
-  get 'collections/:did' => 'collections#show'
-  post "collections/:did" => "collections#upsert"
-  # delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
-  get 'files/:did/mods' => 'core_files#mods'
-  get 'files/:did/teibp' => 'core_files#teibp'
-  get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
-  get 'files/:did/tei' => 'core_files#tei'
-  get 'files/:did' => 'core_files#show'
-  put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
-  post 'files/:did' => 'core_files#upsert'
-  # delete "files/:did" => "core_files#destroy"
 
   resources :downloads, :only => 'show'
+
+  namespace :api do
+    get 'communities/:did' => 'communities#api_show'
+    # delete "communities/:did" => "communities#destroy"
+    get 'collections/:did' => 'collections#api_show'
+    post "collections/:did" => "collections#upsert"
+    # delete "collections/:did" => "collections#destroy"
+    get 'files/:did/mods' => 'core_files#mods'
+    get 'files/:did/teibp' => 'core_files#teibp'
+    get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
+    get 'files/:did/tei' => 'core_files#tei'
+    get 'files/:did' => 'core_files#api_show'
+    put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
+    post 'files/:did' => 'core_files#upsert'
+    # delete "files/:did" => "core_files#destroy"
+  end
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
