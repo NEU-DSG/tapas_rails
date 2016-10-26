@@ -101,6 +101,7 @@ class CatalogController < ApplicationController
     # solr fields to be displayed in the show (single result) view
     #   The ordering of the field names is the order of the display
     config.add_show_field 'title_info_title_ssi', :label => 'Title'
+    config.add_show_field 'abstract_tesim', :label => 'Description'
     # config.add_show_field 'title_vern_display', :label => 'Title'
     # config.add_show_field 'subtitle_display', :label => 'Subtitle'
     # config.add_show_field 'subtitle_vern_display', :label => 'Subtitle'
