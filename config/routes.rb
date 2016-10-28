@@ -26,27 +26,27 @@ TapasRails::Application.routes.draw do
   get 'communities/:did' => 'communities#show'
   post "communities/:did" => "communities#upsert"
   get 'communities' => 'communities#index'
+  # delete "communities/:did" => "communities#destroy"
 
   # Collections
+  get 'collections/:did' => 'collections#api_show'
+  post "collections/:did" => "collections#upsert"
+  # delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
+  get 'files/:did/mods' => 'core_files#mods'
+  get 'files/:did/teibp' => 'core_files#teibp'
+  get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
+  get 'files/:did/tei' => 'core_files#tei'
+  get 'files/:did' => 'core_files#api_show'
+  put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
+  post 'files/:did' => 'core_files#upsert'
+  # delete "files/:did" => "core_files#destroy"
 
   resources :downloads, :only => 'show'
 
   namespace :api do
     get 'communities/:did' => 'communities#api_show'
-    # delete "communities/:did" => "communities#destroy"
-    get 'collections/:did' => 'collections#api_show'
-    post "collections/:did" => "collections#upsert"
-    # delete "collections/:did" => "collections#destroy"
-    get 'files/:did/mods' => 'core_files#mods'
-    get 'files/:did/teibp' => 'core_files#teibp'
-    get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
-    get 'files/:did/tei' => 'core_files#tei'
-    get 'files/:did' => 'core_files#api_show'
-    put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
-    post 'files/:did' => 'core_files#upsert'
-    # delete "files/:did" => "core_files#destroy"
   end
 
   # Example of regular route:
