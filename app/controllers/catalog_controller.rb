@@ -180,6 +180,10 @@ class CatalogController < ApplicationController
     # whether the sort is ascending or descending (it must be asc or desc
     # except in the relevancy case).
     config.add_sort_field 'score desc', :label => 'relevance'
+    config.add_sort_field 'title_info_title_ssi asc, score desc', :label => 'title a-z'
+    config.add_sort_field 'title_info_title_ssi desc, score desc', :label => 'title z-a'
+    config.add_sort_field 'system_create_dtsi desc', :label => 'most recently added'
+    config.add_sort_field 'system_modified_dtsi desc', :label => 'most recently updated'
     # config.add_sort_field 'score desc, pub_date_sort desc, title_sort asc', :label => 'relevance'
     # config.add_sort_field 'pub_date_sort desc, title_sort asc', :label => 'year'
     # config.add_sort_field 'author_sort asc, title_sort asc', :label => 'author'
