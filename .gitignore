@@ -16,7 +16,7 @@
 /tmp
 
 # Ignore everything associated with jetty
-#/jetty
+/jetty
 
 # Ignore Figaro generated configuration file
 /config/application.yml
