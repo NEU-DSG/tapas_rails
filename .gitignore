@@ -15,10 +15,10 @@
 /log/*.log
 /tmp
 
-# Ignore everything associated with jetty 
+# Ignore everything associated with jetty
 /jetty
 
-# Ignore Figaro generated configuration file 
+# Ignore Figaro generated configuration file
 /config/application.yml
 
 # Ignore Redis generated dump file
@@ -45,7 +45,7 @@ config/secrets.yml
 
 /vendor/cache
 
-# Ignore swp files 
+# Ignore swp files
 **.swp
 
 .DS_Store

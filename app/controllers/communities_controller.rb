@@ -1,4 +1,5 @@
 class CommunitiesController < CatalogController
+  include ApiAccessible
   self.copy_blacklight_config_from(CatalogController)
 
   def upsert
@@ -25,6 +26,9 @@ class CommunitiesController < CatalogController
     render 'shared/index'
   end
 
+  # def show #inherited from catalog controller
+  # end
+
   def communities_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
     query = "has_model_ssim:\"#{model_type}\""
@@ -41,8 +45,7 @@ class CommunitiesController < CatalogController
     @community = Community.new(params[:community])
     @community.did = @community.pid
     @community.save!
-    @community.match_dc_to_mods
-    redirect_to communities_path and return
+    redirect_to @community and return
   end
 
   def edit
@@ -53,8 +56,7 @@ class CommunitiesController < CatalogController
   def update
     @community = Community.find(params[:id])
     @community.update_attributes(params[:community])
-    @community.match_dc_to_mods
     @community.save!
-    redirect_to "/catalog/#{@community.pid}"
+    redirect_to @community and return
   end
 end
