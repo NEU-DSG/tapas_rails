@@ -1,18 +1,26 @@
 = form_for @community do |f|
   %fieldset
-    .row-fluid
-      .span4
-        = f.label :title, "Title", class: "control-label"
-      .span4
-        = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "input-block-level", placeholder: "University Libraries"
-    .row-fluid
-      .span8
-        = f.label :description, "Description"
-        = f.text_area :description, name: 'community[description][]', class: "input-block-level", rows: 5
-    .row-fluid
-      .span8
-        = f.label :mass_permissions, "visibility"
-        = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+    .container-fluid
+      .row
+        .col-md-1
+          = f.label :title, "Title", class: "control-label"
+        .col-md-4
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "input-block-level", placeholder: "University Libraries"
+      .row
+        .col-md-1
+          = f.label :description, "Description"
+        .col-md-4
+          = f.text_area :description, name: 'community[description][]', class: "input-block-level", rows: 5
+      .row
+        .col-md-1
+          = f.label :thumbnail, "Thumbnail"
+        .col-md-4
+          = f.text_field :thumbnail, name: 'community[thumbnail][]', class: "input-block-level"
+      .row
+        .col-md-1
+          = f.label :mass_permissions, "visibility"
+        .col-md-4
+          = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
     -# %hr
     -# %legend Permissions
     -# %fieldset
