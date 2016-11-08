@@ -8,6 +8,8 @@
     <%= render 'home' %>
     <%= render 'shared/sitelinks_search_box' %>
   <% else %>
-    <%= render 'search_results' %>
+  	<p>link</p>
+    
+    <p><%= link_to "Add new Book", {:action => 'new' }%></p>
   <% end %>
 </div>

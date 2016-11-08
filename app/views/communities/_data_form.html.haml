@@ -1,11 +1,18 @@
 = form_for @community do |f|
   %fieldset
     .row-fluid
-      .span8
+      .span4
         = f.label :title, "Title", class: "control-label"
+      .span4
         = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "input-block-level", placeholder: "University Libraries"
+    .row-fluid
+      .span8
         = f.label :description, "Description"
         = f.text_area :description, name: 'community[description][]', class: "input-block-level", rows: 5
+    .row-fluid
+      .span8
+        = f.label :mass_permissions, "visibility"
+        = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
     -# %hr
     -# %legend Permissions
     -# %fieldset
