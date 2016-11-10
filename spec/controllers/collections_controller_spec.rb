@@ -64,3 +64,4 @@ describe CollectionsController do
     end
   end
 end
+

@@ -13,14 +13,19 @@
           = f.text_area :description, name: 'community[description][]', class: "input-block-level", rows: 5
       .row
         .col-md-1
-          = f.label :thumbnail, "Thumbnail"
+          = f.label :project_members, "Members"
         .col-md-4
-          = f.text_field :thumbnail, name: 'community[thumbnail][]', class: "input-block-level"
+          = f.text_field :project_members, name: 'community[project_members][]', class: "input-block-level"
       .row
         .col-md-1
-          = f.label :mass_permissions, "visibility"
+          = f.label :mass_permissions, "Visibility"
         .col-md-4
           = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+      .row
+        .col-md-1
+          = f.label :og_reference, "External links"
+        .col-md-4
+          = f.text_area :og_reference, name: 'community[og_reference][]', class: "input-block-level", rows: 5
     -# %hr
     -# %legend Permissions
     -# %fieldset
@@ -39,4 +44,4 @@
     -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
     %hr
   .form-actions
-    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit' ,href:'communities#show'

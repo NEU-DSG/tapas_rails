@@ -93,6 +93,7 @@ class CatalogController < ApplicationController
     # config.add_index_field 'author_display', :label => 'Author'
     # config.add_index_field 'author_vern_display', :label => 'Author'
     config.add_index_field 'active_fedora_model_ssi', :label => 'Type'
+    config.add_index_field 'drupal_og_reference_ssim', :label => 'External Links'
     # config.add_index_field 'language_facet', :label => 'Language'
     # config.add_index_field 'published_display', :label => 'Published'
     # config.add_index_field 'published_vern_display', :label => 'Published'
@@ -102,6 +103,9 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_show_field 'title_info_title_ssi', :label => 'Title'
     config.add_show_field 'abstract_tesim', :label => 'Description'
+    config.add_show_field 'drupal_og_reference_ssim', :label => 'External links'
+    config.add_show_field 'project_members_ssim', :label => 'Members'
+
     # config.add_show_field 'title_vern_display', :label => 'Title'
     # config.add_show_field 'subtitle_display', :label => 'Subtitle'
     # config.add_show_field 'subtitle_vern_display', :label => 'Subtitle'

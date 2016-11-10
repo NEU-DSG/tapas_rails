@@ -17,6 +17,10 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
   def to_solr(hsh = {})
     hsh = super(hsh)
 
+    if self.project_members.first
+      hsh['project_members_ssim'] = self.project_members.first
+    end
+
     if self.drupal_access.first 
       hsh['drupal_access_ssim'] = self.drupal_access.first
     end

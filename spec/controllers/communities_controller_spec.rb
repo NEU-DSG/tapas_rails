@@ -76,3 +76,37 @@ describe CommunitiesController do
 
   it_should_behave_like 'an API enabled controller'
 end
+
+
+FactoryGirl.define do
+  factory :details do |f|
+    f.title "John"
+    f.description "Doe"
+  end
+end
+
+
+
+
+# describe "POST #create" do
+#   context "with valid attributes" do
+#     it "saves the new contact in the database"
+#     it "redirects to the home page"
+#   end
+# end
+
+
+describe "POST create" do
+  context "with valid attributes" do
+    it "creates a new contact" do
+      expect{
+        post :create, contact: FactoryGirl.create.attributes_for(:details)
+      }.to change(Community,:count).by(1)
+    end
+
+    it "redirects to the new contact" do
+      post :create, contact: FactoryGirl.create.attributes_for(:details)
+      response.should redirect_to Contact.last
+    end
+  end
+end

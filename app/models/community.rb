@@ -19,10 +19,12 @@ class Community < CerberusCore::BaseModels::Community
   has_metadata :name => "properties", :type => PropertiesDatastream
 
   has_attributes :project_members, datastream: "properties", multiple: true
+  has_attributes :og_reference, datastream:"properties"
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
+ # has_attributes :thumbnail, datastream: "DC"
 
-  # Look up or create the root community of the graph
+ # Look up or create the root community of the graph
   def self.root_community
     if Community.exists?(Rails.configuration.tap_root)
       Community.find(Rails.configuration.tap_root)
@@ -52,5 +54,6 @@ class Community < CerberusCore::BaseModels::Community
     # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
     self.mods.title = self.DC.title.first
     self.mods.abstract = self.DC.description.first
+  #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 end
