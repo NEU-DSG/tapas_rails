@@ -10,7 +10,7 @@
         .col-md-1
           = f.label :description, "Description"
         .col-md-4
-          = f.text_area :description, name: 'community[description][]', class: "input-block-level", rows: 5
+          = f.text_area :description,required: true, name: 'community[description][]', class: "input-block-level", rows: 5
       .row
         .col-md-1
           = f.label :project_members, "Members"

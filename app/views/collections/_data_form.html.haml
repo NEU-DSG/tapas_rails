@@ -1,0 +1,43 @@
+= form_for @collection do |f|
+  %fieldset
+    .container-fluid
+      .row
+        .col-md-1
+          = f.label :title, "Title", class: "control-label"
+        .col-md-4
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'collection[title][]', class: "input-block-level", placeholder: "University Libraries"
+      .row
+        .col-md-1
+          = f.label :description, "Description"
+        .col-md-4
+          = f.text_area :description,required: true, name: 'collection[description][]', class: "input-block-level", rows: 5
+
+        .row
+          .col-md-1
+            = f.label :mass_permissions, "Visibility"
+          .col-md-4
+            = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+        .row
+          .col-md-1
+            = f.label :community, "Community"
+          .col-md-4
+            = f.select :community, options_for_select(@arr), name:'community'
+    -# %hr
+    -# %legend Permissions
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :mass_permissions, "Mass Permissions"
+    -#       = f.select :mass_permissions, options_for_select(['public', 'private'], @community.mass_permissions)
+    -# %hr
+    -# %legend Thumbnail (Optional)
+    -# - if !@community.properties.thumbnail_list[0].blank?
+    -#   =image_tag @community.properties.thumbnail_list[0]
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :thumbnail, "Thumbnail"
+    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit' ,href:'collections#show'

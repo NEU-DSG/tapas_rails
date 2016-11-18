@@ -49,8 +49,8 @@ class CommunitiesController < CatalogController
   end
 
   def edit
-    @community = Community.find(params[:id])
-    @page_title = "Edit #{@community.title}"
+     @community = Community.find(params[:id])
+     @page_title = "Edit #{@community.title}"
   end
 
   def update

@@ -31,8 +31,13 @@ TapasRails::Application.routes.draw do
   # delete "communities/:did" => "communities#destroy"
 
   # Collections
-  get 'collections/:did' => 'collections#api_show'
+  resources :collections
+  get 'collections/:did' => 'collections#show'
   post "collections/:did" => "collections#upsert"
+  get 'collections/:did/edit' => 'collections#edit'
+  get 'collections' => 'collections#index'
+
+
   # delete "collections/:did" => "collections#destroy"
 
   # CoreFiles
@@ -49,6 +54,7 @@ TapasRails::Application.routes.draw do
 
   namespace :api do
     get 'communities/:did' => 'communities#api_show'
+    get 'collections/:did' => 'collections#api_show'
   end
 
   # Example of regular route:
