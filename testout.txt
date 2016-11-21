@@ -1,0 +1,19 @@
+.F
+
+Failures:
+
+  1) CommunitiesController post #create 422s for invalid requests
+     Failure/Error: post :create,community_old
+     NoMethodError:
+       undefined method `symbolize_keys' for "tap:67":String
+     # ./spec/controllers/communities_controller_spec.rb:148:in `block (3 levels) in <top (required)>'
+
+Finished in 4.43 seconds
+2 examples, 1 failure
+
+Failed examples:
+
+rspec ./spec/controllers/communities_controller_spec.rb:139 # CommunitiesController post #create 422s for invalid requests
+
+Randomized with seed 55419
+

@@ -7,6 +7,7 @@ class Collection < CerberusCore::BaseModels::Collection
   include StatusTracking
   
   before_save :ensure_unique_did
+  before_save :match_dc_to_mods
   after_save :update_core_files
 
   has_core_file_types  ["CoreFile"]
@@ -17,6 +18,8 @@ class Collection < CerberusCore::BaseModels::Collection
 
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
+  has_attributes :title, datastream: "DC"
+  has_attributes :description, datastream: "DC"
 
   has_many :personographies, :property => :is_personography_for, 
     :class_name => "CoreFile"
@@ -100,4 +103,12 @@ class Collection < CerberusCore::BaseModels::Collection
         end
       end
     end
+
+def match_dc_to_mods
+  # self.DC.title = self.mods.title.first
+  # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+  self.mods.title = self.DC.title.first
+  self.mods.abstract = self.DC.description.first
+  #  self.mods.thumbnail = self.DC.thumbnail.first
+end
 end

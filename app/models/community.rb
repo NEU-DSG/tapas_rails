@@ -24,6 +24,7 @@ class Community < CerberusCore::BaseModels::Community
   has_attributes :description, datastream: "DC"
  # has_attributes :thumbnail, datastream: "DC"
 
+  validates_presence_of :title, :description
  # Look up or create the root community of the graph
   def self.root_community
     if Community.exists?(Rails.configuration.tap_root)
