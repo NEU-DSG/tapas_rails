@@ -15,6 +15,8 @@ gem 'passenger', '5.0.15'
 # Use mysql2 for the staging environment
 gem 'mysql2'
 
+gem 'minitest', '4.7.5'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
 
@@ -105,3 +107,4 @@ gem "devise"
 gem "devise-guests", "~> 0.3"
 
 gem "rsolr", "~> 1.0.6"
+gem 'therubyracer',  platforms: :ruby
