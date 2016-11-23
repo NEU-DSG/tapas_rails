@@ -68,8 +68,8 @@ class CollectionsController < CatalogController
     @arr =[]
     results.each do |res|
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
-+     end
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
     end
     @collection = Collection.find(params[:id])
     @page_title = "Edit #{@collection.title}"
