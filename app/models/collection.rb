@@ -20,6 +20,7 @@ class Collection < CerberusCore::BaseModels::Collection
   has_metadata :name => "properties", :type => PropertiesDatastream
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
+  # has_attributes :community, datastream: "DC"
 
   has_many :personographies, :property => :is_personography_for, 
     :class_name => "CoreFile"

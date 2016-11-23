@@ -5,23 +5,25 @@
         .col-md-1
           = f.label :title, "Title", class: "control-label"
         .col-md-4
-          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'collection[title][]', class: "input-block-level", placeholder: "University Libraries"
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'collection[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
       .row
         .col-md-1
           = f.label :description, "Description"
         .col-md-4
-          = f.text_area :description,required: true, name: 'collection[description][]', class: "input-block-level", rows: 5
+          = f.text_area :description,required: true, name: 'collection[description][]', class: "form-control input-block-level", rows: 5
 
-        .row
-          .col-md-1
-            = f.label :mass_permissions, "Visibility"
-          .col-md-4
-            = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
-        .row
-          .col-md-1
-            = f.label :community, "Community"
-          .col-md-4
-            = f.select :community, options_for_select(@arr), name:'community'
+      .row
+        .col-md-1
+          = f.label :mass_permissions, "Visibility"
+        .col-md-4
+          = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+      .row
+        .col-md-1
+          = f.label :community, "Community"
+        .col-md-4
+          / = f.select :community, options_for_select(@arr), name:'community'
+          - parent = !@collection.community.blank? ? @collection.community.pid : nil
+          = f.select :community, options_for_select(@arr, parent), name:'community'
     -# %hr
     -# %legend Permissions
     -# %fieldset
