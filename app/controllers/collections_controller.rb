@@ -76,7 +76,9 @@ class CollectionsController < CatalogController
   end
 
   def update
-    @collection = Collection.find(params[:id])
+    @collection = Collection.find("#{params[:collection][:community]}")
+    params[:collection].delete("community")
+    @collection.depositor = "000000000"
     @collection.update_attributes(params[:collection])
     @collection.save!
     redirect_to @collection and return
