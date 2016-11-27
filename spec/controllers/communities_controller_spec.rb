@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'pry-debugger'
+# require 'pry-debugger'
 
 describe CommunitiesController do
   include ValidAuthToken
