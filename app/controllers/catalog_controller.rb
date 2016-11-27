@@ -106,12 +106,15 @@ class CatalogController < ApplicationController
     config.add_show_field 'drupal_og_reference_ssim', :label => 'External links'
     config.add_show_field 'project_members_ssim', :label => 'Members'
 
+
+
     # config.add_show_field 'title_vern_display', :label => 'Title'
     # config.add_show_field 'subtitle_display', :label => 'Subtitle'
     # config.add_show_field 'subtitle_vern_display', :label => 'Subtitle'
     # config.add_show_field 'author_display', :label => 'Author'
     # config.add_show_field 'author_vern_display', :label => 'Author'
     config.add_show_field 'active_fedora_model_ssi', :label => 'Type'
+
     # config.add_show_field 'url_fulltext_display', :label => 'URL'
     # config.add_show_field 'url_suppl_display', :label => 'More Information'
     # config.add_show_field 'language_facet', :label => 'Language'

@@ -1,7 +1,13 @@
 <div id="sidebar" class="<%= sidebar_classes %>">
   <%= render 'catalog/search_sidebar' %>
+  <p>
+    <a href="/communities/new" class="btn btn-default btn-lg" style="width:160px">New Community</a><br/>
+    <br/><a href="/collections/new" class="btn btn-default btn-lg" style="width:160px">New Collection</a><br/>
+  </p>
+
 </div>
 
 <div id="content" class="<%= main_content_classes %>">
   <%= render 'catalog/search_results' %>
 </div>
+
