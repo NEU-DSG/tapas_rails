@@ -1,0 +1,17 @@
+# Add application configuration variables here, as shown below.
+#
+# PUSHER_APP_ID: "2954"
+# PUSHER_KEY: 7381a978f7dd7f9a1117
+# PUSHER_SECRET: abdc3b896a0ffb85d373
+# STRIPE_API_KEY: EdAvEPVEC3LuaTg5Q3z6WbDVqZlcBQ8Z
+# STRIPE_PUBLIC_KEY: pk_BRgD57O8fHja9HxduJUszhef6jCyS
+SECRET_KEY_BASE: 0d5ea2be2a32aa39b4d74de51737de580892d9d519143773581272be76d4e591926acb1840a3a8298f086adcb1f060eb58a12aa0faf690532e252a0f14235e32
+MYSQL_STAGING_PASSWORD: ui890ad
+
+# Assign the tapas@neu.edu user in config/tapas_api.yml
+# an api token.
+STAGING_TAPAS_API_KEY: d890234.89#
+
+# Assign the tapas@neu.edu user in config/tapas_api.yml a
+# password just in case we wind up needing it.
+STAGING_TAPAS_PASSWORD: ui890.342

@@ -21,7 +21,7 @@
 /jetty
 
 # Ignore Figaro generated configuration file
-/config/application.yml
+#/config/application.yml
 
 # Ignore Redis generated dump file
 dump.rdb
