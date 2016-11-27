@@ -108,3 +108,8 @@ gem "devise-guests", "~> 0.3"
 
 gem "rsolr", "~> 1.0.6"
 gem 'therubyracer',  platforms: :ruby
+
+
+gem 'simplecov', :require => false, :group => :test
+gem 'simplecov-json', :require => false, :group => :test
+gem 'simplecov-rcov', :require => false, :group => :test

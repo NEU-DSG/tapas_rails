@@ -54,7 +54,8 @@ class CommunitiesController < CatalogController
   end
 
   def update
-    @community = Community.find(params[:id])
+    # @community = Community.find(params[:id])
+    @community = Community.find_by_did(params[:id])
     @community.update_attributes(params[:community])
     @community.save!
     redirect_to @community and return
