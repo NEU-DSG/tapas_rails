@@ -1,0 +1,335 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/models/concerns/status_tracking.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/models/concerns/status_tracking.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-models-concerns-status_tracking_rb.html">app/models/concerns/status_tracking.rb</a></td>
+            <td class='right_align'><tt>92</tt></td>
+            <td class='right_align'><tt>46</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>71.74%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:72px"></div>
+        <div class="uncovered" style="width:28px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>43.48%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:43px"></div>
+        <div class="uncovered" style="width:57px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> module StatusTracking</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line3">3</a>   extend ActiveSupport::Concern </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line4">4</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   included do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>     has_attributes :upload_status, :upload_status_time, :stacktrace,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line7">7</a>       :datastream =&gt; :properties, :multiple =&gt; false  </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line8">8</a>     has_attributes :errors_display, :errors_system, :datastream =&gt; :properties,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a>       :multiple =&gt; true</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line10">10</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line11">11</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line12">12</a>   def self.valid_status_code?(code)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line13">13</a>     code.in? %w(COMPLETE INPROGRESS FAILED)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line16">16</a>   def set_status_code(code)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line17">17</a>     if StatusTracking.valid_status_code?(code)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line18">18</a>       self.upload_status = code </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line19">19</a>       self.upload_status_time = Time.now.utc.iso8601</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>     else</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line21">21</a>       raise &quot;Invalid status code passed&quot; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line24">24</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line25">25</a>   def set_default_display_error</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line26">26</a>     self.errors_display = [&#39;A system error occurred while processing&#39;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a>                            &#39; your file.  Please reattempt upload and contact&#39;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a>                            &#39; an administrator if the problem continues.&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line31">31</a>   def set_stacktrace_message(e)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line32">32</a>     error_str = &quot;#{e.backtrace.first} : #{e.message} (#{e.class}) \n&quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>     &quot;#{e.backtrace.drop(1).join(&quot;\n&quot;)}&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line34">34</a>     self.stacktrace = error_str</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line36">36</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line37">37</a>   def mark_upload_failed</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line38">38</a>     set_status_code(&#39;FAILED&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line41">41</a>   def mark_upload_in_progress</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line42">42</a>     set_status_code(&#39;INPROGRESS&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line44">44</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line45">45</a>   def mark_upload_complete</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a>     # Clear any previously set errors</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line47">47</a>     self.stacktrace = &#39;&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line48">48</a>     self.errors_display = []</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line49">49</a>     self.errors_system = []</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line50">50</a>     set_status_code(&#39;COMPLETE&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line53">53</a>   def mark_upload_failed!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line54">54</a>     set_status_code!(&#39;FAILED&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line57">57</a>   def mark_upload_in_progress!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line58">58</a>     set_status_code!(&#39;INPROGRESS&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line61">61</a>   def mark_upload_complete!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line62">62</a>     mark_upload_complete</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line63">63</a>     save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line65">65</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line66">66</a>   def upload_failed?</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line67">67</a>     upload_status == &#39;FAILED&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line68">68</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line69">69</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line70">70</a>   def upload_complete?</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line71">71</a>     upload_status == &#39;COMPLETE&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line73">73</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line74">74</a>   def upload_in_progress?</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line75">75</a>     upload_status == &#39;INPROGRESS&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line76">76</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line77">77</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line78">78</a>   def set_status_code!(code)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line79">79</a>     set_status_code(code)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line80">80</a>     save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line81">81</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line82">82</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line83">83</a>   # Checks if an object has been sitting in the &#39;in progress&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line84">84</a>   # state for more than five minutes, which is a good indication</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line85">85</a>   # that something has gone wrong and upload should be retried.</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line86">86</a>   def stuck_in_progress?</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line87">87</a>     if upload_status_time.present? &amp;&amp; upload_status == &#39;INPROGRESS&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line88">88</a>       5.minutes.ago &gt; upload_status_time</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line89">89</a>     else</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line90">90</a>       return false</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line91">91</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line92">92</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line93">93</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:51:33 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

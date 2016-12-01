@@ -1,0 +1,380 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>spec/validators/core_file_validator_spec.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>spec/validators/core_file_validator_spec.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="spec-validators-core_file_validator_spec_rb.html">spec/validators/core_file_validator_spec.rb</a></td>
+            <td class='right_align'><tt>107</tt></td>
+            <td class='right_align'><tt>55</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>72.90%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:73px"></div>
+        <div class="uncovered" style="width:27px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>47.27%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:47px"></div>
+        <div class="uncovered" style="width:53px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &#39;spec_helper&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a> describe CoreFileValidator do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   include ValidatorHelpers</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>   include FixtureBuilders</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   include FileHelpers</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line8">8</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a>   # Sets up a valid repository structure</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>   before(:all) do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>     @core_file, @collections, @project = FixtureBuilders.create_all 2</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line12">12</a>     @core_file, @other_collection, @other_project = FixtureBuilders.create_all</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line15">15</a>   after(:all) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line16">16</a>   before(:each) { @errors = nil } </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line18">18</a>   def params</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>     { :depositor =&gt; &#39;test_depositor&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>       :did =&gt; &#39;test_did&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>       :file_types =&gt; [&#39;personography&#39;], #Indicates a file that is tei content only</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>       :tei =&gt; Rack::Test::UploadedFile.new(</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a>         fixture_file(&#39;tei.xml&#39;),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line24">24</a>         &#39;application/xml&#39;),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>         :collection_dids =&gt; @collections.map(&amp;:did),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a>         :display_title =&gt; &quot;A Valid Display Title&quot;, </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a>         :display_authors =&gt; [&#39;Mickey&#39;, &#39;Minnie&#39;, &#39;Goofie&#39;],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a>         :display_contributors =&gt; [&#39;Donald&#39;, &#39;Scrooge&#39;],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a>         :display_date =&gt; DateTime.now.iso8601.to_s, </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a>         :support_files =&gt; Rack::Test::UploadedFile.new(</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>           fixture_file(&#39;all_files.zip&#39;),</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line32">32</a>           &#39;application/zip&#39;) }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line35">35</a>   context &#39;Create with all valid params&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line36">36</a>     it &#39;raises no errors&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line37">37</a>       validate(params)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line38">38</a>       expect(@errors.length).to eq 0</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line41">41</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line42">42</a>   context &#39;Update with all valid params&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line43">43</a>     it &#39;raises no errors&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line44">44</a>       removed = %i(collection_dids depositor tei file_types)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line45">45</a>       valid = params.except removed</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line46">46</a>       valid[:did] = @core_file.did</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line48">48</a>       validate(valid)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line49">49</a>       expect(@errors.length).to eq 0</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line53">53</a>   context &#39;Create with missing required data&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line54">54</a>     it &#39;raises an error when tei is missing&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line55">55</a>       validate(params.except(:tei))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line56">56</a>       expect(@errors.length).to eq 1</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line57">57</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line59">59</a>     it &#39;raises an error when depositor is missing&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line60">60</a>       validate(params.except(:depositor))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line61">61</a>       expect(@errors.length).to eq 1</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line62">62</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line63">63</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line64">64</a>     it &#39;raises an error when collection_dids is missing&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line65">65</a>       validate(params.except(:collection_dids))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line66">66</a>       expect(@errors.length).to eq 1 </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line67">67</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line68">68</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line69">69</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line70">70</a>   context &#39;Update with invalid params&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line71">71</a>     before(:each) do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line72">72</a>       params[:did] = @core_file.did</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line73">73</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line74">74</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line75">75</a>     it &#39;raises an error when display_date is not an iso8601 date&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line76">76</a>       validate(params.merge(:display_date =&gt; &#39;Jan 12, 1901&#39;))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line77">77</a>       it_raises_a_single_error(&#39;display_date must be ISO8601 formatted&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line78">78</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line79">79</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line80">80</a>     it &#39;raises an error when file_types is not an array&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line81">81</a>       validate(params.merge(:file_types =&gt; &#39;personography&#39;))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line82">82</a>       it_raises_a_single_error(&#39;file_types must be an array&#39;) </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line83">83</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line84">84</a>     </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line85">85</a>     it &#39;raises an error when an invalid file_type is passed&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line86">86</a>       validate(params.merge(:file_types =&gt; [&#39;bobography&#39;]))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line87">87</a>       it_raises_a_single_error(&quot;bobography is not a valid option&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line88">88</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line89">89</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line90">90</a>     it &#39;raises an error when collection_dids is not an array&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line91">91</a>       validate(params.merge(:collection_dids =&gt; &#39;1&#39;))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line92">92</a>       it_raises_a_single_error(&#39;collection_dids must be an array&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line93">93</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line94">94</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line95">95</a>     it &#39;raises an error when collection_dids references nonexistent collections&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line96">96</a>       validate(params.merge(collection_dids: [&#39;111-111&#39;]))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line97">97</a>       it_raises_a_single_error(&#39;collections that do not exist&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line98">98</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line99">99</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line100">100</a>     it &#39;raises an error when collection_dids references collections that &#39;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line101">101</a>       &#39;belong to multiple projects&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line102">102</a>       collections = (@collections + @other_collection).map(&amp;:did)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line103">103</a>       validate(params.merge collection_dids: collections)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line104">104</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line105">105</a>       it_raises_a_single_error(&#39;collections that belong to multiple projects&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line106">106</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line107">107</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line108">108</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

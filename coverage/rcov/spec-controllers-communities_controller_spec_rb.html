@@ -1,0 +1,680 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>spec/controllers/communities_controller_spec.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>spec/controllers/communities_controller_spec.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="spec-controllers-communities_controller_spec_rb.html">spec/controllers/communities_controller_spec.rb</a></td>
+            <td class='right_align'><tt>207</tt></td>
+            <td class='right_align'><tt>39</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &#39;spec_helper&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> #require &#39;pry-debugger&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line4">4</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a> describe CommunitiesController do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>   include ValidAuthToken</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   include FileHelpers</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line8">8</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a>   # describe &#39;DELETE #destroy&#39; do </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line10">10</a>   #   after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line11">11</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line12">12</a>   #   it &#39;404s for dids that do not exist&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a>   #     delete :destroy, { :did =&gt; &#39;doesnt_exist&#39; }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>   #     expect(response.status).to eq 404</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a>   #   it &#39;404s for dids that do not belong to a Community&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line18">18</a>   #     core_file = FactoryGirl.create :core_file</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>   #     delete :destroy, { :did =&gt; core_file.did }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>   #     expect(response.status).to eq 404</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>   #     expect { core_file.reload }.not_to raise_error</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line24">24</a>   #   it &#39;200s for successful requests and deletes all descendent objects&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>   #     community = Community.create(:did =&gt; &#39;123575&#39;, :depositor =&gt; &#39;test&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a>   #     collection = Collection.create(:did =&gt; &#39;128654&#39;, :depositor =&gt; &#39;test&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a>   #     collection.save! ; collection.community = community ; collection.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a>   #     delete :destroy, { :did =&gt; community.did }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a>   #     expect(response.status).to eq 200</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a>   #     expect(Community.find_by_did community.did).to be nil</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>   #     expect(Collection.find_by_did collection.did).to be nil</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a>   # describe &#39;POST #upsert&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line36">36</a>   #   before(:all) { Resque.inline = true }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line37">37</a>   #   after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line38">38</a>   #   after(:all) { Resque.inline = false }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>   #   let(:community) { Community.find_by_did params[:did] }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line41">41</a>   #   let(:params) do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line42">42</a>   #     { :title =&gt; &#39;Test Community&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a>   #       :depositor =&gt; &#39;000000000&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line44">44</a>   #       :description =&gt; &#39;This is a test community.&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>   #       :members =&gt; %w(1 2 3),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a>   #       :access =&gt; &#39;public&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a>   #       :did =&gt; &#39;12&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line48">48</a>   #       :thumbnail =&gt; Rack::Test::UploadedFile.new(fixture_file(&#39;image.jpg&#39;)),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line49">49</a>   #     }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a>   #   it &#39;422s for invalid requests&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a>   #     post :upsert, params.except(:depositor)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line54">54</a>   #     expect(response.status).to eq 422</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line57">57</a>   #   it &#39;returns a 202 and creates community on requests with new dids.&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a>   #     #binding.pry</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>   #     post :upsert, params</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line61">61</a>   #     expect(response.status).to eq 202</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line62">62</a>   #     expect(community.depositor).to eq params[:depositor]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line63">63</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line65">65</a>   #   it &#39;returns a 202 and updates the requested community if it exists&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line66">66</a>   #     community_old = Community.new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line67">67</a>   #     #.mods removed</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line68">68</a>   #     community_old.title = &#39;Test Community&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line69">69</a>   #     community_old.description = &#39;This is a test&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line70">70</a>   #     community_old.did = params[:did]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line71">71</a>   #     community_old.depositor = &#39;System&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a>   #     community_old.project_members = [&#39;303&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line73">73</a>   #     community_old.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line74">74</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line75">75</a>   #     post :upsert, params</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line76">76</a>   #     expect(response.status).to eq 202</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line77">77</a>   #     expect(community.depositor).to eq &#39;System&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line78">78</a>   #     expect(community.project_members).to eq [&#39;1&#39;, &#39;2&#39;, &#39;3&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line79">79</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line80">80</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line81">81</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line82">82</a>   #Newly added test for update function</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line83">83</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line84">84</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line85">85</a>   describe &#39;get #new&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line86">86</a>     #before(:all) { Resque.inline = true }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line87">87</a>     #after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line88">88</a>     #after(:all) { Resque.inline = false }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line89">89</a>     #let(:community) { Community.find_by_did params[:did] }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line90">90</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line91">91</a>     it &#39;should create a community object&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line92">92</a>       #community = Community.new</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line93">93</a>       get :new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line94">94</a>       #binding.pry</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line95">95</a>       expect(assigns(:community)).to be_a_new(Community)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line96">96</a>       #expect(community.class).to eq 302</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line97">97</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line98">98</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line99">99</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line100">100</a>   describe &#39;post #create&#39; do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line101">101</a>     before(:all) { Resque.inline = true }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line102">102</a>     after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line103">103</a>     after(:all) { Resque.inline = false }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line104">104</a>     let(:community) { Community.find_by_did params[:did] }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line105">105</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line106">106</a>     let(:params) do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line107">107</a>       {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line108">108</a>           :community =&gt; {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line109">109</a>               :title =&gt; &#39;New Community&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line110">110</a>               #:depositor =&gt; [&#39;000000000&#39;],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line111">111</a>               :description =&gt; &#39;This is a test community.&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line112">112</a>               #:members =&gt; %w(1 2 3),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line113">113</a>               :mass_permissions =&gt; &#39;public&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line114">114</a>               #:thumbnail =&gt; Rack::Test::UploadedFile.new(fixture_file(&#39;image.jpg&#39;))</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line115">115</a>           }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line116">116</a>       }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line117">117</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line118">118</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line119">119</a>     it &#39;422s for invalid requests&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line120">120</a>       #community_old = Community.new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line121">121</a>       #.mods removed</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line122">122</a>        # community_old.title = &#39;Test Community&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line123">123</a>        # community_old.description = &#39;This is a test&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line124">124</a>        # community_old.mass_permissions = &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line125">125</a>        # community_old.did = params[:did]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line126">126</a>       #community_old.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line127">127</a>       #params[:id] = community_old.id</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line128">128</a>       #binding.pry</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line129">129</a>       post :create, params</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line130">130</a>       community = Community.first</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line131">131</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line132">132</a>       #binding.pry</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line133">133</a>       expect(response.status).to eq 302</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line134">134</a>       expect(community.title).to eq params[:community][:title]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line135">135</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line136">136</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line137">137</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line138">138</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line139">139</a>   describe &#39;post #update&#39; do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line140">140</a>     before(:all) { Resque.inline = true }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line141">141</a>     after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line142">142</a>     after(:all) { Resque.inline = false }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line143">143</a>     let(:community) { Community.find_by_did params[:did] }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line144">144</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line145">145</a>     let(:params) do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line146">146</a>       {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line147">147</a>           :did =&gt; &#39;12&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line148">148</a>           :community =&gt; {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line149">149</a>               :title =&gt; &#39;New Community&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line150">150</a>               # :depositor =&gt; [&#39;000000000&#39;],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line151">151</a>               :description =&gt; &#39;This is a test community.&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line152">152</a>               #:members =&gt; %w(1 2 3),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line153">153</a>               :mass_permissions =&gt; &#39;public&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line154">154</a>               #:thumbnail =&gt; Rack::Test::UploadedFile.new(fixture_file(&#39;image.jpg&#39;))</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line155">155</a>           }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line156">156</a>       }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line157">157</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line158">158</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line159">159</a>     it &#39;302s for valid requests&#39; do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line160">160</a>       community_old = Community.new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line161">161</a>       #.mods removed</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line162">162</a>       community_old.title = &#39;Test Community&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line163">163</a>       community_old.description = &#39;This is a test&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line164">164</a>       community_old.mass_permissions = &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line165">165</a>       community_old.did = &#39;12&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line166">166</a>       # community_old.project_members = [&#39;303&#39;]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line167">167</a>       community_old.save!</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line168">168</a>       params[:did] = community_old.did</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line169">169</a>       params[:id] = community_old.did</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line170">170</a>       #binding.pry</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line171">171</a>       put :update, params</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line172">172</a>       expect(response.status).to eq 302</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line173">173</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line174">174</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line175">175</a>   # describe &#39;get #edit&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line176">176</a>   #   before(:all) { Resque.inline = true }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line177">177</a>   #   after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line178">178</a>   #   after(:all) { Resque.inline = false }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line179">179</a>   #   let(:community) { Community.find_by_did params[:did] }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line180">180</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line181">181</a>   #   let(:params) do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line182">182</a>   #     {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line183">183</a>   #         :title =&gt; &#39;&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line184">184</a>   #         :depositor =&gt; &#39;000000000&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line185">185</a>   #         :description =&gt; &#39;This is a test community.&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line186">186</a>   #         :members =&gt; %w(1 2 3),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line187">187</a>   #         :access =&gt; &#39;public&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line188">188</a>   #         :did =&gt; &#39;12&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line189">189</a>   #         :thumbnail =&gt; Rack::Test::UploadedFile.new(fixture_file(&#39;image.jpg&#39;)),</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line190">190</a>   #     }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line191">191</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line192">192</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line193">193</a>   #   it &#39;422s for invalid requests&#39; do</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line194">194</a>   #     community_old = Community.new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line195">195</a>   #     #.mods removed</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line196">196</a>   #     community_old.title = &#39;Test Community&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line197">197</a>   #     community_old.description = &#39;This is a test&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line198">198</a>   #     community_old.did = params[:did]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line199">199</a>   #     community_old.depositor = &#39;System&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line200">200</a>   #     community_old.project_members = [&#39;303&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line201">201</a>   #     community_old.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line202">202</a>   #     get :edit, params</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line203">203</a>   #     expect(response.status).to eq 422</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line204">204</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line205">205</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line206">206</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line207">207</a>     it_should_behave_like &#39;an API enabled controller&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line208">208</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:51:33 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

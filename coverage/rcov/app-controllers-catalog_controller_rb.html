@@ -1,0 +1,686 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/controllers/catalog_controller.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/controllers/catalog_controller.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-controllers-catalog_controller_rb.html">app/controllers/catalog_controller.rb</a></td>
+            <td class='right_align'><tt>209</tt></td>
+            <td class='right_align'><tt>31</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="inferred">
+          <td><pre><a name="line2">2</a> # -*- encoding : utf-8 -*-</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line3">3</a> class CatalogController &lt; ApplicationController</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line4">4</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   include Blacklight::Catalog</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line6">6</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   configure_blacklight do |config|</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line8">8</a>     ## Class for sending and receiving requests from a search index</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a>     # config.repository_class = Blacklight::Solr::Repository</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>     config.connection_config = &quot;/config/blacklight.yml&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line11">11</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line12">12</a>     ## Class for converting Blacklight&#39;s url parameters to into request parameters for the search index</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a>     # config.search_builder_class = ::SearchBuilder</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a>     ## Model that maps search index responses to the blacklight response model</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>     # config.response_model = Blacklight::Solr::Response</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line18">18</a>     ## Default parameters to send to solr for all search-like requests. See also SearchBuilder#processed_parameters</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line19">19</a>     config.default_solr_params = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>       :qt =&gt; &#39;search&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>       :rows =&gt; 10</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>     }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line24">24</a>     # solr path which will be added to solr base url before the other solr params.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>     #config.solr_path = &#39;select&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a>     # items to show per page, each number in the array represent another option to choose from.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a>     #config.per_page = [10,20,50,100]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a>     ## Default parameters to send on single-document requests to Solr. These settings are the Blackligt defaults (see SearchHelper#solr_doc_params) or</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>     ## parameters included in the Blacklight-jetty document requestHandler.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>     #config.default_document_solr_params = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a>     #  :qt =&gt; &#39;document&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a>     #  ## These are hard-coded in the blacklight &#39;document&#39; requestHandler</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line36">36</a>     #  # :fl =&gt; &#39;*&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line37">37</a>     #  # :rows =&gt; 1</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line38">38</a>     #  # :q =&gt; &#39;{!raw f=id v=$id}&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>     #}</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line41">41</a>     # solr field configuration for search results/index views</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line42">42</a>     config.index.title_field = &#39;title_info_title_ssi&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line43">43</a>     config.index.display_type_field = &#39;active_fedora_model_ssi&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line44">44</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>     # solr field configuration for document/show views</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a>     #config.show.title_field = &#39;title_display&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a>     #config.show.display_type_field = &#39;format&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line48">48</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line49">49</a>     # solr fields that will be treated as facets by the blacklight application</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>     #   The ordering of the field names is the order of the display</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a>     # Setting a limit will trigger Blacklight&#39;s &#39;more&#39; facet values link.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a>     # * If left unset, then all facet values returned by solr will be displayed.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line54">54</a>     # * If set to an integer, then &quot;f.somefield.facet.limit&quot; will be added to</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>     # solr request, with actual solr request being +1 your configured limit --</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a>     # you configure the number of items you actually want _displayed_ in a page.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line57">57</a>     # * If set to &#39;true&#39;, then no additional parameters will be sent to solr,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a>     # but any &#39;sniffed&#39; request limit parameters will be used for paging, with</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>     # paging at requested limit -1. Can sniff from facet.limit or</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a>     # f.specific_field.facet.limit solr request params. This &#39;true&#39; config</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line61">61</a>     # can be used if you set limits in :default_solr_params, or as defaults</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line62">62</a>     # on the solr side in the request handler itself. Request handler defaults</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line63">63</a>     # sniffing requires solr requests to be made with &quot;echoParams=all&quot;, for</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a>     # app code to actually have it echo&#39;d back to see it.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line65">65</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line66">66</a>     # :show may be set to false if you don&#39;t want the facet to be drawn in the</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line67">67</a>     # facet bar</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line68">68</a>     config.add_facet_field &#39;active_fedora_model_ssi&#39;, :label =&gt; &#39;Format&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line69">69</a>     # # config.add_facet_field &#39;pub_date&#39;, :label =&gt; &#39;Publication Year&#39;, :single =&gt; true</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line70">70</a>     # config.add_facet_field &#39;subject_topic_facet&#39;, :label =&gt; &#39;Topic&#39;, :limit =&gt; 20</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line71">71</a>     # config.add_facet_field &#39;language_facet&#39;, :label =&gt; &#39;Language&#39;, :limit =&gt; true</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a>     # config.add_facet_field &#39;lc_1letter_facet&#39;, :label =&gt; &#39;Call Number&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line73">73</a>     # config.add_facet_field &#39;subject_geo_facet&#39;, :label =&gt; &#39;Region&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line74">74</a>     # config.add_facet_field &#39;subject_era_facet&#39;, :label =&gt; &#39;Era&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line75">75</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line76">76</a>     # config.add_facet_field &#39;example_pivot_field&#39;, :label =&gt; &#39;Pivot Field&#39;, :pivot =&gt; [&#39;format&#39;, &#39;language_facet&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line77">77</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line78">78</a>     # config.add_facet_field &#39;example_query_facet_field&#39;, :label =&gt; &#39;Publish Date&#39;, :query =&gt; {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line79">79</a>     #   :years_5 =&gt; { :label =&gt; &#39;within 5 Years&#39;, :fq =&gt; &quot;pub_date:[#{Time.zone.now.year - 5 } TO *]&quot; },</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line80">80</a>     #   :years_10 =&gt; { :label =&gt; &#39;within 10 Years&#39;, :fq =&gt; &quot;pub_date:[#{Time.zone.now.year - 10 } TO *]&quot; },</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line81">81</a>     #   :years_25 =&gt; { :label =&gt; &#39;within 25 Years&#39;, :fq =&gt; &quot;pub_date:[#{Time.zone.now.year - 25 } TO *]&quot; }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line82">82</a>     # }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line83">83</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line84">84</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line85">85</a>     # Have BL send all facet field names to Solr, which has been the default</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line86">86</a>     # previously. Simply remove these lines if you&#39;d rather use Solr request</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line87">87</a>     # handler defaults, or have no facets.</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line88">88</a>     config.add_facet_fields_to_solr_request!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line89">89</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line90">90</a>     # solr fields to be displayed in the index (search results) view</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line91">91</a>     #   The ordering of the field names is the order of the display</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line92">92</a>     config.add_index_field &#39;title_info_title_ssi&#39;, :label =&gt; &#39;Title&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line93">93</a>     # config.add_index_field &#39;title_vern_display&#39;, :label =&gt; &#39;Title&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line94">94</a>     # config.add_index_field &#39;author_display&#39;, :label =&gt; &#39;Author&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line95">95</a>     # config.add_index_field &#39;author_vern_display&#39;, :label =&gt; &#39;Author&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line96">96</a>     config.add_index_field &#39;active_fedora_model_ssi&#39;, :label =&gt; &#39;Type&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line97">97</a>     config.add_index_field &#39;abstract_tesim&#39;, :label =&gt; &#39;Description&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line98">98</a>     config.add_index_field &#39;drupal_og_reference_ssim&#39;, :label =&gt; &#39;External Links&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line99">99</a>     # config.add_index_field &#39;language_facet&#39;, :label =&gt; &#39;Language&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line100">100</a>     # config.add_index_field &#39;published_display&#39;, :label =&gt; &#39;Published&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line101">101</a>     # config.add_index_field &#39;published_vern_display&#39;, :label =&gt; &#39;Published&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line102">102</a>     # config.add_index_field &#39;lc_callnum_display&#39;, :label =&gt; &#39;Call number&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line103">103</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line104">104</a>     # solr fields to be displayed in the show (single result) view</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line105">105</a>     #   The ordering of the field names is the order of the display</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line106">106</a>     config.add_show_field &#39;title_info_title_ssi&#39;, :label =&gt; &#39;Title&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line107">107</a>     config.add_show_field &#39;abstract_tesim&#39;, :label =&gt; &#39;Description&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line108">108</a>     config.add_show_field &#39;drupal_og_reference_ssim&#39;, :label =&gt; &#39;External links&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line109">109</a>     config.add_show_field &#39;project_members_ssim&#39;, :label =&gt; &#39;Members&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line110">110</a>     config.add_show_field &#39;authors_ssim&#39;, :label =&gt; &#39;Authors&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line111">111</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line112">112</a>     # config.add_show_field &#39;title_vern_display&#39;, :label =&gt; &#39;Title&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line113">113</a>     # config.add_show_field &#39;subtitle_display&#39;, :label =&gt; &#39;Subtitle&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line114">114</a>     # config.add_show_field &#39;subtitle_vern_display&#39;, :label =&gt; &#39;Subtitle&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line115">115</a>     # config.add_show_field &#39;author_display&#39;, :label =&gt; &#39;Author&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line116">116</a>     # config.add_show_field &#39;author_vern_display&#39;, :label =&gt; &#39;Author&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line117">117</a>     config.add_show_field &#39;active_fedora_model_ssi&#39;, :label =&gt; &#39;Type&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line118">118</a>     # config.add_show_field &#39;url_fulltext_display&#39;, :label =&gt; &#39;URL&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line119">119</a>     # config.add_show_field &#39;url_suppl_display&#39;, :label =&gt; &#39;More Information&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line120">120</a>     # config.add_show_field &#39;language_facet&#39;, :label =&gt; &#39;Language&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line121">121</a>     # config.add_show_field &#39;published_display&#39;, :label =&gt; &#39;Published&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line122">122</a>     # config.add_show_field &#39;published_vern_display&#39;, :label =&gt; &#39;Published&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line123">123</a>     # config.add_show_field &#39;lc_callnum_display&#39;, :label =&gt; &#39;Call number&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line124">124</a>     # config.add_show_field &#39;isbn_t&#39;, :label =&gt; &#39;ISBN&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line125">125</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line126">126</a>     # &quot;fielded&quot; search configuration. Used by pulldown among other places.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line127">127</a>     # For supported keys in hash, see rdoc for Blacklight::SearchFields</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line128">128</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line129">129</a>     # Search fields will inherit the :qt solr request handler from</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line130">130</a>     # config[:default_solr_parameters], OR can specify a different one</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line131">131</a>     # with a :qt key/value. Below examples inherit, except for subject</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line132">132</a>     # that specifies the same :qt as default for our own internal</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line133">133</a>     # testing purposes.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line134">134</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line135">135</a>     # The :key is what will be used to identify this BL search field internally,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line136">136</a>     # as well as in URLs -- so changing it after deployment may break bookmarked</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line137">137</a>     # urls.  A display label will be automatically calculated from the :key,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line138">138</a>     # or can be specified manually to be different.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line139">139</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line140">140</a>     # This one uses all the defaults set by the solr request handler. Which</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line141">141</a>     # solr request handler? The one set in config[:default_solr_parameters][:qt],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line142">142</a>     # since we aren&#39;t specifying it otherwise.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line143">143</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line144">144</a>     config.add_search_field &#39;all_fields&#39;, :label =&gt; &#39;All Fields&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line145">145</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line146">146</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line147">147</a>     # Now we see how to over-ride Solr request handler defaults, in this</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line148">148</a>     # case for a BL &quot;search field&quot;, which is really a dismax aggregate</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line149">149</a>     # of Solr search fields.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line150">150</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line151">151</a>     # config.add_search_field(&#39;title&#39;) do |field|</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line152">152</a>     #   # solr_parameters hash are sent to Solr as ordinary url query params.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line153">153</a>     #   field.solr_parameters = { :&#39;spellcheck.dictionary&#39; =&gt; &#39;title&#39; }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line154">154</a>     #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line155">155</a>     #   # :solr_local_parameters will be sent using Solr LocalParams</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line156">156</a>     #   # syntax, as eg {! qf=$title_qf }. This is neccesary to use</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line157">157</a>     #   # Solr parameter de-referencing like $title_qf.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line158">158</a>     #   # See: http://wiki.apache.org/solr/LocalParams</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line159">159</a>     #   field.solr_local_parameters = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line160">160</a>     #     :qf =&gt; &#39;$title_qf&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line161">161</a>     #     :pf =&gt; &#39;$title_pf&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line162">162</a>     #   }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line163">163</a>     # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line164">164</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line165">165</a>     # config.add_search_field(&#39;author&#39;) do |field|</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line166">166</a>     #   field.solr_parameters = { :&#39;spellcheck.dictionary&#39; =&gt; &#39;author&#39; }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line167">167</a>     #   field.solr_local_parameters = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line168">168</a>     #     :qf =&gt; &#39;$author_qf&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line169">169</a>     #     :pf =&gt; &#39;$author_pf&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line170">170</a>     #   }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line171">171</a>     # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line172">172</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line173">173</a>     # Specifying a :qt only to show it&#39;s possible, and so our internal automated</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line174">174</a>     # tests can test it. In this case it&#39;s the same as</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line175">175</a>     # config[:default_solr_parameters][:qt], so isn&#39;t actually neccesary.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line176">176</a>     # config.add_search_field(&#39;subject&#39;) do |field|</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line177">177</a>     #   field.solr_parameters = { :&#39;spellcheck.dictionary&#39; =&gt; &#39;subject&#39; }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line178">178</a>     #   field.qt = &#39;search&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line179">179</a>     #   field.solr_local_parameters = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line180">180</a>     #     :qf =&gt; &#39;$subject_qf&#39;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line181">181</a>     #     :pf =&gt; &#39;$subject_pf&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line182">182</a>     #   }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line183">183</a>     # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line184">184</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line185">185</a>     # &quot;sort results by&quot; select (pulldown)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line186">186</a>     # label in pulldown is followed by the name of the SOLR field to sort by and</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line187">187</a>     # whether the sort is ascending or descending (it must be asc or desc</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line188">188</a>     # except in the relevancy case).</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line189">189</a>     config.add_sort_field &#39;score desc&#39;, :label =&gt; &#39;relevance&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line190">190</a>     config.add_sort_field &#39;title_info_title_ssi asc, score desc&#39;, :label =&gt; &#39;title a-z&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line191">191</a>     config.add_sort_field &#39;title_info_title_ssi desc, score desc&#39;, :label =&gt; &#39;title z-a&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line192">192</a>     config.add_sort_field &#39;system_create_dtsi desc&#39;, :label =&gt; &#39;most recently added&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line193">193</a>     config.add_sort_field &#39;system_modified_dtsi desc&#39;, :label =&gt; &#39;most recently updated&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line194">194</a>     # config.add_sort_field &#39;score desc, pub_date_sort desc, title_sort asc&#39;, :label =&gt; &#39;relevance&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line195">195</a>     # config.add_sort_field &#39;pub_date_sort desc, title_sort asc&#39;, :label =&gt; &#39;year&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line196">196</a>     # config.add_sort_field &#39;author_sort asc, title_sort asc&#39;, :label =&gt; &#39;author&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line197">197</a>     # config.add_sort_field &#39;title_sort asc, pub_date_sort desc&#39;, :label =&gt; &#39;title&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line198">198</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line199">199</a>     # If there are more than this many search results, no spelling (&quot;did you</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line200">200</a>     # mean&quot;) suggestion is offered.</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line201">201</a>     config.spell_max = 5</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line202">202</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line203">203</a>     config.index.document_actions.delete(:bookmark)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line204">204</a>     config.show.document_actions.delete(:citation)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line205">205</a>     config.show.document_actions.delete(:bookmark)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line206">206</a>     config.show.document_actions.delete(:email)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line207">207</a>     config.show.document_actions.delete(:sms)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line208">208</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line209">209</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line210">210</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:51:33 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

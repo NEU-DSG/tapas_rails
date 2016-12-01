@@ -1,4 +1,4 @@
-class CoreFilesController < ApplicationController
+class CoreFilesController < CatalogController
   # include ApiAccessible
   include ModsDisplay::ControllerExtension
 
@@ -7,6 +7,81 @@ class CoreFilesController < ApplicationController
   end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
+
+  def index
+    @page_title = "All CoreFiles"
+    self.search_params_logic += [:communities_filter]
+    (@response, @document_list) = search_results(params, search_params_logic)
+    render 'shared/index'
+  end
+
+  # def show #inherited from catalog controller
+  # end
+
+  def communities_filter(solr_parameters, user_parameters)
+    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:CoreFile"
+    query = "has_model_ssim:\"#{model_type}\""
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << query
+  end
+  def new
+    @page_title = "Create New Core File"
+    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
+    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+
+    @arr =[]
+    results.each do |res|
+      # @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
+    end
+    @core_file = CoreFile.new
+  end
+
+  def create
+    collection = Collection.find("#{params[:core_file][:collection]}")
+    params[:core_file].delete("collection")
+    @core_file = CoreFile.new(params[:core_file])
+    @core_file.did = @core_file.pid
+    @core_file.depositor = "000000000"
+    @core_file.save!
+    @core_file.collection = collection
+    @core_file.save!
+    redirect_to @core_file and return
+  end
+
+  def edit
+    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
+    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+
+    @arr =[]
+    results.each do |res|
+      # @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
+    end
+    @core_file = CoreFile.find(params[:id])
+
+    @page_title = "Edit #{@core_file.title}"
+  end
+
+  def update
+    collection = Collection.find("#{params[:core_file][:collection]}")
+    params[:core_file].delete("collection")
+    @core_file = CoreFile.find(params[:id])
+    # @core_files = CoreFile.find_by_did(params[:id])
+    @core_file.update_attributes(params[:core_file])
+    @core_file.save!
+    @core_file.collection = collection
+    @core_file.save!
+    redirect_to @core_file and return
+  end
 
   def teibp
     e = "Could not find TEI Boilerplate representation of this object.  "\
@@ -37,22 +112,22 @@ class CoreFilesController < ApplicationController
     pretty_json(200) and return
   end
 
-  def show
-    @core_file = CoreFile.find_by_did(params[:did])
-
-    if @core_file.upload_status.blank?
-      @core_file.retroactively_set_status!
-    end
-
-    if @core_file.stuck_in_progress?
-      @core_file.set_default_display_error
-      @core_file.errors_system = ['Object was processing for more than five minutes']
-      @core_file.mark_upload_failed!
-    end
-
-    @response = @core_file.as_json
-    pretty_json(200) and return
-  end
+  # def show
+  #   @core_file = CoreFile.find_by_did(params[:did])
+  #
+  #   if @core_file.upload_status.blank?
+  #     @core_file.retroactively_set_status!
+  #   end
+  #
+  #   if @core_file.stuck_in_progress?
+  #     @core_file.set_default_display_error
+  #     @core_file.errors_system = ['Object was processing for more than five minutes']
+  #     @core_file.mark_upload_failed!
+  #   end
+  #
+  #   @response = @core_file.as_json
+  #   pretty_json(200) and return
+  # end
 
   def upsert
     begin
@@ -120,4 +195,7 @@ class CoreFilesController < ApplicationController
       render :text => error_msg, :status => 404
     end
   end
+
+
+
 end

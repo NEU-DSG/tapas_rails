@@ -1,0 +1,167 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/models/concerns/did.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/models/concerns/did.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-models-concerns-did_rb.html">app/models/concerns/did.rb</a></td>
+            <td class='right_align'><tt>36</tt></td>
+            <td class='right_align'><tt>19</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>88.89%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:89px"></div>
+        <div class="uncovered" style="width:11px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>78.95%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:79px"></div>
+        <div class="uncovered" style="width:21px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> module Did</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line3">3</a>   extend ActiveSupport::Concern </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a>   def ensure_unique_did </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>     if self.did.present? &amp;&amp; self.pid.present?</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>       did = RSolr.solr_escape self.did</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>       pid = RSolr.solr_escape self.pid  </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line8">8</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line9">9</a>       query = &quot;did_ssim:#{did} &amp;&amp; -id:#{pid}&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line10">10</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>       if ActiveFedora::SolrService.query(query).any?</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line12">12</a>         msg = &quot;Attempted to reuse Drupal ID #{did}&quot; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line13">13</a>         raise Exceptions::DuplicateDidError.new msg</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line18">18</a>   def exists_by_did?(nid)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line19">19</a>     return ActiveFedora::Base.exists?(&quot;did_ssim&quot; =&gt; nid) </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line22">22</a>   module_function :exists_by_did?</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line24">24</a>   included do </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>     # Use solr to look up an object with a given content type </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a>     # by drupal node reference id.</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line27">27</a>     def self.find_by_did(did)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line28">28</a>       return self.where(&quot;did_ssim&quot; =&gt; did).first</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line31">31</a>     def self.exists_by_did?(did)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line32">32</a>       return self.exists?(&#39;did_ssim&#39; =&gt; did)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line35">35</a>     has_attributes :did, datastream: &quot;mods&quot;, multiple: false </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line36">36</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line37">37</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:51:33 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

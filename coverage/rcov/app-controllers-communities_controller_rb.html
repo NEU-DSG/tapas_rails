@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/controllers/communities_controller.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/controllers/communities_controller.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-controllers-communities_controller_rb.html">app/controllers/communities_controller.rb</a></td>
+            <td class='right_align'><tt>63</tt></td>
+            <td class='right_align'><tt>35</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>76.19%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:76px"></div>
+        <div class="uncovered" style="width:24px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>57.14%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:57px"></div>
+        <div class="uncovered" style="width:43px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> class CommunitiesController &lt; CatalogController</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line3">3</a>   include ApiAccessible</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a>   self.copy_blacklight_config_from(CatalogController)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line5">5</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>   def upsert</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line7">7</a>     if params[:thumbnail]</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line8">8</a>       params[:thumbnail] = create_temp_file(params[:thumbnail])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line10">10</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line11">11</a>     TapasRails::Application::Queue.push TapasObjectUpsertJob.new params</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line12">12</a>     @response[:message] = &quot;Community upsert in progress&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line13">13</a>     pretty_json(202) and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>   # def destroy</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a>   #   @community.descendents.each { |descendent| descendent.destroy }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line18">18</a>   #   @community.destroy</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>   #   @response[:message] = &quot;Project successfully destroyed&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>   #   pretty_json(200) and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line23">23</a>   def index</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line24">24</a>     @page_title = &quot;All Projects&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line25">25</a>     self.search_params_logic += [:communities_filter]</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line26">26</a>     (@response, @document_list) = search_results(params, search_params_logic)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line27">27</a>     render &#39;shared/index&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a>   # def show #inherited from catalog controller</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line33">33</a>   def communities_filter(solr_parameters, user_parameters)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line34">34</a>     model_type = ActiveFedora::SolrService.escape_uri_for_query &quot;info:fedora/afmodel:Community&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line35">35</a>     query = &quot;has_model_ssim:\&quot;#{model_type}\&quot;&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line36">36</a>     solr_parameters[:fq] ||= []</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line37">37</a>     solr_parameters[:fq] &lt;&lt; query</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line38">38</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line40">40</a>   def new</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line41">41</a>     @page_title = &quot;Create New Community&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line42">42</a>     @community = Community.new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line44">44</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line45">45</a>   def create</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line46">46</a>     @community = Community.new(params[:community])</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line47">47</a>     @community.did = @community.pid</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line48">48</a>     @community.save!</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line49">49</a>     redirect_to @community and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line52">52</a>   def edit</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line53">53</a>      @community = Community.find(params[:id])</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line54">54</a>      @page_title = &quot;Edit #{@community.title}&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line57">57</a>   def update</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line58">58</a>     @community = Community.find_by_did(params[:id])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>     #@community = Community.find(params[:id])</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line60">60</a>     @community.update_attributes(params[:community])</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line61">61</a>     @community.save!</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line62">62</a>     redirect_to @community and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line63">63</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:51:33 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

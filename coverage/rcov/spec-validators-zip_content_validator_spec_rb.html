@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>spec/validators/zip_content_validator_spec.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>spec/validators/zip_content_validator_spec.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="spec-validators-zip_content_validator_spec_rb.html">spec/validators/zip_content_validator_spec.rb</a></td>
+            <td class='right_align'><tt>59</tt></td>
+            <td class='right_align'><tt>34</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &#39;spec_helper&#39; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a> describe ZipContentValidator do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   include FileHelpers</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line6">6</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   let(:zcv) { ZipContentValidator }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line8">8</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line9">9</a>   RSpec.shared_examples &quot;an xml validating operation&quot; do |method|</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>     it &quot;that rejects files that aren&#39;t xml&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>       p = fixture_file &quot;image.jpg&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line12">12</a>       expect { zcv.send(method, p) }.to raise_error Exceptions::InvalidZipError</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line15">15</a>     it &quot;that rejects files that are badly formed xml&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line16">16</a>       p = fixture_file &quot;xml_malformed.xml&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line17">17</a>       expect { zcv.send(method, p) }.to raise_error Exceptions::InvalidZipError</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line18">18</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line21">21</a>   RSpec.shared_examples &quot;a TEI validating operation&quot; do |method| </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line22">22</a>     it &quot;that rejects files that aren&#39;t valid TEI&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line23">23</a>       p = fixture_file &quot;xml.xml&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line24">24</a>       expect { zcv.send(method, p) }.to raise_error Exceptions::InvalidZipError</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line27">27</a>     it &quot;that accepts files that are valid TEI&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line28">28</a>       p = fixture_file &quot;tei.xml&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line29">29</a>       expect { zcv.send(method, p) }.not_to raise_error </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line33">33</a>   describe &quot;.mods&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line34">34</a>     it_should_behave_like &quot;an xml validating operation&quot;, :mods</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line36">36</a>     it &quot;rejects files that are invalid MODS&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line37">37</a>       p = fixture_file &quot;mods_invalid.xml&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line38">38</a>       expect { zcv.mods p }.to raise_error Exceptions::InvalidZipError</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line41">41</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line42">42</a>   describe &quot;.tei&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line43">43</a>     it_should_behave_like &quot;an xml validating operation&quot;, :tei</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line44">44</a>     it_should_behave_like &quot;a TEI validating operation&quot;, :tei</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line47">47</a>   describe &quot;.html&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line48">48</a>     it &quot;raises an error if the file doesn&#39;t have an .html extension&quot; do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line49">49</a>       p = fixture_file &quot;image.jpg&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line50">50</a>       expect { zcv.html(p) }.to raise_error Exceptions::InvalidZipError</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line54">54</a>   describe &quot;.support_files&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line55">55</a>     it &quot;raises an error if a support file isn&#39;t a jpg or png&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line56">56</a>       sfs = [fixture_file(&quot;image.jpg&quot;), fixture_file(&quot;mods.xml&quot;)]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line57">57</a>       expect { zcv.support_files(sfs) }.to raise_error Exceptions::InvalidZipError</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

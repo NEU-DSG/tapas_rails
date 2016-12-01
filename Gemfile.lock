@@ -120,6 +120,7 @@ GEM
     devise-guests (0.3.3)
       devise
     diff-lcs (1.2.4)
+    docile (1.1.5)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
     ebnf (1.0.0)
@@ -374,6 +375,16 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    simplecov (0.12.0)
+      docile (~> 1.1.0)
+      json (>= 1.8, < 3)
+      simplecov-html (~> 0.10.0)
+    simplecov-html (0.10.0)
+    simplecov-json (0.2)
+      json
+      simplecov
+    simplecov-rcov (0.2.3)
+      simplecov (>= 0.4.1)
     sinatra (1.4.3)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -480,6 +491,9 @@ DEPENDENCIES
   rubyzip
   sass-rails (~> 4.0.2)
   sdoc
+  simplecov
+  simplecov-json
+  simplecov-rcov
   sqlite3
   therubyracer
   thor

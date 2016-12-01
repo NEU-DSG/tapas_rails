@@ -1,0 +1,626 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/controllers/core_files_controller.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/controllers/core_files_controller.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-controllers-core_files_controller_rb.html">app/controllers/core_files_controller.rb</a></td>
+            <td class='right_align'><tt>189</tt></td>
+            <td class='right_align'><tt>40</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>84.66%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:85px"></div>
+        <div class="uncovered" style="width:15px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>27.50%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:28px"></div>
+        <div class="uncovered" style="width:72px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> class CoreFilesController &lt; CatalogController</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a>   # include ApiAccessible</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a>   include ModsDisplay::ControllerExtension</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line5">5</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>   configure_mods_display do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>     identifier { ignore! }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line8">8</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>   skip_before_filter :load_asset, :load_datastream, :authorize_download!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line11">11</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line12">12</a>   # def teibp</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a>   #   e = &quot;Could not find TEI Boilerplate representation of this object.  &quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>   #     &quot;Please retry in a few minutes.&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a>   #   render_content_asset @core_file.teibp, e</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line18">18</a>   # def tapas_generic</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>   #   e = &quot;Could not find a Tapas Generic representation of this object.  &quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>   #     &quot;Please retry in a few minutes.&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>   #   render_content_asset @core_file.tapas_generic, e</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line24">24</a>   # def mods</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>   #   @html = render_mods_display(@core_file).to_html</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a>   #   render :text =&gt; @html</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a>   # def tei</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a>   #   e = &quot;Could not find TEI associated with this file.  Please retry in a &quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>   #     &quot;few minutes and contact an administrator if the problem persists.&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a>   #   render_content_asset @core_file.canonical_object, e</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a>   # def rebuild_reading_interfaces</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line36">36</a>   #   RebuildReadingInterfaceJob.perform(params[:did])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line37">37</a>   #   @response[:message] = &quot;Record updated successfully&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line38">38</a>   #   pretty_json(200) and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line41">41</a>   # def show</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line42">42</a>   #   @core_file = CoreFile.find_by_did(params[:did])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line44">44</a>   #   if @core_file.upload_status.blank?</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>   #     @core_file.retroactively_set_status!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line48">48</a>   #   if @core_file.stuck_in_progress?</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line49">49</a>   #     @core_file.set_default_display_error</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>   #     @core_file.errors_system = [&#39;Object was processing for more than five minutes&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>   #     @core_file.mark_upload_failed!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line54">54</a>   #   @response = @core_file.as_json</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>   #   pretty_json(200) and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line57">57</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a>   # def upsert</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>   #   begin</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a>   #     # Step 1: Find or create the CoreFile Object -</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line61">61</a>   #     # we do this here so that we have a stub record to</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line62">62</a>   #     # attach error messages &amp; status tracking to.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line63">63</a>   #     if CoreFile.exists_by_did?(params[:did])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a>   #       core_file = CoreFile.find_by_did(params[:did])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line65">65</a>   #       core_file.mark_upload_in_progress!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line66">66</a>   #     else</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line67">67</a>   #       core_file = CoreFile.create(did: params[:did],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line68">68</a>   #                                   depositor: params[:depositor])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line69">69</a>   #       core_file.mark_upload_in_progress!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line70">70</a>   #     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line71">71</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a>   #     # Step 1: Extract uploaded files to temporary locations if they exist</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line73">73</a>   #     if params[:tei]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line74">74</a>   #       params[:tei] = create_temp_file params[:tei]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line75">75</a>   #     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line76">76</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line77">77</a>   #     if params[:support_files]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line78">78</a>   #       params[:support_files] = create_temp_file params[:support_files]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line79">79</a>   #     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line80">80</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line81">81</a>   #     # Step 2: If TEI was provided, generate a MODS record that can be sent back</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line82">82</a>   #     # to Drupal to populate the validate metadata page provided after initial</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line83">83</a>   #     # file upload</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line84">84</a>   #     if params[:tei]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line85">85</a>   #       opts = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line86">86</a>   #         :authors =&gt; params[:display_authors],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line87">87</a>   #         :contributors =&gt; params[:display_contributors],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line88">88</a>   #         :&quot;timeline-date&quot; =&gt; params[:display_date],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line89">89</a>   #         :title =&gt; params[:title]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line90">90</a>   #       }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line91">91</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line92">92</a>   #       @mods = Exist::GetMods.execute(params[:tei], opts)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line93">93</a>   #     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line94">94</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line95">95</a>   #     # Step 3: Kick off an upsert job</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line96">96</a>   #     job = TapasObjectUpsertJob.new params</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line97">97</a>   #     TapasRails::Application::Queue.push job</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line98">98</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line99">99</a>   #     # Step 4: Respond with MODS if it is available, otherwise send a generic</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line100">100</a>   #     # success message</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line101">101</a>   #     if @mods</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line102">102</a>   #       render :xml =&gt; @mods, :status =&gt; 202</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line103">103</a>   #     else</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line104">104</a>   #       @response[:message] = &quot;Job processing&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line105">105</a>   #       pretty_json(202) and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line106">106</a>   #     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line107">107</a>   #   rescue =&gt; e</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line108">108</a>   #     core_file.set_default_display_error</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line109">109</a>   #     core_file.set_stacktrace_message(e)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line110">110</a>   #     core_file.mark_upload_failed!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line111">111</a>   #     raise e</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line112">112</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line113">113</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line114">114</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line115">115</a>   # private</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line116">116</a>   #</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line117">117</a>   # def render_content_asset(asset, error_msg)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line118">118</a>   #   if asset &amp;&amp; asset.content.content.present?</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line119">119</a>   #     render :text =&gt; asset.content.content</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line120">120</a>   #   else</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line121">121</a>   #     render :text =&gt; error_msg, :status =&gt; 404</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line122">122</a>   #   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line123">123</a>   # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line124">124</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line125">125</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line126">126</a>   def new</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line127">127</a>     @page_title = &quot;Create New CoreFile&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line128">128</a>     model_type = ActiveFedora::SolrService.escape_uri_for_query &quot;info:fedora/afmodel:Collection &quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line129">129</a>     count = ActiveFedora::SolrService.count(&quot;has_model_ssim:\&quot;#{model_type}\&quot;&quot;)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line130">130</a>     results = ActiveFedora::SolrService.query(&quot;has_model_ssim:\&quot;#{model_type}\&quot;&quot;, rows: count)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line131">131</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line132">132</a>     @arr =[]</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line133">133</a>     results.each do |res|</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line134">134</a>       if !res[&#39;title_info_title_ssi&#39;].blank? &amp;&amp; !res[&#39;did_ssim&#39;].blank? &amp;&amp; res[&#39;did_ssim&#39;].count &gt; 0</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line135">135</a>         @arr &lt;&lt; [res[&#39;title_info_title_ssi&#39;],res[&#39;did_ssim&#39;][0]]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line136">136</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line137">137</a>     end</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line138">138</a>     @core_files = CoreFile.new</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line139">139</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line140">140</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line141">141</a>   def create</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line142">142</a>     # collection = Collection.find(&quot;#{params[:core_files][:collections]}&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line143">143</a>     # params[:core_files].delete(&quot;collections&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line144">144</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line145">145</a>     @core_files = CoreFile.new(params[:core_files])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line146">146</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line147">147</a>     @core_files.did = @core_files.pid</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line148">148</a>     @core_files.depositor = &quot;000000000&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line149">149</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line150">150</a>     @core_files.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line151">151</a>     # @core_files.collections = collection</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line152">152</a>     # @collection.save!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line153">153</a>     redirect_to @core_files and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line154">154</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line155">155</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line156">156</a>   def index</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line157">157</a>     @page_title = &quot;All Files&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line158">158</a>     self.search_params_logic += [:corefiles_filter]</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line159">159</a>     (@response, @document_list) = search_results(params, search_params_logic)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line160">160</a>     render &#39;shared/index&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line161">161</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line162">162</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line163">163</a> # def show #inherited from catalog controller</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line164">164</a> # end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line165">165</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line166">166</a>   def corefiles_filter(solr_parameters, user_parameters)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line167">167</a>     model_type = ActiveFedora::SolrService.escape_uri_for_query &quot;info:fedora/afmodel:CoreFile&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line168">168</a>     query = &quot;has_model_ssim:\&quot;#{model_type}\&quot;&quot;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line169">169</a>     solr_parameters[:fq] ||= []</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line170">170</a>     solr_parameters[:fq] &lt;&lt; query</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line171">171</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line172">172</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line173">173</a>   def edit</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line174">174</a>     @core_files = CoreFile.find(params[:id])</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line175">175</a>     @page_title = &quot;Edit #{@core_files.title}&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line176">176</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line177">177</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line178">178</a>   def update</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line179">179</a>     #@core_files = CoreFile.find_by_did(params[:id])</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line180">180</a>     @core_files = CoreFile.find(params[:id])</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line181">181</a>     @core_files.depositor = &quot;000000000&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line182">182</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line183">183</a>     @core_files.update_attributes(params[:core_files])</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line184">184</a>     @core_files.save!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line185">185</a>     redirect_to @core_files and return</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line186">186</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line187">187</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line188">188</a> end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line189">189</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line190">190</a> </pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

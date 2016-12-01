@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/validators/zip_content_validator.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/validators/zip_content_validator.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-validators-zip_content_validator_rb.html">app/validators/zip_content_validator.rb</a></td>
+            <td class='right_align'><tt>77</tt></td>
+            <td class='right_align'><tt>40</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="inferred">
+          <td><pre><a name="line2">2</a> # Handles validating the content that we expect to be within zip files</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> # handed to the server during CoreFile creation.</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a> class ZipContentValidator</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line5">5</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>   def self.mods(mods_path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>     validate_extension(mods_path, %w(xml), &quot;MODS metadata&quot;)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line8">8</a>     xml = load_and_validate_xml mods_path</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>     xsd_path = &quot;#{Rails.root}/lib/assets/xsd/mods-3-5.xsd&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>     xsd = Nokogiri::XML::Schema(File.read xsd_path)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line12">12</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line13">13</a>     errors = []</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line14">14</a>     xsd.validate(xml).each do |error|</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line15">15</a>       errors &lt;&lt; error.message</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line18">18</a>     if errors.any?</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line19">19</a>       raise Exceptions::InvalidZipError.new \</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>         &quot;MODS file at #{mods_path} failed schema validation, errors were:\n &quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>         &quot;#{errors.join(&quot;\n&quot;)}&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line24">24</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line25">25</a>   def self.html(html_path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line26">26</a>     validate_extension(html_path, %w(html), &quot;HTML Display File&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line29">29</a>   def self.tei(tei_path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line30">30</a>     validate_extension(tei_path, %w(xml), &quot;TEI File&quot;)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line31">31</a>     xml = load_and_validate_xml tei_path</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line32">32</a>     validate_tei(xml, tei_path)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line35">35</a>   def self.support_files(support_file_paths)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line36">36</a>     support_file_paths.each do |sf|</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line37">37</a>       validate_extension(sf, %w(jpeg jpg png), &quot;Page Image File&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line38">38</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line41">41</a>   private</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line42">42</a>     def self.validate_tei(xml, path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line43">43</a>       xsl_path = &quot;#{Rails.root}/lib/assets/xslt/is_tei.xsl&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line44">44</a>       template = Nokogiri::XSLT(File.read(xsl_path))</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line45">45</a>       results = template.transform(xml)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line47">47</a>       errors = []</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line48">48</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line49">49</a>       results.xpath(&quot;p&quot;).each do |error|</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line50">50</a>         errors &lt;&lt; error.text</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line53">53</a>       unless errors.empty?</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line54">54</a>         raise Exceptions::InvalidZipError.new &quot;TEI or TFC file at #{path} did &quot; \</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>           &quot;not validate as TEI!  Errors were:\n #{errors.join(&quot;\n&quot;)}&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line57">57</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line59">59</a>     def self.validate_extension(path, valid_exts, file_type)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line60">60</a>       extension = path.split(&#39;.&#39;).last.downcase</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line61">61</a>       unless valid_exts.include? extension</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line62">62</a>         raise Exceptions::InvalidZipError.new &quot;Expected #{file_type} received&quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line63">63</a>           &quot;through zipfile to have one of the following extensions: &quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a>           &quot;#{valid_exts}.  Instead it had extension #{extension}.&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line65">65</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line66">66</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line67">67</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line68">68</a>     def self.load_and_validate_xml(path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line69">69</a>       begin</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line70">70</a>         x = Nokogiri::XML(File.open(path)) do |config|</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line71">71</a>           config.strict.nonet</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a>         end</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line73">73</a>       rescue Nokogiri::XML::SyntaxError =&gt; error</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line74">74</a>         raise Exceptions::InvalidZipError.new &quot;#{path} was invalid! &quot;\</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line75">75</a>           &quot;Error was: #{error.message}&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line76">76</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line77">77</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line78">78</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

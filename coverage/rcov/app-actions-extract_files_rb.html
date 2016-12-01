@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/actions/extract_files.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/actions/extract_files.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-actions-extract_files_rb.html">app/actions/extract_files.rb</a></td>
+            <td class='right_align'><tt>58</tt></td>
+            <td class='right_align'><tt>30</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &quot;zip&quot; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line4">4</a> # A class that handles taking apart the zip files used to ingest content</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line5">5</a> # associated with a TEI file upload.  </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a> class ExtractFiles</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   attr_accessor :tmp_dir</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line8">8</a>   attr_reader :zip_path </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>   def initialize(zip_path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>     @zip_path = zip_path </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line12">12</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line14">14</a>   def self.execute(zip_path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line15">15</a>     ExtractFiles.new(zip_path).execute</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line18">18</a>   # Returns a hash with each of the following keys set to a file path assuming</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>   # that some content could be found: </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a>   # - thumbnail: The image thumbnail associated with this TEIFile.</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>   # Also returns the following key set to an array of files paths: </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>   # - page_images: All page images associated with this TEI File.  May be </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a>   # jpegs or pngs.</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line24">24</a>   def execute</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line25">25</a>     response = {} </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line26">26</a>     @tmp_dir = &quot;#{Rails.root}/tmp/extracted_files/#{SecureRandom.hex}&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line27">27</a>     FileUtils.mkdir_p tmp_dir</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line28">28</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line29">29</a>     response[:directory] = @tmp_dir</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>     # Ensure page_images is always initialized to an empty array</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line32">32</a>     response[:page_images] = []</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line33">33</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line34">34</a>     Zip::File.open(zip_path) do |zip|</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line35">35</a>       zip.each do |entry| </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line36">36</a>         name = entry.name</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line37">37</a>         if name.split(&#39;/&#39;).second == &#39;thumbnail&#39; &amp;&amp; real_file?(entry)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line38">38</a>           response[:thumbnail] = write_to_file entry</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>         elsif name.split(&quot;/&quot;).second == &quot;page_images&quot; &amp;&amp; real_file?(entry)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line40">40</a>           response[:page_images] &lt;&lt; write_to_file(entry)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line41">41</a>         end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line42">42</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a>     end</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line44">44</a>     response</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line47">47</a>   private </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line48">48</a>   def real_file?(entry)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line49">49</a>     entry.file? &amp;&amp; entry.name.split(&#39;/&#39;).last.first != &#39;.&#39; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line51">51</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line52">52</a>   def write_to_file(entry) </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line53">53</a>     return nil unless entry </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line54">54</a>     fname = Pathname.new(entry.name).basename.to_s</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line55">55</a>     path  = Pathname.new(tmp_dir).join(fname).to_s</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line56">56</a>     entry.extract(path)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line57">57</a>     path</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

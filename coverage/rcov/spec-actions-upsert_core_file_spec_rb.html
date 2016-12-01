@@ -1,0 +1,833 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>spec/actions/upsert_core_file_spec.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>spec/actions/upsert_core_file_spec.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="spec-actions-upsert_core_file_spec_rb.html">spec/actions/upsert_core_file_spec.rb</a></td>
+            <td class='right_align'><tt>258</tt></td>
+            <td class='right_align'><tt>147</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>69.77%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:70px"></div>
+        <div class="uncovered" style="width:30px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>46.94%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:47px"></div>
+        <div class="uncovered" style="width:53px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &quot;spec_helper&quot; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a> describe UpsertCoreFile do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   include FileHelpers</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line6">6</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   describe &#39;#update_associations&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line8">8</a>     context &#39;on create (:collection_dids &amp;&amp; :file_type mandatory)&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line9">9</a>       before(:all) do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>         c_one, c_two, c_three = FactoryGirl.create_list(:collection, 3)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>         did = SecureRandom.uuid</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line12">12</a>         @params = { </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line13">13</a>           :file_types =&gt; [&#39;otherography&#39;, &#39;placeography&#39;, &#39;odd_file&#39;],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>           :collection_dids =&gt; [c_one.did, c_two.did, c_three.did]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a>         }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line17">17</a>         upserter = UpsertCoreFile.new @params</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line18">18</a>         @core_file = CoreFile.create(:did =&gt; did, :depositor =&gt; &#39;test&#39;)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line19">19</a>         upserter.core_file = @core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line20">20</a>         upserter.update_associations!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line21">21</a>         @core_file.reload</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line23">23</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line24">24</a>       after(:all) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line26">26</a>       it &#39;updates the collections associated with the core_file&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line27">27</a>         dids = @core_file.collections.map { |collection| collection.did }</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line28">28</a>         expect(dids).to match_array @params[:collection_dids]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line30">30</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line31">31</a>       it &#39;updates the otherography relationships&#39; do</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line32">32</a>         dids = @core_file.otherography_for.map { |collection| collection.did }</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line33">33</a>         expect(dids).to match_array @params[:collection_dids]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line34">34</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line36">36</a>       it &#39;updates the placeography relationships&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line37">37</a>         dids = @core_file.placeography_for.map { |collection| collection.did }</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line38">38</a>         expect(dids).to match_array @params[:collection_dids]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line41">41</a>       it &#39;updates the odd_file relationships&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line42">42</a>         dids = @core_file.odd_file_for.map { |collection| collection.did }</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line43">43</a>         expect(dids).to match_array @params[:collection_dids]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line44">44</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line47">47</a>     context &#39;on update with new :collection_dids &amp;&amp; no :file_types&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line48">48</a>       before(:all) do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line49">49</a>         @old_collections = FactoryGirl.create_list(:collection, 2)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line50">50</a>         @core_file = FactoryGirl.create :core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line51">51</a>         @core_file.collections = @old_collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line52">52</a>         @core_file.bibliography_for = @old_collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line53">53</a>         @core_file.orgography_for = @old_collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line54">54</a>         @core_file.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line56">56</a>         @new_collections = FactoryGirl.create_list(:collection, 3)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line57">57</a>         @new_dids = @new_collections.map { |collection| collection.did }</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line58">58</a>         @params = { </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>           :collection_dids =&gt; @new_dids</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a>         }</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line61">61</a>         upserter = UpsertCoreFile.new @params </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line62">62</a>         upserter.core_file = @core_file </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line63">63</a>         upserter.update_associations! </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line64">64</a>         @core_file.reload</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line65">65</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line66">66</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line67">67</a>       after(:all) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line68">68</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line69">69</a>       it &#39;updates the collections associated with the core_file&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line70">70</a>         expect(@core_file.collections).to match_array @new_collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line71">71</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line73">73</a>       it &#39;updates the previously defined bibliography relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line74">74</a>         expect(@core_file.bibliography_for).to match_array @new_collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line75">75</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line76">76</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line77">77</a>       it &#39;updates the previously defined orgography relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line78">78</a>         expect(@core_file.orgography_for).to match_array @new_collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line79">79</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line80">80</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line81">81</a>       it &#39;leaves all previously empty relationships empty&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line82">82</a>         expect(@core_file.placeography_for).to be_empty</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line83">83</a>         expect(@core_file.odd_file_for).to be_empty</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line84">84</a>         expect(@core_file.otherography_for).to be_empty</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line85">85</a>         expect(@core_file.personography_for).to be_empty</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line86">86</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line87">87</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line88">88</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line89">89</a>     context &#39;on update with new :file_types &amp;&amp; no :collection_dids&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line90">90</a>       before(:all) do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line91">91</a>         @old_collections = FactoryGirl.create_list(:collection, 2)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line92">92</a>         @core_file = FactoryGirl.create :core_file </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line93">93</a>         @core_file.collections = @old_collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line94">94</a>         @core_file.bibliography_for = @old_collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line95">95</a>         @core_file.placeography_for = @old_collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line96">96</a>         @core_file.save! </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line97">97</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line98">98</a>         @params = { </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line99">99</a>           :file_types =&gt; [&#39;odd_file&#39;, &#39;otherography&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line100">100</a>         }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line101">101</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line102">102</a>         upserter = UpsertCoreFile.new @params </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line103">103</a>         upserter.core_file = @core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line104">104</a>         upserter.update_associations!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line105">105</a>         @core_file.reload</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line106">106</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line107">107</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line108">108</a>       after(:all) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line109">109</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line110">110</a>       it &#39;does not clear the .collections relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line111">111</a>         expect(@core_file.collections).to eq @old_collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line112">112</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line113">113</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line114">114</a>       it &#39;clears the previously set bibliography relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line115">115</a>         expect(@core_file.bibliography_for).to be_empty </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line116">116</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line117">117</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line118">118</a>       it &#39;clears the previously set placeography relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line119">119</a>         expect(@core_file.placeography_for).to be_empty</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line120">120</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line121">121</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line122">122</a>       it &#39;assigns the old collections to the odd_file_for relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line123">123</a>         expect(@core_file.odd_file_for).to eq @old_collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line124">124</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line125">125</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line126">126</a>       it &#39;assigns the old collections to the otherography relationship&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line127">127</a>         expect(@core_file.otherography_for).to eq @old_collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line128">128</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line129">129</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line130">130</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line131">131</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line132">132</a>   describe &#39;#upsert&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line133">133</a>     def setup_valid_upsert</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line134">134</a>       @zip = copy_fixture(&#39;all_files.zip&#39;, &#39;zip_copy.zip&#39;)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line135">135</a>       @tei = copy_fixture(&#39;tei.xml&#39;, &#39;tei_copy.xml&#39;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line136">136</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line137">137</a>       @collections = FactoryGirl.create_list(:collection, 3)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line138">138</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line139">139</a>       @community   = FactoryGirl.create :community</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line140">140</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line141">141</a>       # Make all the collections private</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line142">142</a>       @collections.each do |collection|</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line143">143</a>         collection.drupal_access = &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line144">144</a>         collection.community = @community</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line145">145</a>         collection.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line146">146</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line147">147</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line148">148</a>       @params = {</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line149">149</a>         :did =&gt; SecureRandom.uuid, </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line150">150</a>         :collection_dids =&gt; @collections.map { |x| x.did },</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line151">151</a>         :file_types =&gt; [:personography, :placeography], </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line152">152</a>         :depositor =&gt; &quot;William Jackson&quot;,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line153">153</a>         :support_files =&gt; @zip,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line154">154</a>         :display_author =&gt; &#39;Wallace &amp; Grommit&#39;, </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line155">155</a>         :display_contributors =&gt; [&#39;A&#39;, &#39;B&#39;, &#39;C&#39;],</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line156">156</a>         :tei =&gt; @tei</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line157">157</a>       }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line158">158</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line159">159</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line160">160</a>     def clear_upsert_ivars</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line161">161</a>       @zip = nil </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line162">162</a>       @tei = nil</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line163">163</a>       @collections = nil </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line164">164</a>       @community = nil </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line165">165</a>       @params = nil </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line166">166</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line167">167</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line168">168</a>     context &#39;on failure&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line169">169</a>       before(:all) do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line170">170</a>         setup_valid_upsert</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line171">171</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line172">172</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line173">173</a>       it &#39;captures the error on the core_file in question&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line174">174</a>         Content::UpsertPageImages.any_instance.stub(:execute) do |e| </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line175">175</a>           raise &#39;I am a stubbed exception&#39; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line176">176</a>         end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line177">177</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line178">178</a>         expect { UpsertCoreFile.execute(@params) }.to raise_error RuntimeError </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line179">179</a>         core_file = CoreFile.find_by_did(@params[:did])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line180">180</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line181">181</a>         expect(core_file.stacktrace).to include &#39;I am a stubbed exception&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line182">182</a>         expect(core_file.errors_display.length).to eq 1</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line183">183</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line184">184</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line185">185</a>       after(:all) { clear_upsert_ivars }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line186">186</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line187">187</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line188">188</a>     context &#39;on success&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line189">189</a>       before(:all) do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line190">190</a>         setup_valid_upsert</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line191">191</a>         UpsertCoreFile.execute(@params)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line192">192</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line193">193</a>         @core_file = CoreFile.find_by_did(@params[:did])</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line194">194</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line195">195</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line196">196</a>       after(:all) { clear_upsert_ivars }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line197">197</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line198">198</a>       it &#39;creates the CoreFile and associates it with its drupal id&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line199">199</a>         expect(@core_file).not_to be nil </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line200">200</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line201">201</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line202">202</a>       it &#39;deletes the tei temp file&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line203">203</a>         expect(File.exists? @tei).to be false </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line204">204</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line205">205</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line206">206</a>       it &#39;deletes the support_files zip&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line207">207</a>         expect(File.exists? @zip).to be false </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line208">208</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line209">209</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line210">210</a>       it &#39;writes the pid of the object to the MODS datastream&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line211">211</a>         expect(@core_file.mods.identifier.first).to eq @core_file.pid</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line212">212</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line213">213</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line214">214</a>       it &#39;attaches a TEIFile object with the expected content&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line215">215</a>         tei = @core_file.canonical_object</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line216">216</a>         expect(tei.content.content).to eq File.read(fixture_file(&#39;tei.xml&#39;))</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line217">217</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line218">218</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line219">219</a>       it &#39;adds a ImageThumbnailFile object with the expected content&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line220">220</a>         thumb = @core_file.thumbnail</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line221">221</a>         expect(thumb.thumbnail_1.label).to eq &#39;thumbnail.jpg&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line222">222</a>         expect(thumb.thumbnail_1.content.size).not_to eq 0 </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line223">223</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line224">224</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line225">225</a>       it &#39;adds PageImage files with content&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line226">226</a>         page_images = @core_file.page_images</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line227">227</a>         expect(page_images.count).to eq 3</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line228">228</a>         expect(page_images.all? { |x| x.content.content.present? }).to be true</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line229">229</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line230">230</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line231">231</a>       it &#39;generates a teibp reading interface object&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line232">232</a>         teibp = @core_file.teibp </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line233">233</a>         expect(teibp.content.label).to eq &#39;teibp.xhtml&#39; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line234">234</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line235">235</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line236">236</a>       it &#39;generates a tapas-generic reading interface object&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line237">237</a>         tapas_generic = @core_file.tapas_generic</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line238">238</a>         expect(tapas_generic.content.label).to eq &#39;tapas-generic.xhtml&#39; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line239">239</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line240">240</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line241">241</a>       it &#39;assigns the object a drupal_access level&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line242">242</a>         expect(@core_file.drupal_access).to eq &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line243">243</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line244">244</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line245">245</a>       it &#39;assigns a depositor to the core file&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line246">246</a>         expect(@core_file.depositor).to eq @params[:depositor]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line247">247</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line248">248</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line249">249</a>       it &#39;makes the CoreFile a member of the specified collections&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line250">250</a>         expect(@core_file.collections).to eq @collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line251">251</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line252">252</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line253">253</a>       it &#39;makes the CoreFile each type of specified ography&#39; do </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line254">254</a>         expect(@core_file.placeography_for).to eq @collections</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line255">255</a>         expect(@core_file.personography_for).to eq @collections</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line256">256</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line257">257</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line258">258</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line259">259</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

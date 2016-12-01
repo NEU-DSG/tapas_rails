@@ -1,0 +1,236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>app/actions/content/upsert_reading_interface.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>app/actions/content/upsert_reading_interface.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="app-actions-content-upsert_reading_interface_rb.html">app/actions/content/upsert_reading_interface.rb</a></td>
+            <td class='right_align'><tt>59</tt></td>
+            <td class='right_align'><tt>33</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>62.71%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:63px"></div>
+        <div class="uncovered" style="width:37px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>33.33%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:33px"></div>
+        <div class="uncovered" style="width:67px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> module Content</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line3">3</a>   class UpsertReadingInterface</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a>     attr_reader :core_file, :file_path, :interface_type</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>     include Content</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line6">6</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>     def self.all_interface_types</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line8">8</a>       [&#39;teibp&#39;, &#39;tapas-generic&#39;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line10">10</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line11">11</a>     def self.execute_all(core_file, file_path)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line12">12</a>       all_interface_types.each do |interface_type|</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line13">13</a>         Content::UpsertReadingInterface.execute(core_file, file_path, interface_type)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line14">14</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line15">15</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line17">17</a>     def self.execute(core_file, file_path, interface_type)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line18">18</a>       self.new(core_file, file_path, interface_type).execute</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line20">20</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line21">21</a>     def initialize(core_file, file_path, interface_type)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line22">22</a>       @core_file = core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line23">23</a>       @file_path = file_path</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line24">24</a>       @interface_type = interface_type</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line27">27</a>     def execute</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line28">28</a>       ZipContentValidator.tei file_path</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line29">29</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line30">30</a>       interface_type_internal = interface_type.gsub(&#39;-&#39;, &#39;_&#39;)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line31">31</a>       html_file = core_file.send(interface_type_internal)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line33">33</a>       unless html_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line34">34</a>         html_file = ::HTMLFile.create</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line35">35</a>         html_file.html_type = interface_type_internal</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line36">36</a>         html_file.core_file = core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line37">37</a>         html_file.html_for &lt;&lt; core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line38">38</a>         html_file.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line40">40</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line41">41</a>       filename = &quot;#{interface_type}.xhtml&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line42">42</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a>       # Prepare the tei file for eXist by handling relative urls</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line44">44</a>       xml_updated = ::PrepareReadingInterfaceXML.execute(core_file,</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line45">45</a>         Nokogiri::XML(File.read(file_path))).to_xml</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line46">46</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a>       # Pass the updated TEI File to eXist</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line48">48</a>       html = Exist::GetReadingInterface.execute(xml_updated, interface_type)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line49">49</a> </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a>       # Add the HTML to the html_file object</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line51">51</a>       add_unique_file(html_file, :filename =&gt; filename, :blob =&gt; html)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line52">52</a>       upsert_logger.info(&quot;HTMLFile upsert for cf #{html_file.core_file.pid} has pid #{html_file.pid}&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line54">54</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line55">55</a>     private</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line56">56</a>     def upsert_logger</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line57">57</a>       @@upsert_logger ||= Logger.new(&quot;#{Rails.root}/log/#{Rails.env}_upsert.log&quot;)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line58">58</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line60">60</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

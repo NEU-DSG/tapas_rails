@@ -1,0 +1,470 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>spec/models/collection_spec.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>spec/models/collection_spec.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="spec-models-collection_spec_rb.html">spec/models/collection_spec.rb</a></td>
+            <td class='right_align'><tt>137</tt></td>
+            <td class='right_align'><tt>94</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>70.07%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:70px"></div>
+        <div class="uncovered" style="width:30px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>56.38%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:56px"></div>
+        <div class="uncovered" style="width:44px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &#39;spec_helper&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a> describe Collection do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   include FileHelpers</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line6">6</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line7">7</a>   describe &quot;Core File drupal access&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line8">8</a>     let(:coll) { FactoryGirl.create(:collection) }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line9">9</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>     after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line11">11</a>     </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line12">12</a>     context &quot;on a collection that has been made public&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line13">13</a>       it &#39;is set to public&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line14">14</a>         one, two = FactoryGirl.create_list(:core_file, 2)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line15">15</a>         one.drupal_access = &#39;private&#39; ; one.collections &lt;&lt; coll ; one.save!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line16">16</a>         two.drupal_access = &#39;private&#39; ; two.collections &lt;&lt; coll ; two.save!</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line17">17</a>         expect(one.reload.drupal_access).to eq &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line18">18</a>         expect(two.reload.drupal_access).to eq &#39;private&#39; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line19">19</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line20">20</a>         coll.drupal_access = &#39;public&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line21">21</a>         coll.save! </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line23">23</a>         expect(one.reload.drupal_access).to eq &#39;public&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line24">24</a>         expect(two.reload.drupal_access).to eq &#39;public&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line25">25</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line28">28</a>     context &quot;on a collection that has been made private&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line29">29</a>       it &#39;is set to private unless the object has other public collections&#39; do</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line30">30</a>         one, two = FactoryGirl.create_list(:core_file, 2)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line32">32</a>         public_collection = FactoryGirl.create(:collection)</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line33">33</a>         public_collection.drupal_access = &#39;public&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line34">34</a>         public_collection.save! </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line35">35</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line36">36</a>         private_collection = FactoryGirl.create(:collection) </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line37">37</a>         private_collection.drupal_access = &#39;private&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line38">38</a>         private_collection.save! </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line39">39</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line40">40</a>         one.collections = [coll, public_collection] </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line41">41</a>         one.drupal_access = &#39;public&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line42">42</a>         one.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line44">44</a>         two.collections = [coll, private_collection] </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line45">45</a>         two.drupal_access = &#39;public&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line46">46</a>         two.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line48">48</a>         coll.drupal_access = &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line49">49</a>         coll.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line50">50</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line51">51</a>         expect(one.reload.drupal_access).to eq &#39;public&#39; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line52">52</a>         expect(two.reload.drupal_access).to eq &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a>       end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line54">54</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line55">55</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line56">56</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line57">57</a>   describe &quot;phantom collection&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line58">58</a>     let(:phantom) { Collection.phantom_collection }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line59">59</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line60">60</a>     before(:each) { Collection.destroy_all }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line61">61</a>     after(:each) { Collection.destroy_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line62">62</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line63">63</a>     it &quot;is created when referenced before existence&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line64">64</a>       phid = Rails.configuration.phantom_collection_pid</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line65">65</a>       expect(Collection.exists? phid).to be false </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line66">66</a>       phantom</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line67">67</a>       expect(Collection.exists? phid).to be true</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line68">68</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line69">69</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line70">70</a>     it &quot;is looked up when it exists and not created anew&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line71">71</a>       Collection.phantom_collection ; Collection.phantom_collection</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line72">72</a>       expect(Collection.count).to eq 1 </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line73">73</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line74">74</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line75">75</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line76">76</a>   describe &quot;Ography relationships&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line77">77</a>     it { respond_to :personographies } </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line78">78</a>     it { respond_to :orgographies } </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line79">79</a>     it { respond_to :bibliographies }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line80">80</a>     it { respond_to :otherographies } </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line81">81</a>     it { respond_to :odd_files }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line82">82</a>     it { respond_to :personographies= }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line83">83</a>     it { respond_to :orgographies= }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line84">84</a>     it { respond_to :bibliographies= }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line85">85</a>     it { respond_to :otherographies= }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line86">86</a>     it { respond_to :odd_files= }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line87">87</a>     it { respond_to :placeographies }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line88">88</a>     it { respond_to :placeographies= }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line89">89</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line90">90</a>     it &quot;can be set on core files from the collection&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line91">91</a>       collection = FactoryGirl.create :collection</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line92">92</a>       core_file = FactoryGirl.create :core_file</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line93">93</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line94">94</a>       collection.orgographies &lt;&lt; core_file</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line95">95</a>       collection.save!</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line96">96</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line97">97</a>       expect(core_file.orgography_for.first.pid).to eq collection.pid</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line98">98</a>       expect(collection.reload.orgographies).to match_array [core_file]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line99">99</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line100">100</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line101">101</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line102">102</a>   describe &quot;#as_json&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line103">103</a>     after(:each) { ActiveFedora::Base.delete_all }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line104">104</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line105">105</a>     it &#39;returns a valueless hash with no data&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line106">106</a>       result = Collection.new.as_json</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line107">107</a>       </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line108">108</a>       expect(result[:project_did]).to be_blank</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line109">109</a>       expect(result[:depositor]).to be_blank</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line110">110</a>       expect(result[:title]).to be_blank</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line111">111</a>       expect(result[:access]).to be_blank</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line112">112</a>       expect(result[:thumbnail]).to be_blank</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line113">113</a>       expect(result[:description]).to be_blank</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line114">114</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line115">115</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line116">116</a>     it &#39;returns the correct values where data exists&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line117">117</a>       community = FactoryGirl.create :community</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line118">118</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line119">119</a>       collection = FactoryGirl.create :collection</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line120">120</a>       collection.mods.title = &quot;The Most Dangerous Game&quot; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line121">121</a>       collection.mods.abstract = &quot;Spoopy&quot; </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line122">122</a>       collection.add_thumbnail(:filepath =&gt; fixture_file(&#39;image.jpg&#39;))</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line123">123</a>       collection.community = community</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line124">124</a>       collection.drupal_access = &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line125">125</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line126">126</a>       result = collection.as_json</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line127">127</a> </pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line128">128</a>       expect(result[:project_did]).to eq community.did</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line129">129</a>       expect(result[:depositor]).to eq community.depositor</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line130">130</a>       expect(result[:title]).to eq &#39;The Most Dangerous Game&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line131">131</a>       expect(result[:description]).to eq &#39;Spoopy&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line132">132</a>       expect(result[:access]).to eq &#39;private&#39;</pre></td>
+        </tr>
+        <tr class="uncovered">
+          <td><pre><a name="line133">133</a>       expect(result[:thumbnail]).to eq &#39;image.jpg&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line134">134</a>     end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line135">135</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line136">136</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line137">137</a>   it_behaves_like &#39;InlineThumbnails&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line138">138</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

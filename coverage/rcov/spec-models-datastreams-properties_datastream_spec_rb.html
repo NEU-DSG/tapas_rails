@@ -1,0 +1,272 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+  <head>
+    <title>spec/models/datastreams/properties_datastream_spec.rb</title>
+    <link href="./assets/0.2.3/screen.css" media="all" rel="stylesheet" type="text/css" />
+    <link href="./assets/0.2.3/print.css" media="print" rel="stylesheet" type="text/css" />
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <script type="text/javascript" src="./assets/0.2.3/rcov.js"></script>
+  </head>
+  <body>
+    <h1>Tapas rails C0 Coverage Information - Simploco - RCov</h1>
+    <h2>spec/models/datastreams/properties_datastream_spec.rb</h2>
+
+    <div class="report_table_wrapper">
+      <table class='report' id='report_table'>
+        <thead>
+          <tr>
+            <th class="left_align">Name</th>
+            <th class="right_align">Total Lines</th>
+            <th class="right_align">Lines of Code</th>
+            <th class="left_align">Total Coverage</th>
+            <th class="left_align">Code Coverage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="left_align"><a href="spec-models-datastreams-properties_datastream_spec_rb.html">spec/models/datastreams/properties_datastream_spec.rb</a></td>
+            <td class='right_align'><tt>71</tt></td>
+            <td class='right_align'><tt>47</tt></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+            <td class="left_align"><div class="percent_graph_legend"><tt class=''>100.00%</tt></div>
+      <div class="percent_graph">
+        <div class="covered" style="width:100px"></div>
+        <div class="uncovered" style="width:0px"></div>
+      </div></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Key</h3>
+
+    <div class="key"><pre><span class='marked'>Code reported as executed by Ruby looks like this...</span><span class='marked1'>and this: this line is also marked as covered.</span><span class='inferred'>Lines considered as run by rcov, but not reported by Ruby, look like this,</span><span class='inferred1'>and this: these lines were inferred by rcov (using simple heuristics).</span><span class='uncovered'>Finally, here's a line marked as not executed.</span></pre></div>
+
+    <h3>Coverage Details</h3>
+
+    <table class="details">
+      <tbody>
+        <tr class="marked">
+          <td><pre><a name="line2">2</a> require &#39;spec_helper&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line3">3</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line4">4</a> describe PropertiesDatastream do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line5">5</a>   let(:properties) { PropertiesDatastream.new }</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line6">6</a>   let(:solr_hash)  { properties.to_solr }</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line7">7</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line8">8</a>   it &quot;implements the og reference field.&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line9">9</a>     properties.og_reference = &quot;111&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line10">10</a>     expect(properties.og_reference.first).to eq &quot;111&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line11">11</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line12">12</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line13">13</a>   it &quot;implements the project members field.&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line14">14</a>     properties.project_members = [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line15">15</a>     expect(properties.project_members).to match_array [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line16">16</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line17">17</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line18">18</a>   it &quot;implements the html_type field&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line19">19</a>     properties.html_type = &quot;tapas_generic&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line20">20</a>     expect(properties.html_type).to eq [&quot;tapas_generic&quot;]</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line21">21</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line22">22</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line23">23</a>   it &quot;implements the drupal access field.&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line24">24</a>     properties.drupal_access = &quot;public&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line25">25</a>     expect(properties.drupal_access.first).to eq &quot;public&quot; </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line26">26</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line27">27</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line28">28</a>   it &#39;implements the upload status field&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line29">29</a>     properties.upload_status = &#39;IN_PROGRESS&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line30">30</a>     expect(properties.upload_status.first).to eq &#39;IN_PROGRESS&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line31">31</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line32">32</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line33">33</a>   it &#39;implements the upload status time field&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line34">34</a>     now = DateTime.now.iso8601.to_s</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line35">35</a>     properties.upload_status_time = now</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line36">36</a>     expect(properties.upload_status_time.first).to eq now </pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line37">37</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line38">38</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line39">39</a>   it &#39;implements the stacktrace field&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line40">40</a>     properties.stacktrace = &#39;Big hueg stacktraec&#39; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line41">41</a>     expect(properties.stacktrace.first).to eq &#39;Big hueg stacktraec&#39;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line42">42</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line43">43</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line44">44</a>   it &#39;implements the errors_display field&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line45">45</a>     properties.errors_display = %w(one two three)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line46">46</a>     expect(properties.errors_display).to eq %w(one two three)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line47">47</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line48">48</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line49">49</a>   it &#39;implements the errors_system field&#39; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line50">50</a>     properties.errors_system = %w(one two three)</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line51">51</a>     expect(properties.errors_system).to eq %w(one two three)</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line52">52</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line53">53</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line54">54</a>   it &quot;solrizes correctly&quot; do </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line55">55</a>     properties.depositor = &quot;William Jackson&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line56">56</a>     properties.drupal_access = &#39;public&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line57">57</a>     properties.og_reference = [&#39;321&#39;]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line58">58</a>     properties.project_members = [&quot;1&quot;, &quot;2&quot;]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line59">59</a>     properties.html_type = &quot;teibp&quot;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line60">60</a>     properties.upload_status = &quot;SUCCESS&quot;</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line61">61</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line62">62</a>     now = DateTime.now.iso8601.to_s</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line63">63</a>     properties.upload_status_time = now</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line64">64</a> </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line65">65</a>     expect(solr_hash[&quot;drupal_access_ssim&quot;]).to eq &#39;public&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line66">66</a>     expect(solr_hash[&quot;depositor_tesim&quot;]).to eq [&quot;William Jackson&quot;]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line67">67</a>     expect(solr_hash[&quot;drupal_og_reference_ssim&quot;]).to eq [&quot;321&quot;]</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line68">68</a>     expect(solr_hash[&quot;html_type_ssi&quot;]).to eq &quot;teibp&quot; </pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line69">69</a>     expect(solr_hash[&#39;upload_status_ssi&#39;]).to eq &#39;SUCCESS&#39;</pre></td>
+        </tr>
+        <tr class="marked">
+          <td><pre><a name="line70">70</a>     expect(solr_hash[&#39;upload_status_time_dtsi&#39;]).to eq now</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line71">71</a>   end</pre></td>
+        </tr>
+        <tr class="inferred">
+          <td><pre><a name="line72">72</a> end</pre></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>Generated on 2016-11-29 20:50:48 +0000 with <a href="https://github.com/fguillen/simplecov-rcov">SimpleCov-RCov 0.2.3</a></p>
+
+  </body>
+</html>

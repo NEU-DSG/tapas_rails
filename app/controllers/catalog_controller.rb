@@ -105,6 +105,9 @@ class CatalogController < ApplicationController
     config.add_show_field 'abstract_tesim', :label => 'Description'
     config.add_show_field 'drupal_og_reference_ssim', :label => 'External links'
     config.add_show_field 'project_members_ssim', :label => 'Members'
+    config.add_show_field 'authors_ssim', :label => 'Authors'
+    config.add_show_field 'contributors_ssim', :label => 'Contributors'
+    config.add_show_field 'mass_permissions_ssim', :label => 'Visibility'
 
 
 
