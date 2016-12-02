@@ -31,31 +31,38 @@ class CollectionsController < CatalogController
   def new
     @page_title = "Create New Collection"
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
     @arr =[]
     results.each do |res|
-      @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
     end
     @collection = Collection.new
   end
 
   def create
-   # params[:collection][:community] = Community.find("#{params[:collection][:community]}")
-    @collection = Collection.new
+    community = Community.find("#{params[:collection][:community]}")
+    params[:collection].delete("community")
+    @collection = Collection.new(params[:collection])
     @collection.did = @collection.pid
     @collection.depositor = "000000000"
-    @collection.title = params[:collection][:title]
-    @collection.community = Community.find("#{params[:collection][:community]}")
+    @collection.save! #object must be saved before community can be assigned
+    @collection.community = community
     @collection.save!
     redirect_to @collection and return
   end
 
   def edit
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
     @arr =[]
     results.each do |res|
-      @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
     end
     @collection = Collection.find(params[:id])
     @page_title = "Edit #{@collection.title}"
