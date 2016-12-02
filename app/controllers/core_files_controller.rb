@@ -44,12 +44,13 @@ class CoreFilesController < CatalogController
   def create
     collection = Collection.find("#{params[:core_file][:collection]}")
     params[:core_file].delete("collection")
-    @core_file = CoreFile.new(did: params[:did], depositor: params[:depositor])
+    @core_file = CoreFile.new(did: params[:did], depositor: params[:depositor], title: params[:title])
     # @core_file.did = @core_file.pid
     # @core_file.depositor = "000000000"
     # @core_file.save!
     @core_file.collection = collection
     # Start upsert job with params for the file upload
+    logger.warn(params[:tei])
     if params[:tei]
       params[:tei] = create_temp_file params[:tei]
     end
@@ -61,7 +62,7 @@ class CoreFilesController < CatalogController
         :title => params[:title]
       }
 
-      @mods = Exist::GetMods.execute(params[:tei], opts)
+      # @mods = Exist::GetMods.execute(params[:tei], opts)
     end
 
     # Kick off an upsert job
