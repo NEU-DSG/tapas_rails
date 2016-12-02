@@ -19,6 +19,9 @@ class ApplicationController < ActionController::Base
     FileUtils.mkdir_p(tmpdir)
     tmpfile = Rails.root.join(tmpdir, fname)
     FileUtils.mv(fpath, tmpfile)
+    puts tmpdir
+    puts tmpfile
+    puts File.exist?(tmpfile)
     return tmpfile.to_s
   end
 
