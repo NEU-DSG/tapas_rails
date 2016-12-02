@@ -51,6 +51,7 @@ class CoreFilesController < CatalogController
     @core_file.collection = collection
     # Start upsert job with params for the file upload
     logger.warn(params[:tei])
+    logger.info(params) 
     if params[:tei]
       params[:tei] = create_temp_file params[:tei]
     end

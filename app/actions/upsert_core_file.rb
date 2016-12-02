@@ -35,15 +35,15 @@ class UpsertCoreFile
       opts[:title] = params[:display_title]
       opts[:contributors] = params[:display_contributors]
 
-      # if mods_needs_updating
-      #   mods_record = Exist::GetMods.execute(params[:tei], opts)
-      #   core_file.mods.content = mods_record
+      if mods_needs_updating
+        mods_record = Exist::GetMods.execute(params[:tei], opts)
+        core_file.mods.content = mods_record
 
-      #   # Rewrite did to mods after update
-      #   core_file.did = params[:did]
-      #   # Rewrite identifier to mods after update
-      #   core_file.mods.identifier = core_file.pid
-      # end
+        # Rewrite did to mods after update
+        core_file.did = params[:did]
+        # Rewrite identifier to mods after update
+        core_file.mods.identifier = core_file.pid
+      end
 
       update_associations!
 
