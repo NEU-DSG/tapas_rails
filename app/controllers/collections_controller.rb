@@ -18,8 +18,10 @@ class CollectionsController < CatalogController
     render 'shared/index'
   end
 
-  # def show #inherited from catalog controller
-  # end
+  def show #inherited from catalog controller
+    @collection = Collection.find(params[:id])
+    @cid=(params[:id])
+  end
 
   def collections_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"

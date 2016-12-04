@@ -118,6 +118,9 @@ class CatalogController < ApplicationController
     # config.add_show_field 'author_vern_display', :label => 'Author'
     config.add_show_field 'active_fedora_model_ssi', :label => 'Type'
 
+
+
+
     # config.add_show_field 'url_fulltext_display', :label => 'URL'
     # config.add_show_field 'url_suppl_display', :label => 'More Information'
     # config.add_show_field 'language_facet', :label => 'Language'

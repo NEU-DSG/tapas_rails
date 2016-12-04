@@ -112,6 +112,11 @@ class CoreFilesController < CatalogController
     pretty_json(200) and return
   end
 
+  def show #inherited from catalog controller
+    @core_file = CoreFile.find(params[:id])
+    @cid=(params[:id])
+  end
+
   # def show
   #   @core_file = CoreFile.find_by_did(params[:did])
   #

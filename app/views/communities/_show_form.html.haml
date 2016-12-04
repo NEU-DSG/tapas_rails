@@ -1,0 +1,52 @@
+= form_for @community do |f|
+  %fieldset
+    .container-fluid
+      .form-group
+      .row
+        .col-md-1
+          = f.label :title, "Title", class: "control-label"
+        .col-md-4
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
+      .form-group
+      .row
+        .col-md-1
+          = f.label :description, "Description"
+        .col-md-4
+          = f.text_field :description,required: true, name: 'community[description][]', class: "form-control input-block-level"
+      .form-group
+      .row
+        .col-md-1
+          = f.label :project_members, "Members"
+        .col-md-4
+          = f.text_field :project_members, name: 'community[project_members][]', class: "form-control input-block-level"
+      .form-group
+      .row
+        .col-md-1
+          = f.label :mass_permissions, "Visibility"
+        .col-md-4
+          = f.text_field :mass_permissions, {:class => "form-control"}
+      .form-group
+      .row
+        .col-md-1
+          = f.label :og_reference, "External links"
+        .col-md-4
+          = f.text_field :og_reference, name: 'community[og_reference][]', class: "form-control input-block-level"
+    -# %hr
+    -# %legend Permissions
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :mass_permissions, "Mass Permissions"
+    -#       = f.select :mass_permissions, options_for_select(['public', 'private'], @community.mass_permissions)
+    -# %hr
+    -# %legend Thumbnail (Optional)
+    -# - if !@community.properties.thumbnail_list[0].blank?
+    -#   =image_tag @community.properties.thumbnail_list[0]
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :thumbnail, "Thumbnail"
+    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+    %hr
+= link_to " Edit Community", "/communities/"+@cid+"/edit", class: ['btn', 'btn-primary', 'btn-large']
+

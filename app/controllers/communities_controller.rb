@@ -1,3 +1,6 @@
+require 'uri'
+require 'cgi'
+
 class CommunitiesController < CatalogController
   include ApiAccessible
   self.copy_blacklight_config_from(CatalogController)
@@ -26,8 +29,10 @@ class CommunitiesController < CatalogController
     render 'shared/index'
   end
 
-  # def show #inherited from catalog controller
-  # end
+   def show #inherited from catalog controller
+     @community = Community.find(params[:id])
+     @cid=(params[:id])
+   end
 
   def communities_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
