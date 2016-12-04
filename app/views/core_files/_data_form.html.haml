@@ -35,6 +35,15 @@
           / = f.select :community, options_for_select(@arr), name:'community'
           - parent = !@core_file.collection.blank? ? @core_file.collection.pid : nil
           = f.select :collection, options_for_select(@arr, parent), name:'collection'
+      .row
+        .col-md-1
+          = f.label :tei, "File"
+        .col-md-4
+          .field
+            = f.label 'New file'
+            = f.file_field 'tei'
+          .actions
+            = f.submit 'Save'
     -# %hr
     -# %legend Permissions
     -# %fieldset

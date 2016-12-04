@@ -44,13 +44,43 @@ class CoreFilesController < CatalogController
   def create
     collection = Collection.find("#{params[:core_file][:collection]}")
     params[:core_file].delete("collection")
-    @core_file = CoreFile.new(params[:core_file])
-    @core_file.did = @core_file.pid
-    @core_file.depositor = "000000000"
-    @core_file.save!
+    @core_file = CoreFile.new(did: params[:did], depositor: params[:depositor], title: params[:title])
+    # @core_file.did = @core_file.pid
+    # @core_file.depositor = "000000000"
+    # @core_file.save!
     @core_file.collection = collection
-    @core_file.save!
+    # Start upsert job with params for the file upload
+    logger.warn(params[:tei])
+    logger.info(params) 
+    if params[:tei]
+      params[:tei] = create_temp_file params[:tei]
+    end
+
+    if params[:tei]
+      opts = {
+        :authors => params[:authors],
+        :contributors => params[:contributors],
+        :title => params[:title]
+      }
+
+      # @mods = Exist::GetMods.execute(params[:tei], opts)
+    end
+
+    # Kick off an upsert job
+    job = TapasObjectUpsertJob.new params
+    # TapasRails::Application::Queue.push job
+    job.run
+
+    # Respond with MODS if it is available, otherwise send a generic
+    # success message
+    # if @mods
+    #   render :xml => @mods, :status => 202
+    # else
+      # @response[:message] = "Job processing"
+      # @core_file.save!
     redirect_to @core_file and return
+    # end
+    # redirect_to @core_file and return
   end
 
   def edit
