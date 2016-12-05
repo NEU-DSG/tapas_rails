@@ -11,8 +11,11 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     model.mods.content
   end
 
+  before_save :match_dc_to_mods
+
   before_save :ensure_unique_did, :calculate_drupal_access
 
+  parent_collection_relationship :collection
   has_and_belongs_to_many :collections, :property => :is_member_of, 
     :class_name => 'Collection'
 
@@ -36,6 +39,11 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
+  has_attributes :title, datastream: "DC"
+  has_attributes :description, datastream: "DC"
+  has_attributes :authors, datastream: "properties", multiple: true
+  has_attributes :contributors, datastream: "properties", multiple: true
+
 
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
@@ -137,5 +145,13 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     else
       self.drupal_access = 'private'
     end
+  end
+
+  def match_dc_to_mods
+    # self.DC.title = self.mods.title.first
+    # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    self.mods.title = self.DC.title.first
+    self.mods.abstract = self.DC.description.first
+    #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 end

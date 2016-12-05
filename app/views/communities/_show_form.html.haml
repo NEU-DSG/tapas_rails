@@ -1,27 +1,36 @@
-= form_for @collection do |f|
+= form_for @community do |f|
   %fieldset
     .container-fluid
+      .form-group
       .row
         .col-md-1
           = f.label :title, "Title", class: "control-label"
         .col-md-4
-          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'collection[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
+      .form-group
       .row
         .col-md-1
           = f.label :description, "Description"
         .col-md-4
-          = f.text_area :description,required: true, name: 'collection[description][]', class: "form-control input-block-level", rows: 5
+          = f.text_field :description,required: true, name: 'community[description][]', class: "form-control input-block-level"
+      .form-group
+      .row
+        .col-md-1
+          = f.label :project_members, "Members"
+        .col-md-4
+          = f.text_field :project_members, name: 'community[project_members][]', class: "form-control input-block-level"
+      .form-group
       .row
         .col-md-1
           = f.label :mass_permissions, "Visibility"
         .col-md-4
-          = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+          = f.text_field :mass_permissions, {:class => "form-control"}
+      .form-group
       .row
         .col-md-1
-          = f.label :community, "Community"
+          = f.label :og_reference, "External links"
         .col-md-4
-          - parent = !@collection.community.blank? ? @collection.community.pid : nil
-          = f.select :community, options_for_select(@arr, parent), name:'community'
+          = f.text_field :og_reference, name: 'community[og_reference][]', class: "form-control input-block-level"
     -# %hr
     -# %legend Permissions
     -# %fieldset
@@ -39,5 +48,5 @@
     -#       = f.label :thumbnail, "Thumbnail"
     -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
     %hr
-  .form-actions
-    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit' ,href:'collections#show'
+= link_to " Edit Community", "/communities/"+@cid+"/edit", class: ['btn', 'btn-primary', 'btn-large']
+

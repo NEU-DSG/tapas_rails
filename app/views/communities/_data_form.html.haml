@@ -1,31 +1,36 @@
 = form_for @community do |f|
   %fieldset
-    .container-fluid
+    .container-fluid 
+      .form-group
       .row
         .col-md-1
           = f.label :title, "Title", class: "control-label"
         .col-md-4
-          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "input-block-level", placeholder: "University Libraries"
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
+      .form-group
       .row
         .col-md-1
           = f.label :description, "Description"
         .col-md-4
-          = f.text_area :description,required: true, name: 'community[description][]', class: "input-block-level", rows: 5
+          = f.text_area :description,required: true, name: 'community[description][]', class: "form-control input-block-level", rows: 5
+      .form-group
       .row
         .col-md-1
           = f.label :project_members, "Members"
         .col-md-4
-          = f.text_field :project_members, name: 'community[project_members][]', class: "input-block-level"
+          = f.text_field :project_members, name: 'community[project_members][]', class: "form-control input-block-level"
+      .form-group
       .row
         .col-md-1
           = f.label :mass_permissions, "Visibility"
         .col-md-4
-          = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+          = f.select :mass_permissions, {"private" => "private", "public" => "public"}, {:class => "form-control"}
+      .form-group
       .row
         .col-md-1
           = f.label :og_reference, "External links"
         .col-md-4
-          = f.text_area :og_reference, name: 'community[og_reference][]', class: "input-block-level", rows: 5
+          = f.text_area :og_reference, name: 'community[og_reference][]', class: "form-control input-block-level", rows: 5
     -# %hr
     -# %legend Permissions
     -# %fieldset

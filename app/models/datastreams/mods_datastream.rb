@@ -11,8 +11,6 @@ class ModsDatastream < CerberusCore::Datastreams::ModsDatastream
 
     solr_doc["did_ssim"] = self.did.first if self.did.first.present?
     solr_doc["abstract_tesim"] = self.abstract.first
-    #solr_doc["thumbnail"] = self.thumbnail.first
-
     return solr_doc
   end
 end

@@ -18,8 +18,10 @@ class CollectionsController < CatalogController
     render 'shared/index'
   end
 
-  # def show #inherited from catalog controller
-  # end
+  def show #inherited from catalog controller
+    @collection = Collection.find(params[:id])
+    @cid=(params[:id])
+  end
 
   def collections_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
@@ -33,6 +35,7 @@ class CollectionsController < CatalogController
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+
     @arr =[]
     results.each do |res|
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
@@ -69,8 +72,13 @@ class CollectionsController < CatalogController
   end
 
   def update
+    community = Community.find("#{params[:collection][:community]}")
+    params[:collection].delete("community")
     @collection = Collection.find(params[:id])
+    # @core_files = CoreFile.find_by_did(params[:id])
     @collection.update_attributes(params[:collection])
+    @collection.save!
+    @collection.community = community
     @collection.save!
     redirect_to @collection and return
   end

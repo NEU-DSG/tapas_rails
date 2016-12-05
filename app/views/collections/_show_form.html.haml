@@ -10,18 +10,20 @@
         .col-md-1
           = f.label :description, "Description"
         .col-md-4
-          = f.text_area :description,required: true, name: 'collection[description][]', class: "form-control input-block-level", rows: 5
+          = f.text_field :description,required: true, name: 'collection[description][]', class: "form-control input-block-level", rows: 5
+
       .row
         .col-md-1
           = f.label :mass_permissions, "Visibility"
         .col-md-4
-          = f.select :mass_permissions, [['Public', 'public'], ['Private', 'private']]
+          = f.text_field :mass_permissions, class: "form-control input-block-level"
       .row
         .col-md-1
           = f.label :community, "Community"
         .col-md-4
+          / = f.select :community, options_for_select(@arr), name:'community'
           - parent = !@collection.community.blank? ? @collection.community.pid : nil
-          = f.select :community, options_for_select(@arr, parent), name:'community'
+          = f.text_field :community, name:'community', class: "form-control input-block-level"
     -# %hr
     -# %legend Permissions
     -# %fieldset
@@ -39,5 +41,5 @@
     -#       = f.label :thumbnail, "Thumbnail"
     -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
     %hr
-  .form-actions
-    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit' ,href:'collections#show'
+= link_to " Edit Collection", "/collections/"+@cid+"/edit", class: ['btn', 'btn-primary', 'btn-large']
+

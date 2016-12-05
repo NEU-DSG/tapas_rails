@@ -1,4 +1,4 @@
-class CoreFilesController < ApplicationController
+class CoreFilesController < CatalogController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
 
@@ -7,6 +7,112 @@ class CoreFilesController < ApplicationController
   end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
+
+  def index
+    @page_title = "All CoreFiles"
+    self.search_params_logic += [:communities_filter]
+    (@response, @document_list) = search_results(params, search_params_logic)
+    render 'shared/index'
+  end
+
+  # def show #inherited from catalog controller
+  # end
+
+  def communities_filter(solr_parameters, user_parameters)
+    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:CoreFile"
+    query = "has_model_ssim:\"#{model_type}\""
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << query
+  end
+
+  def new
+    @page_title = "Create New Core File"
+    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
+    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+
+    @arr =[]
+    results.each do |res|
+      # @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
+    end
+    @core_file = CoreFile.new
+  end
+
+  def create
+    collection = Collection.find("#{params[:core_file][:collection]}")
+    params[:core_file].delete("collection")
+    @core_file = CoreFile.new(did: params[:did], depositor: params[:depositor], title: params[:title])
+    # @core_file.did = @core_file.pid
+    # @core_file.depositor = "000000000"
+    # @core_file.save!
+    @core_file.collection = collection
+    # Start upsert job with params for the file upload
+    logger.warn(params[:tei])
+    logger.info(params)
+    if params[:tei]
+      params[:tei] = create_temp_file params[:tei]
+    end
+
+    if params[:tei]
+      opts = {
+        :authors => params[:authors],
+        :contributors => params[:contributors],
+        :title => params[:title]
+      }
+
+      # @mods = Exist::GetMods.execute(params[:tei], opts)
+    end
+
+    # Kick off an upsert job
+    job = TapasObjectUpsertJob.new params
+    # TapasRails::Application::Queue.push job
+    job.run
+
+    # Respond with MODS if it is available, otherwise send a generic
+    # success message
+    # if @mods
+    #   render :xml => @mods, :status => 202
+    # else
+      # @response[:message] = "Job processing"
+      # @core_file.save!
+    redirect_to @core_file and return
+    # end
+    # redirect_to @core_file and return
+  end
+
+  def edit
+    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
+    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+
+    @arr =[]
+    results.each do |res|
+      # @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
+        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      end
+    end
+    @core_file = CoreFile.find(params[:id])
+
+    @page_title = "Edit #{@core_file.title}"
+  end
+
+  def update
+    collection = Collection.find("#{params[:core_file][:collection]}")
+    params[:core_file].delete("collection")
+    @core_file = CoreFile.find(params[:id])
+    # @core_files = CoreFile.find_by_did(params[:id])
+    @core_file.update_attributes(params[:core_file])
+    @core_file.save!
+    @core_file.collection = collection
+    @core_file.save!
+    redirect_to @core_file and return
+  end
 
   def teibp
     e = "Could not find TEI Boilerplate representation of this object.  "\
@@ -53,6 +159,9 @@ class CoreFilesController < ApplicationController
     @response = @core_file.as_json
     pretty_json(200) and return
   end
+
+  # def show #inherited from catalog controller
+  # end
 
   def upsert
     begin

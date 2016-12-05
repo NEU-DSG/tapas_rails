@@ -2,7 +2,9 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
 
   use_terminology CerberusCore::Datastreams::PropertiesDatastream 
 
-  extend_terminology do |t| 
+  extend_terminology do |t|
+    t.authors
+    t.contributors
     t.og_reference
     t.project_members
     t.drupal_access
@@ -19,6 +21,14 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
 
     if self.project_members.first
       hsh['project_members_ssim'] = self.project_members.first
+    end
+
+    if self.authors.first
+      hsh['authors_ssim'] = self.authors.first
+    end
+
+    if self.contributors.first
+      hsh['contributors_ssim'] = self.contributors.first
     end
 
     if self.drupal_access.first 

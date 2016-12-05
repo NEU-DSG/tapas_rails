@@ -1,0 +1,65 @@
+= form_for @core_file do |f|
+  %fieldset
+    .container-fluid
+      .form-group
+      .row
+        .col-md-1
+          = f.label :title, "Title", class: "control-label"
+        .col-md-4
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'core_file[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
+      .row
+        .col-md-1
+          = f.label :description, "Description", class: "control-label"
+        .col-md-4
+          = f.text_field :description, required: true, pattern: ".*\\S.*", name: 'core_file[description][]', class: "form-control input-block-level", placeholder: "University Libraries"
+      .row
+        .col-md-1
+          = f.label :mass_permissions, "Visibility"
+        .col-md-4
+          = f.select :mass_permissions, {"private" => "private", "public" => "public"}, {:class => "form-control"}
+      .row
+        .col-md-1
+          = f.label :authors, "Authors", class: "control-label"
+        .col-md-4
+          = f.text_field :authors, required: true, pattern: ".*\\S.*", name: 'core_file[authors][]', class: "form-control input-block-level", placeholder: "University Libraries"
+
+      .row
+        .col-md-1
+          = f.label :contributors, "Contributors", class: "control-label"
+        .col-md-4
+          = f.text_field :contributors, required: true, pattern: ".*\\S.*", name: 'core_file[contributors][]', class: "form-control input-block-level", placeholder: "University Libraries"
+      .row
+        .col-md-1
+          = f.label :collection, "Collection"
+        .col-md-4
+          / = f.select :community, options_for_select(@arr), name:'community'
+          - parent = !@core_file.collection.blank? ? @core_file.collection.pid : nil
+          = f.select :collection, options_for_select(@arr, parent), name:'collection'
+      .row
+        .col-md-1
+          = f.label :tei, "File"
+        .col-md-4
+          .field
+            = f.label 'New file'
+            = f.file_field 'tei'
+          .actions
+            = f.submit 'Save'
+    -# %hr
+    -# %legend Permissions
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :mass_permissions, "Mass Permissions"
+    -#       = f.select :mass_permissions, options_for_select(['public', 'private'], @community.mass_permissions)
+    -# %hr
+    -# %legend Thumbnail (Optional)
+    -# - if !@community.properties.thumbnail_list[0].blank?
+    -#   =image_tag @community.properties.thumbnail_list[0]
+    -# %fieldset
+    -#   .row-fluid
+    -#     .span8
+    -#       = f.label :thumbnail, "Thumbnail"
+    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit' ,href:'core_files#show'
