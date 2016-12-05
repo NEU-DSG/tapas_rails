@@ -21,7 +21,7 @@ module ApiAccessible
     # then send it along.
     before_action :remove_empty_strings_from_array, :only => [:upsert, :api_show]
 
-    before_action :load_resource_by_did, :only => [:api_show]
+    before_action :load_resource_by_did, :only => [:api_show, :teibp, :tei, :tapas_generic, :mods]
 
     before_action :validate_upsert, :only => [:upsert]
   end

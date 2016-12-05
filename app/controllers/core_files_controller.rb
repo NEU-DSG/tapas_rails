@@ -1,5 +1,5 @@
 class CoreFilesController < ApplicationController
-  # include ApiAccessible
+  include ApiAccessible
   include ModsDisplay::ControllerExtension
 
   configure_mods_display do
@@ -37,7 +37,7 @@ class CoreFilesController < ApplicationController
     pretty_json(200) and return
   end
 
-  def show
+  def api_show
     @core_file = CoreFile.find_by_did(params[:did])
 
     if @core_file.upload_status.blank?

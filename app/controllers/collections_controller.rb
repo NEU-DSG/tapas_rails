@@ -1,5 +1,5 @@
 class CollectionsController < CatalogController
-  # include ApiAccessible
+  include ApiAccessible
 
   def upsert
     if params[:thumbnail]
