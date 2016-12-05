@@ -1,5 +1,5 @@
 class CollectionsController < ApplicationController
-  # include ApiAccessible
+  include ApiAccessible
 
   def upsert
     if params[:thumbnail]
