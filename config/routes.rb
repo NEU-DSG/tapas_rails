@@ -45,13 +45,15 @@ TapasRails::Application.routes.draw do
   get 'core_files/:did/edit' => 'core_files#edit'
   get 'core_files' => 'core_files#index'
 
-  get 'core_files/:did/mods' => 'core_files#mods'
-  get 'core_files/:did/teibp' => 'core_files#teibp'
-  get 'core_files/:did/tapas_generic' => 'core_files#tapas_generic'
-  get 'core_files/:did/tei' => 'core_files#tei'
+  get 'files/:did/mods' => 'core_files#mods'
+  get 'files/:did/teibp' => 'core_files#teibp'
+  get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
+  get 'files/:did/tei' => 'core_files#tei'
+  get 'files/:did' => 'core_files#api_show'
   get 'core_files/:did' => 'core_files#show'
   put 'core_files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
-  post 'core_files/:did' => 'core_files#upsert'
+  post 'core_files/:id' => 'core_files#update'
+  post 'files/:did' => 'core_files#upsert'
   # delete "files/:did" => "core_files#destroy"
 
   resources :downloads, :only => 'show'
