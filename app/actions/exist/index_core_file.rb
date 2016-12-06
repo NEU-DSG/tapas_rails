@@ -1,6 +1,6 @@
 # Takes a presumed complete CoreFile and handles indexing it into exist.
 module Exist
-  class IndexCoreFile 
+  class IndexCoreFile
     attr_accessor :core_file, :filepath, :mod_opts
 
     def initialize(core_file, filepath, **mod_opts)
@@ -16,8 +16,9 @@ module Exist
     def execute
       if filepath
         Exist::StoreTei.execute(filepath, core_file)
-        Exist::StoreMods.execute(filepath, core_file, mod_opts)
+        # Exist::StoreMods.execute(filepath, core_file, mod_opts)
       else
+        logger.info "file path does not exist- geting from canonical object"
         content = core_file.canonical_object.content.content
         @file = Tempfile.new(['tei', '.xml'])
         @file.write(content)
@@ -26,7 +27,7 @@ module Exist
         Exist::StoreMods.execute(@file.path, core_file, mod_opts)
       end
 
-      Exist::StoreTfe.execute(core_file)
+      # Exist::StoreTfe.execute(core_file)
     ensure
       @file.unlink if @file
     end
