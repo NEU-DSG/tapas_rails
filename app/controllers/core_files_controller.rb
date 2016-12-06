@@ -15,9 +15,6 @@ class CoreFilesController < CatalogController
     render 'shared/index'
   end
 
-  # def show #inherited from catalog controller
-  # end
-
   def communities_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:CoreFile"
     query = "has_model_ssim:\"#{model_type}\""
@@ -43,45 +40,61 @@ class CoreFilesController < CatalogController
   end
 
   def create
-    collection = Collection.find("#{params[:core_file][:collection]}")
-    params[:core_file].delete("collection")
-    @core_file = CoreFile.new(did: params[:did], depositor: params[:depositor], title: params[:title])
-    # @core_file.did = @core_file.pid
-    # @core_file.depositor = "000000000"
-    # @core_file.save!
-    @core_file.collection = collection
-    # Start upsert job with params for the file upload
-    logger.warn(params[:tei])
-    logger.info(params)
-    if params[:tei]
-      params[:tei] = create_temp_file params[:tei]
+    begin
+      params[:collection_dids] = params[:core_file][:collection]
+
+      # Step 1: Find or create the CoreFile Object -
+      # we do this here so that we have a stub record to
+      # attach error messages & status tracking to.
+      core_file = CoreFile.create(did: params[:did],
+                                    depositor: params[:depositor])
+      # core_file.mark_upload_in_progress!
+
+      # Step 1: Extract uploaded files to temporary locations if they exist
+      if params[:tei]
+        params[:tei] = create_temp_file params[:tei]
+      end
+
+      if params[:support_files]
+        params[:support_files] = create_temp_file params[:support_files]
+      end
+
+      # Step 2: If TEI was provided, generate a MODS record that can be sent back
+      # to Drupal to populate the validate metadata page provided after initial
+      # file upload
+      if params[:tei]
+        opts = {
+          :authors => params[:authors],
+          :contributors => params[:contributors],
+          :"timeline-date" => params[:display_date],
+          :title => params[:title]
+        }
+
+        @mods = Exist::GetMods.execute(params[:tei], opts)
+      end
+
+      # Step 3: Kick off an upsert job
+      puts params
+      job = TapasObjectUpsertJob.new params
+      # TapasRails::Application::Queue.push job
+      job.run
+
+      # Step 4: Respond with MODS if it is available, otherwise send a generic
+      # success message
+      # if @mods
+      #   render :xml => @mods, :status => 202
+      # else
+      #   @response[:message] = "Job processing"
+      #   pretty_json(202) and return
+      # end
+      @core_file = CoreFile.find(params[:id])
+      redirect_to @core_file and return
+    rescue => e
+      core_file.set_default_display_error
+      core_file.set_stacktrace_message(e)
+      # core_file.mark_upload_failed!
+      raise e
     end
-
-    if params[:tei]
-      opts = {
-        :authors => params[:authors],
-        :contributors => params[:contributors],
-        :title => params[:title]
-      }
-
-      # @mods = Exist::GetMods.execute(params[:tei], opts)
-    end
-
-    # Kick off an upsert job
-    job = TapasObjectUpsertJob.new params
-    # TapasRails::Application::Queue.push job
-    job.run
-
-    # Respond with MODS if it is available, otherwise send a generic
-    # success message
-    # if @mods
-    #   render :xml => @mods, :status => 202
-    # else
-      # @response[:message] = "Job processing"
-      # @core_file.save!
-    redirect_to @core_file and return
-    # end
-    # redirect_to @core_file and return
   end
 
   def edit
@@ -103,15 +116,10 @@ class CoreFilesController < CatalogController
   end
 
   def update
-    collection = Collection.find("#{params[:core_file][:collection]}")
-    params[:core_file].delete("collection")
-    @core_file = CoreFile.find(params[:id])
-    # @core_files = CoreFile.find_by_did(params[:id])
-    @core_file.update_attributes(params[:core_file])
-    @core_file.save!
-    @core_file.collection = collection
-    @core_file.save!
-    redirect_to @core_file and return
+    cf = CoreFile.find(params[:id])
+    params[:did] = cf.did
+    logger.warn("we are about to edit #{params[:did]}")
+    create
   end
 
   def teibp
@@ -160,8 +168,13 @@ class CoreFilesController < CatalogController
     pretty_json(200) and return
   end
 
-  # def show #inherited from catalog controller
-  # end
+  def show #inherited from catalog controller
+    @core_file = CoreFile.find(params[:id])
+    @mods_html = render_mods_display(@core_file).to_html.html_safe
+    e = "Could not find TEI associated with this file.  Please retry in a "\
+      "few minutes and contact an administrator if the problem persists."
+    @cid=(params[:id])
+  end
 
   def upsert
     begin
