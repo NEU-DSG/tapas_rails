@@ -116,7 +116,7 @@ class CoreFilesController < CatalogController
   end
 
   def update
-    cf = CoreFile.find(params[:id])
+    cf = CoreFile.find_by_did(params[:id])
     params[:did] = cf.did
     logger.warn("we are about to edit #{params[:did]}")
     create
