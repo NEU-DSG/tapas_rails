@@ -1,5 +1,6 @@
+#Controller for Core Files
 class CoreFilesController < CatalogController
-  include ApiAccessible
+  # include ApiAccessible
   include ModsDisplay::ControllerExtension
 
   configure_mods_display do
@@ -8,6 +9,7 @@ class CoreFilesController < CatalogController
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
 
+  #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
     self.search_params_logic += [:communities_filter]
@@ -15,6 +17,11 @@ class CoreFilesController < CatalogController
     render 'shared/index'
   end
 
+  # def show #inherited from catalog controller
+  # end
+
+  #This method is the helper method for index. It basically gets the core files
+  # using solr queries
   def communities_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:CoreFile"
     query = "has_model_ssim:\"#{model_type}\""
@@ -22,6 +29,7 @@ class CoreFilesController < CatalogController
     solr_parameters[:fq] << query
   end
 
+  #This method is used to create a new core file
   def new
     @page_title = "Create New Core File"
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
@@ -39,64 +47,20 @@ class CoreFilesController < CatalogController
     @core_file = CoreFile.new
   end
 
+  #This method contains the actual logic for creating a new core file
   def create
-    begin
-      params[:collection_dids] = params[:core_file][:collection]
-
-      # Step 1: Find or create the CoreFile Object -
-      # we do this here so that we have a stub record to
-      # attach error messages & status tracking to.
-      core_file = CoreFile.create(did: params[:did],
-                                    depositor: params[:depositor])
-      # core_file.mark_upload_in_progress!
-
-      # Step 1: Extract uploaded files to temporary locations if they exist
-      if params[:tei]
-        params[:tei] = create_temp_file params[:tei]
-      end
-
-      if params[:support_files]
-        params[:support_files] = create_temp_file params[:support_files]
-      end
-
-      # Step 2: If TEI was provided, generate a MODS record that can be sent back
-      # to Drupal to populate the validate metadata page provided after initial
-      # file upload
-      if params[:tei]
-        opts = {
-          :authors => params[:authors],
-          :contributors => params[:contributors],
-          :"timeline-date" => params[:display_date],
-          :title => params[:title]
-        }
-
-        @mods = Exist::GetMods.execute(params[:tei], opts)
-      end
-
-      # Step 3: Kick off an upsert job
-      puts params
-      job = TapasObjectUpsertJob.new params
-      # TapasRails::Application::Queue.push job
-      job.run
-
-      # Step 4: Respond with MODS if it is available, otherwise send a generic
-      # success message
-      # if @mods
-      #   render :xml => @mods, :status => 202
-      # else
-      #   @response[:message] = "Job processing"
-      #   pretty_json(202) and return
-      # end
-      @core_file = CoreFile.find(params[:id])
-      redirect_to @core_file and return
-    rescue => e
-      core_file.set_default_display_error
-      core_file.set_stacktrace_message(e)
-      # core_file.mark_upload_failed!
-      raise e
-    end
+    collection = Collection.find("#{params[:core_file][:collection]}")
+    params[:core_file].delete("collection")
+    @core_file = CoreFile.new(params[:core_file])
+    @core_file.did = @core_file.pid
+    @core_file.depositor = "000000000"
+    @core_file.save!
+    @core_file.collection = collection
+    @core_file.save!
+    redirect_to @core_file and return
   end
 
+  #This method is used to edit a particular core file
   def edit
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
     # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
@@ -115,11 +79,17 @@ class CoreFilesController < CatalogController
     @page_title = "Edit #{@core_file.title}"
   end
 
+  #This method contains the actual logic for editing a particular core file
   def update
-    cf = CoreFile.find_by_did(params[:id])
-    params[:did] = cf.did
-    logger.warn("we are about to edit #{params[:did]}")
-    create
+    collection = Collection.find("#{params[:core_file][:collection]}")
+    params[:core_file].delete("collection")
+    #@core_file = CoreFile.find(params[:id])
+    @core_file = CoreFile.find_by_did(params[:id])
+    @core_file.update_attributes(params[:core_file])
+    @core_file.save!
+    @core_file.collection = collection
+    @core_file.save!
+    redirect_to @core_file and return
   end
 
   def teibp
@@ -151,30 +121,27 @@ class CoreFilesController < CatalogController
     pretty_json(200) and return
   end
 
-  def api_show
-    @core_file = CoreFile.find_by_did(params[:did])
-
-    if @core_file.upload_status.blank?
-      @core_file.retroactively_set_status!
-    end
-
-    if @core_file.stuck_in_progress?
-      @core_file.set_default_display_error
-      @core_file.errors_system = ['Object was processing for more than five minutes']
-      @core_file.mark_upload_failed!
-    end
-
-    @response = @core_file.as_json
-    pretty_json(200) and return
-  end
-
   def show #inherited from catalog controller
     @core_file = CoreFile.find(params[:id])
-    @mods_html = render_mods_display(@core_file).to_html.html_safe
-    e = "Could not find TEI associated with this file.  Please retry in a "\
-      "few minutes and contact an administrator if the problem persists."
     @cid=(params[:id])
   end
+
+  # def show
+  #   @core_file = CoreFile.find_by_did(params[:did])
+  #
+  #   if @core_file.upload_status.blank?
+  #     @core_file.retroactively_set_status!
+  #   end
+  #
+  #   if @core_file.stuck_in_progress?
+  #     @core_file.set_default_display_error
+  #     @core_file.errors_system = ['Object was processing for more than five minutes']
+  #     @core_file.mark_upload_failed!
+  #   end
+  #
+  #   @response = @core_file.as_json
+  #   pretty_json(200) and return
+  # end
 
   def upsert
     begin
@@ -242,4 +209,7 @@ class CoreFilesController < CatalogController
       render :text => error_msg, :status => 404
     end
   end
+
+
+
 end
