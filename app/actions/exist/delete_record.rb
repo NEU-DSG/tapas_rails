@@ -7,7 +7,7 @@ module Exist
     attr_reader :did
 
     def initialize(did)
-      @did = did 
+      @did = did
     end
 
     def self.execute(did)
@@ -15,8 +15,8 @@ module Exist
     end
 
     def build_resource
-      proj_did = CoreFile.find_by_did(did).project.did 
-      url = build_url("#{proj_did}/#{did}")
+      proj_did = CoreFile.find_by_did(did).project.did
+      url = build_url("#{proj_did.gsub!(':','_')}/#{did.gsub!(':','_')}")
       self.resource = RestClient::Resource.new(url, options_hash)
     end
 

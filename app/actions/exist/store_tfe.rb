@@ -1,10 +1,10 @@
-# This endpoint handles adding necessary metadata to an already indexed TEI 
-# document that controls who is capable of viewing it.  This request can 
-# only be run after a TEI document with the specified drupal ID has been 
+# This endpoint handles adding necessary metadata to an already indexed TEI
+# document that controls who is capable of viewing it.  This request can
+# only be run after a TEI document with the specified drupal ID has been
 # indexed in exist.
 module Exist
-  class StoreTfe 
-    include Exist::Concerns::Helpers 
+  class StoreTfe
+    include Exist::Concerns::Helpers
     attr_reader :core_file
 
     def initialize(core_file)
@@ -16,15 +16,15 @@ module Exist
     end
 
     def build_resource
-      url = build_url "#{core_file.project.did}/#{core_file.did}/tfe" 
+      url = build_url "#{core_file.project.did.gsub!(':','_')}/#{core_file.did.gsub!(':','_')}/tfe"
       options = options_hash
-      options[:headers][:content_type] = 'multipart/form-data' 
+      options[:headers][:content_type] = 'multipart/form-data'
 
-      self.resource = RestClient::Resource.new url, options 
+      self.resource = RestClient::Resource.new url, options
     end
 
-    def execute 
-      build_resource 
+    def execute
+      build_resource
 
       is_public = (@core_file.drupal_access == 'public').to_s
       collections = @core_file.collections.map(&:did).join(',')
@@ -37,4 +37,3 @@ module Exist
     end
   end
 end
-
