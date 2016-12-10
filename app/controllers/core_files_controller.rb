@@ -42,13 +42,14 @@ class CoreFilesController < CatalogController
   def create
     begin
       params[:collection_dids] = params[:core_file][:collection]
+      params[:depositor] = "000000000" #temp setting this until users integrated
 
       # Step 1: Find or create the CoreFile Object -
       # we do this here so that we have a stub record to
       # attach error messages & status tracking to.
       core_file = CoreFile.create(did: params[:did],
                                     depositor: params[:depositor])
-      # core_file.mark_upload_in_progress!
+      core_file.mark_upload_in_progress!
 
       # Step 1: Extract uploaded files to temporary locations if they exist
       if params[:tei]
@@ -87,12 +88,13 @@ class CoreFilesController < CatalogController
       #   @response[:message] = "Job processing"
       #   pretty_json(202) and return
       # end
-      @core_file = CoreFile.find(params[:id])
-      redirect_to @core_file and return
+      # @core_file = CoreFile.find_by_did(pid)
+      flash[:notice] = "Your file is being created. Check back soon."
+      redirect_to "/core_files"
     rescue => e
       core_file.set_default_display_error
       core_file.set_stacktrace_message(e)
-      # core_file.mark_upload_failed!
+      core_file.mark_upload_failed!
       raise e
     end
   end
@@ -173,7 +175,6 @@ class CoreFilesController < CatalogController
     @mods_html = render_mods_display(@core_file).to_html.html_safe
     e = "Could not find TEI associated with this file.  Please retry in a "\
       "few minutes and contact an administrator if the problem persists."
-    @cid=(params[:id])
   end
 
   def upsert
