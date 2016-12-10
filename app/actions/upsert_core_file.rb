@@ -10,11 +10,12 @@ class UpsertCoreFile
 
   def execute
     begin
-      if Did.exists_by_did?(params[:did])
+      if params[:did] && Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did])
       else
-        self.core_file = CoreFile.create(:did => params[:did],
-                                         :depositor => params[:depositor])
+        self.core_file = CoreFile.create(:depositor => params[:depositor])
+        core_file.save!
+        core_file.did = core_file.pid
       end
 
       core_file.mark_upload_in_progress!
@@ -40,7 +41,7 @@ class UpsertCoreFile
         core_file.mods.content = mods_record
 
         # Rewrite did to mods after update
-        core_file.did = params[:did]
+        core_file.did = params[:did]? params[:did] : core_file.pid
         # Rewrite identifier to mods after update
         core_file.mods.identifier = core_file.pid
       end
@@ -122,6 +123,10 @@ class UpsertCoreFile
           core_file.send(:"#{ography}=", collections)
         end
       end
+    # in case where its just one string of a collection
+    elsif params[:collection_dids].is_a?(String)
+      col = Collection.find_by_did(params[:collection_dids])
+      core_file.collections = [col]
     # In the case where only file_types are provided, update which
     # ography relationships are declared but use the collections
     # that the CoreFile is already a member of
