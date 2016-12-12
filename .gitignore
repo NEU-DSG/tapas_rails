@@ -19,6 +19,7 @@
 
 # Ignore everything associated with jetty
 /jetty
+jetty/*
 
 # Ignore Figaro generated configuration file
 /config/application.yml
@@ -58,3 +59,4 @@ config/environments/*.local.yml
 coverage/*
 test.txt
 testout.txt
+.idea/*

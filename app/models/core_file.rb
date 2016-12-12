@@ -41,8 +41,8 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   has_metadata :name => "properties", :type => PropertiesDatastream
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
-  has_attributes :authors, datastream: "properties", multiple: true
-  has_attributes :contributors, datastream: "properties", multiple: true
+  has_attributes :authors, datastream: "properties", multiple: true #change to MODS mapping?
+  has_attributes :contributors, datastream: "properties", multiple: true #change to MODS mapping?
 
 
   def self.all_ography_types

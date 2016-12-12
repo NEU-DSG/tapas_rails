@@ -31,7 +31,6 @@ class CollectionsController < CatalogController
   #This method is used to display various attributes of a collection
   def show
     @collection = Collection.find(params[:id])
-    @cid=(params[:id])
   end
 
   #This method is used to create a new collection

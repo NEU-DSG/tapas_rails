@@ -41,5 +41,4 @@
     -#       = f.label :thumbnail, "Thumbnail"
     -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
     %hr
-= link_to " Edit Collection", "/collections/"+@cid+"/edit", class: ['btn', 'btn-primary', 'btn-large']
-
+= link_to " Edit Collection", "/collections/"+@collection.pid+"/edit", class: ['btn', 'btn-primary', 'btn-large']

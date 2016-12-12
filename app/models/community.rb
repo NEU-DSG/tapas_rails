@@ -22,9 +22,9 @@ class Community < CerberusCore::BaseModels::Community
   has_attributes :og_reference, datastream:"properties"
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
- # has_attributes :thumbnail, datastream: "DC"
 
-  validates_presence_of :title, :description
+  validates_presence_of :title
+
  # Look up or create the root community of the graph
   def self.root_community
     if Community.exists?(Rails.configuration.tap_root)
@@ -55,6 +55,5 @@ class Community < CerberusCore::BaseModels::Community
     # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
     self.mods.title = self.DC.title.first
     self.mods.abstract = self.DC.description.first
-  #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 end

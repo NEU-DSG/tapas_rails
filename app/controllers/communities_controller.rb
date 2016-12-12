@@ -32,7 +32,6 @@ class CommunitiesController < CatalogController
   #This method is used to display various attributes of community
   def show
     @community = Community.find(params[:id])
-    @cid=(params[:id])
   end
 
   #This method is used to create a new community/project
