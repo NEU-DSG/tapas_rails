@@ -32,7 +32,7 @@ class RebuildReadingInterfaceJob
         core_file.set_stacktrace_message(e)
         core_file.mark_upload_failed!
       end
-      raise e
+      raise ActiveFedora::ObjectNotFoundError
     ensure
       tmpfile.close if tmpfile
       tmpfile.unlink if tmpfile

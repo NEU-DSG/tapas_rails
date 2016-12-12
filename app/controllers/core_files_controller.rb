@@ -19,7 +19,7 @@ class CoreFilesController < CatalogController
   #This method is the helper method for index. It basically gets the core files
   # using solr queries
   def communities_filter(solr_parameters, user_parameters)
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:CoreFile"
+    model_type = RSolr.solr_escape "info:fedora/afmodel:CoreFile"
     query = "has_model_ssim:\"#{model_type}\""
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << query
@@ -28,14 +28,12 @@ class CoreFilesController < CatalogController
   #This method is used to create a new core file
   def new
     @page_title = "Create New Core File"
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
-    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
 
     @arr =[]
     results.each do |res|
-      # @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
         @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
       end
@@ -80,7 +78,6 @@ class CoreFilesController < CatalogController
       end
 
       # Step 3: Kick off an upsert job
-      puts params
       job = TapasObjectUpsertJob.new params
       # TapasRails::Application::Queue.push job
       job.run
@@ -106,8 +103,7 @@ class CoreFilesController < CatalogController
 
   #This method is used to edit a particular core file
   def edit
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
-    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
+    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
 

@@ -30,55 +30,51 @@ describe CommunitiesController do
   #   end
   # end
 
-  #   describe 'POST #upsert' do
-  #     before(:all) { Resque.inline = true }
-  #     after(:each) { ActiveFedora::Base.delete_all }
-  #     after(:all) { Resque.inline = false }
-  #     let(:community) { Community.find_by_did params[:did] }
-  #
-  #     let(:params) do
-  #       { :title => 'Test Community',
-  #         :depositor => '000000000',
-  #         :description => 'This is a test community.',
-  #         :members => %w(1 2 3),
-  #         :access => 'public',
-  #         :did => '12',
-  #         :thumbnail => Rack::Test::UploadedFile.new(fixture_file('image.jpg')),
-  #       }
-  #     end
-  #
-  #     it '422s for invalid requests' do
-  #       post :upsert, params.except(:depositor)
-  #       expect(response.status).to eq 422
-  #     end
-  #
-  #     it 'returns a 202 and creates community on requests with new dids.' do
-  #       post :upsert, params
-  #
-  #       expect(response.status).to eq 202
-  #       expect(community.depositor).to eq params[:depositor]
-  #     end
-  #
-  #     it 'returns a 202 and updates the requested community if it exists' do
-  #       community_old = Community.new
-  #       community_old.mods.title = 'Test Community'
-  #       community_old.did = params[:did]
-  #       community_old.depositor = 'System'
-  #       community_old.project_members = ['303']
-  #       community_old.save!
-  #
-  #       post :upsert, params
-  #       expect(response.status).to eq 202
-  #       expect(community.depositor).to eq 'System'
-  #       expect(community.project_members).to eq ['1', '2', '3']
-  #     end
-  #   end
-  #
-  #   it_should_behave_like 'an API enabled controller'
-  # end
+    describe 'POST #upsert' do
+      before(:all) { Resque.inline = true }
+      after(:each) { ActiveFedora::Base.delete_all }
+      after(:all) { Resque.inline = false }
+      let(:community) { Community.find_by_did params[:did] }
 
+      let(:params) do
+        { :title => 'Test Community',
+          :depositor => '000000000',
+          :description => 'This is a test community.',
+          :members => %w(1 2 3),
+          :access => 'public',
+          :did => '12',
+          :thumbnail => Rack::Test::UploadedFile.new(fixture_file('image.jpg')),
+        }
+      end
 
-  #Newly added tests for the Community Controller
+      it '422s for invalid requests' do
+        post :upsert, params.except(:depositor)
+        expect(response.status).to eq 422
+      end
+
+      it 'returns a 202 and creates community on requests with new dids.' do
+        post :upsert, params
+
+        expect(response.status).to eq 202
+        expect(community.depositor).to eq params[:depositor]
+      end
+
+      it 'returns a 202 and updates the requested community if it exists' do
+        community_old = Community.new
+        community_old.title = 'Test Community'
+        community_old.did = params[:did]
+        community_old.depositor = 'System'
+        community_old.project_members = ['303']
+        community_old.save!
+
+        post :upsert, params
+        expect(response.status).to eq 202
+        expect(community.depositor).to eq 'System'
+        expect(community.project_members).to eq ['1', '2', '3']
+      end
+    end
+
+    it_should_behave_like 'an API enabled controller'
 
   # Testing the new function defined in Community Controller
   describe 'get #new' do
@@ -183,59 +179,24 @@ describe CommunitiesController do
   end
 
 
-  # Testing the update function in the Community Controller
   describe 'post #update' do
-    before(:all) {
-
-      Resque.inline = true }
-
-    after(:each) {
-
-      ActiveFedora::Base.delete_all }
-
-    after(:all) {
-
-      Resque.inline = false }
-
-    let(:community) {
-
-      Community.find_by_did params[:did] }
-
-    # Creation of params object to pass it along with update function for Community object creation
-    let(:params) do
-      {
-          :did => '12',
-          :community => {
-              :title => 'Updated Community',
-              :description => 'This is a test community updated.',
-              :mass_permissions => 'public'
-          }
-      }
-    end
+    Resque.inline = true
+    let(:community) { FactoryGirl.create :community }
 
     # Purpose statement
-    it '302s for valid updates' do
-
-      # creating an instance of Community object and saving it in database and updating its fields with arguments passed
-      # in params
-      @community_old = Community.new
-      @community_old.title = 'Test Community'
-      @community_old.description = 'This is a test'
-      @community_old.mass_permissions = 'private'
-      @community_old.did = params[:did]
-      @community_old.depositor = 'System'
-      @community_old.project_members = ['303']
-      @community_old.save!
-      params[:id] = @community_old.did
+    it '302s for valid requests' do
+      community.did = community.pid
+      community.save!
+      params = { :did=> community.did, :id=>community.pid, :community=>{:title=>'Updated community', :mass_permissions=>'public', :description=>'Updated description'}}
 
       # Calling the update function
       put :update, params
 
-      # Expecting the post method to be successful and transfer the updated Community resource to the show page
+      # Expecting the post method to be successful and transfer the updated community resource to the show page
       expect(response.status).to eq 302
     end
+    Resque.inline = false
   end
 
+  after(:all){ActiveFedora::Base.delete_all}
 end
-
-

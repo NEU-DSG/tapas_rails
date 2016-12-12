@@ -16,7 +16,9 @@ module Exist
     end
 
     def execute
-      url = build_url "#{core_file.project.did.gsub!(':','_')}/#{core_file.did.gsub!(':','_')}/mods"
+      did = core_file.did.to_s.gsub(':','_')
+      p_did = core_file.project.did.to_s.gsub(':','_')
+      url = build_url "#{p_did}/#{did}/mods"
       build_resource(url)
       send_mods_request
     end

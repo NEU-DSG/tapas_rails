@@ -15,7 +15,6 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   before_save :ensure_unique_did, :calculate_drupal_access
 
-  parent_collection_relationship :collection
   has_and_belongs_to_many :collections, :property => :is_member_of,
     :class_name => 'Collection'
 

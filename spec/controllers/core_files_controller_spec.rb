@@ -5,7 +5,6 @@ describe CoreFilesController do
   include FixtureBuilders
   include ValidAuthToken
 
-=begin
   let(:core_file) { FactoryGirl.create :core_file }
 
   def test_file(fname)
@@ -71,9 +70,7 @@ describe CoreFilesController do
       let(:requested_content) { 'tei' }
     end
   end
-=end
 
-=begin
   describe 'GET mods' do
     # Given that we are mostly trusting display_mods to output the right thing,
     # this is a pretty light spec.
@@ -91,7 +88,6 @@ describe CoreFilesController do
       expect(response.body).to include 'Collection Ia, public'
     end
   end
-=end
 
   # describe "DELETE destroy" do
   #   after(:each) { ActiveFedora::Base.delete_all }
@@ -115,15 +111,14 @@ describe CoreFilesController do
   #   end
   # end
 
-=begin
-  describe 'GET #show' do
+  describe 'GET #api_show' do
 
     after(:all) { ActiveFedora::Base.delete_all }
 
     it 'returns the success representation of the object for valid records' do
       cf, col, proj = FixtureBuilders.create_all
       cf.mark_upload_complete!
-      get :show, did: cf.did
+      get :api_show, did: cf.did
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -134,7 +129,7 @@ describe CoreFilesController do
       cf = FactoryGirl.create :core_file
       cf.mark_upload_in_progress!
 
-      get :show, did: cf.did
+      get :api_show, did: cf.did
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -145,7 +140,7 @@ describe CoreFilesController do
       cf = FactoryGirl.create :core_file
       cf.mark_upload_failed!
 
-      get :show, did: cf.did
+      get :api_show, did: cf.did
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -155,7 +150,7 @@ describe CoreFilesController do
     it 'marks invalid tagless records as failed' do
       cf = FactoryGirl.create :core_file # No associated collections, invalid
 
-      get :show, did: cf.did
+      get :api_show, did: cf.did
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -169,7 +164,7 @@ describe CoreFilesController do
       cf.upload_status_time = 20.minutes.ago.utc.iso8601
       cf.save!
 
-      get :show, did: cf.did
+      get :api_show, did: cf.did
 
       expect(response.status).to eq 200
       json = JSON.parse(response.body)
@@ -177,16 +172,12 @@ describe CoreFilesController do
       expect(json['errors_system'].first).to include 'more than five minutes'
     end
   end
-=end
 
-=begin
   describe "PUT #rebuild_reading_interfaces" do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it 'raises a 404 for dids that do not exist' do
-      put :rebuild_reading_interfaces, did: 'no-such-did'
-
-      expect(response.status).to eq 404
+      expect{put :rebuild_reading_interfaces, did: 'no-such-did'}.to raise_error(ActiveFedora::ObjectNotFoundError)
     end
 
     it 'returns a 200 on successful reading interface rebuild' do
@@ -207,7 +198,7 @@ describe CoreFilesController do
   describe "POST #upsert" do
     let(:post_defaults) do
       { :collection_dids => ["12345", "22345"],
-        :did             => "111",
+        :did             => "tap:111",
         :access          => "private",
         :depositor       => "wjackson",
         :tei             => test_file(fixture_file('tei.xml')),
@@ -222,23 +213,26 @@ describe CoreFilesController do
 
       # Create a community for our collections to be attached to
       community = FactoryGirl.create :community
+      community.did = community.pid
+      community.save!
 
       # Create the relevant collections
       collection_one = FactoryGirl.create :collection
-      collection_one.did = post_defaults[:collection_dids][0]
+      collection_one.did = collection_one.pid
       collection_one.community = community
       collection_one.save!
 
       collection_two = FactoryGirl.create :collection
-      collection_two.did = post_defaults[:collection_dids][1]
+      collection_two.did = collection_two.pid
       collection_two.community = community
       collection_two.save!
+      post_defaults['collection_dids'] = [collection_one.did, collection_two.did]
 
       post :upsert, post_defaults
 
       expect(response.status).to eq 202
 
-      core = CoreFile.find(CoreFile.find_by_did("111").id)
+      core = CoreFile.find(CoreFile.find_by_did("tap:111").id)
       tei  = core.canonical_object(:model)
 
       # Ensure support file content has been attached
@@ -264,15 +258,10 @@ describe CoreFilesController do
       Resque.inline = false
     end
   end
+
   it_should_behave_like "an API enabled controller"
-end
-=end
 
-  # Adding new tests for Core Files controller
-
-  # Testing the new function defined in Core Files Controller
   describe 'get #new' do
-
     # Purpose statement
     it 'should create a core file object' do
 
@@ -287,104 +276,40 @@ end
     end
   end
 
-
   # Testing the create function in the Core files Controller
   describe 'post #create' do
-
-    # Creation of community object before any test begins used later for confirmation of working of create functionality
-    before(:all) {
-
-      Resque.inline = true
-
-      @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
-      @community.did = @community.pid
-      @community.save!
-      @did = @community.did}
-
-    before(:each){
-
-      # Creation of collection object before each test begins
-      @collectionCreated = Collection.new(title:"New collection",description:"Collection to be embedded in Community",mass_permissions:"public")
-      @collectionCreated.did = @collectionCreated.pid
-      @collectionCreated.depositor = '000000000'
-      @collectionCreated.save!
-      @collectionCreated.community = @community
-      @collectionCreated.save!
-      @collectdid = @collectionCreated.did
-
-
-      # Creation of core file object before each test with parent collection that is created above
-      @coreFileCreated = CoreFile.new(title:"New core file",description:"Core File to be embedded in Collection",mass_permissions:"public")
-      @coreFileCreated.did = @coreFileCreated.pid
-      @coreFileCreated.depositor = '000000000'
-      @coreFileCreated.save!
-      @coreFileCreated.collection = @collectionCreated
-      @coreFileCreated.save!
-      @coreFiledid = @coreFileCreated.did
-    }
+    let(:community) { FactoryGirl.create :community }
+    let(:collection) { FactoryGirl.create :collection }
+    Resque.inline = true
 
     after(:all) {
-
       Resque.inline = false
       ActiveFedora::Base.delete_all }
 
-
-    let(:core_file) {
-
-      CoreFile.find_by_did params[:did] }
-
-
-    it 'core file object should created with assigned title' do
-
-      # Expecting the core file created with same title as the one passed during creation above
-      # Commented due to bug
-      #expect(@coreFileCreated.title). to eq "New core file"
-    end
-
-    it 'core file object should created with assigned description' do
-
-      # Expecting the core file created with same description as the one passed during creation above
-      # Commented due to bug
-      #expect(@coreFileCreated.description). to eq "Core File to be embedded in Collection"
-    end
-
-    it 'core file object should created with assigned mass permissions' do
-
-      # Expecting the core file created with same mass permission as the one passed during creation above
-      expect(@coreFileCreated.mass_permissions). to eq "public"
-    end
-
-    it 'core file object should created with assigned depositor' do
-
-      # Expecting the core file created with same depositor as the one passed during creation above
-      expect(@coreFileCreated.depositor). to eq "000000000"
-    end
-
-    it 'core file object should created and part of the collection created above' do
-
-      # Expecting the core file created as a part of the same collection as the one passed during creation above
-      expect(@coreFileCreated.collection.did). to eq @collectdid
-    end
-
-    # Creation of params object to pass it along with create function for Core Files object creation
     let(:params) do
       {
-
           :core_file => {
-              :title => 'New core file',
-              :description => 'This is a test core file.',
-              :mass_permissions => 'public',
-              :collection => @collectionCreated
-          }
+              :collection => collection.pid,
+          },
+          :mass_permissions => "private",
+          :depositor       => "000000000",
+          :tei             => test_file(fixture_file('tei.xml')),
+          :title           => "Core File",
+          :description     => "Test",
+          :did             => "tap:228"
       }
     end
 
     # Purpose statement
     it 'should create a core file object and go to show page' do
+      community.did = community.pid
+      community.save!
+      collection.community = community
+      collection.did = collection.pid
+      collection.save!
 
       # Calling the create function
-      # Commented due to bug
-      #post :create, params
+      post :create, params
 
       # Retrieving the first object created in CoreFile class
       coreFile = CoreFile.first
@@ -392,13 +317,14 @@ end
       # Testing the object creation parameters
       #binding.pry
 
-      # Expecting the post method to be successful and transfer the created core file resource to the show page
-      # Changed due to bug from 302 to 200
-      # expect(response.status).to eq 302
-      expect(response.status).to eq 200
-      
+      # Expecting the post method to be successful and transfer the created core file index with a flash
+      expect(response.status).to eq 302
+
       # Commented due to bug
-      #expect(coreFile.title).to eq params[:core_file][:title]
+      expect(coreFile.title).to eq "Review: an electronic transcription"
+      expect(coreFile.depositor).to eq "000000000"
+      expect(coreFile.mass_permissions).to eq "private"
+      expect(coreFile.collections.first.did).to eq collection.did
     end
 
   end
@@ -469,7 +395,7 @@ end
       core_file_old.did = params[:did]
       core_file_old.depositor = '0000000'
       core_file_old.save!
-      core_file_old.collection = @collectionCreated
+      core_file_old.collections = [@collectionCreated]
       core_file_old.save!
       params[:id] = core_file_old.did
 
@@ -486,5 +412,7 @@ end
       expect(response.status).to eq 200
     end
   end
+
+  after(:all){ActiveFedora::Base.delete_all}
 
 end

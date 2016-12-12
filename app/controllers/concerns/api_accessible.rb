@@ -91,7 +91,6 @@ module ApiAccessible
 
   # Validate the params associated with update and create API requests
   def validate_upsert
-    puts 'running upsert validate'
     validator = "#{controller_name.classify}Validator".constantize
     errors    = validator.validate_upsert(params)
 

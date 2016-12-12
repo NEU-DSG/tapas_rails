@@ -30,9 +30,8 @@ class Community < CerberusCore::BaseModels::Community
     if Community.exists?(Rails.configuration.tap_root)
       Community.find(Rails.configuration.tap_root)
     else
-      community = Community.new(:pid => Rails.configuration.tap_root)
+      community = Community.new(:pid => Rails.configuration.tap_root, :title => "Root community")
       community.depositor = "000000000"
-      community.mods.title = "TAPAS root"
       community.mass_permissions = "private"
       community.save!
       return community

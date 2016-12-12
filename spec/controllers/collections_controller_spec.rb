@@ -4,7 +4,7 @@ describe CollectionsController do
   include ValidAuthToken
   include FileHelpers
 
-  #it_should_behave_like 'an API enabled controller'
+  it_should_behave_like 'an API enabled controller'
 
   # describe 'DELETE destroy' do
   #   after(:each) { ActiveFedora::Base.delete_all }
@@ -28,7 +28,6 @@ describe CollectionsController do
   #   end
   # end
 
-=begin
   describe 'POST upsert' do
     after(:all) { ActiveFedora::Base.delete_all }
 
@@ -64,7 +63,6 @@ describe CollectionsController do
       Resque.inline = false
     end
   end
-=end
 
   # Adding new tests for Collections controller
 
@@ -221,51 +219,16 @@ describe CollectionsController do
 
   # Testing the update function in the Collection Controller
   describe 'post #update' do
-
-    # Creation of community object used later for creating a Collection object
-    before(:each){
-      @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
-      @community.did = @community.pid
-      @community.save!
-      @did = @community.did
-    }
-
-    before(:all) { Resque.inline = true }
-    after(:each) { ActiveFedora::Base.delete_all }
-    after(:all) { Resque.inline = false }
-    let(:collection) { Collection.find_by_did params[:did] }
-
-    # Creation of params object to pass it along with update function for Collection object creation
-    let(:params) do
-      {
-          :did => '12',
-          :collection => {
-              :title => 'New Collection',
-              :description => 'This is a test collection.',
-              :mass_permissions => 'public',
-              :community => @community
-          }
-      }
-    end
+    Resque.inline = true
+    let(:community) { FactoryGirl.create :community }
+    let(:collection) { FactoryGirl.create :collection }
 
     # Purpose statement
     it '302s for valid requests' do
-
-      # creating an instance of Collection object and saving it in database and updating its fields with arguments passed
-      # in params
-      collection_old = Collection.new
-      collection_old.title = 'Test Collection'
-      collection_old.description = 'This is a test'
-      collection_old.mass_permissions = 'private'
-      collection_old.did = params[:did]
-      collection_old.depositor = '0000000'
-      collection_old.save!
-      collection_old.community = @community
-      collection_old.save!
-      params[:id] = collection_old.did
-
-      # Testing the object creation parameters
-      #binding.pry
+      collection.did = collection.pid
+      collection.community = community
+      collection.save!
+      params = { :did=> collection.did, :id=>collection.pid, :collection=>{:title=>'Updated collection', :mass_permissions=>'public', :community=>community.pid, :description=>'Updated description'}}
 
       # Calling the update function
       put :update, params
@@ -273,7 +236,8 @@ describe CollectionsController do
       # Expecting the post method to be successful and transfer the updated Collection resource to the show page
       expect(response.status).to eq 302
     end
+    Resque.inline = false
   end
 
+  after(:all){ActiveFedora::Base.delete_all}
 end
-

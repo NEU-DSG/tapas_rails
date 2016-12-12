@@ -15,8 +15,11 @@ module Exist
     end
 
     def build_resource
-      proj_did = CoreFile.find_by_did(did).project.did
-      url = build_url("#{proj_did.gsub!(':','_')}/#{did.gsub!(':','_')}")
+      cf = CoreFile.find_by_did(did)
+      proj_did = cf.project.did.to_s
+      proj_did = proj_did.gsub(':','_')
+      did = cf.did.gsub(':','_')
+      url = build_url("#{proj_did}/#{did}")
       self.resource = RestClient::Resource.new(url, options_hash)
     end
 

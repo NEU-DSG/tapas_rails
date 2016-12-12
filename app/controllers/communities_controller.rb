@@ -23,7 +23,7 @@ class CommunitiesController < CatalogController
   #This method is the helper method for index. It basically gets the communities
   # using solr queries
   def communities_filter(solr_parameters, user_parameters)
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
+    model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     query = "has_model_ssim:\"#{model_type}\""
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << query

@@ -22,7 +22,7 @@ class CollectionsController < CatalogController
   #This method is the helper method for index. It basically gets the collections
   # using solr queries
   def collections_filter(solr_parameters, user_parameters)
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
+    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
     query = "has_model_ssim:\"#{model_type}\""
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << query
@@ -36,7 +36,7 @@ class CollectionsController < CatalogController
   #This method is used to create a new collection
   def new
     @page_title = "Create New Collection"
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
+    model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
 
@@ -65,7 +65,7 @@ class CollectionsController < CatalogController
 
   #This method is used to edit a particular collection
   def edit
-    model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Community"
+    model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
     @arr =[]

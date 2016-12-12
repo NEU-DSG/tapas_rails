@@ -16,7 +16,9 @@ module Exist
     end
 
     def build_resource
-      url = build_url "#{core_file.project.did.gsub!(':','_')}/#{core_file.did.gsub!(':','_')}/tfe"
+      did = core_file.did.to_s.gsub(':','_')
+      p_did = core_file.project.did.to_s.gsub(':','_')
+      url = build_url "#{p_did}/#{did}/tfe"
       options = options_hash
       options[:headers][:content_type] = 'multipart/form-data'
 

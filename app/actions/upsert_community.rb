@@ -9,9 +9,9 @@ class UpsertCommunity
       else
         community = Community.new(:did => params[:did])
         community.depositor = params[:depositor]
+        update_metadata! community
         community.save!
         community.community = Community.root_community
-        update_metadata! community
       end
 
       if params[:thumbnail]
