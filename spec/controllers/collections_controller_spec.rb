@@ -4,7 +4,7 @@ describe CollectionsController do
   include ValidAuthToken
   include FileHelpers
 
-  it_should_behave_like 'an API enabled controller'
+  #it_should_behave_like 'an API enabled controller'
 
   # describe 'DELETE destroy' do
   #   after(:each) { ActiveFedora::Base.delete_all }
@@ -28,6 +28,7 @@ describe CollectionsController do
   #   end
   # end
 
+=begin
   describe 'POST upsert' do
     after(:all) { ActiveFedora::Base.delete_all }
 
@@ -63,5 +64,216 @@ describe CollectionsController do
       Resque.inline = false
     end
   end
+=end
+
+  # Adding new tests for Collections controller
+
+  # Testing the new function defined in Collections Controller
+  describe 'get #new' do
+
+    # Purpose statement
+    it 'should create a collection object' do
+
+      # Calling create function
+      get :new
+
+      # Testing the object creation parameters of collections
+      #binding.pry
+
+      # Checking whether the new object is of class type Collection
+      expect(assigns(:collection)).to be_a_new(Collection)
+    end
+  end
+
+  # Testing the create function in the Collections Controller
+  describe 'post #create' do
+
+
+    before(:all) {
+
+      Resque.inline = true
+
+      # Creation of Community object before all test begin which is used later for creating a Collection object
+      @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
+      @community.did = @community.pid
+      @community.save!
+      @did = @community.did}
+
+    before(:each){
+
+      # Creation of Collection object before each test which uses Community object above for as parent
+      @collectionCreated = Collection.new(title:"New collection",description:"Collection to be embedded in Community",mass_permissions:"public")
+      @collectionCreated.did = @collectionCreated.pid
+      @collectionCreated.depositor = '000000000'
+      @collectionCreated.save!
+      @collectionCreated.community = @community
+      @collectionCreated.save!
+      @collectdid = @collectionCreated.did
+    }
+
+    after(:all) {
+
+      Resque.inline = false
+      ActiveFedora::Base.delete_all}
+
+    let(:collection) {
+
+      Collection.find_by_did params[:did]}
+
+
+    # Testing Community creation
+    # Purpose statement
+    it 'community object should be created with id' do
+
+      # Expecting the community created with same id as the one assigned during creation
+      expect(@community.did). to eq @did
+    end
+
+    # Purpose statement
+    it 'community object should created with assigned title' do
+
+      # Expecting the community created with same title as the one passed during creation
+      expect(@community.title). to eq "ParentCommunity"
+    end
+
+    # Purpose statement
+    it 'community object should created with specified description' do
+
+      # Expecting the community created with same description as the one passed during creation
+      expect(@community.description). to eq "Community created for holding collection"
+    end
+
+    # Purpose statement
+    it 'community object should created with specified mass permissions' do
+
+      # Expecting the community created with same mass permission as the one passed during creation
+      expect(@community.mass_permissions). to eq "public"
+    end
+
+    # Testing Collection creation
+    # Purpose statement
+    it 'collection object should created with assigned title' do
+
+      # Expecting the collection created with same title as the one passed during creation
+      expect(@collectionCreated.title). to eq "New collection"
+    end
+
+    # Purpose statement
+    it 'collection object should created with assigned description' do
+
+      # Expecting the collection created with same title as the one passed during creation
+      expect(@collectionCreated.description). to eq "Collection to be embedded in Community"
+    end
+
+    # Purpose statement
+    it 'collection object should created with assigned mass permission' do
+
+      # Expecting the collection created with same mass permission as the one passed during creation
+      expect(@collectionCreated.mass_permissions). to eq "public"
+    end
+
+    # Purpose statement
+    it 'collection object should created with assigned depositor' do
+
+      # Expecting the collection created with same depositor as the one passed during creation
+      expect(@collectionCreated.depositor). to eq "000000000"
+    end
+
+    # Purpose statement
+    it 'collection object should created with the community created above and not null ' do
+
+      # Expecting the collection created with same title as the one passed during creation
+      expect(@collectionCreated.community.id). to eq @did
+    end
+
+    # Creation of params object to pass it along with create function for Collection object creation
+    let(:params) do
+      {
+
+          :collection => {
+              :title => 'New collection',
+              :description => 'This is a test collection.',
+              :mass_permissions => 'public',
+              :community => @community
+          }
+      }
+    end
+
+    # Purpose statement
+    it 'should create a collection object and go to show page' do
+
+      # Calling the create function
+      post :create, params
+
+      # Retrieving the first object created in Collection class
+      collection = Collection.first
+
+      # Testing the object creation parameters
+      #binding.pry
+
+      # Expecting the post method to be successful and transfer the created collection resource to the show page
+      expect(response.status).to eq 302
+
+      expect(collection.title).to eq params[:collection][:title]
+    end
+  end
+
+
+  # Testing the update function in the Collection Controller
+  describe 'post #update' do
+
+    # Creation of community object used later for creating a Collection object
+    before(:each){
+      @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
+      @community.did = @community.pid
+      @community.save!
+      @did = @community.did
+    }
+
+    before(:all) { Resque.inline = true }
+    after(:each) { ActiveFedora::Base.delete_all }
+    after(:all) { Resque.inline = false }
+    let(:collection) { Collection.find_by_did params[:did] }
+
+    # Creation of params object to pass it along with update function for Collection object creation
+    let(:params) do
+      {
+          :did => '12',
+          :collection => {
+              :title => 'New Collection',
+              :description => 'This is a test collection.',
+              :mass_permissions => 'public',
+              :community => @community
+          }
+      }
+    end
+
+    # Purpose statement
+    it '302s for valid requests' do
+
+      # creating an instance of Collection object and saving it in database and updating its fields with arguments passed
+      # in params
+      collection_old = Collection.new
+      collection_old.title = 'Test Collection'
+      collection_old.description = 'This is a test'
+      collection_old.mass_permissions = 'private'
+      collection_old.did = params[:did]
+      collection_old.depositor = '0000000'
+      collection_old.save!
+      collection_old.community = @community
+      collection_old.save!
+      params[:id] = collection_old.did
+
+      # Testing the object creation parameters
+      #binding.pry
+
+      # Calling the update function
+      put :update, params
+
+      # Expecting the post method to be successful and transfer the updated Collection resource to the show page
+      expect(response.status).to eq 302
+    end
+  end
+
 end
 

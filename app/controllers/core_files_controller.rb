@@ -8,6 +8,7 @@ class CoreFilesController < CatalogController
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
 
+  #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
     self.search_params_logic += [:communities_filter]
@@ -15,6 +16,8 @@ class CoreFilesController < CatalogController
     render 'shared/index'
   end
 
+  #This method is the helper method for index. It basically gets the core files
+  # using solr queries
   def communities_filter(solr_parameters, user_parameters)
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:CoreFile"
     query = "has_model_ssim:\"#{model_type}\""
@@ -22,6 +25,7 @@ class CoreFilesController < CatalogController
     solr_parameters[:fq] << query
   end
 
+  #This method is used to create a new core file
   def new
     @page_title = "Create New Core File"
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
@@ -39,6 +43,7 @@ class CoreFilesController < CatalogController
     @core_file = CoreFile.new
   end
 
+  #This method contains the actual logic for creating a new core file
   def create
     begin
       params[:collection_dids] = params[:core_file][:collection]
@@ -99,6 +104,7 @@ class CoreFilesController < CatalogController
     end
   end
 
+  #This method is used to edit a particular core file
   def edit
     model_type = ActiveFedora::SolrService.escape_uri_for_query "info:fedora/afmodel:Collection"
     # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi')
@@ -117,6 +123,7 @@ class CoreFilesController < CatalogController
     @page_title = "Edit #{@core_file.title}"
   end
 
+  #This method contains the actual logic for editing a particular core file
   def update
     cf = CoreFile.find(params[:id])
     params[:did] = cf.did
@@ -153,6 +160,13 @@ class CoreFilesController < CatalogController
     pretty_json(200) and return
   end
 
+  def show #inherited from catalog controller
+    @core_file = CoreFile.find(params[:id])
+    @mods_html = render_mods_display(@core_file).to_html.html_safe
+    e = "Could not find TEI associated with this file.  Please retry in a "\
+      "few minutes and contact an administrator if the problem persists."
+  end
+
   def api_show
     @core_file = CoreFile.find_by_did(params[:did])
 
@@ -168,13 +182,6 @@ class CoreFilesController < CatalogController
 
     @response = @core_file.as_json
     pretty_json(200) and return
-  end
-
-  def show #inherited from catalog controller
-    @core_file = CoreFile.find(params[:id])
-    @mods_html = render_mods_display(@core_file).to_html.html_safe
-    e = "Could not find TEI associated with this file.  Please retry in a "\
-      "few minutes and contact an administrator if the problem persists."
   end
 
   def upsert
