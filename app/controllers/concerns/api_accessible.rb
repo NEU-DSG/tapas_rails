@@ -112,7 +112,8 @@ module ApiAccessible
     # Returns a sanitized json display of original post params
 
     # Remove controller and action hash elems
-    pcopy.except!(:controller, :action)
+    pcopy.delete(:controller)
+    pcopy.delete(:action)
 
     # If original request involved a file, clean up what we display
     # back to the end user.
@@ -123,6 +124,7 @@ module ApiAccessible
     if pcopy[:support_files]
       pcopy[:support_files] = pcopy[:support_files].as_json.except!('tempfile')
     end
+    logger.info("#{pcopy} from original_post_params")
 
     return pcopy
   end
