@@ -1,6 +1,20 @@
-class CommunitiesController < CatalogController
+require 'blacklight/catalog'
+class CommunitiesController < ApplicationController
   include ApiAccessible
+  include Blacklight::Catalog
+  include Blacklight::Controller
+
+  # before_filter :prepend_view_paths
+
   self.copy_blacklight_config_from(CatalogController)
+  # def prepend_view_paths
+    # prepend_view_path "app/views/catalog/"
+  # end
+
+  def search_action_url options = {}
+    # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
+    catalog_index_url(options.except(:controller, :action))
+  end
 
   def upsert
     if params[:thumbnail]
@@ -17,7 +31,7 @@ class CommunitiesController < CatalogController
     @page_title = "All Projects"
     self.search_params_logic += [:communities_filter]
     (@response, @document_list) = search_results(params, search_params_logic)
-    render 'shared/index'
+    render 'catalog/index'
   end
 
   #This method is the helper method for index. It basically gets the communities
@@ -32,6 +46,7 @@ class CommunitiesController < CatalogController
   #This method is used to display various attributes of community
   def show
     @community = Community.find(params[:id])
+    @page_title = @community.title || ""
   end
 
   #This method is used to create a new community/project
@@ -51,7 +66,7 @@ class CommunitiesController < CatalogController
   #This method is used to edit a particular community
   def edit
      @community = Community.find(params[:id])
-     @page_title = "Edit #{@community.title}"
+     @page_title = "Edit #{@community.title || ''}"
   end
 
   #This method contains the actual logic for editing a particular community

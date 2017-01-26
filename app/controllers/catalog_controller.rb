@@ -1,7 +1,12 @@
 # -*- encoding : utf-8 -*-
+require 'blacklight/catalog'
 class CatalogController < ApplicationController
-
   include Blacklight::Catalog
+  include Hydra::Controller::ControllerBehavior
+  # include Rails.application.routes.url_helpers
+
+  # These before_filters apply the hydra access controls
+  before_filter :enforce_show_permissions, :only=>:show
 
   configure_blacklight do |config|
     ## Class for sending and receiving requests from a search index
@@ -206,6 +211,11 @@ class CatalogController < ApplicationController
     config.show.document_actions.delete(:bookmark)
     config.show.document_actions.delete(:email)
     config.show.document_actions.delete(:sms)
+  end
+
+  def search_action_url(options = {})
+    # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
+    catalog_index_path(options.except(:controller, :action))
   end
 
 end

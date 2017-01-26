@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
     FileUtils.mkdir_p(tmpdir)
     tmpfile = Rails.root.join(tmpdir, fname)
     FileUtils.mv(fpath, tmpfile)
-    logger.info("inside create_temp_file") 
+    logger.info("inside create_temp_file")
     logger.warn tmpdir
     logger.warn tmpfile
     logger.warn File.exist?(tmpfile)
