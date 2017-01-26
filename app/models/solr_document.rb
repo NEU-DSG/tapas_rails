@@ -1,9 +1,10 @@
 # -*- encoding : utf-8 -*-
 class SolrDocument
-
+  # include Rails.application.routes.url_helpers
   include Blacklight::Solr::Document
   # include Blacklight::Document
   include CerberusCore::SolrDocumentBehavior
+  include TapasRails::SolrDocumentBehavior
   include TapasQueries
 
   # self.unique_key = 'id'
@@ -19,7 +20,8 @@ class SolrDocument
   # single valued. See Blacklight::Document::SemanticFields#field_semantics
   # and Blacklight::Document::SemanticFields#to_semantic_values
   # Recommendation: Use field names from Dublin Core
-  use_extension( Blacklight::Document::DublinCore)
+  # use_extension( Blacklight::Document::DublinCore)
+  use_extension( Blacklight::Solr::Document::Mods )
 
   def any_public_collections?
    return false unless klass == 'CoreFile'
