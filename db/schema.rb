@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140902205708) do
+ActiveRecord::Schema.define(version: 20170126143948) do
 
   create_table "bookmarks", force: true do |t|
     t.integer  "user_id",       null: false
@@ -54,5 +54,18 @@ ActiveRecord::Schema.define(version: 20140902205708) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+
+  create_table "view_packages", force: true do |t|
+    t.string   "human_name"
+    t.string   "machine_name"
+    t.text     "description"
+    t.text     "file_type"
+    t.string   "css_dir"
+    t.string   "js_dir"
+    t.text     "parameters"
+    t.text     "run_process"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
