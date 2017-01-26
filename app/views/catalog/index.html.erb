@@ -1,15 +1,12 @@
 <div id="sidebar" class="<%= sidebar_classes %>">
-  <%= render 'search_sidebar' %>
+  <%= render 'catalog/search_sidebar' %>
 </div>
 
 <div id="content" class="<%= main_content_classes %>">
   <% unless has_search_parameters? %>
     <%# if there are no input/search related params, display the "home" partial -%>
-    <%= render 'home' %>
-    <%= render 'shared/sitelinks_search_box' %>
+    <%= render 'catalog/home' %>
   <% else %>
-  	<p>link</p>
-    
-    <p><%= link_to "Add new Book", {:action => 'new' }%></p>
+    <%= render 'catalog/search_results' %>
   <% end %>
 </div>
