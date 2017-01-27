@@ -2,13 +2,13 @@
 
 FactoryGirl.define do
   factory :view_package do
-    human_name "MyString"
-    machine_name "MyString"
-    description "MyText"
-    file_type "MyText"
-    css_dir "MyString"
-    js_dir "MyString"
-    parameters "MyText"
-    run_process "MyText"
+
+    factory :tapas_generic do
+      machine_name "tapas_generic"
+    end
+
+    factory :teibp do
+      machine_name "teibp"
+    end
   end
 end
