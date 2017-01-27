@@ -61,6 +61,7 @@ class CoreFilesController < ApplicationController
       # Step 1: Find or create the CoreFile Object -
       # we do this here so that we have a stub record to
       # attach error messages & status tracking to.
+      logger.info "in upsert method"
       if CoreFile.exists_by_did?(params[:did])
         core_file = CoreFile.find_by_did(params[:did])
         core_file.mark_upload_in_progress!
@@ -69,8 +70,9 @@ class CoreFilesController < ApplicationController
                                     depositor: params[:depositor])
         core_file.mark_upload_in_progress!
       end
+      logger.info "step 1 completed"
 
-      # Step 1: Extract uploaded files to temporary locations if they exist
+      # Step 2: Extract uploaded files to temporary locations if they exist
       if params[:tei]
         params[:tei] = create_temp_file params[:tei]
       end
@@ -78,8 +80,9 @@ class CoreFilesController < ApplicationController
       if params[:support_files]
         params[:support_files] = create_temp_file params[:support_files]
       end
+      logger.info "step 2 completed"
 
-      # Step 2: If TEI was provided, generate a MODS record that can be sent back
+      # Step 3: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload
       if params[:tei]
@@ -92,12 +95,14 @@ class CoreFilesController < ApplicationController
 
         @mods = Exist::GetMods.execute(params[:tei], opts)
       end
+      logger.info "step 3 completed"
 
-      # Step 3: Kick off an upsert job
+      # Step 4: Kick off an upsert job
       job = TapasObjectUpsertJob.new params
       TapasRails::Application::Queue.push job
+      logger.info "step 4 completed"
 
-      # Step 4: Respond with MODS if it is available, otherwise send a generic
+      # Step 5: Respond with MODS if it is available, otherwise send a generic
       # success message
       if @mods
         render :xml => @mods, :status => 202
@@ -109,6 +114,7 @@ class CoreFilesController < ApplicationController
       core_file.set_default_display_error
       core_file.set_stacktrace_message(e)
       core_file.mark_upload_failed!
+      logger.error e
       raise e
     end
   end

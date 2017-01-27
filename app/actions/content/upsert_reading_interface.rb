@@ -4,6 +4,12 @@ module Content
     include Content
 
     def self.all_interface_types
+      # TODO - test/fix
+      # array = available_view_packages
+      # array.each do |r|
+      #   r.replace("_","-")
+      # end
+      # return array
       ['teibp', 'tapas-generic']
     end
 
