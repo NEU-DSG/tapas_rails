@@ -1,0 +1,11 @@
+%h1= "View Packages"
+%ul.breadcrumb
+  %li= "View Packages"
+-if @view_packages.length > 0
+  - @view_packages.each do |view|
+    %h3
+      = link_to(view.human_name, view_package_path(view.id))
+    %h5= "Description"
+    %p= view.description
+-else
+  There are currently no view packages available
