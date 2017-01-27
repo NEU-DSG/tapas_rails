@@ -74,12 +74,20 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   end
 
   def retroactively_set_status!
+    array = available_view_packages
+    create_view_package_methods
+    views = 0
+    array.each do |view_package|
+      view = send("#{view_package}".to_sym)
+      if !(view && view.content.size > 0)
+        views = views + 1
+      end
+    end
+
     has_tei = canonical_object && canonical_object.content.size > 0
-    has_teibp = teibp && teibp.content.size > 0
-    has_tg = tapas_generic && tapas_generic.content.size > 0
     has_collections = collections.any?
 
-    if has_tei && has_teibp && has_tg && has_collections
+    if has_tei && views == 0 && has_collections
       mark_upload_complete!
     else
       set_default_display_error
