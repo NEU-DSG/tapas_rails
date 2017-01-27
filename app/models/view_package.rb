@@ -7,7 +7,12 @@ class ViewPackage < ActiveRecord::Base
 
 
   # TODO make a job which communicates with github to dynamically add these
-  
+  # TODO need to figure out where the assets will be stored for each of these and how to retrieve them in the interface when necessary
 
+  after_destroy :clear_cache
+  after_save :clear_cache
 
+  def clear_cache
+    Rails.cache.delete("view_packages")
+  end
 end
