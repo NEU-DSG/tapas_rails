@@ -8,7 +8,7 @@ class HTMLFile < CerberusCore::BaseModels::ContentFile
     :class_name => "CoreFile"
 
   def html_type=(str)
-    array = ViewPackage.where("").pluck(:machine_name).to_a
+    array = available_view_packages
     if array.blank? # set defaults for now
       array = ["teibp", "tapas_generic"]
     end
