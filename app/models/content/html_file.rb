@@ -1,6 +1,7 @@
 class HTMLFile < CerberusCore::BaseModels::ContentFile
   include Filename
   include DownloadPath
+  include TapasRails::ViewPackages
 
   core_file_relationship :core_file
 

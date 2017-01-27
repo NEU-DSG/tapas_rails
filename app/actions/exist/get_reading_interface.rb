@@ -1,20 +1,21 @@
 module Exist
   class GetReadingInterface
     include Exist::Concerns::Helpers
+    include TapasRails::ViewPackages
     attr_reader :xml_blob, :type
 
     def initialize(xml_blob, type)
       # TODO - test this
-      # array = available_view_packages
-      # if array.blank? # set defaults for now
-      #   array = ["teibp", "tapas-generic"]
-      # else
-      #   array.each do |r|
-      #     r.replace("_","-")
-      #   end
-      # end
-      # valid_types = array
-      valid_types = ["teibp", "tapas-generic"]
+      array = available_view_packages
+      if array.blank? # set defaults for now
+        array = ["teibp", "tapas-generic"]
+      else
+        array.each do |r|
+          r.sub!("_","-")
+        end
+      end
+      valid_types = array
+      # valid_types = ["teibp", "tapas-generic"]
 
       @xml_blob = xml_blob
       if type.in? valid_types

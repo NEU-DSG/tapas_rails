@@ -9,7 +9,6 @@ class UpsertCoreFile
   end
 
   def execute
-    logger.info("executing upsert_core_file")
     begin
       if Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did])
