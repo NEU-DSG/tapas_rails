@@ -9,6 +9,8 @@ TapasRails::Application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+  config.log_level = :debug
+
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
@@ -40,8 +42,8 @@ TapasRails::Application.configure do
     end
   end
 
-  config.middleware.use ExceptionNotification::Rack, 
-    :email => { 
+  config.middleware.use ExceptionNotification::Rack,
+    :email => {
       :email_prefix => "[Tapas Rails Notifier DEV]",
       :sender_address => %{"notifier" <notifier@tapasrails.neu.edu>},
       :exception_recipients => email
