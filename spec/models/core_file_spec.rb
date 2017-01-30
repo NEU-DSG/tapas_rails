@@ -111,7 +111,9 @@ describe CoreFile do
       FactoryGirl.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)
-      ViewPackage.where({:machine_name => 'tapas_generic'})[0].destroy
+      ViewPackage.all.each do |v|
+        v.destroy
+      end
       core_file.create_view_package_methods
       expect { core_file.tapas_generic }.to raise_error(NoMethodError)
     end
