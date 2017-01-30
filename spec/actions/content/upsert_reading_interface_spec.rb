@@ -18,14 +18,16 @@ describe Content::UpsertReadingInterface do
 
   describe '.execute_all' do
     before(:all) do
-      @core_file = FactoryGirl.create :core_file
-      @core_file.collections = FactoryGirl.create_list(:collection, 2)
-      @core_file.save!
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
-      @tei = fixture_file 'tei.xml'
+      unless ENV['TRAVIS']
+        @core_file = FactoryGirl.create :core_file
+        @core_file.collections = FactoryGirl.create_list(:collection, 2)
+        @core_file.save!
+        FactoryGirl.create :tapas_generic
+        FactoryGirl.create :teibp
+        @tei = fixture_file 'tei.xml'
 
-      Content::UpsertReadingInterface.execute_all @core_file, @tei
+        Content::UpsertReadingInterface.execute_all @core_file, @tei
+      end
     end
 
     it 'does not delete the file at the given filepath' do

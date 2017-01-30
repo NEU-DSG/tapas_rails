@@ -29,6 +29,9 @@ RSpec.configure do |config|
   # config.mock_with :rr
 
   config.infer_spec_type_from_file_location!
+  config.mock_with :rspec do |mocks|
+    mocks.yield_receiver_to_any_instance_implementation_blocks = false
+  end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"

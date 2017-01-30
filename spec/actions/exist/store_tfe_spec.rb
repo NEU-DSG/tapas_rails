@@ -5,14 +5,15 @@ describe Exist::StoreTfe do
   include FixtureBuilders
 
   before(:all) do
-    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-    @core_file, @collections, @community = FixtureBuilders.create_all
+    unless ENV['TRAVIS']
+      @core_file, @collections, @community = FixtureBuilders.create_all
 
-    @core_file_unindexed = FactoryGirl.create :core_file
-    @core_file_unindexed.collections = @collections
-    @core_file_unindexed.save!
+      @core_file_unindexed = FactoryGirl.create :core_file
+      @core_file_unindexed.collections = @collections
+      @core_file_unindexed.save!
 
-    Exist::StoreTei.execute(fixture_file('tei.xml'), @core_file)
+      Exist::StoreTei.execute(fixture_file('tei.xml'), @core_file)
+    end
   end
 
   after(:all) { ActiveFedora::Base.delete_all }
