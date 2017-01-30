@@ -4,6 +4,7 @@ describe CoreFilesController do
   include FileHelpers
   include FixtureBuilders
   include ValidAuthToken
+  include TapasRails::ViewPackages
 
   let(:core_file) { FactoryGirl.create :core_file }
 
@@ -14,24 +15,58 @@ describe CoreFilesController do
   end
 
   RSpec.shared_examples "a content displaying route" do
-    let(:route) { requested_content.to_sym }
+    # before :all do
+    #   FactoryGirl.create :tapas_generic
+    #   FactoryGirl.create :teibp
+    #   core_file.create_view_package_methods
+    #   @route = requested_content.to_sym
+    # end
+    # let(:tg) { FactoryGirl.create :tapas_generic }
+    # let(:tb) { FactoryGirl.create :teibp }
+    # let(:route) { requested_content.to_sym }
+    #
+    # before :all do
+    #   core_file.create_view_package_methods
+    # end
 
     after(:each) { ActiveFedora::Base.delete_all }
 
     it '404s when no CoreFile can be found' do
-      get route, { :did => SecureRandom.uuid }
+      FactoryGirl.create :tapas_generic
+      FactoryGirl.create :teibp
+      core_file.create_view_package_methods
+      @route = requested_content.to_sym
+      # get @route, { :did => SecureRandom.uuid }
+      if requested_content != "tei"
+        get :view_package_html, { :did => SecureRandom.uuid, :view_package => requested_content }
+      else
+        get @route, {:did => SecureRandom.uuid}
+      end
 
       expect(response.status).to eq 404
       expect(response.body).to include 'Resource not found'
     end
 
     it "404s when the CoreFile lacks the requested display type." do
-      get route, { :did => core_file.did }
+      FactoryGirl.create :tapas_generic
+      FactoryGirl.create :teibp
+      core_file.create_view_package_methods
+      @route = requested_content.to_sym
+      if requested_content != "tei"
+        get :view_package_html, { :did => core_file.did, :view_package => requested_content }
+      else
+        get @route, {:did => core_file.did}
+      end
       expect(response.status).to eq 404
       expect(response.body).not_to be nil
     end
 
     it '200s and returns the content when it exists' do
+      FactoryGirl.create :tapas_generic
+      FactoryGirl.create :teibp
+      available_view_packages
+      core_file.create_view_package_methods
+      @route = requested_content.to_sym
       html = FactoryGirl.create :html_file
       html.core_file = core_file
       html.html_for << core_file
@@ -46,7 +81,11 @@ describe CoreFilesController do
       html.content.content = html_content
       html.save!
 
-      get route, { :did => core_file.did }
+      if requested_content != "tei"
+        get :view_package_html, { :did => core_file.did, :view_package => requested_content }
+      else
+        get @route, {:did => core_file.did}
+      end
 
       expect(response.status).to eq 200
       expect(response.body).to eq html_content
