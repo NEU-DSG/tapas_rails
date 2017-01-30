@@ -4,7 +4,7 @@ describe RebuildReadingInterfaceJob do
   include FileHelpers
   include FixtureBuilders
 
-  after(:each) { ActiveFedora::Base.delete_all } # TODO delete_all does not work for some reason?
+  after(:each) { ActiveFedora::Base.delete_all }
 
   let(:core) { FactoryGirl.create :core_file }
   let(:tei) { FactoryGirl.create :tei_file }
