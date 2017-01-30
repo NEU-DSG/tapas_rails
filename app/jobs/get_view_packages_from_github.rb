@@ -23,7 +23,7 @@ class GetViewPackagesFromGithub
     directories = Dir.glob('*').select {|f| File.directory? f}
     view_packages = available_view_packages
     directories.each do |dir_name|
-      dir = dir_name.sub("_","-")
+      dir = dir_name.sub("-","_")
       if view_packages.include?(dir)
         view = ViewPackage.where({:machine_name => dir})
       else
@@ -31,8 +31,11 @@ class GetViewPackagesFromGithub
       end
       FileUtils.cd(Rails.root.join("public/view_packages/#{dir_name}"))
       # look for config file
+      puts view.inspect
       if File.exist?("PKG-CONFIG.xml")
+        puts "config file exists"
         doc = File.open("PKG-CONFIG.xml") { |f| Nokogiri::XML(f) }
+        puts doc
         view.human_name = doc.css("view_package human_name").text
         view.description = doc.css("view_package description").text
         view.css_dir = doc.css("view_package css_dir").text

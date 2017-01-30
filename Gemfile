@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-
+require 'git'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.8'
 
@@ -104,5 +104,3 @@ end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
-
-gem 'git'
