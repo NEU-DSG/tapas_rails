@@ -8,7 +8,7 @@ module ApiAccessible
     # But enforce credential checks on each and every request.
     # Note that this and the csrf disable up top will have to be
     # reworked once tapas_rails is the actual frontend for tapas.
-    # before_action :authenticate
+    before_action :authenticate
 
     # This is necessary because of apparent limitations in Drupal.
     # Ensure that numerically keyed hashes are transformed into
