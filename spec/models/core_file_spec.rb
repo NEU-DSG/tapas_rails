@@ -107,7 +107,7 @@ describe CoreFile do
       expect(core_file).to respond_to(:tapas_generic)
     end
 
-    it "should not have tapas_generic method if the view_package doesn't exist" do
+    it "should not have method if the view_package doesn't exist" do
       Rails.cache.delete("view_packages")
       ViewPackage.all.each do |c|
         c.destroy
