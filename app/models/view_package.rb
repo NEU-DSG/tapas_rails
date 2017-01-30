@@ -1,4 +1,5 @@
 class ViewPackage < ActiveRecord::Base
+  include TapasRails::ViewPackages
   attr_accessible :human_name, :machine_name, :description, :file_type, :css_dir, :js_dir, :parameters, :run_process if Rails::VERSION::MAJOR < 4
 
   serialize :file_type, Array
@@ -13,6 +14,10 @@ class ViewPackage < ActiveRecord::Base
   after_save :clear_cache
 
   def clear_cache
+    arr_before = available_view_packages
     Rails.cache.delete("view_packages")
+    arr_after = available_view_packages
+    arr_before.reject!{|x| arr_after.include? x}
+    CoreFile.remove_view_package_methods(arr_before)
   end
 end

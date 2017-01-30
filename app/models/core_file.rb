@@ -59,7 +59,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     array.each do |method_name|
       string_name = method_name
       method_name = method_name.to_sym
-      self.class.send :define_method, method_name do |arg = :models|
+      CoreFile.send :define_method, method_name do |arg = :models|
         if arg.blank?
           arg = :models
         end
@@ -70,6 +70,13 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
         load_specified_type(tg, arg)
       end
+    end
+  end
+
+  def self.remove_view_package_methods(view_packages)
+    view_packages.each do |r|
+      sym = r.to_sym
+      CoreFile.send :remove_method, sym
     end
   end
 

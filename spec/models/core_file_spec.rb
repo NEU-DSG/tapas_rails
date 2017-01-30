@@ -102,27 +102,18 @@ describe CoreFile do
 
   describe "view package methods" do
     it "should have tapas_generic method when tapas_generic view package object exists" do
-      ActiveFedora::Base.delete_all
       FactoryGirl.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)
-      ActiveFedora::Base.delete_all
     end
 
     it "should not have method if the view_package doesn't exist" do
-      ActiveFedora::Base.delete_all
-      Rails.cache.delete("view_packages")
-      ViewPackage.all.each do |c|
-        c.destroy
-      end
-      puts ViewPackage.all
-      puts available_view_packages
-      core_file = CoreFile.new
+      FactoryGirl.create :tapas_generic
       core_file.create_view_package_methods
-      puts Rails.cache.fetch("view_packages")
-      expect(core_file).not_to respond_to(:teibp)
-      expect { core_file.teibp }.to raise_error(NoMethodError)
-      ActiveFedora::Base.delete_all
+      expect(core_file).to respond_to(:tapas_generic)
+      ViewPackage.where({:machine_name => 'tapas_generic'})[0].destroy
+      core_file.create_view_package_methods
+      expect { core_file.tapas_generic }.to raise_error(NoMethodError)
     end
   end
 
