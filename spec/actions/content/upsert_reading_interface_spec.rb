@@ -31,7 +31,8 @@ describe Content::UpsertReadingInterface do
     end
 
     it 'attaches a teibp html document with content to the CoreFile' do
-      skip("Test passes locally but not on Travis.") if ENV['CI']
+      skip "Test passes locally but not on Travis." if ENV['CI'] do
+      end
       teibp = @core_file.teibp
       expect(teibp).to be_instance_of HTMLFile
       expect(teibp.content.label).to eq 'teibp.xhtml'
