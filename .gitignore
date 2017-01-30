@@ -53,3 +53,7 @@ config/secrets.yml
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+
+# Ignore directories which are pulled down from github
+public/view_packages
+public/view_packages/*
