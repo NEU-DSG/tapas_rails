@@ -7,6 +7,7 @@ describe Content::UpsertReadingInterface do
 
   it 'raises an error when given invalid TEI' do
     file = fixture_file('xml.xml')
+    Rails.cache.delete("view_packages")
     FactoryGirl.create :tapas_generic
     FactoryGirl.create :teibp
     action = Content::UpsertReadingInterface
@@ -31,8 +32,7 @@ describe Content::UpsertReadingInterface do
     end
 
     it 'attaches a teibp html document with content to the CoreFile' do
-      skip "Test passes locally but not on Travis." if ENV['CI'] do
-      end
+      skip "Test passes locally but not on Travis." if ENV['TRAVIS']
       teibp = @core_file.teibp
       expect(teibp).to be_instance_of HTMLFile
       expect(teibp.content.label).to eq 'teibp.xhtml'
@@ -40,7 +40,7 @@ describe Content::UpsertReadingInterface do
     end
 
     it 'attaches a tapas_generic html document with content to the CoreFile' do
-      skip("Test passes locally but not on Travis.") if ENV['CI']
+      skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
       tapas_generic = @core_file.tapas_generic
       expect(tapas_generic).to be_instance_of HTMLFile
       expect(tapas_generic.content.label).to eq 'tapas-generic.xhtml'

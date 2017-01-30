@@ -17,13 +17,13 @@ describe Exist::StoreTfe do
   after(:all) { ActiveFedora::Base.delete_all }
 
   it 'raises an error when a did that is not in Exist yet is used' do
-    skip("Test passes locally but not on Travis.") if ENV['CI']
+    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     e = RestClient::InternalServerError
     expect { Exist::StoreTfe.execute(@core_file_unindexed) }.to raise_error e
   end
 
   it 'returns a 201 when TFE is correctly added to an existing TEI document' do
-    skip("Test passes locally but not on Travis.") if ENV['CI']
+    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     response = Exist::StoreTfe.execute(@core_file)
     expect(response.code).to eq 201
   end

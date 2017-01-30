@@ -7,7 +7,7 @@ describe Exist::StoreTei do
   after(:all) { ActiveFedora::Base.delete_all }
 
   it 'returns a 201 for valid uploads' do
-    skip("Test passes locally but not on Travis.") if ENV['CI']
+    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     file = fixture_file 'tei.xml'
     core_file, collections, community = FixtureBuilders.create_all
 

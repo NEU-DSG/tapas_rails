@@ -11,7 +11,7 @@ describe Exist::StoreMods do
   after(:all) { ActiveFedora::Base.delete_all }
 
   it 'returns a 201 for valid storage requests' do
-    skip("Test passes locally but not on Travis.") if ENV['CI']
+    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     file = fixture_file 'tei.xml'
     Exist::StoreTei.execute(file, @core_file)
 
@@ -20,7 +20,7 @@ describe Exist::StoreMods do
   end
 
   it 'passes optional params correctly' do
-    skip("Test passes locally but not on Travis.") if ENV['CI']
+    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     file = fixture_file 'tei.xml'
     Exist::StoreTei.execute(file, @core_file)
 

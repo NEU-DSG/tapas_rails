@@ -10,7 +10,7 @@ describe RebuildReadingInterfaceJob do
   let(:tei) { FactoryGirl.create :tei_file }
 
   it 'rebuilds the reading interface when given a valid CoreFile' do
-    skip("Test passes locally but not on Travis.") if ENV['CI']
+    skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     FactoryGirl.create :tapas_generic
     FactoryGirl.create :teibp
     cf, cl, p = FixtureBuilders.create_all
