@@ -195,13 +195,14 @@ describe UpsertCoreFile do
 
     context 'on success' do
       before(:all) do
-        skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-        setup_valid_upsert
-        FactoryGirl.create :tapas_generic
-        FactoryGirl.create :teibp
-        UpsertCoreFile.execute(@params)
+        unless ENV['TRAVIS']
+          setup_valid_upsert
+          FactoryGirl.create :tapas_generic
+          FactoryGirl.create :teibp
+          UpsertCoreFile.execute(@params)
 
-        @core_file = CoreFile.find_by_did(@params[:did])
+          @core_file = CoreFile.find_by_did(@params[:did])
+        end
       end
 
       after(:all) { clear_upsert_ivars }

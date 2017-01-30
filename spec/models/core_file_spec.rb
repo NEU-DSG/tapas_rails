@@ -102,12 +102,15 @@ describe CoreFile do
 
   describe "view package methods" do
     it "should have tapas_generic method when tapas_generic view package object exists" do
+      ActiveFedora::Base.delete_all
       FactoryGirl.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)
+      ActiveFedora::Base.delete_all
     end
 
     it "should not have method if the view_package doesn't exist" do
+      ActiveFedora::Base.delete_all
       Rails.cache.delete("view_packages")
       ViewPackage.all.each do |c|
         c.destroy
@@ -119,6 +122,7 @@ describe CoreFile do
       puts Rails.cache.fetch("view_packages")
       expect(core_file).not_to respond_to(:teibp)
       expect { core_file.teibp }.to raise_error(NoMethodError)
+      ActiveFedora::Base.delete_all
     end
   end
 
@@ -171,7 +175,12 @@ describe CoreFile do
 
   describe "HTML Object Queries" do
     before(:each) { setup_html_tests }
-    after(:each) { core_file.destroy }
+    after(:each) {
+      core_file.destroy
+      ViewPackage.all.each do |v|
+        v.destroy
+      end
+    }
 
     def setup_html_tests
       FactoryGirl.create :tapas_generic
