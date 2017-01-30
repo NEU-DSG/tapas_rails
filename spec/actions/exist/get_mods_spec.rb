@@ -6,14 +6,14 @@ describe Exist::GetMods, :existdb => true do
   describe '#execute' do
     context 'with no optional arguments' do
       it 'raises a 400 when given a file that is not TEI XML' do
-        skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+        skip("Test passes locally but not on Travis.") if ENV['CI']
         path = fixture_file 'xml_malformed.xml'
         error = RestClient::BadRequest
         expect { Exist::GetMods.execute path  }.to raise_error error
       end
 
       it 'returns a MODS document when given valid TEI XML' do
-        skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+        skip("Test passes locally but not on Travis.") if ENV['CI']
         path = fixture_file 'tei.xml'
         expect { Exist::GetMods.execute path  }.not_to raise_error
         response = Exist::GetMods.execute path
@@ -25,7 +25,7 @@ describe Exist::GetMods, :existdb => true do
       let(:path) { fixture_file 'tei.xml' }
 
       it 'passes valid display params to eXist' do
-        skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+        skip("Test passes locally but not on Travis.") if ENV['CI']
         authors = %w(Peter Paul Mary)
         contributors = %w(Jack Jill)
         title = 'Testing valid display params'
@@ -46,7 +46,7 @@ describe Exist::GetMods, :existdb => true do
       end
 
       it 'ignores invalid display params' do
-        skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+        skip("Test passes locally but not on Travis.") if ENV['CI']
         opts = { authors: ['Squilliam Tentacles'], abstract: 'Foobar' }
         response = Exist::GetMods.execute(path, opts)
         expect(opts[:authors].all? { |a| response.include? a }).to be true

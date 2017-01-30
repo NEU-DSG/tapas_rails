@@ -12,7 +12,7 @@ describe Exist::IndexCoreFile do
 
     # This test needs to be improved ASAP.
     it 'returns no errors on valid requests' do
-      skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+      skip("Test passes locally but not on Travis.") if ENV['CI']
       expect { Exist::IndexCoreFile.execute(@core_file, @filepath) }.not_to raise_error
     end
   end

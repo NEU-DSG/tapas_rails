@@ -209,7 +209,7 @@ describe CoreFilesController do
     end
 
     it 'returns a 200 on successful reading interface rebuild' do
-      skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+      skip("Test passes locally but not on Travis.") if ENV['CI']
 
       core, collections, community = FixtureBuilders.create_all
       tei = FactoryGirl.create :tei_file
@@ -239,7 +239,7 @@ describe CoreFilesController do
     after(:all) { ActiveFedora::Base.delete_all }
 
     it "returns a 202 and creates the desired file on a valid request." do
-      skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
+      skip("Test passes locally but not on Travis.") if ENV['CI']
       Resque.inline = true
 
       # Create a community for our collections to be attached to
