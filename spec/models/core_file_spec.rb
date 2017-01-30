@@ -3,6 +3,7 @@ require "spec_helper"
 describe CoreFile do
   include FileHelpers
   include FixtureBuilders
+  include TapasRails::ViewPackages
 
   let(:core_file) { FactoryGirl.create :core_file }
   let(:collection) { FactoryGirl.create :collection }
@@ -100,14 +101,24 @@ describe CoreFile do
   end
 
   describe "view package methods" do
-    it "should have no method error before calling create_view_package_methods" do
-      expect{core_file.tapas_generic}.to raise_error
-    end
-
     it "should have tapas_generic method when tapas_generic view package object exists" do
       FactoryGirl.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)
+    end
+
+    it "should not have tapas_generic method if the view_package doesn't exist" do
+      Rails.cache.delete("view_packages")
+      ViewPackage.all.each do |c|
+        c.destroy
+      end
+      puts ViewPackage.all
+      puts available_view_packages
+      core_file = CoreFile.new
+      core_file.create_view_package_methods
+      puts Rails.cache.fetch("view_packages")
+      expect(core_file).not_to respond_to(:teibp)
+      expect { core_file.teibp }.to raise_error(NoMethodError)
     end
   end
 
