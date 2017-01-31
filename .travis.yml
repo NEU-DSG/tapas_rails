@@ -3,8 +3,6 @@ before_install:
   - sudo apt-get update -qq
   - sudo apt-get install imagemagick libmagickcore-dev libmagic-dev redis-server libreoffice-common libimage-exiftool-perl poppler-utils
   - gem install bundler
-  - gem install rubygems
-  - gem install git
 rvm:
   - 2.0.0
 before_script:

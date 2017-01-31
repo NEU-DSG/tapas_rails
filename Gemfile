@@ -104,3 +104,7 @@ end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
+
+group :test do
+  gem "git"
+end

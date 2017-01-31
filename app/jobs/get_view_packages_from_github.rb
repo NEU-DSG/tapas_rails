@@ -25,7 +25,7 @@ class GetViewPackagesFromGithub
     directories.each do |dir_name|
       dir = dir_name.sub("-","_")
       if view_packages.include?(dir)
-        view = ViewPackage.where({:machine_name => dir})
+        view = ViewPackage.where(machine_name: dir).first
       else
         view = ViewPackage.new(:machine_name => dir)
       end
