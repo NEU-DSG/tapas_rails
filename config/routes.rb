@@ -44,6 +44,7 @@ TapasRails::Application.routes.draw do
   resources :downloads, :only => 'show'
 
   resources :view_packages
+  get 'api/view_packages' => 'view_packages#api_index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
