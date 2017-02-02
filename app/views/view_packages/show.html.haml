@@ -12,12 +12,16 @@
   %ul
     - @view.file_type.each do |file|
       %li= file
-- if !@view.css_dir.blank?
-  %h4= "CSS directory"
-  %p= @view.css_dir
-- if !@view.js_dir.blank?
-  %h4= "Javascript directory"
-  %p= @view.js_dir
+- if !@view.css_files.blank?
+  %h4= "CSS Files"
+  %ul
+    - @view.css_files.each do |file|
+      %li= link_to(file, root_url+"view_packages/#{@view.machine_name.sub("_","-")}/#{file}")
+- if !@view.js_files.blank?
+  %h4= "JS Files"
+  %ul
+    - @view.js_files.each do |file|
+      %li= link_to(file, root_url+"view_packages/#{@view.machine_name.sub("_","-")}/#{file}")
 -if !@view.parameters.blank?
   %h4= "Parameters"
   %table.table.table-bordered.table-striped
