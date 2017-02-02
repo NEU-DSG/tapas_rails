@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170126143948) do
+ActiveRecord::Schema.define(version: 20170201205147) do
 
   create_table "bookmarks", force: true do |t|
     t.integer  "user_id",       null: false
@@ -60,8 +60,8 @@ ActiveRecord::Schema.define(version: 20170126143948) do
     t.string   "machine_name"
     t.text     "description"
     t.text     "file_type"
-    t.string   "css_dir"
-    t.string   "js_dir"
+    t.text     "css_files",    limit: 255
+    t.text     "js_files",     limit: 255
     t.text     "parameters"
     t.text     "run_process"
     t.datetime "created_at"
