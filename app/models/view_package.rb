@@ -1,8 +1,10 @@
 class ViewPackage < ActiveRecord::Base
   include TapasRails::ViewPackages
-  attr_accessible :human_name, :machine_name, :description, :file_type, :css_dir, :js_dir, :parameters, :run_process if Rails::VERSION::MAJOR < 4
+  attr_accessible :human_name, :machine_name, :description, :file_type, :css_files, :js_files, :parameters, :run_process if Rails::VERSION::MAJOR < 4
 
   serialize :file_type, Array
+  serialize :css_files, Array
+  serialize :js_files, Array
   serialize :parameters, Hash
   serialize :run_process, Hash
 
