@@ -14,17 +14,19 @@ class ViewPackagesController < ApplicationController
     @view_packages = ViewPackage.all(:order => "machine_name")
     @view_packages.each do |view|
       dir_name = view.machine_name.sub("_","-")
-      if view.js_dir
-        js_dir = Rails.root.join("public/view_packages/#{dir_name}/#{view.js_dir}")
-        logger.info js_dir
-        logger.info Dir[js_dir+"*"]
-        view.js_dir = Dir[js_dir+"*"]
+      if !view.js_files.blank?
+        array = []
+        view.js_files.each do |js|
+          array << root_url+"view_packages/#{dir_name}/#{js}"
+        end
+        view.js_files = array
       end
-      if view.css_dir
-        css_dir =  Rails.root.join("public/view_packages/#{dir_name}/#{view.css_dir}")
-        logger.info css_dir
-        logger.info Dir[css_dir+"*.css"]
-        view.css_dir = Dir[css_dir+"*.css"]
+      if !view.css_files.blank?
+        array = []
+        view.css_files.each do |css|
+          array << root_url+"view_packages/#{dir_name}/#{css}"
+        end
+        view.css_files = array
       end
     end
     render json: @view_packages
