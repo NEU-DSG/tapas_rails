@@ -76,7 +76,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   def self.remove_view_package_methods(view_packages)
     view_packages.each do |r|
       sym = r.to_sym
-      if CoreFile.respond_to?(sym)
+      if CoreFile.method_defined? sym
         CoreFile.send :remove_method, sym
       end
     end
