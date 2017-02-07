@@ -3,7 +3,7 @@ lock '3.2.1'
 
 set :application, 'tapas_rails'
 set :stages, ["staging", "production"]
-set :repo_url, 'https://github.com/neu-dsg/tapas_rails'
+set :repo_url, 'https://github.com/NEU-DSG/tapas_rails'
 
 # Ensure that the Rails environment is always loaded for Resque workers
 set :resque_environment_task, true
