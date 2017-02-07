@@ -2,7 +2,7 @@ TapasRails::Application.routes.draw do
 
   # At some point we'll want all this, but I'm going to disable these routes
   # until we're ready to migrate to 100% Hydra-Head usage for tapas.
-  # root :to => "catalog#index"
+  root :to => "view_packages#index"
   # blacklight_for :catalog
   # devise_for :users
 
@@ -33,15 +33,18 @@ TapasRails::Application.routes.draw do
 
   # CoreFiles
   get 'files/:did/mods' => 'core_files#mods'
-  get 'files/:did/teibp' => 'core_files#teibp'
-  get 'files/:did/tapas_generic' => 'core_files#tapas_generic'
   get 'files/:did/tei' => 'core_files#tei'
   get 'files/:did' => 'core_files#show'
   put 'files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
   post 'files/:did' => 'core_files#upsert'
   # delete "files/:did" => "core_files#destroy"
 
+  get 'files/:did/html/:view_package' => 'core_files#view_package_html'
+
   resources :downloads, :only => 'show'
+
+  resources :view_packages
+  get 'api/view_packages' => 'view_packages#api_index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

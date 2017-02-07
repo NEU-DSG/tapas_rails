@@ -2,22 +2,24 @@ class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
 
-  configure_mods_display do 
-    identifier { ignore! } 
+  configure_mods_display do
+    identifier { ignore! }
   end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
 
-  def teibp 
-    e = "Could not find TEI Boilerplate representation of this object.  "\
-      "Please retry in a few minutes."
-    render_content_asset @core_file.teibp, e
-  end
-
-  def tapas_generic 
-    e = "Could not find a Tapas Generic representation of this object.  "\
-      "Please retry in a few minutes."
-    render_content_asset @core_file.tapas_generic, e
+  def view_package_html
+    @core_file = CoreFile.find_by_did(params[:did])
+    @core_file.create_view_package_methods
+    view_package = ViewPackage.where(:machine_name => "#{params[:view_package]}").to_a.first
+    if !view_package.blank?
+      e = "Could not find a #{view_package.human_name} representation of this object."\
+        "Please retry in a few minutes."
+      html = @core_file.send("#{view_package.machine_name}".to_sym)
+      render_content_asset html, e
+    else
+      render :text => "The view package #{params[:view_package]} could not be found", :status => 422
+    end
   end
 
   def mods
@@ -37,7 +39,7 @@ class CoreFilesController < ApplicationController
     pretty_json(200) and return
   end
 
-  def show 
+  def show
     @core_file = CoreFile.find_by_did(params[:did])
 
     if @core_file.upload_status.blank?
@@ -56,31 +58,31 @@ class CoreFilesController < ApplicationController
 
   def upsert
     begin
-      # Step 1: Find or create the CoreFile Object - 
-      # we do this here so that we have a stub record to 
-      # attach error messages & status tracking to. 
+      # Step 1: Find or create the CoreFile Object -
+      # we do this here so that we have a stub record to
+      # attach error messages & status tracking to.
       if CoreFile.exists_by_did?(params[:did])
         core_file = CoreFile.find_by_did(params[:did])
-        core_file.mark_upload_in_progress! 
+        core_file.mark_upload_in_progress!
       else
-        core_file = CoreFile.create(did: params[:did], 
+        core_file = CoreFile.create(did: params[:did],
                                     depositor: params[:depositor])
         core_file.mark_upload_in_progress!
       end
 
-      # Step 1: Extract uploaded files to temporary locations if they exist
+      # Step 2: Extract uploaded files to temporary locations if they exist
       if params[:tei]
         params[:tei] = create_temp_file params[:tei]
       end
 
       if params[:support_files]
-        params[:support_files] = create_temp_file params[:support_files] 
+        params[:support_files] = create_temp_file params[:support_files]
       end
 
-      # Step 2: If TEI was provided, generate a MODS record that can be sent back
+      # Step 3: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload
-      if params[:tei] 
+      if params[:tei]
         opts = {
           :authors => params[:display_authors],
           :contributors => params[:display_contributors],
@@ -91,22 +93,23 @@ class CoreFilesController < ApplicationController
         @mods = Exist::GetMods.execute(params[:tei], opts)
       end
 
-      # Step 3: Kick off an upsert job 
+      # Step 4: Kick off an upsert job
       job = TapasObjectUpsertJob.new params
-      TapasRails::Application::Queue.push job 
+      TapasRails::Application::Queue.push job
 
-      # Step 4: Respond with MODS if it is available, otherwise send a generic
+      # Step 5: Respond with MODS if it is available, otherwise send a generic
       # success message
       if @mods
-        render :xml => @mods, :status => 202 
+        render :xml => @mods, :status => 202
       else
-        @response[:message] = "Job processing" 
+        @response[:message] = "Job processing"
         pretty_json(202) and return
       end
     rescue => e
       core_file.set_default_display_error
       core_file.set_stacktrace_message(e)
       core_file.mark_upload_failed!
+      logger.error e
       raise e
     end
   end
@@ -115,9 +118,9 @@ class CoreFilesController < ApplicationController
 
   def render_content_asset(asset, error_msg)
     if asset && asset.content.content.present?
-      render :text => asset.content.content 
-    else 
-      render :text => error_msg, :status => 404 
+      render :text => asset.content.content
+    else
+      render :text => error_msg, :status => 404
     end
-  end    
+  end
 end

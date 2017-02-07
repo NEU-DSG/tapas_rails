@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation if Rails::VERSION::MAJOR < 4
-  # Connects this user object to Blacklights Bookmarks. 
+  # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -19,7 +19,9 @@ class User < ActiveRecord::Base
     email
   end
 
-  private 
+  # TODO - add interaction with wild apricot
+
+  private
 
     def generate_api_key
       key = Devise.friendly_token
@@ -29,7 +31,7 @@ class User < ActiveRecord::Base
       if User.where(:encrypted_api_key => @api_key)
         generate_api_key
       else
-        self.encrypted_api_key = @api_key 
+        self.encrypted_api_key = @api_key
       end
     end
 end

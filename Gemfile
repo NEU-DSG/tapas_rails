@@ -96,10 +96,12 @@ gem 'capistrano-git-submodule-strategy', '~> 0.1', :github => 'ekho/capistrano-g
 
 group :development, :test do
   gem "pry"
-  gem "rspec-rails"
+  gem "rspec-rails", "~>2.15"
+  gem "rspec-its"
   gem "jettywrapper"
   gem "factory_girl_rails"
 end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
+gem "git"
