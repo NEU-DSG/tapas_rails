@@ -10,6 +10,7 @@ set :resque_environment_task, true
 
 set :scm, :git
 set :git_strategy, Capistrano::Git::SubmoduleStrategy
+set :branch, fetch(:branch, 'develop')
 # Default branch is :master
 # ask :branch, proc { `git rev-parse --abbrev-ref HEAD`.chomp }.call
 
