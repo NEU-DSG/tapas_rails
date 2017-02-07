@@ -468,7 +468,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   mods_display (~> 0.3)
-  mysql2 (~> 0.4.5)
+  mysql2
   namae
   nest
   parseconfig
