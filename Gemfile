@@ -13,7 +13,7 @@ gem 'rubyzip'
 gem 'passenger', '5.0.15'
 
 # Use mysql2 for the staging environment
-gem 'mysql2', :group => [:staging, :production]
+gem 'mysql2', '0.3.16'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'

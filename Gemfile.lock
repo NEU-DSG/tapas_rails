@@ -232,7 +232,7 @@ GEM
       i18n
       stanford-mods
     multi_json (1.11.0)
-    mysql2 (0.4.5)
+    mysql2 (0.3.16)
     namae (0.9.2)
     nest (1.1.2)
       redis
@@ -468,7 +468,7 @@ DEPENDENCIES
   jettywrapper
   jquery-rails
   mods_display (~> 0.3)
-  mysql2
+  mysql2 (= 0.3.16)
   namae
   nest
   parseconfig
