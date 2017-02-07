@@ -17,7 +17,7 @@ staging:
   pool: 5
   database: tapas_rails_staging
   username: tapas_rails
-  password: <%= ENV['MYSQL_PRODUCTION_PASSWORD'] %>
+  password: <%= ENV['MYSQL_STAGING_PASSWORD'] %>
 
 production:
   adapter: mysql2
