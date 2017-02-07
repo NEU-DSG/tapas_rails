@@ -1,5 +1,5 @@
 exist:
   username: 'tapas'
-  password: <%=  ENV['STAGING_EXIST_PASSWORD'] %>
+  password: <%=  ENV['PRODUCTION_EXIST_PASSWORD'] %>
   url: 'http://localhost:8868/exist/apps/tapas-xq'
 base_url: 'http://rails_api.tapasdev.neu.edu'
