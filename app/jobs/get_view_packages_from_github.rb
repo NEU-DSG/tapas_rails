@@ -16,6 +16,7 @@ class GetViewPackagesFromGithub
       FileUtils.chmod 0775, Rails.root.join("public")
       g = Git.clone("https://github.com/NEU-DSG/tapas-view-packages.git", Rails.root.join("public/view_packages"))
     end
+    g.fetch()
     g.pull()
     g.checkout('feature/config-file') #for now TODO change this to develop or master when it is merged in
     FileUtils.cd(Rails.root.join("public/view_packages"))
