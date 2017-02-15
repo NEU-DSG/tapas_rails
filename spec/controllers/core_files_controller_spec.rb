@@ -51,7 +51,7 @@ describe CoreFilesController do
     it '200s and returns the content when it exists' do
       FactoryGirl.create :tapas_generic
       FactoryGirl.create :teibp
-      available_view_packages
+      available_view_packages_machine
       core_file.create_view_package_methods
       @route = requested_content.to_sym
       html = FactoryGirl.create :html_file
