@@ -7,6 +7,15 @@
 - if !@view.description.blank?
   %h4= "Description"
   %p= @view.description
+- if !@view.machine_name.blank?
+  %h4= "Machine Name"
+  %p= @view.machine_name
+- if !@view.dir_name.blank?
+  %h4= "Directory Name"
+  %p= @view.dir_name
+- if !@view.git_timestamp.blank?
+  %h4= "Last Updated"
+  %p= @view.git_timestamp
 - if !@view.file_type.blank?
   %h4= "File Types"
   %ul
@@ -16,12 +25,12 @@
   %h4= "CSS Files"
   %ul
     - @view.css_files.each do |file|
-      %li= link_to(file, root_url+"view_packages/#{@view.machine_name.sub("_","-")}/#{file}")
+      %li= link_to(file, root_url+"view_packages/#{@view.dir_name}/#{file}")
 - if !@view.js_files.blank?
   %h4= "JS Files"
   %ul
     - @view.js_files.each do |file|
-      %li= link_to(file, root_url+"view_packages/#{@view.machine_name.sub("_","-")}/#{file}")
+      %li= link_to(file, root_url+"view_packages/#{@view.dir_name}/#{file}")
 -if !@view.parameters.blank?
   %h4= "Parameters"
   %table.table.table-bordered.table-striped
