@@ -12,4 +12,4 @@ cache:
 script: "bundle exec rake ci:build"
 branches:
   only:
-    - feature/dynamic_view_packages
+    - develop
