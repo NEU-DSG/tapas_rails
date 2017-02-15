@@ -9,7 +9,7 @@ class HTMLFile < CerberusCore::BaseModels::ContentFile
     :class_name => "CoreFile"
 
   def html_type=(str)
-    array = available_view_packages
+    array = available_view_packages_machine
     if array.blank? # set defaults for now
       array = ["teibp", "tapas_generic"]
     end

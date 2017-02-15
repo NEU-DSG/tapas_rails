@@ -54,7 +54,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   end
 
   def create_view_package_methods
-    array = available_view_packages
+    array = available_view_packages_machine
 
     array.each do |method_name|
       string_name = method_name
@@ -83,7 +83,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   end
 
   def retroactively_set_status!
-    array = available_view_packages
+    array = available_view_packages_machine
     create_view_package_methods
     views = 0
     array.each do |view_package|

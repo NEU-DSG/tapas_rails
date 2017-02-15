@@ -6,13 +6,9 @@ module Exist
 
     def initialize(xml_blob, type)
       # TODO - test this
-      array = available_view_packages
+      array = available_view_packages_dir
       if array.blank? # set defaults for now
         array = ["teibp", "tapas-generic"]
-      else
-        array.each do |r|
-          r.sub!("_","-")
-        end
       end
       valid_types = array
       # valid_types = ["teibp", "tapas-generic"]

@@ -4,10 +4,7 @@ module Content
     include Content
 
     def self.all_interface_types
-      array = ViewPackage.where("").pluck(:machine_name).to_a #TODO replace this with available_view_packages
-      array.each do |r|
-        r.sub!("_","-")
-      end
+      array = ViewPackage.where("").pluck(:dir_name).to_a #TODO replace this with available_view_packages_dir
       return array
     end
 
