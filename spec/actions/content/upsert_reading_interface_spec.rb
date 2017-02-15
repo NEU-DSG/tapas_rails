@@ -8,7 +8,8 @@ describe Content::UpsertReadingInterface do
   it 'raises an error when given invalid TEI' do
     skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     file = fixture_file('xml.xml')
-    Rails.cache.delete("view_packages")
+    Rails.cache.delete("view_packages_machine")
+    Rails.cache.delete("view_packages_dir")
     FactoryGirl.create :tapas_generic
     FactoryGirl.create :teibp
     action = Content::UpsertReadingInterface

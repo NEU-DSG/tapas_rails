@@ -13,7 +13,8 @@ class ViewPackage < ActiveRecord::Base
 
   def clear_cache
     arr_before = available_view_packages_machine
-    Rails.cache.delete("view_packages")
+    Rails.cache.delete("view_packages_machine")
+    Rails.cache.delete("view_packages_dir")
     arr_after = available_view_packages_machine
     arr_before.reject!{|x| arr_after.include? x}
     CoreFile.remove_view_package_methods(arr_before)
