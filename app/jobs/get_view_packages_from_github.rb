@@ -7,7 +7,6 @@ class GetViewPackagesFromGithub
   end
 
   def run
-    # uri = URI.parse("https://github.com/NEU-DSG/tapas-generic.git")
     if File.directory?(Rails.root.join("public/view_packages"))
       puts "directory exists"
       g = Git.open(Rails.root.join("public/view_packages"))
@@ -22,15 +21,16 @@ class GetViewPackagesFromGithub
     system("git pull")
     system("git submodule update --init") #update or initialize any submodules, like tapas-generic
     directories = Dir.glob('*').select {|f| File.directory? f}
-    view_packages = ViewPackage.where("").pluck(:machine_name).to_a
+    view_packages = ViewPackage.where("").pluck(:dir_name).to_a
     directories.each do |dir_name|
-      dir = dir_name.sub("-","_")
-      if view_packages.include?(dir)
-        view = ViewPackage.where(machine_name: dir).first
+      if view_packages.include?(dir_name)
+        view = ViewPackage.where(dir_name: dir_name).first
       else
-        view = ViewPackage.create(:machine_name => dir)
+        view = ViewPackage.create(:dir_name => dir_name)
       end
       FileUtils.cd(Rails.root.join("public/view_packages/#{dir_name}"))
+      view.machine_name = dir_name.sub("-","_")
+      view.git_timestamp = `git log -1 --pretty=format:%ai 2>&1`
       # look for config file
       puts view.inspect
       if File.exist?("PKG-CONFIG.xml") || File.exist?("CONFIG.xml")
@@ -70,6 +70,7 @@ class GetViewPackagesFromGithub
         puts view
       else
         puts "No config file exists for the view_package #{dir_name}"
+        view.delete
       end
 
     end
