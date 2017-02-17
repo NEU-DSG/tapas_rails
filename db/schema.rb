@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170215140743) do
+ActiveRecord::Schema.define(version: 20170217200912) do
 
   create_table "bookmarks", force: true do |t|
     t.integer  "user_id",       null: false
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(version: 20170215140743) do
     t.datetime "updated_at"
     t.string   "dir_name"
     t.datetime "git_timestamp"
+    t.string   "git_branch"
   end
 
 end

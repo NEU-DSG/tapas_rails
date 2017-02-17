@@ -16,6 +16,9 @@
 - if !@view.git_timestamp.blank?
   %h4= "Last Updated"
   %p= @view.git_timestamp
+- if !@view.git_branch.blank?
+  %h4= "Git Branch"
+  %p= @view.git_branch
 - if !@view.file_type.blank?
   %h4= "File Types"
   %ul

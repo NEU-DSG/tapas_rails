@@ -30,7 +30,6 @@ class GetViewPackagesFromGithub
       end
       FileUtils.cd(Rails.root.join("public/view_packages/#{dir_name}"))
       view.machine_name = dir_name.sub("-","_")
-      view.git_timestamp = `git log -1 --pretty=format:%ai 2>&1`
       # look for config file
       puts view.inspect
       if File.exist?("PKG-CONFIG.xml") || File.exist?("CONFIG.xml")
@@ -41,6 +40,13 @@ class GetViewPackagesFromGithub
           doc = File.open("CONFIG.xml") { |f| Nokogiri::XML(f) }
         end
         puts doc
+        view.git_branch = doc.css("view_package git_branch").text
+        if (!view.git_branch.blank?)
+          system("git checkout "+view.git_branch)
+          system("git pull origin "+view.git_branch)
+        end
+        puts `git status`
+        view.git_timestamp = `git log -1 --pretty=format:%ai 2>&1`
         view.human_name = doc.css("view_package human_name").text
         view.description = doc.css("view_package description").text
         css_files = []
