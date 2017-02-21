@@ -1,14 +1,21 @@
 module Exist
   class GetReadingInterface
-    include Exist::Concerns::Helpers 
+    include Exist::Concerns::Helpers
+    include TapasRails::ViewPackages
     attr_reader :xml_blob, :type
 
-    def initialize(xml_blob, type) 
-      valid_types = %w(teibp tapas-generic)
+    def initialize(xml_blob, type)
+      # TODO - test this
+      array = available_view_packages_dir
+      if array.blank? # set defaults for now
+        array = ["teibp", "tapas-generic"]
+      end
+      valid_types = array
+      # valid_types = ["teibp", "tapas-generic"]
 
-      @xml_blob = xml_blob 
+      @xml_blob = xml_blob
       if type.in? valid_types
-        @type = type 
+        @type = type
       else
         raise Exceptions::ExistError.new 'Invalid reading interface type '\
           "was #{type}, must be one of: #{valid_types}"
@@ -22,8 +29,8 @@ module Exist
     def build_resource
       url  = build_url "derive-reader/#{type}"
       options = options_hash.merge(:headers => {
-        :content_type => 'application/xml', 
-        :accept => 'text/html' 
+        :content_type => 'application/xml',
+        :accept => 'text/html'
       })
 
       self.resource = RestClient::Resource.new(url, options, :timeout => 300)
@@ -31,7 +38,7 @@ module Exist
 
     def execute
       build_resource
-      params = { 
+      params = {
         :file => xml_blob,
         :"assets-base" => Settings['base_url'] + "/reading_interface"
       }

@@ -4,7 +4,8 @@ module Content
     include Content
 
     def self.all_interface_types
-      ['teibp', 'tapas-generic']
+      array = ViewPackage.where("").pluck(:dir_name).to_a #TODO replace this with available_view_packages_dir
+      return array
     end
 
     def self.execute_all(core_file, file_path)
@@ -25,9 +26,10 @@ module Content
 
     def execute
       ZipContentValidator.tei file_path
+      core_file.create_view_package_methods
 
       interface_type_internal = interface_type.gsub('-', '_')
-      html_file = core_file.send(interface_type_internal)
+      html_file = core_file.send("#{interface_type_internal}".to_sym)
 
       unless html_file
         html_file = ::HTMLFile.create

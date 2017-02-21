@@ -4,6 +4,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include DrupalAccess
   include TapasQueries
   include StatusTracking
+  include TapasRails::ViewPackages
 
   # Configure mods_display gem
   include ModsDisplay::ModelExtension
@@ -59,13 +60,52 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
+  def create_view_package_methods
+    array = available_view_packages_machine
+
+    array.each do |method_name|
+      string_name = method_name
+      method_name = method_name.to_sym
+      CoreFile.send :define_method, method_name do |arg = :models|
+        if arg.blank?
+          arg = :models
+        end
+        tg = self.content_objects(:raw).find do |x|
+          x["active_fedora_model_ssi"] == "HTMLFile" &&
+            x["html_type_ssi"] == string_name
+        end
+
+        load_specified_type(tg, arg)
+      end
+    end
+  end
+
+  def self.remove_view_package_methods(view_packages)
+    view_packages.each do |r|
+      if !r.blank?
+        sym = r.to_sym
+        if CoreFile.method_defined? sym
+          CoreFile.send :remove_method, sym
+        end
+      end
+    end
+  end
+
   def retroactively_set_status!
+    array = available_view_packages_machine
+    create_view_package_methods
+    views = 0
+    array.each do |view_package|
+      view = send("#{view_package}".to_sym)
+      if !(view && view.content.size > 0)
+        views = views + 1
+      end
+    end
+
     has_tei = canonical_object && canonical_object.content.size > 0
-    has_teibp = teibp && teibp.content.size > 0
-    has_tg = tapas_generic && tapas_generic.content.size > 0
     has_collections = collections.any?
 
-    if has_tei && has_teibp && has_tg && has_collections
+    if has_tei && views == 0 && has_collections
       mark_upload_complete!
     else
       set_default_display_error

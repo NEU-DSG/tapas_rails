@@ -137,6 +137,19 @@ class CoreFilesController < CatalogController
     e = "Could not find a Tapas Generic representation of this object.  "\
       "Please retry in a few minutes."
     render_content_asset @core_file.tapas_generic, e
+
+  def view_package_html
+    @core_file = CoreFile.find_by_did(params[:did])
+    @core_file.create_view_package_methods
+    view_package = ViewPackage.where(:machine_name => "#{params[:view_package]}").to_a.first
+    if !view_package.blank?
+      e = "Could not find a #{view_package.human_name} representation of this object."\
+        "Please retry in a few minutes."
+      html = @core_file.send("#{view_package.machine_name}".to_sym)
+      render_content_asset html, e
+    else
+      render :text => "The view package #{params[:view_package]} could not be found", :status => 422
+    end
   end
 
   def mods
@@ -194,7 +207,7 @@ class CoreFilesController < CatalogController
         core_file.mark_upload_in_progress!
       end
 
-      # Step 1: Extract uploaded files to temporary locations if they exist
+      # Step 2: Extract uploaded files to temporary locations if they exist
       if params[:tei]
         params[:tei] = create_temp_file params[:tei]
       end
@@ -203,7 +216,7 @@ class CoreFilesController < CatalogController
         params[:support_files] = create_temp_file params[:support_files]
       end
 
-      # Step 2: If TEI was provided, generate a MODS record that can be sent back
+      # Step 3: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload
       if params[:tei]
@@ -217,11 +230,11 @@ class CoreFilesController < CatalogController
         @mods = Exist::GetMods.execute(params[:tei], opts)
       end
 
-      # Step 3: Kick off an upsert job
+      # Step 4: Kick off an upsert job
       job = TapasObjectUpsertJob.new params
       TapasRails::Application::Queue.push job
 
-      # Step 4: Respond with MODS if it is available, otherwise send a generic
+      # Step 5: Respond with MODS if it is available, otherwise send a generic
       # success message
       if @mods
         render :xml => @mods, :status => 202
@@ -233,6 +246,7 @@ class CoreFilesController < CatalogController
       core_file.set_default_display_error
       core_file.set_stacktrace_message(e)
       core_file.mark_upload_failed!
+      logger.error e
       raise e
     end
   end

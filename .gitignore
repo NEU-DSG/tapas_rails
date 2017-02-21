@@ -60,3 +60,7 @@ coverage/*
 test.txt
 testout.txt
 .idea/*
+
+# Ignore directories which are pulled down from github
+public/view_packages
+public/view_packages/*

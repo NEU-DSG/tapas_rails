@@ -36,11 +36,14 @@ describe UpsertCommunity do
   context 'Create' do
     context 'with a thumbnail specified' do
       before(:all)  do
+        clean_communities
         copy_fixture('image.jpg', 'image_copy.jpg')
         UpsertCommunity.execute params
       end
 
-      after(:all) { ActiveFedora::Base.delete_all }
+      after(:all) do
+        clean_communities
+      end
 
       it 'builds the requested community' do
         expect(community.class).to eq Community
@@ -59,10 +62,12 @@ describe UpsertCommunity do
         UpsertCommunity.execute(params.except(:thumbnail))
       end
 
-      after(:all) { ActiveFedora::Base.delete_all }
+      after(:all) do
+        clean_communities
+      end
 
       it 'assigns no content to the thumbnail' do
-        expect(community.thumbnail_1.content).to be nil
+        expect(community.thumbnail_1.content).to eq(nil)
       end
 
       it_should_behave_like 'a metadata assigning operation'
@@ -75,20 +80,23 @@ describe UpsertCommunity do
       community = Community.new
       community.did = params[:did]
       community.depositor = 'The Previous Depositor'
-      community.title = 'A different title' 
+      community.mods.title = 'A different title'
       community.project_members = %w(a b c d e)
       community.drupal_access = 'private'
       community.save!
       community.community = Community.root_community
       community.save!
+      @count_before = Community.count
 
       UpsertCommunity.execute params
     end
 
-    after(:all) { ActiveFedora::Base.delete_all }
+    after(:all) do
+      clean_communities
+    end
 
     it 'does not build a new community' do
-      expect(Community.count).to eq 2
+      expect(Community.count).to eq @count_before
     end
 
     it 'does not update the depositor even when one is provided' do
@@ -97,5 +105,14 @@ describe UpsertCommunity do
 
     it_should_behave_like 'a metadata assigning operation'
     it_should_behave_like 'a thumbnail updating operation'
+  end
+
+  def clean_communities
+    if Community.find_by_did("123")
+      Community.find_by_did("123").destroy
+    end
+    if Community.count > 1
+      # todo clean out other communities
+    end
   end
 end

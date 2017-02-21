@@ -15,9 +15,13 @@ describe UpsertCollection do
   end
 
   def build_parent_community
-    @community = Community.new(:title=>"Community")
-    @community.did = params[:project_did]
-    @community.save!
+    if !Community.find_by_did("333")
+      @community = Community.new
+      @community.did = params[:project_did]
+      @community.save!
+    else
+      @community = Community.find_by_did("333")
+    end
   end
 
   subject(:collection) { Collection.find_by_did(params[:did]) }
@@ -42,7 +46,7 @@ describe UpsertCollection do
         UpsertCollection.execute params
       end
 
-      after(:all) { ActiveFedora::Base.delete_all }
+      after(:all) { clean_up }
 
       it 'builds the requested collection' do
         expect(collection.class).to eq Collection
@@ -69,7 +73,7 @@ describe UpsertCollection do
         copy_fixture('image.jpg', 'image_copy.jpg')
         UpsertCollection.execute params
       end
-      after(:all) { ActiveFedora::Base.delete_all }
+      after(:all) { clean_up }
       it 'assigns the collection to the phantom collection bucket' do
         pid = Rails.configuration.phantom_collection_pid
         expect(collection.community).to be nil
@@ -82,7 +86,7 @@ describe UpsertCollection do
 
   context 'when updating a collection that already exists' do
     before(:all) do
-      ActiveFedora::Base.delete_all
+      clean_up
 
       copy_fixture('image.jpg', 'image_copy.jpg')
       build_parent_community
@@ -93,11 +97,12 @@ describe UpsertCollection do
       collection.community = FactoryGirl.create(:community)
       collection.og_reference = [collection.community.did]
       collection.save!
+      @count_before = Collection.count
 
       UpsertCollection.execute params
     end
 
-    after(:all) { ActiveFedora::Base.delete_all }
+    after(:all) { clean_up }
 
     it 'does not update the depositor even if a new one is provided' do
       expect(collection.depositor).to eq 'Old Depositor'
@@ -112,7 +117,7 @@ describe UpsertCollection do
     end
 
     it 'does not rebuild the collection' do
-      expect(Collection.all.length).to eq 1
+      expect(Collection.all.length).to eq @count_before
     end
 
     it_should_behave_like 'a metadata assigning operation'
@@ -121,12 +126,12 @@ describe UpsertCollection do
 
   context 'without a thumbnail' do
     before(:all) do
-      ActiveFedora::Base.delete_all
+      clean_up
       build_parent_community
       UpsertCollection.execute(params.except(:thumbnail))
     end
 
-    after(:all) { ActiveFedora::Base.delete_all }
+    after(:all) { clean_up }
 
     it 'creates the desired collection' do
       expect(Collection.find_by_did(params[:did])).not_to be nil
@@ -134,6 +139,15 @@ describe UpsertCollection do
 
     it 'assigns no thumbnail' do
       expect(collection.thumbnail_1.content).to be nil
+    end
+  end
+
+  def clean_up
+    if Collection.find_by_did("111")
+      Collection.find_by_did("111").destroy
+    end
+    if Community.find_by_did("333")
+      Community.find_by_did("333").destroy
     end
   end
 end

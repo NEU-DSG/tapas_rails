@@ -30,8 +30,9 @@ module Exist
 
       is_public = (@core_file.drupal_access == 'public').to_s
       collections = @core_file.collections.map(&:did).join(',')
-
-      params = { :transforms => 'teibp, tapas-generic',
+      transforms = ViewPackage.where("").pluck(:dir_name).to_a #TODO replace this with available_view_packages_dir
+      transforms = transforms.join(", ")
+      params = { :transforms => transforms,
         :collections => collections,
         :"is-public" => is_public }
 

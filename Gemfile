@@ -13,7 +13,7 @@ gem 'rubyzip'
 gem 'passenger', '5.0.15'
 
 # Use mysql2 for the staging environment
-gem 'mysql2'
+gem 'mysql2', '0.3.16'
 
 gem 'minitest', '4.7.5'
 
@@ -98,7 +98,8 @@ gem 'capistrano-git-submodule-strategy', '~> 0.1', :github => 'ekho/capistrano-g
 
 group :development, :test do
   gem "pry"
-  gem "rspec-rails"
+  gem "rspec-rails", "~>2.15"
+  gem "rspec-its"
   gem "jettywrapper"
   gem "factory_girl_rails"
 end
@@ -113,3 +114,4 @@ gem 'therubyracer',  platforms: :ruby
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
+gem "git"

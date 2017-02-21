@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Community do
   include FileHelpers
+  before(:each) { ActiveFedora::Base.delete_all }
   after(:each) { ActiveFedora::Base.delete_all }
 
   it "can create the root community when it doesn't exist" do

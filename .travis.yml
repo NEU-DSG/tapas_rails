@@ -13,3 +13,4 @@ script: "bundle exec rake ci:build"
 branches:
   only:
     - feature/rails_interface
+    - develop
