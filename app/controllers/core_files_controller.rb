@@ -126,18 +126,7 @@ class CoreFilesController < CatalogController
     logger.warn("we are about to edit #{params[:did]}")
     create
   end
-
-  def teibp
-    e = "Could not find TEI Boilerplate representation of this object.  "\
-      "Please retry in a few minutes."
-    render_content_asset @core_file.teibp, e
-  end
-
-  def tapas_generic
-    e = "Could not find a Tapas Generic representation of this object.  "\
-      "Please retry in a few minutes."
-    render_content_asset @core_file.tapas_generic, e
-
+  
   def view_package_html
     @core_file = CoreFile.find_by_did(params[:did])
     @core_file.create_view_package_methods
