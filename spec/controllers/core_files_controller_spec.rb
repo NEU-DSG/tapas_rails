@@ -15,13 +15,13 @@ describe CoreFilesController do
   end
 
   RSpec.shared_examples "a content displaying route" do
+    let(:core_file) { FactoryGirl.create :core_file }
 
     after(:each) { ActiveFedora::Base.delete_all }
 
     it '404s when no CoreFile can be found' do
       FactoryGirl.create :tapas_generic
       FactoryGirl.create :teibp
-      core_file.create_view_package_methods
       @route = requested_content.to_sym
       # get @route, { :did => SecureRandom.uuid }
       if requested_content != "tei"

@@ -126,18 +126,22 @@ class CoreFilesController < CatalogController
     logger.warn("we are about to edit #{params[:did]}")
     create
   end
-  
+
   def view_package_html
     @core_file = CoreFile.find_by_did(params[:did])
-    @core_file.create_view_package_methods
-    view_package = ViewPackage.where(:machine_name => "#{params[:view_package]}").to_a.first
-    if !view_package.blank?
-      e = "Could not find a #{view_package.human_name} representation of this object."\
-        "Please retry in a few minutes."
-      html = @core_file.send("#{view_package.machine_name}".to_sym)
-      render_content_asset html, e
+    if @core_file.blank?
+      render :text => "Resource not found", :status => 404
     else
-      render :text => "The view package #{params[:view_package]} could not be found", :status => 422
+      @core_file.create_view_package_methods
+      view_package = ViewPackage.where(:machine_name => "#{params[:view_package]}").to_a.first
+      if !view_package.blank?
+        e = "Could not find a #{view_package.human_name} representation of this object."\
+          "Please retry in a few minutes."
+        html = @core_file.send("#{view_package.machine_name}".to_sym)
+        render_content_asset html, e
+      else
+        render :text => "The view package #{params[:view_package]} could not be found", :status => 422
+      end
     end
   end
 
