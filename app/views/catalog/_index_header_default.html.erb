@@ -15,10 +15,7 @@
         <%= t('blacklight.search.documents.counter', counter: counter) %>
       </span>
     <% end %>
-    <%# document['title_info_title_ssi'] %>
-    <%= document.path %>
-    <%# link_to(document['title_info_title_ssi'] , community_path(document['id'])) %>
-    <%# link_to_document document, document_show_link_field(document), counter: counter %>
+    <%= link_to_document document, document_show_link_field(document), counter: counter %>
   </h5>
 
   <%= document_actions %>
