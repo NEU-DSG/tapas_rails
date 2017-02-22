@@ -30,10 +30,10 @@
           = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors', class: "form-control input-block-level", placeholder: "University Libraries"
       .row
         .col-md-1
-          = f.label :collection, "Collection"
+          = f.label :collections, "Collection"
         .col-md-4
-          - parent = !@core_file.collection.blank? ? @core_file.collection.pid : nil
-          = f.select :collection, options_for_select(@arr, parent), name: "collection"
+          - parent = !@core_file.collections.blank? ? @core_file.collections.first.pid : nil
+          = f.select :collections, options_for_select(@arr, parent), name: "collections"
       .row
         .col-md-1
           = f.label :tei, "File"
