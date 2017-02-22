@@ -17,6 +17,7 @@ describe UpsertCommunity do
   subject(:community) { Community.find_by_did(params[:did]) }
 
   RSpec.shared_examples 'a metadata assigning operation' do
+    its('title')     { should eq params[:title] }
     its('mods.title')     { should eq [params[:title]] }
     its(:drupal_access)   { should eq params[:access] }
     its(:mass_permissions) { should eq 'private' }
@@ -80,7 +81,7 @@ describe UpsertCommunity do
       community = Community.new
       community.did = params[:did]
       community.depositor = 'The Previous Depositor'
-      community.mods.title = 'A different title'
+      community.title = 'A different title'
       community.project_members = %w(a b c d e)
       community.drupal_access = 'private'
       community.save!

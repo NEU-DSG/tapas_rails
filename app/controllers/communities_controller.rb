@@ -4,17 +4,17 @@ class CommunitiesController < ApplicationController
   include Blacklight::Catalog
   include Blacklight::Controller
 
-  # before_filter :prepend_view_paths
+  before_filter :prepend_view_paths
 
   self.copy_blacklight_config_from(CatalogController)
-  # def prepend_view_paths
-    # prepend_view_path "app/views/catalog/"
-  # end
-
-  def search_action_url options = {}
-    # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
-    catalog_index_url(options.except(:controller, :action))
+  def prepend_view_paths
+    prepend_view_path "app/views/catalog/"
   end
+
+  # def search_action_url options = {}
+    # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
+    # catalog_index_url(options.except(:controller, :action))
+  # end
 
   def upsert
     if params[:thumbnail]
@@ -31,7 +31,7 @@ class CommunitiesController < ApplicationController
     @page_title = "All Projects"
     self.search_params_logic += [:communities_filter]
     (@response, @document_list) = search_results(params, search_params_logic)
-    render 'catalog/index'
+    render 'shared/index'
   end
 
   #This method is the helper method for index. It basically gets the communities
