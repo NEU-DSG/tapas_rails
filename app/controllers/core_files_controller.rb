@@ -2,6 +2,7 @@ class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
   include ControllerHelper
+  include TapasRails::ViewPackages
 
   include Blacklight::Catalog
   include Blacklight::Controller
@@ -21,7 +22,6 @@ class CoreFilesController < ApplicationController
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
   before_filter :can_read?, only: [:show]
-  self.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
   #This method displays all the core files created in the database
   def index
@@ -180,6 +180,13 @@ class CoreFilesController < ApplicationController
   def show #inherited from catalog controller
     @core_file = CoreFile.find(params[:id])
     @mods_html = render_mods_display(@core_file).to_html.html_safe
+    avail_views = available_view_packages
+    @view_packages = {}
+    avail_views.each do |v|
+      @view_packages[v[1]] = v[0]
+    end
+    @view_packages["XML View"] = :tei
+    # get the default_view_package TODO - store this on collection, core_file like in drupal
     e = "Could not find TEI associated with this file.  Please retry in a "\
       "few minutes and contact an administrator if the problem persists."
   end
