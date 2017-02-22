@@ -7,6 +7,7 @@ class CommunitiesController < ApplicationController
   before_filter :prepend_view_paths
 
   self.copy_blacklight_config_from(CatalogController)
+
   def prepend_view_paths
     prepend_view_path "app/views/catalog/"
   end

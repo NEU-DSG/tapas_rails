@@ -4,9 +4,12 @@ class CatalogController < ApplicationController
   include Blacklight::Catalog
   include Hydra::Controller::ControllerBehavior
   # include Rails.application.routes.url_helpers
-
   # These before_filters apply the hydra access controls
   before_filter :enforce_show_permissions, :only=>:show
+  # This applies appropriate access controls to all solr queries
+  CatalogController.solr_search_params_logic += [:add_access_controls_to_solr_params]
+  # This filters out objects that you want to exclude from search results, like FileAssets
+  CatalogController.solr_search_params_logic += [:exclude_unwanted_models]
 
   configure_blacklight do |config|
     ## Class for sending and receiving requests from a search index
@@ -216,6 +219,12 @@ class CatalogController < ApplicationController
   def search_action_url(options = {})
     # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
     catalog_index_path(options.except(:controller, :action))
+  end
+
+  def exclude_unwanted_models(solr_parameters, user_parameters)
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:CoreFile\""
+    solr_parameters[:fq] << "-#{Solrizer.solr_name("is_supplemental_material_for", :symbol)}:[* TO *]"
   end
 
 end

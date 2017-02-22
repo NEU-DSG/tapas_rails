@@ -1,24 +1,39 @@
-class CoreFilesController < CatalogController
+class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
+  include ControllerHelper
+
+  include Blacklight::Catalog
+  include Blacklight::Controller
+
+  before_filter :prepend_view_paths
+
+  self.copy_blacklight_config_from(CatalogController)
+
+  def prepend_view_paths
+    prepend_view_path "app/views/catalog/"
+  end
 
   configure_mods_display do
     identifier { ignore! }
   end
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
+  # We can do better by using SOLR check instead of Fedora
+  before_filter :can_read?, only: [:show]
+  self.solr_search_params_logic += [:add_access_controls_to_solr_params]
 
   #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
-    self.search_params_logic += [:communities_filter]
+    self.search_params_logic += [:core_files_filter]
     (@response, @document_list) = search_results(params, search_params_logic)
     render 'shared/index'
   end
 
   #This method is the helper method for index. It basically gets the core files
   # using solr queries
-  def communities_filter(solr_parameters, user_parameters)
+  def core_files_filter(solr_parameters, user_parameters)
     model_type = RSolr.solr_escape "info:fedora/afmodel:CoreFile"
     query = "has_model_ssim:\"#{model_type}\""
     solr_parameters[:fq] ||= []

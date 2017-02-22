@@ -1,6 +1,15 @@
-class CollectionsController < CatalogController
+class CollectionsController < ApplicationController
   include ApiAccessible
+  include Blacklight::Catalog
+  include Blacklight::Controller
+  self.copy_blacklight_config_from(CatalogController)
 
+  before_filter :prepend_view_paths
+
+  def prepend_view_paths
+    prepend_view_path "app/views/catalog/"
+  end
+  
   def upsert
     if params[:thumbnail]
       params[:thumbnail] = create_temp_file(params[:thumbnail])
