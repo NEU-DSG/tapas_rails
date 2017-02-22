@@ -16,4 +16,9 @@
 //
 // Required by Blacklight
 //= require blacklight/blacklight
+//= require bootstrap/button
+//= require bootstrap/tooltip
+//= require bootstrap/popover
+//= require bootstrap/tab
+//= require bootstrap/carousel
 //= require_tree .

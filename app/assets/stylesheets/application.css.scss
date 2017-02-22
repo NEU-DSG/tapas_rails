@@ -9,14 +9,18 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree .
+
  */
  @import 'bootstrap-sprockets';
 
  @import 'tapas-variables';
 
- @import 'tapas-mixins'; 
+ @import 'tapas-mixins';
+
+ @import 'font-awesome/font-awesome';
 
  @import 'bootstrap';
 
  @import 'blacklight';
+
+ // = require_tree .
