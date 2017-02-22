@@ -21,6 +21,8 @@ class Collection < CerberusCore::BaseModels::Collection
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
 
+  validates_presence_of :title
+
   has_many :personographies, :property => :is_personography_for,
     :class_name => "CoreFile"
   has_many :orgographies, :property => :is_orgography_for,

@@ -10,6 +10,7 @@ class UpsertCollection
       else
         collection = Collection.new
         collection.did = params[:did]
+        collection.title = params[:title] if params.has_key? :title
         collection.depositor = params[:depositor]
         collection.og_reference = [params[:project_did]]
         collection.save!

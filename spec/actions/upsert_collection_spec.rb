@@ -17,6 +17,7 @@ describe UpsertCollection do
   def build_parent_community
     if !Community.find_by_did("333")
       @community = Community.new
+      @community.title = "Test Community"
       @community.did = params[:project_did]
       @community.save!
     else
@@ -92,6 +93,7 @@ describe UpsertCollection do
       build_parent_community
       collection = Collection.new
       collection.did = params[:did]
+      collection.title = "Test Collection"
       collection.depositor = 'Old Depositor'
       collection.save!
       collection.community = FactoryGirl.create(:community)
