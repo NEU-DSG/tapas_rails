@@ -10,7 +10,7 @@
 <% end -%>
 
 
-<%= render 'search_header' %>
+<%= render 'catalog/search_header' %>
 
 <h2 class="sr-only"><%= t('blacklight.search.search_results') %></h2>
 <%- if @response.empty? %>
@@ -21,4 +21,4 @@
   <%= render_document_index %>
 <%- end %>
 
-<%= render 'results_pagination' %>
+<%= render 'catalog/results_pagination' %>
