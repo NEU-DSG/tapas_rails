@@ -44,6 +44,7 @@ class UpsertCollection
       collection.mods.abstract = params[:description] if params.has_key? :description
       collection.DC.description = params[:description] if params.has_key? :description
       collection.drupal_access = params[:access] if params.has_key? :access
+      collection.mass_permissions = params[:access] if params.has_key? :access
       collection.save!
     end
 

@@ -46,6 +46,9 @@ class UpsertCoreFile
         core_file.mods.identifier = core_file.pid
       end
 
+      core_file.drupal_access = params[:access] if params.has_key? :access
+      core_file.mass_permissions = params[:access] if params.has_key? :access
+
       update_associations!
 
       if params[:tei].present?
