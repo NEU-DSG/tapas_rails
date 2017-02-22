@@ -1,2 +1,17 @@
 %div.reading
-  
+  -@view_packages.each do |view|
+    %div{class:"reader_#{view[1]}"}
+      -if view[1] == :tei
+        %div.row
+          %div.checkbox
+            %label{for:"toggle_word_wrap"}
+              ="Toggle Soft Wrap"
+            =check_box_tag :toggle_word_wrap,  id:'toggle_word_wrap', name:'toggle_word_wrap'
+          %div.checkbox
+            %label{ for:"toggle_invisibles"}
+              ="Toggle Invisibles"
+            =check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles'
+        %pre
+          = @core_file.canonical_object.content.content
+      -else
+        = @core_file.send(view[1].to_sym).content.content.html_safe

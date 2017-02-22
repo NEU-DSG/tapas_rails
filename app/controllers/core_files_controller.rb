@@ -181,6 +181,7 @@ class CoreFilesController < ApplicationController
     @core_file = CoreFile.find(params[:id])
     @mods_html = render_mods_display(@core_file).to_html.html_safe
     avail_views = available_view_packages
+    @core_file.create_view_package_methods
     @view_packages = {}
     avail_views.each do |v|
       @view_packages[v[1]] = v[0]

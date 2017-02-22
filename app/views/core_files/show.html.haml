@@ -2,7 +2,7 @@
 
 %h2.page-header= @core_file.title
 
-%div.tabbable.tabs-left.vertical-tabs
+%div.tabbable.tabs-left.vertical-tabs.node
   %ul.nav.nav-tabs.vertical-tabs-list
     %li.vertical-tab-button.active
       = link_to "Reader", '#reader'
@@ -16,7 +16,7 @@
   .tab-content.vertical-tabs-panes
     #reader.tab-pane.active
       = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages}
-      = render partial:'reading_interface', locals:{core_file:@core_file}
+      = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages}
 
     #metadata.tab-pane
       = @mods_html
@@ -44,3 +44,6 @@
     e.preventDefault();
     $(this).tab('show');
   });
+
+=javascript_include_tag "record"
+=javascript_include_tag "ace/ace"
