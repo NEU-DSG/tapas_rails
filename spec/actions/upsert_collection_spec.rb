@@ -28,7 +28,7 @@ describe UpsertCollection do
   subject(:collection) { Collection.find_by_did(params[:did]) }
 
   RSpec.shared_examples 'a metadata assigning operation' do
-    its('mods.title') { should eq [params[:title]] }
+    its(:title) { should eq params[:title] }
     its('mods.abstract') { should eq [params[:description]] }
     its(:drupal_access) { should eq params[:access] }
     its(:mass_permissions) { should eq 'private' }
