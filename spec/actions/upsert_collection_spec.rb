@@ -31,7 +31,7 @@ describe UpsertCollection do
     its(:title) { should eq params[:title] }
     its('mods.abstract') { should eq [params[:description]] }
     its(:drupal_access) { should eq params[:access] }
-    its(:mass_permissions) { should eq 'private' }
+    its(:mass_permissions) { should eq 'public' }
   end
 
   RSpec.shared_examples 'a thumbnail updating operation' do

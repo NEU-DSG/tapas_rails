@@ -20,7 +20,7 @@ describe UpsertCommunity do
     its('title')     { should eq params[:title] }
     its('mods.title')     { should eq [params[:title]] }
     its(:drupal_access)   { should eq params[:access] }
-    its(:mass_permissions) { should eq 'private' }
+    its(:mass_permissions) { should eq 'public' }
     its('mods.abstract')  { should eq [params[:description]] }
     its(:project_members) { should match_array params[:members] }
   end
