@@ -44,7 +44,7 @@ class Collection < CerberusCore::BaseModels::Collection
       return Collection.find(pid)
     else
       c = Collection.new(:pid => pid).tap do |c|
-        c.mods.title = "Orphaned TEI records."
+        c.title = "Orphaned TEI records."
         c.depositor = "tapasrails@neu.edu"
       end
 

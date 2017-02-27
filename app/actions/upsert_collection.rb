@@ -10,10 +10,9 @@ class UpsertCollection
       else
         collection = Collection.new
         collection.did = params[:did]
-        collection.title = params[:title] if params.has_key? :title
         collection.depositor = params[:depositor]
         collection.og_reference = [params[:project_did]]
-        collection.save!
+        update_metadata!(collection)
 
         community = Community.find_by_did(params[:project_did])
         if community
@@ -26,8 +25,9 @@ class UpsertCollection
       if params[:thumbnail].present?
         collection.add_thumbnail(:filepath => params[:thumbnail])
       end
-      upsert_logger.info("Collection upsert for #{collection.pid} has did #{collection.did}")
+
       update_metadata!(collection)
+      upsert_logger.info("Collection upsert for #{collection.pid} has did #{collection.did}")
     rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
       raise e
