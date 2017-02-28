@@ -34,6 +34,18 @@ class ApplicationController < ActionController::Base
     @response ||= {}
   end
 
+  helper_method :current_user_can?
+
+  def current_user_can?(perm_level, record)
+    if current_user
+      current_user.can? perm_level, record
+    elsif perm_level != :read
+      false
+    else
+      record.read_groups.include? 'public'
+    end
+  end
+
   # def layout_name
   #   "application"
   # end
