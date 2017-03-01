@@ -16,4 +16,20 @@ module ControllerHelper
       render_403
     end
   end
+
+  def can_edit?
+    begin
+      record = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{params[:id]}\"").first)
+    rescue NoMethodError
+      render_404(ActiveFedora::ObjectNotFoundError.new, request.fullpath) and return
+    end
+
+    if current_user.nil?
+      render_403
+    elsif current_user.can? :edit, record
+      return true
+    else
+      render_403
+    end
+  end
 end
