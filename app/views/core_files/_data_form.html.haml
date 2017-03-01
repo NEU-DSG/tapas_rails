@@ -6,34 +6,54 @@
         .col-md-1
           = f.label :title, "Title", class: "control-label"
         .col-md-4
-          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control input-block-level", placeholder: "University Libraries"
+          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control input-block-level", placeholder: "Record Title"
       .row
         .col-md-1
           = f.label :description, "Description", class: "control-label"
         .col-md-4
-          = f.text_field :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control input-block-level", placeholder: "University Libraries"
-      .row
-        .col-md-1
-          = f.label :mass_permissions, "Visibility"
-        .col-md-4
-          = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
-      .row
+          = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control input-block-level", placeholder: "Brief description of the record"
+
+      .row.authors
         .col-md-1
           = f.label :authors, "Authors", class: "control-label"
         .col-md-4
-          = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors', class: "form-control input-block-level", placeholder: "University Libraries"
+          - if @core_file.authors.empty?
+            = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors[]', class: "form-control input-block-level", placeholder: "Name(s) of persons responsible for the creation of document"
+          - else
+            - @core_file.authors.each_with_index do |name, i|
+              %span.author.to-remove
+                = f.text_field :authors, pattern: ".*\\S.*", value: name, name: 'display_authors[]'
+                %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove author", type: "button"}
+                  %i.fa.fa-remove
+                %br
+          %button#add_another_author.btn.btn-success{:type => "button"}
+            %i.fa-plus-sign.fa
+            Add Author
 
-      .row
+      .row.contributors
         .col-md-1
           = f.label :contributors, "Contributors", class: "control-label"
         .col-md-4
-          = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors', class: "form-control input-block-level", placeholder: "University Libraries"
+          - if @core_file.contributors.empty?
+            = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors[]', class: "form-control input-block-level", placeholder: "Name(s) of contributors responsible for the creation of this TAPAS record"
+          - else
+            - @core_file.contributors.each_with_index do |name, i|
+              %span.contributor.to-remove
+                = f.text_field :contributors, pattern: ".*\\S.*", value: name, name: 'display_contributors[]'
+                %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove contributor", type: "button"}
+                  %i.fa.fa-remove
+                %br
+          %button#add_another_contributor.btn.btn-success{:type => "button"}
+            %i.fa-plus-sign.fa
+            Add Contributor
+
       .row
         .col-md-1
           = f.label :collections, "Collection"
         .col-md-4
           - parent = !@core_file.collections.blank? ? @core_file.collections.first.pid : nil
-          = f.select :collections, options_for_select(@arr, parent), name: "collections"
+          = f.select :collections, options_for_select(@collections, parent), name: "collections"
+
       .row
         .col-md-1
           = f.label :tei, "File"
@@ -52,6 +72,12 @@
     -#     .span8
     -#       = f.label :thumbnail, "Thumbnail"
     -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+
+    .row
+      .col-md-1
+        = f.label :mass_permissions, "Visibility"
+      .col-md-4
+        = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
     %hr
   .form-actions
     = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'
