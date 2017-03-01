@@ -12,7 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
+
 //
 // Required by Blacklight
 //= require blacklight/blacklight
@@ -21,4 +21,5 @@
 //= require bootstrap/popover
 //= require bootstrap/tab
 //= require bootstrap/carousel
+//= require plugins
 //= require_tree .
