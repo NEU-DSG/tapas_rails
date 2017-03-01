@@ -19,10 +19,17 @@ class ApplicationController < ActionController::Base
     FileUtils.mkdir_p(tmpdir)
     tmpfile = Rails.root.join(tmpdir, fname)
     FileUtils.mv(fpath, tmpfile)
-    logger.info("inside create_temp_file")
-    logger.warn tmpdir
-    logger.warn tmpfile
-    logger.warn File.exist?(tmpfile)
+    return tmpfile.to_s
+  end
+
+  def create_temp_file_from_existing(fedora_file, original_file)
+    fpath = fedora_file
+    fname = original_file
+
+    tmpdir = Rails.root.join("tmp", "#{Time.now.to_i}")
+    FileUtils.mkdir_p(tmpdir)
+    tmpfile = Rails.root.join(tmpdir, fname)
+    FileUtils.cp(fpath, tmpfile)
     return tmpfile.to_s
   end
 
