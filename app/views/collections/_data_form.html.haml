@@ -21,7 +21,7 @@
           = f.label :community, "Community"
         .col-md-4
           - parent = !@collection.community.blank? ? @collection.community.pid : nil
-          = f.select :community, options_for_select(@arr, parent), name:'community'
+          = f.select :community, options_for_select(@communities, parent), name:'community'
     -# %hr
     -# %legend Permissions
     -# %fieldset

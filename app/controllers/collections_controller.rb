@@ -9,7 +9,7 @@ class CollectionsController < ApplicationController
   def prepend_view_paths
     prepend_view_path "app/views/catalog/"
   end
-  
+
   def upsert
     if params[:thumbnail]
       params[:thumbnail] = create_temp_file(params[:thumbnail])
@@ -49,10 +49,10 @@ class CollectionsController < ApplicationController
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
 
-    @arr =[]
+    @communities =[]
     results.each do |res|
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+        @communities << [res['title_info_title_ssi'],res['did_ssim'][0]]
       end
     end
     @collection = Collection.new
@@ -77,10 +77,10 @@ class CollectionsController < ApplicationController
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
-    @arr =[]
+    @communities =[]
     results.each do |res|
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+        @communities << [res['title_info_title_ssi'],res['did_ssim'][0]]
       end
     end
     @collection = Collection.find(params[:id])
