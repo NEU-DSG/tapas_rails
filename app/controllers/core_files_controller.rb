@@ -22,6 +22,7 @@ class CoreFilesController < ApplicationController
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
   before_filter :can_read?, only: [:show]
+  before_filter :can_edit?, only: [:edit, :update]
 
   #This method displays all the core files created in the database
   def index
@@ -47,10 +48,10 @@ class CoreFilesController < ApplicationController
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
 
-    @arr =[]
+    @collections =[]
     results.each do |res|
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+        @collections << [res['title_info_title_ssi'],res['did_ssim'][0]]
       end
     end
     @core_file = CoreFile.new
@@ -65,13 +66,22 @@ class CoreFilesController < ApplicationController
       # Step 1: Find or create the CoreFile Object -
       # we do this here so that we have a stub record to
       # attach error messages & status tracking to.
-      core_file = CoreFile.create(did: params[:did],
+      if params[:did].blank? && !params[:id].blank?
+        params[:did] = params[:id]
+      end
+      if CoreFile.exists_by_did?(params[:did])
+        core_file = CoreFile.find_by_did(params[:did])
+      else
+        core_file = CoreFile.create(did: params[:did],
                                     depositor: params[:depositor])
-      core_file.mark_upload_in_progress!
+        core_file.mark_upload_in_progress!
+      end
 
       # Step 1: Extract uploaded files to temporary locations if they exist
       if params[:tei]
         params[:tei] = create_temp_file params[:tei]
+      else
+        params[:tei] = create_temp_file_from_existing(core_file.canonical_object.fedora_file_path, core_file.canonical_object.filename)
       end
 
       if params[:support_files]
@@ -94,51 +104,56 @@ class CoreFilesController < ApplicationController
 
       # Step 3: Kick off an upsert job
       job = TapasObjectUpsertJob.new params
-      # TapasRails::Application::Queue.push job
+      # TapasRails::Application::Queue.push job #swap this for the line below when you're ready to push it to the queue instead of running it directly
       job.run
 
       # Step 4: Respond with MODS if it is available, otherwise send a generic
       # success message
-      # if @mods
+      if @mods
       #   render :xml => @mods, :status => 202
-      # else
+        flash[:notice] = "Your file has been updated."
+        @core_file = CoreFile.find_by_did(params[:did])
+        redirect_to @core_file
+      else
+        flash[:notice] = "Your file is being created. Check back soon."
+        redirect_to "/core_files"
       #   @response[:message] = "Job processing"
       #   pretty_json(202) and return
-      # end
-      # @core_file = CoreFile.find_by_did(pid)
-      flash[:notice] = "Your file is being created. Check back soon."
-      redirect_to "/core_files"
+      end
+
     rescue => e
-      core_file.set_default_display_error
-      core_file.set_stacktrace_message(e)
-      core_file.mark_upload_failed!
+      # core_file.set_default_display_error
+      # core_file.set_stacktrace_message(e)
+      # core_file.mark_upload_failed!
       raise e
     end
   end
 
-  #This method is used to edit a particular core file
+  #This method is used to load the edit partial
   def edit
+    @core_file = CoreFile.find(params[:id])
     model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+    community = "info:fedora/"+@core_file.project.pid
+    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"")
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
 
-    @arr =[]
+    @collections =[]
     results.each do |res|
-      # @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      # @collections << [res['title_info_title_ssi'],res['did_ssim'][0]]
       if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @arr << [res['title_info_title_ssi'],res['did_ssim'][0]]
+        @collections << [res['title_info_title_ssi'],res['did_ssim'][0]]
       end
     end
-    @core_file = CoreFile.find(params[:id])
 
     @page_title = "Edit #{@core_file.title}"
   end
 
-  #This method contains the actual logic for editing a particular core file
+  #This method contains the logic for editing/submission of edit form
   def update
     cf = CoreFile.find(params[:id])
     params[:did] = cf.did
     logger.warn("we are about to edit #{params[:did]}")
+    logger.warn params
     create
   end
 
