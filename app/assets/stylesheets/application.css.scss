@@ -23,4 +23,9 @@
 
  @import 'blacklight';
 
- // = require_tree .
+ @import 'core_files';
+
+ @import 'jquery-ui/resizable';
+
+
+ //= require_tree .
