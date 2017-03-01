@@ -1,68 +1,62 @@
 = form_for @core_file do |f|
-  %fieldset
-    .container-fluid
-      .form-group
-      .row
-        .col-md-1
-          = f.label :title, "Title", class: "control-label"
-        .col-md-4
-          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control input-block-level", placeholder: "Record Title"
-      .row
-        .col-md-1
-          = f.label :description, "Description", class: "control-label"
-        .col-md-4
-          = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control input-block-level", placeholder: "Brief description of the record"
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :title, "Title", class: "control-label col-md-1"
+          .col-md-4
+            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control input-block-level", placeholder: "Record Title"
+        .form-group
+          = f.label :description, "Description", class: "control-label col-md-1"
+          .col-md-4
+            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control input-block-level", placeholder: "Brief description of the record"
 
-      .row.authors
-        .col-md-1
-          = f.label :authors, "Authors", class: "control-label"
-        .col-md-4
-          - if @core_file.authors.empty?
-            = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors[]', class: "form-control input-block-level", placeholder: "Name(s) of persons responsible for the creation of document"
-          - else
-            - @core_file.authors.each_with_index do |name, i|
-              %span.author.to-remove
-                = f.text_field :authors, pattern: ".*\\S.*", value: name, name: 'display_authors[]'
-                %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove author", type: "button"}
-                  %i.fa.fa-remove
-                %br
-          %button#add_another_author.btn.btn-success{:type => "button"}
-            %i.fa-plus-sign.fa
-            Add Author
+        .form-group.authors
+          = f.label :authors, "Authors", class: "control-label col-md-1"
+          .col-md-4
+            - if @core_file.authors.empty?
+              = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors[]', class: "form-control input-block-level", placeholder: "Name(s) of persons responsible for the creation of document"
+            - else
+              - @core_file.authors.each_with_index do |name, i|
+                %span.author.to-remove
+                  = f.text_field :authors, pattern: ".*\\S.*", value: name, name: 'display_authors[]', class: "form-control input-block-level"
+                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove author", type: "button"}
+                    %i.fa.fa-remove
+                  %br
+            %button#add_another_author.btn.btn-success{:type => "button"}
+              %i.fa-plus-sign.fa
+              Add Author
 
-      .row.contributors
-        .col-md-1
-          = f.label :contributors, "Contributors", class: "control-label"
-        .col-md-4
-          - if @core_file.contributors.empty?
-            = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors[]', class: "form-control input-block-level", placeholder: "Name(s) of contributors responsible for the creation of this TAPAS record"
-          - else
-            - @core_file.contributors.each_with_index do |name, i|
-              %span.contributor.to-remove
-                = f.text_field :contributors, pattern: ".*\\S.*", value: name, name: 'display_contributors[]'
-                %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove contributor", type: "button"}
-                  %i.fa.fa-remove
-                %br
-          %button#add_another_contributor.btn.btn-success{:type => "button"}
-            %i.fa-plus-sign.fa
-            Add Contributor
+        .form-group.contributors
+          = f.label :contributors, "Contributors", class: "control-label col-md-1"
+          .col-md-4
+            - if @core_file.contributors.empty?
+              = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors[]', class: "form-control input-block-level", placeholder: "Name(s) of contributors responsible for the creation of this TAPAS record"
+            - else
+              - @core_file.contributors.each_with_index do |name, i|
+                %span.contributor.to-remove
+                  = f.text_field :contributors, pattern: ".*\\S.*", value: name, name: 'display_contributors[]', class: "form-control input-block-level"
+                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove contributor", type: "button"}
+                    %i.fa.fa-remove
+                  %br
+            %button#add_another_contributor.btn.btn-success{:type => "button"}
+              %i.fa-plus-sign.fa
+              Add Contributor
 
-      .row
-        .col-md-1
-          = f.label :collections, "Collection"
-        .col-md-4
-          - parent = !@core_file.collections.blank? ? @core_file.collections.first.pid : nil
-          = f.select :collections, options_for_select(@collections, parent), name: "collections"
+        .form-group
+          -# TODO - change this to a multiselect
+          = f.label :collections, "Collection", class: "control-label col-md-1"
+          .col-md-4
+            - parent = !@core_file.collections.blank? ? @core_file.collections.first.pid : nil
+            = f.select :collections, options_for_select(@collections, parent), name: "collections"
 
-      .row
-        .col-md-1
-          = f.label :tei, "File"
-        .col-md-4
-          .field
-            = f.label 'New file'
+        .form-group
+          -# TODO - show the existing file here if there is one
+          = f.label :tei, "File", class: "control-label col-md-1"
+          .col-md-4
             = f.file_field 'tei', name: "tei"
-          .actions
-            = f.submit 'Save'
+
+    -# TODO add thumbnail
     -# %hr
     -# %legend Thumbnail (Optional)
     -# - if !@community.properties.thumbnail_list[0].blank?

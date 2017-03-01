@@ -76,11 +76,15 @@
         editor.getSession().setMode("ace/mode/xml");
         editor.getSession().setUseWrapMode(true);
         editor.setOptions({
-          maxLines: Infinity,
           minLines: 20,
           useSoftTabs: true,
           showInvisibles: true,
           readOnly: true,
+        });
+        $(".reader_tei").resizable({
+          resize: function( event, ui ) {
+            editor.resize();
+          }
         });
       }
     }

@@ -11,7 +11,7 @@
             %label{ for:"toggle_invisibles"}
               ="Toggle Invisibles"
             =check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles'
-        %pre
+        %pre#ace
           = @core_file.canonical_object.content.content
       -else
         = @core_file.send(view[1].to_sym).content.content.html_safe
