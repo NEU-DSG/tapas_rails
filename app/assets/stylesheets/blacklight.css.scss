@@ -146,3 +146,35 @@ dd {
   margin-left: 0px;
   position: relative;
 }
+
+.dropdown-menu {
+  background-color: $gray-lighter;
+}
+
+.dropdown-menu > li > a:hover, .dropdown-menu > li > a:focus {
+  background-color: darken($gray-lighter, 10%);
+}
+
+.glyphicon {
+  @extend .fa;
+  font-family: FontAwesome;
+}
+.glyphicon:before {
+  font-family: FontAwesome;
+}
+.glyphicon-remove {
+  @extend .fa-remove;
+  &:before {
+    content: "\f00d" !important;
+  }
+}
+.glyphicon-search {
+  @extend .fa-search;
+  &:before {
+    content: "\f002" !important;
+  }
+}
+
+.facets-heading {
+  display: inline-block;
+}

@@ -26,3 +26,30 @@
   margin: 0;
   vertical-align: initial;
 }
+
+.record.tile {
+  text-align: center;
+  border: 1px solid $gray-lighter;
+  img {
+    clear: both;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    padding: 10px;
+  }
+  h4 {
+    padding: 10px;
+  }
+  .btn-xs {
+    margin: 5px;
+  }
+}
+
+.panel-records {
+  .panel-title {
+    font-size: 26px;
+    small {
+      padding-top: 5px;
+    }
+  }
+}
