@@ -76,11 +76,11 @@ class CollectionsController < ApplicationController
   def edit
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'id, title_info_title_ssi', rows: count)
     @communities =[]
     results.each do |res|
-      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @communities << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
+        @communities << [res['title_info_title_ssi'],res['id']]
       end
     end
     @collection = Collection.find(params[:id])
