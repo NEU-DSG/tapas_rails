@@ -113,7 +113,7 @@ describe UpsertCommunity do
       Community.find_by_did("123").destroy
     end
     if Community.count > 1
-      # todo clean out other communities
+      Community.delete_all
     end
   end
 end
