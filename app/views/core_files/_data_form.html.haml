@@ -3,17 +3,17 @@
     .row
       .form-horizontal
         .form-group
-          = f.label :title, "Title", class: "control-label col-md-1"
-          .col-md-4
-            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control input-block-level", placeholder: "Record Title"
+          = f.label :title, "Title", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control", placeholder: "Record Title"
         .form-group
-          = f.label :description, "Description", class: "control-label col-md-1"
-          .col-md-4
-            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control input-block-level", placeholder: "Brief description of the record"
+          = f.label :description, "Description", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control", placeholder: "Brief description of the record"
 
         .form-group.authors
-          = f.label :authors, "Authors", class: "control-label col-md-1"
-          .col-md-4
+          = f.label :authors, "Authors", class: "control-label col-md-2"
+          .col-md-6
             - if @core_file.authors.empty?
               = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors[]', class: "form-control input-block-level", placeholder: "Name(s) of persons responsible for the creation of document"
             - else
@@ -28,8 +28,8 @@
               Add Author
 
         .form-group.contributors
-          = f.label :contributors, "Contributors", class: "control-label col-md-1"
-          .col-md-4
+          = f.label :contributors, "Contributors", class: "control-label col-md-2"
+          .col-md-6
             - if @core_file.contributors.empty?
               = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors[]', class: "form-control input-block-level", placeholder: "Name(s) of contributors responsible for the creation of this TAPAS record"
             - else
@@ -44,17 +44,22 @@
               Add Contributor
 
         .form-group
-          -# TODO - change this to a multiselect
-          = f.label :collections, "Collection", class: "control-label col-md-1"
-          .col-md-4
+          -# TODO - change this to a multiselect, also may want to use did temporarily until pid is more significant than did
+          = f.label :collections, "Collection", class: "control-label col-md-2"
+          .col-md-6
             - parent = !@core_file.collections.blank? ? @core_file.collections.first.pid : nil
             = f.select :collections, options_for_select(@collections, parent), name: "collections"
 
         .form-group
           -# TODO - show the existing file here if there is one
-          = f.label :tei, "File", class: "control-label col-md-1"
-          .col-md-4
+          = f.label :tei, "File", class: "control-label col-md-2"
+          .col-md-6
             = f.file_field 'tei', name: "tei"
+        .form-group
+          = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
+          .col-md-6
+            = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
+
 
     -# TODO add thumbnail
     -# %hr
@@ -67,11 +72,6 @@
     -#       = f.label :thumbnail, "Thumbnail"
     -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
 
-    .row
-      .col-md-1
-        = f.label :mass_permissions, "Visibility"
-      .col-md-4
-        = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
     %hr
   .form-actions
     = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'
