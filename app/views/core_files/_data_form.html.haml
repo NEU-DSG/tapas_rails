@@ -51,15 +51,25 @@
             = f.select :collections, options_for_select(@collections, parent), name: "collections"
 
         .form-group
-          -# TODO - show the existing file here if there is one
           = f.label :tei, "File", class: "control-label col-md-2"
           .col-md-6
             = f.file_field 'tei', name: "tei"
+            -if @core_file.canonical_object
+              %p
+                ="Current File:"
+                %a{href: @core_file.canonical_object.download_path}
+                  %span.fa.fa-file-code-o
+                  = @core_file.canonical_object.filename
         .form-group
           = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
           .col-md-6
             = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
-
+        .form-group
+          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          .col-md-6
+            - if !@core_file.thumbnail.blank?
+              =image_tag @core_file.thumbnail.download_path('thumbnail_1')
+            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png"
 
     -# TODO add thumbnail
     -# %hr

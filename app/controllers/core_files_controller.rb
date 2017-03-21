@@ -88,6 +88,11 @@ class CoreFilesController < ApplicationController
         params[:support_files] = create_temp_file params[:support_files]
       end
 
+      if params[:core_file][:thumbnail]
+        thumbnail = create_temp_file params[:core_file][:thumbnail]
+        Content::UpsertThumbnail.execute(core_file, thumbnail)
+      end
+
       # Step 2: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload
