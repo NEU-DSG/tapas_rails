@@ -48,7 +48,7 @@
           = f.label :collections, "Collection", class: "control-label col-md-2"
           .col-md-6
             - parent = !@core_file.collections.blank? ? @core_file.collections.first.pid : nil
-            = f.select :collections, options_for_select(@collections, parent), name: "collections"
+            = f.select :collections, options_for_select(@collections, parent), {}, {name: "collections", class: "form-control"}
 
         .form-group
           = f.label :tei, "File", class: "control-label col-md-2"
@@ -63,7 +63,7 @@
         .form-group
           = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
           .col-md-6
-            = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
+            = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {}, {class: "form-control", name: "mass_permissions"}
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
@@ -71,16 +71,7 @@
               =image_tag @core_file.thumbnail.download_path('thumbnail_1')
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png"
 
-    -# TODO add thumbnail
-    -# %hr
-    -# %legend Thumbnail (Optional)
-    -# - if !@community.properties.thumbnail_list[0].blank?
-    -#   =image_tag @community.properties.thumbnail_list[0]
-    -# %fieldset
-    -#   .row-fluid
-    -#     .span8
-    -#       = f.label :thumbnail, "Thumbnail"
-    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+    -# TODO add support_files?
 
     %hr
   .form-actions
