@@ -1,5 +1,37 @@
-= link_to "Home", "/communities", class: ['btn', 'btn-info', 'btn-large']
-//TODO - this should not be a form
-//this should show some fields plus the collections in the project
-%h2.page-header Show Community
-= render 'show_form'
+- if current_user_can? :edit, @community
+  = link_to "Edit", edit_community_path(@community), class:['btn', 'btn-info', 'btn-large']
+- collections = @community.children
+
+%h2.page-header= @community.title
+
+%div.row
+  %div.col-md-3
+    -if !@community.thumbnail_1.nil?
+      =image_tag @community.download_path('thumbnail_1')
+    %p= @community.description
+    -# external links TODO
+    -# institution TODO
+
+  %div.col-md-9
+    %panel.panel-default.panel-records
+      %div.panel-heading
+        %h3.panel-title
+          = "Collections"
+          - if current_user_can? :edit, @community
+            %small
+              %a{href:edit_community_path(@community), class: 'pull-right'}
+                %i.fa.fa-plus
+                = "Add New"
+      %div.panel-body
+        - collections.each do |collection|
+          %div.col-lg-3
+            .collection.tile
+              - if current_user_can? :edit, collection
+                %a{href:edit_collection_path(collection), class: ['btn','btn-xs','btn-default','pull-right']}
+                  %i.fa.fa-pencil
+                  = "Edit"
+              - if collection.thumbnail.blank?
+                =image_tag "tapaslogo-opaque.png"
+              -else
+                %img{src:collection.thumbnail}
+              %h4= link_to collection.title, collection

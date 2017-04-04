@@ -72,10 +72,15 @@ class CommunitiesController < ApplicationController
 
   #This method contains the actual logic for editing a particular community
   def update
-    # @community = Community.find(params[:id])
-    @community = Community.find_by_did(params[:id])
+    @community = Community.find(params[:id])
+    puts @community
+    # @community = Community.find_by_did(params[:id])
     @community.update_attributes(params[:community])
     @community.save!
+    if params[:thumbnail]
+      params[:thumbnail] = create_temp_file(params[:thumbnail])
+      @community.add_thumbnail(:filepath => params[:thumbnail])
+    end
     redirect_to @community and return
   end
 end

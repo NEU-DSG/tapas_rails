@@ -27,7 +27,7 @@
   vertical-align: initial;
 }
 
-.record.tile {
+.record.tile, .collection.tile {
   text-align: center;
   border: 1px solid $gray-lighter;
   img {
@@ -45,7 +45,7 @@
   }
 }
 
-.panel-records {
+.panel-records, .panel-collections {
   .panel-title {
     font-size: 26px;
     small {

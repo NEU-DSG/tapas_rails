@@ -1,52 +1,38 @@
 = form_for @community do |f|
-  %fieldset
-    .container-fluid 
-      .form-group
-      .row
-        .col-md-1
-          = f.label :title, "Title", class: "control-label"
-        .col-md-4
-          = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "form-control input-block-level", placeholder: "University Libraries"
-      .form-group
-      .row
-        .col-md-1
-          = f.label :description, "Description"
-        .col-md-4
-          = f.text_area :description,required: true, name: 'community[description][]', class: "form-control input-block-level", rows: 5
-      .form-group
-      .row
-        .col-md-1
-          = f.label :project_members, "Members"
-        .col-md-4
-          = f.text_field :project_members, name: 'community[project_members][]', class: "form-control input-block-level"
-      .form-group
-      .row
-        .col-md-1
-          = f.label :mass_permissions, "Visibility"
-        .col-md-4
-          = f.select :mass_permissions, {"private" => "private", "public" => "public"}, {:class => "form-control"}
-      .form-group
-      .row
-        .col-md-1
-          = f.label :og_reference, "External links"
-        .col-md-4
-          = f.text_area :og_reference, name: 'community[og_reference][]', class: "form-control input-block-level", rows: 5
-    -# %hr
-    -# %legend Permissions
-    -# %fieldset
-    -#   .row-fluid
-    -#     .span8
-    -#       = f.label :mass_permissions, "Mass Permissions"
-    -#       = f.select :mass_permissions, options_for_select(['public', 'private'], @community.mass_permissions)
-    -# %hr
-    -# %legend Thumbnail (Optional)
-    -# - if !@community.properties.thumbnail_list[0].blank?
-    -#   =image_tag @community.properties.thumbnail_list[0]
-    -# %fieldset
-    -#   .row-fluid
-    -#     .span8
-    -#       = f.label :thumbnail, "Thumbnail"
-    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :title, "Title", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "form-control", placeholder: "University Libraries"
+        .form-group
+          = f.label :description, "Description", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'community[description][]', class: "form-control", placeholder: "Brief description of the community"
+        .form-group
+          = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
+          .col-md-6
+            = f.select :mass_permissions, options_for_select(['public', 'private'], @community.mass_permissions), {}, {:class => "form-control", :name=> "mass_permissions"}
+        .form-group
+          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          .col-md-6
+            - if !@community.thumbnail_1.nil?
+              =image_tag @community.download_path('thumbnail_1')
+            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
+
+      -# .row
+      -#   .col-md-2
+      -#     = f.label :project_members, "Members"
+      -#   .col-md-6
+      -#     -# = f.text_field :project_members, name: 'community[project_members][]', class: "form-control"TODO
+      -# .row
+      -#   .col-md-2
+      -#     = f.label :og_reference, "External links"
+      -#   .col-md-6
+      -#     = f.text_area :og_reference, name: 'community[og_reference][]', class: "form-control", rows: 5
+      -#     -# TODO
+
     %hr
   .form-actions
-    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit' ,href:'communities#show'
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

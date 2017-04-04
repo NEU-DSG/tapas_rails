@@ -73,6 +73,9 @@ class CatalogController < ApplicationController
     # :show may be set to false if you don't want the facet to be drawn in the
     # facet bar
     config.add_facet_field 'active_fedora_model_ssi', :label => 'Format'
+    # config.add_facet_field 'creator_tesim', :label => 'Creator'
+    config.add_facet_field 'authors_ssim', :label => 'Authors'
+    config.add_facet_field 'contributors_ssim', :label => 'Contributors'
     # # config.add_facet_field 'pub_date', :label => 'Publication Year', :single => true
     # config.add_facet_field 'subject_topic_facet', :label => 'Topic', :limit => 20
     # config.add_facet_field 'language_facet', :label => 'Language', :limit => true
@@ -97,6 +100,9 @@ class CatalogController < ApplicationController
     # solr fields to be displayed in the index (search results) view
     #   The ordering of the field names is the order of the display
     config.add_index_field 'title_info_title_ssi', :label => 'Title'
+    # config.add_index_field 'creator_tesim', :label => 'Creator'
+    config.add_index_field 'authors_ssim', :label => 'Authors'
+    config.add_index_field 'contributors_ssim', :label => 'Contributors'
     # config.add_index_field 'title_vern_display', :label => 'Title'
     # config.add_index_field 'author_display', :label => 'Author'
     # config.add_index_field 'author_vern_display', :label => 'Author'

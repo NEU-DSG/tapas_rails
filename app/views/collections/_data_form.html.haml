@@ -14,20 +14,18 @@
           = f.label :community, "Community", class: "control-label col-md-2"
           .col-md-6
             - parent = !@collection.community.blank? ? @collection.community.pid : nil
-            = f.select :community, options_for_select(@communities, parent), name: "community"
+            = f.select :community, options_for_select(@communities, parent), {}, {name: "community", class: "form-control"}
         .form-group
           = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
           .col-md-6
-            = f.select :mass_permissions, options_for_select(['public', 'private'], @collection.mass_permissions), {:class => "form-control"}, name: "mass_permissions"
+            = f.select :mass_permissions, options_for_select(['public', 'private'], @collection.mass_permissions), {}, {:class => "form-control", :name=> "mass_permissions"}
+        .form-group
+          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          .col-md-6
+            - if !@collection.thumbnail_1.nil?
+              =image_tag @collection.download_path('thumbnail_1')
+            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
 
-    -# %legend Thumbnail (Optional)
-    -# - if !@community.properties.thumbnail_list[0].blank?
-    -#   =image_tag @community.properties.thumbnail_list[0]
-    -# %fieldset
-    -#   .row-fluid
-    -#     .span8
-    -#       = f.label :thumbnail, "Thumbnail"
-    -#       = f.file_field :thumbnail, name: 'thumbnail', accept:".jpg,.jpeg,.png"
     %hr
   .form-actions
     = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

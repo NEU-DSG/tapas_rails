@@ -69,6 +69,14 @@ class CollectionsController < ApplicationController
     @collection.save! #object must be saved before community can be assigned
     @collection.community = community
     @collection.save!
+
+    if params[:thumbnail]
+      params[:thumbnail] = create_temp_file(params[:thumbnail])
+      @collection.add_thumbnail(:filepath => params[:thumbnail])
+    end
+    # can this be used instead of individually spelling out the methods?
+    # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
+
     redirect_to @collection and return
   end
 
@@ -97,6 +105,14 @@ class CollectionsController < ApplicationController
     @collection.save!
     @collection.community = community
     @collection.save!
+
+    if params[:thumbnail]
+      params[:thumbnail] = create_temp_file(params[:thumbnail])
+      @collection.add_thumbnail(:filepath => params[:thumbnail])
+    end
+    # can this be used instead of individually spelling out the methods?
+    # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
+
     redirect_to @collection and return
   end
 end
