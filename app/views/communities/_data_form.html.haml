@@ -20,7 +20,9 @@
             - if !@community.thumbnail_1.nil?
               =image_tag @community.download_path('thumbnail_1')
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
-
+      -# TODO - add institution
+      -# TODO - add content date
+      -# TODO - add keywords/subjects
       -# .row
       -#   .col-md-2
       -#     = f.label :project_members, "Members"

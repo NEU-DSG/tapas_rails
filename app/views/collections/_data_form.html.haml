@@ -26,6 +26,7 @@
               =image_tag @collection.download_path('thumbnail_1')
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
 
+
     %hr
   .form-actions
     = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

@@ -1,3 +1,13 @@
+%ul.breadcrumb
+  %li
+    = link_to @core_file.project.title, community_path(@core_file.project)
+  %li.collection
+    -# TODO do a dropdown here?
+    -@core_file.collections.each do |col|
+      = link_to col.title, collection_path(col)
+  %li
+    = @core_file.title
+
 - if current_user_can? :edit, @core_file
   = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
 
@@ -29,11 +39,19 @@
           %a{href: @core_file.canonical_object.download_path}
             %span.fa.fa-file-code-o
             = @core_file.canonical_object.filename
+      -# TODO add other auxilliary files
 
     #project_details.tab-pane
       -if @core_file.project
         %dt Project:
         %dd= link_to @core_file.project.mods.title.first, community_path(@core_file.project)
+        -if User.find(@core_file.project.depositor)
+          - depositor = User.find(@core_file.project.depositor)
+          %dt Project Owner:
+          %dd= link_to depositor.to_s #, user_path(depositor) TODO make user profile
+        -if !@core_file.project.description.blank?
+          %dt Project Description:
+          %dd= @core_file.project.description
       -if @core_file.collections
         %dt Collections:
         -@core_file.collections.each do |c|
