@@ -1,0 +1,9 @@
+%h1= "Pages"
+%ul.breadcrumb
+  %li= "Pages"
+-if @pages.length > 0
+  - @pages.each do |page|
+    %h3
+      = link_to(page.title, page_path(page.slug))
+-else
+  There are currently no pages available
