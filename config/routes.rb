@@ -71,7 +71,10 @@ TapasRails::Application.routes.draw do
   resources :view_packages
   get 'api/view_packages' => 'view_packages#api_index'
 
+  get '/admin' => 'admin#index'
   resources :pages
+
+  mount Bootsy::Engine => '/bootsy', as: 'bootsy'
 
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
 
