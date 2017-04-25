@@ -23,4 +23,5 @@
 //= require bootstrap/tab
 //= require bootstrap/carousel
 //= require plugins
+//= require bootsy
 //= require_tree .

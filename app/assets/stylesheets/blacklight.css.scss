@@ -155,26 +155,10 @@ dd {
   background-color: darken($gray-lighter, 10%);
 }
 
-.glyphicon {
-  @extend .fa;
-  font-family: FontAwesome;
-}
-.glyphicon:before {
-  font-family: FontAwesome;
-}
-.glyphicon-remove {
-  @extend .fa-remove;
-  &:before {
-    content: "\f00d" !important;
-  }
-}
-.glyphicon-search {
-  @extend .fa-search;
-  &:before {
-    content: "\f002" !important;
-  }
-}
-
 .facets-heading {
   display: inline-block;
+}
+
+.bootstrap-wysihtml5-insert-link-modal.fade.in, .bootsy-modal.fade.in {
+  z-index: 1041;
 }

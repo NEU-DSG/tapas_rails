@@ -11,6 +11,14 @@
  *= require_self
 
  */
+
+ $icon-font-path: "/assets/bootstrap/";
+ @font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('/assets/bootstrap/glyphicons-halflings-regular.eot');
+  src: url('/assets/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/assets/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('/assets/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
  @import 'bootstrap-sprockets';
 
  @import 'tapas-variables';
@@ -27,5 +35,6 @@
 
  @import 'jquery-ui/resizable';
 
-
+ @import 'bootsy';
+ //= require bootsy
  //= require_tree .
