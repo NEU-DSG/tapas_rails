@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
     attr_accessible :email, :password, :password_confirmation
   end
 
-  attr_accessible :email, :password, :password_confirmation if Rails::VERSION::MAJOR < 4
+  attr_accessible :email, :password, :password_confirmation, :name, :role if Rails::VERSION::MAJOR < 4
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -16,6 +16,7 @@ class User < ActiveRecord::Base
 
   delegate :can?, :cannot?, :to => :ability
 
+  ROLES = %w[admin paid_user unpaid_user]
 
   def api_key=(api_key)
     @api_key = Digest::SHA512.hexdigest api_key
@@ -35,6 +36,18 @@ class User < ActiveRecord::Base
 
   def user_key
     self.id.to_s
+  end
+
+  def admin?
+    return self.role.eql?('admin')
+  end
+
+  def paid_user?
+    return self.role.eql?('paid_user')
+  end
+
+  def unpaid_user?
+    return self.role.eql?('unpaid_user')
   end
 
   def self.find_by_user_key(key)
