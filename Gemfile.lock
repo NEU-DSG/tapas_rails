@@ -143,6 +143,8 @@ GEM
     figaro (0.7.0)
       bundler (~> 1.0)
       rails (>= 3, < 5)
+    friendly_id (5.1.0)
+      activerecord (>= 4.0.0)
     git (1.3.0)
     haml (4.0.7)
       tilt
@@ -481,6 +483,7 @@ DEPENDENCIES
   exception_notification
   factory_girl_rails
   figaro
+  friendly_id (~> 5.1.0)
   git
   jbuilder (~> 1.2)
   jettywrapper
