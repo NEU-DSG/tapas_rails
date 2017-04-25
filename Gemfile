@@ -63,6 +63,9 @@ gem 'thor-rails'
 # Use Namae to try to parse arbitrary names
 gem 'namae'
 
+# Bootstrap WYSIWYG Editor
+gem 'bootsy'
+
 # Configure email alerts on exception
 gem 'exception_notification'
 
