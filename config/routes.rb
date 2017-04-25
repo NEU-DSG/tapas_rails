@@ -71,6 +71,10 @@ TapasRails::Application.routes.draw do
   resources :view_packages
   get 'api/view_packages' => 'view_packages#api_index'
 
+  resources :pages
+
+  match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
