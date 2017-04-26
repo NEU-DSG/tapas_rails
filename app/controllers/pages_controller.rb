@@ -1,10 +1,12 @@
 class PagesController < ApplicationController
   extend ActiveSupport::Concern
   before_filter :verify_admin, :except => :show
+
+  rescue_from ActiveRecord::RecordNotFound do |exception|
+    render_404(exception)
+  end
+
   included do
-    rescue_from ActiveRecord::RecordNotFound do |exception|
-      render_404(exception)
-    end
     rescue_from ActiveRecord::RecordInvalid do |exception|
       flash[:error] = exception.to_s
       redirect_to '/admin'
