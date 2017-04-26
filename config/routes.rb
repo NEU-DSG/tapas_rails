@@ -74,6 +74,8 @@ TapasRails::Application.routes.draw do
   get '/admin' => 'admin#index'
   resources :pages
 
+  get 'my_tapas' => 'users#my_tapas'
+
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
 
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
