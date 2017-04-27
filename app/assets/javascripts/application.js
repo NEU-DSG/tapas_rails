@@ -24,4 +24,5 @@
 //= require bootstrap/carousel
 //= require plugins
 //= require bootsy
+//= require forem
 //= require_tree .
