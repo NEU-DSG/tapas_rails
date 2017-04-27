@@ -1,4 +1,10 @@
 class ApplicationController < ActionController::Base
+
+  def forem_user
+    current_user
+  end
+  helper_method :forem_user
+
   # Adds a few additional behaviors into the application controller
   include Blacklight::Controller
   layout 'blacklight'

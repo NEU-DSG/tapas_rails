@@ -54,6 +54,14 @@ class User < ActiveRecord::Base
     self.send("find_by_nuid".to_sym, key)
   end
 
+  def forem_name
+    return self.name
+  end
+
+  def forem_email
+    return self.email
+  end
+
   # TODO - add interaction with wild apricot
   private
 
