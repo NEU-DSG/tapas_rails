@@ -162,3 +162,46 @@ dd {
 .bootstrap-wysihtml5-insert-link-modal.fade.in, .bootsy-modal.fade.in {
   z-index: 1041;
 }
+
+#toolbar {
+  z-index: 1600;
+  position: fixed;
+  top: 176px;
+  .fa {
+    color: #FFF;
+    background: #DF691A;
+  }
+
+  .toolbar-link {
+    display: block;
+    text-decoration: none;
+    background: #DF691A;
+    color: #FFF;
+    width: 2.5em;
+    height: 2.5em;
+    overflow: hidden;
+  }
+  .toolbar-link:hover, .toolbar-link:focus {
+    width: auto;
+    .toolbar-title {
+      opacity: 1;
+      visibility: visible;
+      margin-left: 0;
+    }
+  }
+
+  .toolbar-title {
+    visibility: hidden;
+    opacity: 0;
+    transition: all, 0.2s, linear;
+    color: #FFFFFF;
+    margin-left: -100px;
+    padding-right: 10px;
+  }
+
+  #tools, #feed, #bookbag, #search {
+    background: #FFFFFF;
+    border: 1px solid #4E5D6C;
+    margin-bottom: 0;
+  }
+}

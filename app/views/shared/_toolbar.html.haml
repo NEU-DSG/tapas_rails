@@ -1,2 +1,25 @@
 %div.toolbar#toolbar
-  -# - if 
+  - if current_user
+    %a.collapsed.toolbar-link{:href => "#tools", "data-toggle" => "collapse"}
+      %span.fa-stack.fa-lg
+        %i.fa.fa-square.fa-stack-2x
+        %i.fa.fa-wrench.fa-stack-1x
+      %span.toolbar-title
+        = "Tools"
+    %section#tools.tools.wrench.collapse
+      %div.tools-content
+        %ul.menu.nav
+          %li.leaf
+            %a{:href=>"/user"}
+              = "My Account"
+          %li.leaf
+            %a{:href=>"/my_tapas"}
+              = "My TAPAS"
+  - else
+    %a{:href => "/user", :class => "toolbar-link"}
+      %span.fa-stack.fa-lg
+        %i.fa.fa-square.fa-stack-2x
+        %i.fa.fa-sign-in.fa-stack-1x.fa-inverse
+      %span.toolbar-title
+        = "Sign In"
+  %a.collapsed.toolbar-link
