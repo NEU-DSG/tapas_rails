@@ -4,8 +4,4 @@
 
 %h3
   = "My Projects"
--@response = @projects
-%div#sidebar{ :class =>  sidebar_classes }
-  = render 'catalog/search_sidebar'
-%div#content{ :class => main_content_classes }
-  = render 'catalog/search_results'
+= render "my_projects"

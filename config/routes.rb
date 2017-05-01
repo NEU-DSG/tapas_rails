@@ -83,6 +83,7 @@ TapasRails::Application.routes.draw do
   resources :pages
 
   get 'my_tapas' => 'users#my_tapas'
+  get 'my_projects' => 'users#my_projects'
 
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
 
