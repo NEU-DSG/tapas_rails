@@ -15,6 +15,9 @@
           %li.leaf
             %a{:href=>"/my_tapas"}
               = "My TAPAS"
+          %li.leaf
+            %a{:href=>"/my_projects"}
+              = "My Projects"
   - else
     %a{:href => "/user", :class => "toolbar-link"}
       %span.fa-stack.fa-lg
@@ -22,4 +25,28 @@
         %i.fa.fa-sign-in.fa-stack-1x.fa-inverse
       %span.toolbar-title
         = "Sign In"
-  %a.collapsed.toolbar-link
+  %a.collapsed.toolbar-link{:href => "#news", "data-toggle" => "collapse"}
+    %span.fa-stack.fa-lg
+      %i.fa.fa-square.fa-stack-2x
+      %i.fa.fa-newspaper-o.fa-stack-1x
+    %span.toolbar-title
+      = "My Feed"
+  %section#news.news.feed.collapse
+    %div.news-content
+      -# TODO - add news feed here
+  %a.collapse.toolbar-link{:href => "#search", "data-toggle" => "collapse"}
+    %span.fa-stack.fa-lg
+      %i.fa.fa-square.fa-stack-2x
+      %i.fa.fa-search.fa-stack-1x
+    %span.toolbar-title
+      = "Search"
+  %section#search.search.collapse
+    %div.search-content
+      -# TODO - add search box partial
+  - if current_user
+    %a{:href => "/user/sign_out", :class => "toolbar-link"}
+      %span.fa-stack.fa-lg
+        %i.fa.fa-square.fa-stack-2x
+        %i.fa.fa-sign-out.fa-stack-1x.fa-inverse
+      %span.toolbar-title
+        = "Sign Out"
