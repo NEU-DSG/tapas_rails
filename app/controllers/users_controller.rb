@@ -19,6 +19,14 @@ class UsersController < ApplicationController
     render 'my_tapas'
   end
 
+  def my_projects
+    @page_title = "My Projects"
+    @user = current_user
+    self.search_params_logic += [:my_communities_filter]
+    (@projects, @document_list) = search_results(params, search_params_logic)
+    render 'my_projects'
+  end
+
   def my_communities_filter(solr_parameters, user_parameters)
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     query = "has_model_ssim:\"#{model_type}\" && project_members_ssim:\"#{@user.id}\""
