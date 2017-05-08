@@ -1,19 +1,10 @@
-class CoreFilesController < ApplicationController
+class CoreFilesController < CatalogController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
   include ControllerHelper
   include TapasRails::ViewPackages
 
-  include Blacklight::Catalog
-  include Blacklight::Controller
-
-  before_filter :prepend_view_paths
-
   self.copy_blacklight_config_from(CatalogController)
-
-  def prepend_view_paths
-    prepend_view_path "app/views/catalog/"
-  end
 
   configure_mods_display do
     identifier { ignore! }

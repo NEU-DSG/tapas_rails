@@ -1,21 +1,7 @@
-require 'blacklight/catalog'
-class CommunitiesController < ApplicationController
+class CommunitiesController < CatalogController
   include ApiAccessible
-  include Blacklight::Catalog
-  include Blacklight::Controller
-
-  before_filter :prepend_view_paths
 
   self.copy_blacklight_config_from(CatalogController)
-
-  def prepend_view_paths
-    prepend_view_path "app/views/catalog/"
-  end
-
-  # def search_action_url options = {}
-    # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
-    # catalog_index_url(options.except(:controller, :action))
-  # end
 
   def upsert
     if params[:thumbnail]
