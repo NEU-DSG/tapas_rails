@@ -86,6 +86,11 @@ GEM
       nokogiri (~> 1.6)
       rails (>= 3.2.6, < 5)
       rsolr (~> 1.0.11)
+    blacklight-gallery (0.4.1)
+      blacklight (>= 5.12, < 7)
+      bootstrap-sass (~> 3.0)
+      openseadragon (>= 0.2.0)
+      rails
     block_helpers (0.3.3)
       activesupport (>= 2.0)
     bootstrap-sass (3.3.5)
@@ -287,6 +292,8 @@ GEM
       activesupport
       nokogiri (>= 1.4.2)
       solrizer (~> 3.3)
+    openseadragon (0.3.3)
+      rails (> 3.2.0)
     orm_adapter (0.5.0)
     parseconfig (1.0.6)
     passenger (5.0.15)
@@ -507,6 +514,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  blacklight-gallery
   bootsy
   capistrano (~> 3.1)
   capistrano-git-submodule-strategy (~> 0.1)!
