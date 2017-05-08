@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  helper Openseadragon::OpenseadragonHelper
 
   def forem_user
     current_user
