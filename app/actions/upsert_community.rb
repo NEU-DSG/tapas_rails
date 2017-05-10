@@ -36,6 +36,7 @@ class UpsertCommunity
       community.DC.description = params[:description] if params.has_key? :description
       community.match_dc_to_mods
       community.project_members = params[:members] if params.has_key? :members
+      community.properties.project_members = params[:members] if params.has_key? :members
       community.drupal_access = params[:access] if params.has_key? :access
       community.mass_permissions = params[:access] if params.has_key? :access
       community.save!
