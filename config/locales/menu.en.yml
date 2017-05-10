@@ -1,0 +1,18 @@
+en:
+  menus:
+    main:
+      about:
+        text: "About"
+        url: "/about"
+      browse:
+        text: "Browse TAPAS"
+        url: "/browse"
+      learn_and_teach:
+        text: "Learn and Teach"
+        url: "/learn_and_teach"
+      community:
+        text: "Community"
+        url: "/community"
+      help:
+        text: "Help"
+        url: "/text"

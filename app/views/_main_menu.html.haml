@@ -1,0 +1,4 @@
+%ul.nav.navbar-nav
+  - I18n.t('menus.main').each do |key, menu_item|
+    %li
+      = link_to(menu_item[:text], menu_item[:url])
