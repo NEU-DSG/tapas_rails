@@ -1,6 +1,6 @@
-class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream 
+class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
 
-  use_terminology CerberusCore::Datastreams::PropertiesDatastream 
+  use_terminology CerberusCore::Datastreams::PropertiesDatastream
 
   extend_terminology do |t|
     t.authors
@@ -20,7 +20,7 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     hsh = super(hsh)
 
     if self.project_members.first
-      hsh['project_members_ssim'] = self.project_members.first
+      hsh['project_members_ssim'] = self.project_members
     end
 
     if self.authors.first
@@ -31,11 +31,11 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
       hsh['contributors_ssim'] = self.contributors.first
     end
 
-    if self.drupal_access.first 
+    if self.drupal_access.first
       hsh['drupal_access_ssim'] = self.drupal_access.first
     end
 
-    if self.html_type.first 
+    if self.html_type.first
       hsh['html_type_ssi'] = self.html_type.first
     end
 
