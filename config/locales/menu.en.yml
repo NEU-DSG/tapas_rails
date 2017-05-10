@@ -4,15 +4,61 @@ en:
       about:
         text: "About"
         url: "/about"
+        submenu:
+          getting_started:
+            text: "Getting Started"
+            url: "/getting_started"
+          mission:
+            text: "Mission and History"
+            url: "/mission"
+          partners:
+            text: "Partners and Supporters"
+            url: "/partners"
+          people:
+            text: "People"
+            url: "/people"
       browse:
         text: "Browse TAPAS"
         url: "/browse"
       learn_and_teach:
         text: "Learn and Teach"
         url: "/learn_and_teach"
+        submenu:
+          teaching:
+            text: "Teaching with Tapas"
+            url: "#teaching_with_tapas"
+          workshops:
+            text: "Workshops"
+            url: "#workshops"
+          guides:
+            text: "Guides and Templates"
+            url: "#guides_and_templates"
+          instructor:
+            text: "Instructor Resources"
+            url: "#instructor_resources"
       community:
         text: "Community"
         url: "/community"
+        submenu:
+          forums:
+            text: "Forums"
+            url: "/forums"
+          news:
+            text: "News"
+            url: "/news"
       help:
         text: "Help"
         url: "/text"
+        submenu:
+          getting_started:
+            text: "Getting Started"
+            url: "getting_started"
+          tutorials:
+            text: "Tutorials"
+            url: "/tutorials"
+          troubleshooting:
+            text: "Troubleshooting"
+            url: "/troubleshooting"
+          documentation:
+            text: "documentation"
+            url: "/documentation"
