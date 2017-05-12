@@ -3,7 +3,8 @@ class RebuildReadingInterfaceJob
 # TODO run this for real
   def self.perform(did)
     begin
-      core_file = CoreFile.find_by_did(did)
+      # core_file = CoreFile.find_by_did(did)
+      core_file = CoreFile.find("#{did}")
 
       if !(core_file)
         raise 'Could not find record with specified Drupal ID'
@@ -32,6 +33,7 @@ class RebuildReadingInterfaceJob
         core_file.set_stacktrace_message(e)
         core_file.mark_upload_failed!
       end
+      logger.error e
       raise ActiveFedora::ObjectNotFoundError
     ensure
       tmpfile.close if tmpfile
