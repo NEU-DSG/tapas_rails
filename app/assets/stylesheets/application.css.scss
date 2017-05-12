@@ -19,8 +19,6 @@
   src: url('/assets/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/assets/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('/assets/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 }
 
- @import 'bootstrap-sprockets';
-
  @import 'tapas-variables';
 
  @import 'tapas-mixins';
@@ -29,13 +27,19 @@
 
  @import 'bootstrap';
 
+ @import 'bootstrap-sprockets';
+
+ @import 'bootsy';
+
  @import 'blacklight';
+
+ @import 'blacklight/blacklight';
+
+ @import 'blacklight_gallery';
 
  @import 'core_files';
 
  @import 'jquery-ui/resizable';
-
- @import 'bootsy';
 
  @import 'forem/base';
 
