@@ -9,7 +9,8 @@ TapasRails::Application.routes.draw do
 
   devise_for :users
 
-  root to: "catalog#index"
+  # root to: "catalog#index"
+  root to: "pages#show", id: 'home'
   blacklight_for :catalog
   # Blacklight.add_routes(self)
   # HydraHead.add_routes(self)
