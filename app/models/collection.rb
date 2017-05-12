@@ -76,6 +76,12 @@ class Collection < CerberusCore::BaseModels::Collection
     }
   end
 
+  def to_solr(solr_doc = Hash.new())
+    solr_doc["active_fedora_model_ssi"] = self.class
+    super(solr_doc)
+    return solr_doc
+  end
+
   private
     def update_core_files
       return true unless @drupal_access_changed

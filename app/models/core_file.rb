@@ -60,6 +60,14 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
+  def to_solr(solr_doc = Hash.new())
+    solr_doc["active_fedora_model_ssi"] = self.class
+    solr_doc['all_text_timv'] = self.canonical_object.content.content
+    super(solr_doc)
+    logger.info("in the to_solr for core_file")
+    return solr_doc
+  end
+
   def create_view_package_methods
     array = available_view_packages_machine
 

@@ -55,4 +55,10 @@ class Community < CerberusCore::BaseModels::Community
     self.mods.title = self.DC.title.first
     self.mods.abstract = self.DC.description.first
   end
+
+  def to_solr(solr_doc = Hash.new())
+    solr_doc["active_fedora_model_ssi"] = self.class
+    super(solr_doc)
+    return solr_doc
+  end
 end
