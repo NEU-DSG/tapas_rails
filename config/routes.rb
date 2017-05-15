@@ -35,6 +35,8 @@ TapasRails::Application.routes.draw do
   mount Resque::Server, at: "/resque"
   # end
 
+  get 'browse' => 'catalog#browse'
+  
   # Communities
   resources :communities
   get 'communities/:did' => 'communities#show'
