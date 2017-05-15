@@ -18,7 +18,10 @@ class CommunitiesController < CatalogController
     @page_title = "All Projects"
     self.search_params_logic += [:communities_filter]
     (@response, @document_list) = search_results(params, search_params_logic)
-    render 'shared/index'
+    respond_to do |format|
+      format.html { render :template => 'shared/index' }
+      format.js { render :template => 'shared/index', :layout => false }
+    end
   end
 
   #This method is the helper method for index. It basically gets the communities

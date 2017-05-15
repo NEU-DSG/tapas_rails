@@ -17,7 +17,10 @@ class CollectionsController < CatalogController
     @page_title = "All Collections"
     self.search_params_logic += [:collections_filter]
     (@response, @document_list) = search_results(params, search_params_logic)
-    render 'shared/index'
+    respond_to do |format|
+      format.html { render :template => 'shared/index' }
+      format.js { render :template => 'shared/index', :layout => false }
+    end
   end
 
   #This method is the helper method for index. It basically gets the collections
