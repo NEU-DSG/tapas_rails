@@ -1,0 +1,59 @@
+%h2.page-title= "Browse"
+
+= render :partial=>'catalog/search_form'
+%br
+
+%ul.nav.nav-tabs.browse-tabs
+  %li.active
+    %a{:href=>"#projects", "data-toggle"=>"tab", "data-type"=>"communities"} Projects
+  %li
+    %a{:href=>"#collections", "data-toggle"=>"tab", "data-type"=>"collections"} Collections
+  %li
+    %a{:href=>"#records", "data-toggle"=>"tab", "data-type"=>"core_files"} Records
+.tab-content
+  #projects.tab-pane.active
+    Loading...
+  #collections.tab-pane
+    Loading...
+  #records.tab-pane
+    Loading...
+
+
+:javascript
+  $(document).ready(function(){
+    $(".browse-tabs a").click(function(e){
+      var type = $(this).data('type');
+      if (type == 'communities'){
+        $("#projects").append("<span class='fa fa-spinner fa-spin fa-3x fa-fw'></span>");
+        $.ajax({
+          url: '/communities',
+          type: 'get',
+          dataType: 'script',
+          complete: function(data){
+            $("#projects").html(data.responseText);
+          }
+        });
+      } else if (type == 'collections'){
+        $("#collections").append("<span class='fa fa-spinner fa-spin fa-3x fa-fw'></span>");
+        $.ajax({
+          url: '/collections',
+          type: 'get',
+          dataType: 'script',
+          complete: function(data){
+            $("#collections").html(data.responseText);
+          }
+        });
+      } else if (type == 'core_files') {
+        $("#records").append("<span class='fa fa-spinner fa-spin fa-3x fa-fw'></span>");
+        $.ajax({
+          url: '/core_files',
+          type: 'get',
+          dataType: 'script',
+          complete: function(data){
+            $("#records").html(data.responseText);
+          }
+        });
+      }
+    });
+    $(".browse-tabs li.active a").click();
+  });
