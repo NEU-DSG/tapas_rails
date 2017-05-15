@@ -1,15 +1,6 @@
-require 'blacklight/catalog'
-class UsersController < ApplicationController
-  include Blacklight::Catalog
-  include Blacklight::Controller
-
-  before_filter :prepend_view_paths
+class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
-
-  def prepend_view_paths
-    prepend_view_path "app/views/catalog/"
-  end
 
   def my_tapas
     @page_title = "My TAPAS"
