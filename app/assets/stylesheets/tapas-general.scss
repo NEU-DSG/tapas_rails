@@ -198,3 +198,19 @@ dd {
 .bootstrap-wysihtml5-insert-link-modal.fade.in, .bootsy-modal.fade.in {
  z-index: 1041;
 }
+
+#documents.row.gallery {
+  display: block;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+
+  .document {
+    display: flex;
+    flex: none;
+    align-items: stretch;
+    .thumbnail {
+      width: 100%
+    }
+  }
+}
