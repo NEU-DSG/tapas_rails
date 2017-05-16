@@ -58,6 +58,7 @@ class Community < CerberusCore::BaseModels::Community
 
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_fedora_model_ssi"] = self.class
+    solr_doc["type_sim"] = "Project"
     super(solr_doc)
     return solr_doc
   end
