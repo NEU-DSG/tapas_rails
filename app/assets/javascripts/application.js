@@ -25,4 +25,3 @@
 //= require plugins
 //= require bootsy
 //= require forem
-//= require_tree .
