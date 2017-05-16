@@ -5,6 +5,7 @@ class Community < CerberusCore::BaseModels::Community
   include TapasQueries
   include InlineThumbnail
   include StatusTracking
+  include SolrHelpers
   include TapasRails::MetadataAssignment
 
   before_save :ensure_unique_did

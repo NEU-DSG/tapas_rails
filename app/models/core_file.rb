@@ -4,6 +4,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include DrupalAccess
   include TapasQueries
   include StatusTracking
+  include SolrHelpers
   include TapasRails::ViewPackages
 
   # Configure mods_display gem
@@ -63,6 +64,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_fedora_model_ssi"] = self.class
     solr_doc['all_text_timv'] = self.canonical_object.content.content
+    solr_doc['type_sim'] = "Record"
     super(solr_doc)
     logger.info("in the to_solr for core_file")
     return solr_doc

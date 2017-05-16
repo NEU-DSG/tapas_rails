@@ -5,6 +5,7 @@ class Collection < CerberusCore::BaseModels::Collection
   include InlineThumbnail
   include TapasQueries
   include StatusTracking
+  include SolrHelpers
 
   before_save :ensure_unique_did
   before_save :match_dc_to_mods
