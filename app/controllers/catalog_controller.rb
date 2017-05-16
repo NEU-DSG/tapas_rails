@@ -19,6 +19,7 @@ class CatalogController < ApplicationController
     config.show.tile_source_field = :content_metadata_image_iiif_info_ssm
     config.show.partials.insert(1, :openseadragon)
 
+    config.index.thumbnail_field = 'thumbnail_list_tesim'
     ## Class for sending and receiving requests from a search index
     # config.repository_class = Blacklight::Solr::Repository
     config.connection_config = "/config/blacklight.yml"
