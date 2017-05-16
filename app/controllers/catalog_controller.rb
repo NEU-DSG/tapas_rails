@@ -264,4 +264,8 @@ class CatalogController < ApplicationController
     solr_parameters[:fq] << "-#{Solrizer.solr_name("is_supplemental_material_for", :symbol)}:[* TO *]"
   end
 
+  def browse
+    render 'browse'
+  end
+
 end
