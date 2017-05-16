@@ -1,7 +1,7 @@
 %ul.nav.navbar-nav
   - I18n.t('menus.main').each do |key, menu_item|
     %li{:class=>menu_item[:submenu]? "expanded dropdown" : ""}
-      %a{:href=> menu_item[:url], :class=>menu_item[:submenu]? "dropdown-toggle" : "", "data-target"=>"#", "data-toggle"=>"dropdown" }
+      %a{:href=> menu_item[:url], :class=>menu_item[:submenu]? "dropdown-toggle" : "", "data-target"=>"#", "data-toggle"=>menu_item[:submenu] ? "dropdown":"" }
         =menu_item[:text]
         -if menu_item[:submenu]
           %span.caret
