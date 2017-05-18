@@ -11,5 +11,13 @@ module TapasRails
     def read_groups
       Array(self[Ability.read_group_field])
     end
+
+    def collections
+      Array(self['collections_ssim'])
+    end
+
+    def project
+      Array(self['project_pid_ssi']).first
+    end
   end
 end
