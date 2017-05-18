@@ -214,3 +214,15 @@ dd {
     }
   }
 }
+
+#sort-dropdown .dropdown-toggle, #per_page-dropdown .dropdown-toggle {
+  color: $component-active-color;
+
+  .caret {
+    color: $component-active-color;
+  }
+}
+
+.navbar-nav > li > a {
+  line-height: 31px;
+}

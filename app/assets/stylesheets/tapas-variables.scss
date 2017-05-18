@@ -771,8 +771,8 @@ $thumbnail-caption-padding:   9px;
 //
 //##
 
-$well-bg:                     $gray-light;
-$well-border:                 #FFF;//transparent;
+$well-bg:                     transparent;//$gray-light;
+$well-border:                 $gray-lighter;//transparent;
 
 
 //== Badges
