@@ -63,10 +63,13 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_fedora_model_ssi"] = self.class
-    solr_doc['all_text_timv'] = self.canonical_object.content.content
+    solr_doc['all_text_timv'] = self.canonical_object.content.content if self.canonical_object
     solr_doc['type_sim'] = "Record"
+    solr_doc['collections_ssim'] = self.collections.map{|c| c.title}
+    solr_doc['collections_pids_ssim'] = self.collections.map{|c| c.pid}
+    solr_doc['project_ssi'] = self.project.title
+    solr_doc['project_pid_ssi'] = self.project.pid
     super(solr_doc)
-    logger.info("in the to_solr for core_file")
     return solr_doc
   end
 
