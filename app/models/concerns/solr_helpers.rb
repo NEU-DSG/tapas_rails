@@ -7,7 +7,7 @@ module SolrHelpers
   end
 
   def remove_from_index
-    ActiveFedora::SolrService.instance.conn.delete(self.id)
+    ActiveFedora::SolrService.instance.conn.delete_by_id("#{self.pid}")
     ActiveFedora::SolrService.instance.conn.commit
   end
 end
