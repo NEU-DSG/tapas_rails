@@ -10,11 +10,11 @@
   <% end %>
 
   <h5 class="index_title document-title-heading <%= document_actions.present? ? "col-sm-9 col-lg-10" : "col-md-12" %>">
-    <% if counter = document_counter_with_offset(document_counter) %>
-      <span class="document-counter">
+    <!-- <% if counter = document_counter_with_offset(document_counter) %> -->
+      <!-- <span class="document-counter">
         <%= t('blacklight.search.documents.counter', counter: counter) %>
-      </span>
-    <% end %>
+      </span> -->
+    <!-- <% end %> -->
     <%= link_to_document document, document_show_link_field(document), counter: counter %>
   </h5>
 
