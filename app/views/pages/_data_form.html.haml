@@ -11,6 +11,11 @@
           .col-md-6
             = f.text_field :slug, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "url_path_for_page"
         .form-group
+          = f.label :publish, class: "control-label col-md-2"
+          .col-md-6
+            .checkbox
+              = f.check_box :publish, {}, "true"
+        .form-group
           = f.label :content, "Content", class: "control-label col-md-2"
           .col-md-6
             = f.bootsy_area :content, required: true, class: "form-control", placeholder: "HTML Content of page", rows: 16, editor_options: {html: true}

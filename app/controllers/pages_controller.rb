@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
   extend ActiveSupport::Concern
   before_filter :verify_admin, :except => :show
+  before_filter :verify_published, :only => :show
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
@@ -63,7 +64,12 @@ class PagesController < ApplicationController
       redirect_to root_path unless current_user.admin?
     end
 
+    def verify_published
+      page = Page.friendly.find(params[:id])
+      render_403 unless page.publish == "true" || current_user.admin?
+    end
+
     def page_params
-      params.require(:page).permit(:content, :title, :slug, :bootsy_image_gallery_id)
+      params.require(:page).permit(:content, :title, :slug, :bootsy_image_gallery_id, :publish)
     end
 end

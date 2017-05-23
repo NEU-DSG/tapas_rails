@@ -5,5 +5,8 @@
   - @pages.each do |page|
     %h3
       = link_to(page.title, page_path(page.slug))
+      - if current_user.admin?
+        %a.btn.btn-default.btn-sm{:href=>edit_page_path(page.id)}
+          = "Edit"
 -else
   There are currently no pages available
