@@ -6,13 +6,13 @@
         = render_index_field_label document, field: field_name
       %dd{:class=>"blacklight-#{field_name.parameterize}"}
         = render_index_field_value document, field: field_name
-  - if document.collections
+  - if !document.collections.blank?
     %dt.blacklight-collections
       = "Collections:"
     %dd.blacklight-collections
       - document.collections.each do |col|
         = col.inspect
-  - if document.project
+  - if !document.project.blank?
     %dt.blacklight-project
       = "Project:"
     %dd.blacklight-project
