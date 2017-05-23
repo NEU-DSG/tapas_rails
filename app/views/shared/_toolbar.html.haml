@@ -34,15 +34,15 @@
   %section#news.news.feed.collapse
     %div.news-content
       -# TODO - add news feed here
-  %a.collapse.toolbar-link{:href => "#search", "data-toggle" => "collapse"}
+  %a.collapse.toolbar-link{:href => "#search_tool", "data-toggle" => "collapse"}
     %span.fa-stack.fa-lg
       %i.fa.fa-square.fa-stack-2x
       %i.fa.fa-search.fa-stack-1x
     %span.toolbar-title
       = "Search"
-  %section#search.search.collapse
+  %section#search_tool.search.collapse
     %div.search-content
-      -# TODO - add search box partial
+      = render :partial=>'catalog/search_form'
   - if current_user
     %a{:href => "/user/sign_out", :class => "toolbar-link"}
       %span.fa-stack.fa-lg
