@@ -66,7 +66,7 @@ class PagesController < ApplicationController
 
     def verify_published
       page = Page.friendly.find(params[:id])
-      render_403 unless page.publish == "true" || current_user.admin?
+      render_404("Access denied") unless page.publish == "true" || (current_user && current_user.admin?)
     end
 
     def page_params

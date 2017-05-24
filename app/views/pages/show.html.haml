@@ -1,4 +1,4 @@
-- if current_user.admin?
+- if current_user && current_user.admin?
   = link_to "Edit", edit_page_path(@page), class:['btn', 'btn-info', 'btn-large']
 
 = raw @page.content
