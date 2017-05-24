@@ -13,14 +13,17 @@ class CoreFilesController < CatalogController
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
   before_filter :can_read?, only: [:show]
-  before_filter :can_edit?, only: [:edit, :update]
+  # before_filter :can_edit?, only: [:edit, :update]
 
   #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
     self.search_params_logic += [:core_files_filter]
     (@response, @document_list) = search_results(params, search_params_logic)
-    render 'shared/index'
+    respond_to do |format|
+      format.html { render :template => 'shared/index' }
+      format.js { render :template => 'shared/index', :layout => false }
+    end
   end
 
   #This method is the helper method for index. It basically gets the core files
@@ -51,7 +54,7 @@ class CoreFilesController < CatalogController
   #This method contains the actual logic for creating a new core file
   def create
     begin
-      params[:collection_dids] = params[:core_file][:collection]
+      params[:collection_dids] = params[:collections] if params[:collections]
       params[:depositor] = "000000000" #temp setting this until users integrated
 
       # Step 1: Find or create the CoreFile Object -
@@ -79,8 +82,8 @@ class CoreFilesController < CatalogController
         params[:support_files] = create_temp_file params[:support_files]
       end
 
-      if params[:core_file][:thumbnail]
-        thumbnail = create_temp_file params[:core_file][:thumbnail]
+      if params[:thumbnail]
+        thumbnail = create_temp_file params[:thumbnail]
         Content::UpsertThumbnail.execute(core_file, thumbnail)
       end
 
@@ -97,6 +100,7 @@ class CoreFilesController < CatalogController
 
         @mods = Exist::GetMods.execute(params[:tei], opts)
       end
+      logger.info "passing params to job"
 
       # Step 3: Kick off an upsert job
       job = TapasObjectUpsertJob.new params
@@ -106,10 +110,10 @@ class CoreFilesController < CatalogController
       # Step 4: Respond with MODS if it is available, otherwise send a generic
       # success message
       if @mods
+        logger.info("mods is present - the redirect may be where it's failing")
       #   render :xml => @mods, :status => 202
         flash[:notice] = "Your file has been updated."
-        @core_file = CoreFile.find_by_did(params[:did])
-        redirect_to @core_file
+        redirect_to core_file
       else
         flash[:notice] = "Your file is being created. Check back soon."
         redirect_to "/core_files"

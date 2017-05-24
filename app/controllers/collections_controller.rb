@@ -56,16 +56,19 @@ class CollectionsController < CatalogController
   #This method contains the actual logic for creating a new collection
   def create
     # @collection = Collection.new
-    community = Community.find("#{params[:collection][:community]}")
+    puts params
+    community = Community.find(params[:community]) if params[:community]
     params[:collection].delete("community")
     @collection = Collection.new(params[:collection])
     @collection.did = @collection.pid
     @collection.depositor = "000000000" #temporarily set until users implemented
+    @collection.mass_permissions = params[:mass_permissions]
     @collection.save! #object must be saved before community can be assigned
-    @collection.community = community
+    @collection.community = community if community
     @collection.save!
 
     if params[:thumbnail]
+      logger.info "we have a thumbnail"
       params[:thumbnail] = create_temp_file(params[:thumbnail])
       @collection.add_thumbnail(:filepath => params[:thumbnail])
     end
@@ -92,16 +95,18 @@ class CollectionsController < CatalogController
 
   #This method contains the actual logic for editing a particular collection
   def update
-    community = Community.find("#{params[:collection][:community]}")
+    community = Community.find(params[:community]) if params[:community]
     params[:collection].delete("community")
     @collection = Collection.find(params[:id])
     # @core_files = CoreFile.find_by_did(params[:id])
     @collection.update_attributes(params[:collection])
+    @collection.mass_permissions = params[:mass_permissions]
     @collection.save!
-    @collection.community = community
+    @collection.community = community if community
     @collection.save!
 
     if params[:thumbnail]
+      logger.info "we have a thumbnail"
       params[:thumbnail] = create_temp_file(params[:thumbnail])
       @collection.add_thumbnail(:filepath => params[:thumbnail])
     end
