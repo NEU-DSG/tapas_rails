@@ -60,8 +60,8 @@ describe Collection do
   describe "phantom collection" do
     let(:phantom) { Collection.phantom_collection }
 
-    before(:each) { Collection.destroy_all }
-    after(:each) { Collection.destroy_all }
+    before(:each) { Collection.delete_all }
+    after(:each) { Collection.delete_all }
 
     it "is created when referenced before existence" do
       phid = Rails.configuration.phantom_collection_pid

@@ -9,7 +9,7 @@ describe "The Did module" do
   let(:tester) { DidTester.new }
 
   after(:each) do
-    ActiveFedora::Base.destroy_all
+    ActiveFedora::Base.delete_all
   end
 
   it "gives access to did setter/getter methods" do
