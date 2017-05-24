@@ -15,6 +15,12 @@
 # server list. The second argument is a, or duck-types, Hash and is
 # used to set extended properties on the server.
 
+# parses out the current branch you're on. See: http://www.harukizaemon.com/2008/05/deploying-branches-with-capistrano.html
+current_branch = `git branch`.match(/\* (\S+)\s/m)[1]
+
+# use the branch specified as a param, then use the current branch. If all fails use master branch
+set :branch, ENV['branch'] || current_branch || "develop" # you can use the 'branch' parameter on deployment to specify the branch you wish to deploy
+
 server 'tapasdev.neu.edu', user: 'tapas_rails', roles: %w{web app db resque_worker resque_scheduler}
 
 set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
@@ -47,7 +53,7 @@ set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
 
 
 set :deploy_to, '/export/home/tapas_rails/tapas_rails'
-set :branch, 'develop'
+# set :branch, 'develop'
 set :rails_env, 'staging'
 
 set :resque_log_file, 'log/resque.log'
