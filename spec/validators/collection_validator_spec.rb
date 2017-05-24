@@ -8,7 +8,7 @@ describe CollectionValidator do
     @community = FactoryGirl.create :community
   end
 
-  after(:all) { @community.destroy }
+  after(:all) { ActiveFedora::Base.delete_all }
 
   let(:params) do
     { title: "Sample Collection",
@@ -16,7 +16,7 @@ describe CollectionValidator do
       description: "A sample collection",
       depositor: "test",
       access: "public",
-      community: @community.did,
+      community: @community.pid,
       thumbnail: Rack::Test::UploadedFile.new(
         fixture_file('image.jpg'), 'image/jpeg'
       ) }
@@ -57,13 +57,6 @@ describe CollectionValidator do
     it 'raises an error with no community' do
       validate(params.except(:community))
       expect(@errors.length).to eq 1
-    end
-  end
-
-  context 'create with invalid data' do
-    it 'raises an error when a bad community is passed' do
-      validate(params.merge(community: SecureRandom.uuid))
-      it_raises_a_single_error 'project with specified did'
     end
   end
 end

@@ -12,8 +12,7 @@ class CollectionValidator
 
   def validate_project_did
    validate_nonblank_string :community
-
-    unless Community.exists_by_did?(params[:community])
+    unless Community.exists?(params[:community])
       errors << 'project with specified did does not exist'
     end
   end
