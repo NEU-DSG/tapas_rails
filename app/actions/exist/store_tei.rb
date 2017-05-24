@@ -17,8 +17,6 @@ module Exist
       if !core_file.project.blank?
         p_did = core_file.project.did.to_s.gsub(':','_')
       else
-        puts core_file.project
-        puts core_file.collections.first
         p_did = core_file.collections.first.community.did.to_s.gsub(':','_')
       end
       url = build_url "#{p_did}/#{did}/tei"
