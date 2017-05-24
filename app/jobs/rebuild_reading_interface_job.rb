@@ -1,9 +1,7 @@
 class RebuildReadingInterfaceJob
   @queue = 'tapas_rails_maintenance'
-# TODO run this for real
   def self.perform(did)
     begin
-      # core_file = CoreFile.find_by_did(did)
       core_file = CoreFile.find("#{did}")
 
       if !(core_file)
