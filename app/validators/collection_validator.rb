@@ -1,8 +1,8 @@
 class CollectionValidator
   include Validations
 
-  def validate_upsert 
-    required = %i(project_did title depositor access)
+  def validate_upsert
+    required = %i(community title depositor access)
     validate_did_and_create_reqs(Collection, required)
     return errors if errors.any?
 
@@ -11,9 +11,9 @@ class CollectionValidator
   end
 
   def validate_project_did
-   validate_nonblank_string :project_did
+   validate_nonblank_string :community
 
-    unless Community.exists_by_did?(params[:project_did])
+    unless Community.exists_by_did?(params[:community])
       errors << 'project with specified did does not exist'
     end
   end
