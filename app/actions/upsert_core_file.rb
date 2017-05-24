@@ -50,6 +50,7 @@ class UpsertCoreFile
       core_file.mass_permissions = params[:access] if params.has_key? :access
 
       update_associations!
+      puts core_file.collections
 
       if params[:tei].present?
         Content::UpsertTei.execute(core_file, params[:tei])
@@ -110,6 +111,7 @@ class UpsertCoreFile
     # overwrite both the ography types and the collection memberships this
     # record declares
     if params[:file_types].is_a?(Array) && params[:collection_dids].is_a?(Array)
+      puts "its an array and file_type is an array"
       core_file.clear_ographies!
       core_file.collections = collections
       params[:file_types].each do |ography|
@@ -120,6 +122,8 @@ class UpsertCoreFile
     # that any previous ography relationships that this core_file had
     # are updated to point at the new set of collections
     elsif params[:collection_dids].is_a?(Array)
+      puts "its an array"
+      puts collections
       core_file.collections = collections
       CoreFile.all_ography_read_methods.each do |ography|
         if core_file.send(ography).any?
@@ -128,17 +132,22 @@ class UpsertCoreFile
       end
     # in case where its just one string of a collection
     elsif params[:collection_dids].is_a?(String)
+      puts "its a string"
       col = Collection.find_by_did(params[:collection_dids])
       core_file.collections = [col]
     # In the case where only file_types are provided, update which
     # ography relationships are declared but use the collections
     # that the CoreFile is already a member of
     elsif params[:file_types].is_a?(Array)
+      puts "file types is array"
       old_collections = core_file.collections.to_a
       core_file.clear_ographies!
       params[:file_types].each do |ography|
         core_file.send(:"#{ography}_for=", old_collections)
       end
+    else
+      puts "none of the above"
+      puts params
     end
 
     core_file.save!

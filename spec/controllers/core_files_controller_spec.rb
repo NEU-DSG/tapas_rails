@@ -310,6 +310,9 @@ describe CoreFilesController do
     let(:community) { FactoryGirl.create :community }
     let(:collection) { FactoryGirl.create :collection }
     Resque.inline = true
+    before(:all) {
+      ActiveFedora::Base.delete_all
+    }
 
     after(:all) {
       Resque.inline = false
@@ -317,15 +320,13 @@ describe CoreFilesController do
 
     let(:params) do
       {
-          :core_file => {
-              :collection => collection.pid,
-          },
           :mass_permissions => "private",
           :depositor       => "000000000",
           :tei             => test_file(fixture_file('tei.xml')),
           :title           => "Core File",
           :description     => "Test",
-          :did             => "tap:228"
+          :did             => "tap:228",
+          :collection_dids => [collection.did]
       }
     end
 
@@ -335,7 +336,6 @@ describe CoreFilesController do
       community.did = community.pid
       community.save!
       collection.community = community
-      collection.did = collection.pid
       collection.save!
 
       # Calling the create function

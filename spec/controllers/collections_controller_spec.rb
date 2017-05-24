@@ -49,7 +49,7 @@ describe CollectionsController do
       post_params = { title: 'Collection',
         access: 'private',
         did: '8018',
-        project_did: community.did,
+        community: community.pid,
         description: 'This is a test collection',
         depositor: '101',
         thumbnail: Rack::Test::UploadedFile.new(fixture_file('image.jpg')), }
@@ -228,8 +228,7 @@ describe CollectionsController do
       collection.did = collection.pid
       collection.community = community
       collection.save!
-      params = { :did=> collection.did, :id=>collection.pid, :collection=>{:title=>'Updated collection', :mass_permissions=>'public', :community=>community.pid, :description=>'Updated description'}}
-
+      params = { :did=> collection.did, :id=>collection.pid, :collection=>{:title=>'Updated collection', :mass_permissions=>'public', :community=>community, :description=>'Updated description'}}
       # Calling the update function
       put :update, params
 
