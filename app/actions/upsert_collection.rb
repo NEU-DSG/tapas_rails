@@ -41,6 +41,8 @@ class UpsertCollection
     def update_metadata!(collection)
       collection.mods.title = params[:title] if params.has_key? :title
       collection.DC.title = params[:title] if params.has_key? :title
+      collection.mods.title = params[:collection][:title] if params[:collection][:title]
+      collection.DC.title = params[:collection][:title] if params[:collection][:title]
       collection.mods.abstract = params[:description] if params.has_key? :description
       collection.DC.description = params[:description] if params.has_key? :description
       collection.drupal_access = params[:access] if params.has_key? :access
