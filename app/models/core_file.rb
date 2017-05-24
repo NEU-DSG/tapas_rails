@@ -65,10 +65,10 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     solr_doc["active_fedora_model_ssi"] = self.class
     solr_doc['all_text_timv'] = self.canonical_object.content.content if self.canonical_object
     solr_doc['type_sim'] = "Record"
-    solr_doc['collections_ssim'] = self.collections.map{|c| c.title}
-    solr_doc['collections_pids_ssim'] = self.collections.map{|c| c.pid}
-    solr_doc['project_ssi'] = self.project.title
-    solr_doc['project_pid_ssi'] = self.project.pid
+    solr_doc['collections_ssim'] = self.collections.map{|c| c.title} if !self.collections.blank?
+    solr_doc['collections_pids_ssim'] = self.collections.map{|c| c.pid} if !self.collections.blank?
+    solr_doc['project_ssi'] = self.project.title if !self.project.blank?
+    solr_doc['project_pid_ssi'] = self.project.pid if !self.project.blank?
     super(solr_doc)
     return solr_doc
   end

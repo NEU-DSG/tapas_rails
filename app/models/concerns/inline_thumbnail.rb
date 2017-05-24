@@ -1,11 +1,11 @@
 module InlineThumbnail
   extend ActiveSupport::Concern
 
-  included do 
+  included do
     include Hydra::ModelMethods
     include DownloadPath
 
-    has_file_datastream 'thumbnail_1', 
+    has_file_datastream 'thumbnail_1',
       :type => CerberusCore::Datastreams::FileContentDatastream
   end
 
@@ -14,7 +14,7 @@ module InlineThumbnail
     # Anything in the :content param for this is going to be an image
     if opts[:content]
       content = opts[:content]
-      content_present = !content.nil? && content.length > 0 
+      content_present = !content.nil? && content.length > 0
     end
 
     if opts[:filepath].present?
@@ -24,10 +24,12 @@ module InlineThumbnail
       filename = opts[:name]
       content  = opts[:content]
     else
-      raise "Invalid options passed!" 
+      raise "Invalid options passed!"
     end
-
-    add_file(content, 'thumbnail_1', filename)
+    logger.info(filename)
+    self.add_file(content, 'thumbnail_1', filename)
+    logger.info self.thumbnail_1
+    self.thumbnail_1.content = content
     self.thumbnail_list = [download_path('thumbnail_1')]
   end
 end
