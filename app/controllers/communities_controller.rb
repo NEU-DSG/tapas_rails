@@ -2,6 +2,12 @@ class CommunitiesController < CatalogController
   include ApiAccessible
 
   self.copy_blacklight_config_from(CatalogController)
+  before_filter :can_read?, except: [:index, :show]
+
+  before_filter :enforce_show_permissions, :only=>:show
+
+  self.solr_search_params_logic += [:add_access_controls_to_solr_params]
+
 
   def upsert
     if params[:thumbnail]
@@ -35,6 +41,7 @@ class CommunitiesController < CatalogController
 
   #This method is used to display various attributes of community
   def show
+    authorize! params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
   end
