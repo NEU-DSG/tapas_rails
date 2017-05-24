@@ -10,18 +10,19 @@ describe UpsertCollection do
       :title => 'A Test Collection',
       :access => 'public',
       :project_did => '333',
+      :community => '333',
       :thumbnail => tmp_fixture_file('image_copy.jpg'),
     }
   end
 
   def build_parent_community
-    if !Community.find_by_did("333")
+    if !Community.all.blank?
       @community = Community.new
       @community.title = "Test Community"
       @community.did = params[:project_did]
       @community.save!
     else
-      @community = Community.find_by_did("333")
+      @community = Community.all.first
     end
   end
 
@@ -145,11 +146,6 @@ describe UpsertCollection do
   end
 
   def clean_up
-    if Collection.find_by_did("111")
-      Collection.find_by_did("111").destroy
-    end
-    if Community.find_by_did("333")
-      Community.find_by_did("333").destroy
-    end
+    ActiveFedora::Base.destroy_all
   end
 end
