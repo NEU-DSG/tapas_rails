@@ -2,7 +2,11 @@ class RebuildReadingInterfaceJob
   @queue = 'tapas_rails_maintenance'
   def self.perform(did)
     begin
-      core_file = CoreFile.find("#{did}")
+      if CoreFile.exists?("#{did}")
+        core_file = CoreFile.find("#{did}")
+      else
+        core_file = CoreFile.find_by_did("#{did}")
+      end
 
       if !(core_file)
         raise 'Could not find record with specified Drupal ID'
