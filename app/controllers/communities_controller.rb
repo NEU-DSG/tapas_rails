@@ -1,5 +1,6 @@
 class CommunitiesController < CatalogController
   include ApiAccessible
+  include ControllerHelper
 
   self.copy_blacklight_config_from(CatalogController)
   before_filter :can_read?, except: [:index, :show]

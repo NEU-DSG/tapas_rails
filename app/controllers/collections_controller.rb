@@ -1,5 +1,6 @@
 class CollectionsController < CatalogController
   include ApiAccessible
+  include ControllerHelper
   self.copy_blacklight_config_from(CatalogController)
 
   def upsert
