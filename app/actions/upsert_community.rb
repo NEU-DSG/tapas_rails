@@ -39,6 +39,9 @@ class UpsertCommunity
       community.properties.project_members = params[:members] if params.has_key? :members
       community.drupal_access = params[:access] if params.has_key? :access
       community.mass_permissions = params[:access] if params.has_key? :access
+      community.properties.project_members.each do |p|
+        community.rightsMetadata.permissions({person: p}, 'edit')
+      end
       community.save!
     end
 

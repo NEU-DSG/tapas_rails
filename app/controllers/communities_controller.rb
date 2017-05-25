@@ -41,7 +41,7 @@ class CommunitiesController < CatalogController
 
   #This method is used to display various attributes of community
   def show
-    authorize! params[:id]
+    authorize! :show, params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
   end

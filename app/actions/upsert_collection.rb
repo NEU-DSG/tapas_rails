@@ -50,6 +50,9 @@ class UpsertCollection
       collection.drupal_access = params[:access] if params.has_key? :access
       collection.mass_permissions = params[:access] if params.has_key? :access
       collection.properties.project_members = params[:members] if params.has_key? :members
+      collection.properties.project_members.each do |p|
+        collection.rightsMetadata.permissions({person: p}, 'edit')
+      end
       collection.save!
     end
 
