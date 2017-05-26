@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170523152748) do
+ActiveRecord::Schema.define(version: 20170526154953) do
 
   create_table "bookmarks", force: true do |t|
     t.integer  "user_id",       null: false
@@ -150,10 +150,12 @@ ActiveRecord::Schema.define(version: 20170523152748) do
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
 
   create_table "pages", force: true do |t|
-    t.string "title",   null: false
-    t.string "slug",    null: false
-    t.text   "content"
-    t.string "publish"
+    t.string   "title",      null: false
+    t.string   "slug",       null: false
+    t.text     "content"
+    t.string   "publish"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "searches", force: true do |t|
