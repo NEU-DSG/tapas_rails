@@ -87,6 +87,11 @@ class CoreFilesController < CatalogController
         Content::UpsertThumbnail.execute(core_file, thumbnail)
       end
 
+      core_file.permissions({person: current_user.id}, "edit")
+      if params[:mass_permissions]
+        core_file.mass_permissions = params[:mass_permissions]
+      end
+
       # Step 2: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload
