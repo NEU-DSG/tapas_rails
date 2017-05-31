@@ -36,7 +36,7 @@ TapasRails::Application.routes.draw do
   # end
 
   get 'browse' => 'catalog#browse'
-  
+
   # Communities
   resources :communities
   get 'communities/:did' => 'communities#show'
@@ -84,6 +84,7 @@ TapasRails::Application.routes.draw do
 
   get '/admin' => 'admin#index'
   resources :pages
+  resources :news_items
 
   get 'my_tapas' => 'users#my_tapas'
   get 'my_projects' => 'users#my_projects'
