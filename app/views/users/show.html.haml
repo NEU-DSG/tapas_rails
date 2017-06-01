@@ -1,0 +1,27 @@
+- if current_user && current_user.admin?
+  = link_to "Edit", edit_user_path(@user), class:['btn', 'btn-info', 'btn-large']
+%h1
+  = @user.name
+%hr
+= @user.inspect
+
+%dt= "ID"
+%dd= @user.id
+
+%dt= "Email"
+%dd= @user.email
+
+%dt= "Created At"
+%dd= @user.created_at
+
+%dt= "Updated At"
+%dd= @user.updated_at
+
+%dt= "Currently logged in since"
+%dd= @user.current_sign_in_at
+
+%dt= "Last logged in"
+%dd= @user.last_sign_in_at
+
+%dt= "Role"
+%dd= @user.role

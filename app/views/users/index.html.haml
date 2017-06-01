@@ -1,0 +1,26 @@
+%h1= "Users"
+%ul.breadcrumb
+  %li= "Users"
+-if @users.length > 0
+  %table.table.table-striped
+    %tr
+      %th
+        = "User"
+      %th
+        = "Updated at"
+      %th
+        = "Role"
+    - @users.each do |user|
+      %tr
+        %td
+          %h3
+            = link_to(user.name, user_path(user.id))
+            - if current_user.admin?
+              %a.btn.btn-default.btn-sm{:href=>edit_user_path(user.id)}
+                = "Edit"
+        %td
+          = user.updated_at
+        %td
+          = user.role
+-else
+  There are currently no users available

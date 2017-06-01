@@ -1,0 +1,25 @@
+%h2.page-header
+  = "Edit"
+  %i="#{@user.name}"
+
+= form_for @user do |f|
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :name, "Name", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :name, required: true, class: "form-control", placeholder: "Full Name"
+        .form-group
+          = f.label :email, "Email", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :email, required: true, class: "form-control", placeholder: "Email"
+        .form-group
+          = f.label :role, "Admin", class: "control-label col-md-2"
+          .col-md-6
+            .checkbox
+              = f.check_box :role, {}, "admin"
+
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

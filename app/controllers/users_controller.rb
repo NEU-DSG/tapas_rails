@@ -2,6 +2,7 @@ class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
   before_filter :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
+  before_filter :verify_admin, :only => [:index, :show, :edit, :create]
 
   def my_tapas
     @page_title = "My TAPAS"
@@ -17,6 +18,29 @@ class UsersController < CatalogController
     self.search_params_logic += [:my_communities_filter]
     (@projects, @document_list) = search_results(params, search_params_logic)
     render 'my_projects'
+  end
+
+  def index
+    @users_title = "Users"
+    @users = User.all
+  end
+
+  def admin_show
+    @user = User.find(params[:id])
+    render 'show'
+  end
+
+  def edit
+    @user = User.find(params[:id])
+  end
+
+  def update
+    @user = User.find(params[:id])
+    @user.name = params[:user][:name]
+    @user.email = params[:user][:email]
+    @user.role = params[:user][:role]
+    @user.save!
+    redirect_to @user
   end
 
   def search_action_url(options = {})
@@ -37,6 +61,10 @@ class UsersController < CatalogController
       else
         render_404("User not signed in") and return
       end
+    end
+
+    def verify_admin
+      redirect_to root_path unless current_user.admin?
     end
 
 end
