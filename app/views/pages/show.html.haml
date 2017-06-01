@@ -1,4 +1,6 @@
 - if current_user && current_user.admin?
   = link_to "Edit", edit_page_path(@page), class:['btn', 'btn-info', 'btn-large']
+%h2.page-header
+  = @page.title
 
 = raw @page.content

@@ -1,9 +1,7 @@
 - if current_user && current_user.admin?
   = link_to "Edit", edit_user_path(@user), class:['btn', 'btn-info', 'btn-large']
-%h1
+%h2.page-header
   = @user.name
-%hr
-= @user.inspect
 
 %dt= "ID"
 %dd= @user.id
