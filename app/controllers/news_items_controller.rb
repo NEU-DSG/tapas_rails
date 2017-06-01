@@ -40,6 +40,10 @@ class NewsItemsController < ApplicationController
   def new
     @news_item_title = "New News Item"
     @news_item = NewsItem.new
+    @users =[]
+    User.all.each do |u|
+      @users << [u.name, u.id]
+    end
   end
 
   def create
