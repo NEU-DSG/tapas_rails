@@ -88,6 +88,8 @@ TapasRails::Application.routes.draw do
 
   get 'my_tapas' => 'users#my_tapas'
   get 'my_projects' => 'users#my_projects'
+  get 'users/:id' => 'users#admin_show'
+  resources :users, :only => ['index', 'edit', 'new', 'create', 'update']
 
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
 
