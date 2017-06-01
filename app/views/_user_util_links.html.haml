@@ -13,7 +13,7 @@
             = link_to "Admin", admin_path
       - unless current_user.to_s.blank?
         %li
-          = link_to current_user, edit_user_registration_path
+          = link_to current_user.name, edit_user_registration_path
       - else
         %li
           = link_to t('blacklight.header_links.login'), new_user_session_path
