@@ -1,4 +1,4 @@
-NewsItem.class NewsItemsController < ApplicationController
+class NewsItemsController < ApplicationController
   extend ActiveSupport::Concern
   before_filter :verify_admin, :except => :show
   before_filter :verify_published, :only => :show
