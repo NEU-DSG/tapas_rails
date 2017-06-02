@@ -90,6 +90,7 @@ TapasRails::Application.routes.draw do
   get 'my_projects' => 'users#my_projects'
   get 'users/:id' => 'users#admin_show'
   resources :users, :only => ['index', 'edit', 'new', 'create', 'update']
+  resources :menu_items, path: "/menu"
 
   mount Bootsy::Engine => '/bootsy', as: 'bootsy'
 
