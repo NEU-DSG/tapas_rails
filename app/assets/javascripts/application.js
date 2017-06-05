@@ -25,6 +25,7 @@
 //= require plugins
 //= require bootsy
 //= require forem
+//= require jquery.nestable
 
 Bootsy.options.parserRules.classes = {
   "navbar": 1,
