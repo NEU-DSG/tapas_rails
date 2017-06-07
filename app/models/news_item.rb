@@ -4,7 +4,7 @@ class NewsItem < ActiveRecord::Base
   include SolrHelpers
 
 
-  attr_accessible :title, :content, :slug, :publish, :author if Rails::VERSION::MAJOR < 4
+  attr_accessible :title, :content, :slug, :publish, :author, :tags if Rails::VERSION::MAJOR < 4
   validates_presence_of :title, :content, :slug
   validates :slug, uniqueness: { case_sensitive: false }
   friendly_id :slug, use: :slugged
