@@ -22,6 +22,10 @@ class PagesController < ApplicationController
   def edit
     @page = Page.friendly.find(params[:id])
     @page_title = @page.title
+    @menus = []
+    @menus << ["Main Menu", "main_menu"]
+    @menus << ["Documentation Submenu", "documentation_sub"]
+    @menus << ["Toolbar - Tools", "toolbar_tools"]
   end
 
   def update
@@ -40,6 +44,10 @@ class PagesController < ApplicationController
   def new
     @page_title = "New Page"
     @page = Page.new
+    @menus = []
+    @menus << ["Main Menu", "main_menu"]
+    @menus << ["Documentation Submenu", "documentation_sub"]
+    @menus << ["Toolbar - Tools", "toolbar_tools"]
   end
 
   def create
@@ -70,6 +78,6 @@ class PagesController < ApplicationController
     end
 
     def page_params
-      params.require(:page).permit(:content, :title, :slug, :bootsy_image_gallery_id, :publish)
+      params.require(:page).permit(:content, :title, :slug, :bootsy_image_gallery_id, :publish, :submenu)
     end
 end
