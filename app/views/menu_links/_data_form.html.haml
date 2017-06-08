@@ -1,0 +1,24 @@
+= form_for @menu_link do |f|
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :link_text, "Link Text", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :link_text, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Link Text"
+        .form-group
+          = f.label :link_href, "Link Href", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :link_href, required: true, class: "form-control", placeholder: "Link Href"
+        .form-group
+          = f.label :classes, "Classes", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :classes, class: "form-control", placeholder: "CSS Classes"
+        .form-group
+          = f.label :menu_name, class: "control-label col-md-2"
+          .col-md-6
+            = f.select :menu_name, options_for_select(@menus, params[:menu_name] ? params[:menu_name] : @menu_link.menu_name), {:prompt => "Choose Menu"}, {required: true, class: "form-control"}
+
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'
