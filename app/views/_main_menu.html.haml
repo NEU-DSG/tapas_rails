@@ -1,14 +1,2 @@
 %ul.nav.navbar-nav
-  - MenuLink.all.where(:menu_name=>"main_menu").order(:link_order).each do |l|
-    - if l.parent_link_id.blank?
-      - child_links = MenuLink.all.where(:parent_link_id => l.id).order(:link_order)
-      %li{:class=>!child_links.blank? ? "expanded dropdown": ""}
-        %a{:href=> l.link_href, :class=>!child_links.blank? ? "dropdown-toggle" : "", "data-target"=> "#", "data-toggle"=>!child_links.blank? ? "dropdown": ""}
-          =l.link_text
-          -if !child_links.blank?
-            %span.caret
-        -if !child_links.blank?
-          %ul.dropdown-menu
-            - child_links.each do |cl|
-              %li
-                = link_to(cl.link_text, cl.link_href)
+  = render partial: "/shared/menu", locals:{menu:"main_menu"}

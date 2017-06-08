@@ -16,6 +16,10 @@
             .checkbox
               = f.check_box :publish, {}, "true"
         .form-group
+          = f.label :submenu, class: "control-label col-md-2"
+          .col-md-6
+            = f.select :submenu, options_for_select(@menus, @page.submenu), {:prompt => "Which submenu belongs on this page"}, {class: "form-control"}
+        .form-group
           = f.label :content, "Content", class: "control-label col-md-2"
           .col-md-6
             = f.bootsy_area :content, required: true, class: "form-control", placeholder: "HTML Content of page", rows: 16, editor_options: {html: true}

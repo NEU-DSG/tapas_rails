@@ -1,6 +1,7 @@
 %h1= "News Items"
 %ul.breadcrumb
   %li= "News Items"
+=link_to "Create New News Item", new_news_item_path, class:['btn', 'btn-primary', 'btn-large']
 -if @news_items.length > 0
   %table.table.table-striped
     %tr

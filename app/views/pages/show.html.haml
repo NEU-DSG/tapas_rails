@@ -3,4 +3,11 @@
 %h2.page-header
   = @page.title
 
-= raw @page.content
+-if @page.submenu
+  %div.row
+    %div.col-sm-9
+      = raw @page.content
+    %div.col-sm-3
+      = render partial: "submenu", locals: {submenu: @page.submenu}
+- else
+  = raw @page.content
