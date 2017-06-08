@@ -30,7 +30,7 @@ class MenuLinksController < ApplicationController
     @menu_link.update_attributes(menu_link_params)
     if @menu_link.valid?
       @menu_link.save!
-      redirect_to @menu_link
+      redirect_to(:action => :index)
     else
       flash.now[:error] = @menu_link.errors.full_messages.join(",")
       render(:action => :edit)
