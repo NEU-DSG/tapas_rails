@@ -59,15 +59,30 @@ class MenuLinksController < ApplicationController
 
   def index
     @menu_link_title = "Menu Links"
-    @main_menu_links = MenuLink.all.where(:menu_name=>"main_menu")
-    @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub")
-    @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools")
+    @main_menu_links = MenuLink.all.where(:menu_name=>"main_menu").order(:link_order)
+    @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub").order(:link_order)
+    @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools").order(:link_order)
   end
 
-  def reorder
-    puts params
-
-
+  def update_menu_order
+    logger.info params
+    logger.info "in update_menu_order"
+    params[:menu_order].each do |i, l|
+      link = MenuLink.find(l["id"])
+      link.link_order = i
+      link.save!
+      if l["children"]
+        l["children"].each do |x, l_c|
+          link_c = MenuLink.find(l_c["id"])
+          link_c.link_order = x
+          link_c.parent_link_id = l["id"]
+          link_c.save!
+        end
+      end
+    end
+    respond_to do |format|
+      format.json { render :json=>{:status=>"Success", :links=>MenuLink.all.where(:menu_name=>params[:menu_name]).to_json}, status: 200}
+    end
   end
 
   private
