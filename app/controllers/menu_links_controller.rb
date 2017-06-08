@@ -19,6 +19,10 @@ class MenuLinksController < ApplicationController
 
   def edit
     @menu_link = MenuLink.find(params[:id])
+    @menus = []
+    @menus << ["Main Menu", "main_menu"]
+    @menus << ["Documentation Submenu", "documentation_sub"]
+    @menus << ["Toolbar - Tools", "toolbar_tools"]
   end
 
   def update
@@ -36,17 +40,17 @@ class MenuLinksController < ApplicationController
   def new
     @menu_link_title = "New Menu Link"
     @menu_link = MenuLink.new
-    @users =[]
-    User.all.each do |u|
-      @users << [u.name, u.id]
-    end
+    @menus = []
+    @menus << ["Main Menu", "main_menu"]
+    @menus << ["Documentation Submenu", "documentation_sub"]
+    @menus << ["Toolbar - Tools", "toolbar_tools"]
   end
 
   def create
     @menu_link = MenuLink.new(menu_link_params)
     if @menu_link.valid?
       @menu_link.save!
-      redirect_to @menu_link
+      redirect_to(:action => :index)
     else
       flash.now[:error] = @menu_link.errors.full_messages.join(",")
       render(:action => :new)
@@ -55,7 +59,15 @@ class MenuLinksController < ApplicationController
 
   def index
     @menu_link_title = "Menu Links"
-    @menu_links = MenuLink.all
+    @main_menu_links = MenuLink.all.where(:menu_name=>"main_menu")
+    @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub")
+    @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools")
+  end
+
+  def reorder
+    puts params
+
+
   end
 
   private
