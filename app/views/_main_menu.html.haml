@@ -1,12 +1,14 @@
 %ul.nav.navbar-nav
-  - I18n.t('menus.main').each do |key, menu_item|
-    %li{:class=>menu_item[:submenu]? "expanded dropdown" : ""}
-      %a{:href=> menu_item[:url], :class=>menu_item[:submenu]? "dropdown-toggle" : "", "data-target"=>"#", "data-toggle"=>menu_item[:submenu] ? "dropdown":"" }
-        =menu_item[:text]
-        -if menu_item[:submenu]
-          %span.caret
-      - if menu_item[:submenu]
-        %ul.dropdown-menu
-          - menu_item[:submenu].each do |key, submenu_item|
-            %li
-              = link_to(submenu_item[:text], submenu_item[:url])
+  - MenuLink.all.where(:menu_name=>"main_menu").order(:link_order).each do |l|
+    - if l.parent_link_id.blank?
+      - child_links = MenuLink.all.where(:parent_link_id => l.id).order(:link_order)
+      %li{:class=>!child_links.blank? ? "expanded dropdown": ""}
+        %a{:href=> l.link_href, :class=>!child_links.blank? ? "dropdown-toggle" : "", "data-target"=> "#", "data-toggle"=>!child_links.blank? ? "dropdown": ""}
+          =l.link_text
+          -if !child_links.blank?
+            %span.caret
+        -if !child_links.blank?
+          %ul.dropdown-menu
+            - child_links.each do |cl|
+              %li
+                = link_to(cl.link_text, cl.link_href)
