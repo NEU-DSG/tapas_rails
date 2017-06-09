@@ -2,6 +2,11 @@ class CollectionsController < CatalogController
   include ApiAccessible
   include ControllerHelper
   self.copy_blacklight_config_from(CatalogController)
+  before_filter :can_read?, only: [:show]
+
+  before_filter :enforce_show_permissions, :only=>:show
+
+  self.search_params_logic += [:add_access_controls_to_solr_params]
 
   def upsert
     if params[:thumbnail]
