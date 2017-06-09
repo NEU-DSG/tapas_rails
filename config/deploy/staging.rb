@@ -55,6 +55,7 @@ set :workers, { "tapas_rails" => 2, "tapas_rails_maintenance" => 2 }
 set :deploy_to, '/export/home/tapas_rails/tapas_rails'
 # set :branch, 'develop'
 set :rails_env, 'staging'
+set :stage, :staging
 
 set :resque_log_file, 'log/resque.log'
 
