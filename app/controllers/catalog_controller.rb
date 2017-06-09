@@ -268,6 +268,7 @@ class CatalogController < ApplicationController
   end
 
   def browse
+    logger.info ENV.to_yaml
     render 'browse'
   end
 
