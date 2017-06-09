@@ -17,6 +17,8 @@
             - if current_user.admin?
               %a.btn.btn-default.btn-sm{:href=>edit_page_path(page.id)}
                 = "Edit"
+              %a.btn.btn-danger.btn-sm{:href=>page_path(page.id), "data-method"=>"delete"}
+                %i.fa.fa-trash
         %td
           = page.updated_at
 -else

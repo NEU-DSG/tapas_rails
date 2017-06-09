@@ -64,6 +64,19 @@ class PagesController < ApplicationController
   def index
     @page_title = "Pages"
     @pages = Page.all
+    if !session[:flash_success].blank?
+      flash[:success] = session[:flash_success]
+      session.delete(:flash_success)
+    end
+  end
+
+  def destroy
+    @page = Page.find(params[:id])
+    title = @page.title
+    redirect_to(:action => :index)
+    if @page.destroy
+      session[:flash_success] = "#{title} has been deleted"
+    end
   end
 
   private

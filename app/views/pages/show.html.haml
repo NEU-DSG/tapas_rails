@@ -1,5 +1,8 @@
 - if current_user && current_user.admin?
   = link_to "Edit", edit_page_path(@page), class:['btn', 'btn-info', 'btn-large']
+  %ul.breadcrumb
+    %li= link_to("Pages", pages_path)
+    %li= @page.title
 %h2.page-header
   = @page.title
 
