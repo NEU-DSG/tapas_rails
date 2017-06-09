@@ -62,6 +62,9 @@ class MenuLinksController < ApplicationController
     @main_menu_links = MenuLink.all.where(:menu_name=>"main_menu").order(:link_order)
     @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub").order(:link_order)
     @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools").order(:link_order)
+    if session[:flash_success]
+      flash.now[:success] = session[:flash_success]
+    end
   end
 
   def update_menu_order
@@ -82,6 +85,15 @@ class MenuLinksController < ApplicationController
     end
     respond_to do |format|
       format.json { render :json=>{:status=>"Success", :links=>MenuLink.all.where(:menu_name=>params[:menu_name]).to_json}, status: 200}
+    end
+  end
+
+  def destroy
+    @menu_link = MenuLink.find(params[:id])
+    title = @menu_link.link_text
+    redirect_to(:action => :index)
+    if @menu_link.destroy
+      session[:flash_success] = "#{title} has been deleted"
     end
   end
 

@@ -5,6 +5,8 @@
         %div.dd-handle
           = "#{l.link_text} (#{l.link_href})"
         = link_to("Edit", edit_menu_link_path(l), "class"=>"inline-block")
+        %a{:href=>menu_link_path(l), "data-method"=>"delete", "class"=>"inline-block"}
+          %i.fa.fa-trash
         - child_links = MenuLink.all.where(:parent_link_id => l.id).order(:link_order)
         - if !child_links.blank?
           %ol.dd-list
@@ -13,3 +15,5 @@
                 %div.dd-handle
                   = "#{cl.link_text} (#{cl.link_href})"
                 = link_to("Edit", edit_menu_link_path(cl), "class"=>"inline-block")
+                %a{:href=>menu_link_path(cl), "data-method"=>"delete", "class"=>"inline-block"}
+                  %i.fa.fa-trash
