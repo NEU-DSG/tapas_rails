@@ -63,7 +63,8 @@ class MenuLinksController < ApplicationController
     @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub").order(:link_order)
     @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools").order(:link_order)
     if session[:flash_success]
-      flash.now[:success] = session[:flash_success]
+      flash[:success] = session[:flash_success]
+      session.delete(:flash_success)
     end
   end
 
