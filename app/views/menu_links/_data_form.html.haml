@@ -10,6 +10,8 @@
           = f.label :link_href, "Link Href", class: "control-label col-md-2"
           .col-md-6
             = f.text_field :link_href, required: true, class: "form-control", placeholder: "Link Href"
+            %p.help-block
+              = "Can be full http link, relative link like \"/test_url\" or \"#\""
         .form-group
           = f.label :classes, "Classes", class: "control-label col-md-2"
           .col-md-6
