@@ -1,3 +1,6 @@
+%ul.breadcrumb
+  %li= link_to("News Items", news_items_path)
+  %li= "Edit \"#{@news_item.title}\""
 %h2.page-header
   = "Edit"
   %i="#{@news_item.title}"

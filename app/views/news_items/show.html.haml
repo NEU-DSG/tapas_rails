@@ -1,6 +1,8 @@
 - if current_user && current_user.admin?
   = link_to "Edit", edit_news_item_path(@news_item), class:['btn', 'btn-info', 'btn-large']
+%ul.breadcrumb
+  %li= link_to("News Items", news_items_path)
+  %li= "#{@news_item.title}"
 %h2.page-header
   = @news_item.title
-
 = raw @news_item.content

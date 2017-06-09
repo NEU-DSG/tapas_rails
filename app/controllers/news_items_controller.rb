@@ -60,6 +60,19 @@ class NewsItemsController < ApplicationController
   def index
     @news_item_title = "News Items"
     @news_items = NewsItem.all
+    if !session[:flash_success].blank?
+      flash[:success] = session[:flash_success]
+      session.delete(:flash_success)
+    end
+  end
+
+  def destroy
+    @news_item = NewsItem.find(params[:id])
+    title = @news_item.title
+    redirect_to(:action => :index)
+    if @news_item.destroy
+      session[:flash_success] = "#{title} has been deleted"
+    end
   end
 
   private
