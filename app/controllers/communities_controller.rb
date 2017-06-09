@@ -3,7 +3,7 @@ class CommunitiesController < CatalogController
   include ControllerHelper
 
   self.copy_blacklight_config_from(CatalogController)
-  before_filter :can_read?, only: [:index, :show]
+  before_filter :can_read?, only: [:show]
 
   before_filter :enforce_show_permissions, :only=>:show
 
