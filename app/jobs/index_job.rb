@@ -7,7 +7,7 @@ class IndexJob
   end
 
   def queue_name
-    :index
+    :tapas_rails_maintenance
   end
 
   def run

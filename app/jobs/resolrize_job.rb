@@ -1,6 +1,6 @@
 class ResolrizeJob
   def queue_name
-    :resolrize
+    :tapas_rails_maintenance
   end
 
   def run

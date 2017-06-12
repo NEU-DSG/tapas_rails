@@ -270,20 +270,7 @@ class CatalogController < ApplicationController
     solr_parameters[:fq] << "-#{Solrizer.solr_name("is_supplemental_material_for", :symbol)}:[* TO *]"
   end
 
-  # def index
-  #   logger.error "We are in the catalog index method"
-  #   # blacklight_config.connection_config = "#{::Rails.root}/config/solr.yml"
-  #   # blacklight_config.solr_config = "#{::Rails.root}/config/solr.yml"
-  #   # blacklight_config.blacklight_config_file = "#{::Rails.root}/config/solr.yml"
-  #   logger.error ENV.to_yaml
-  #   logger.error blacklight_config
-  #   logger.info repository.inspect
-  #   logger.info repository.connection.inspect
-  #   super
-  # end
-
   def browse
-    logger.info ENV.to_yaml
     render 'browse'
   end
 
