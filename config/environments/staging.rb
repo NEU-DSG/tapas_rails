@@ -23,4 +23,12 @@ TapasRails::Application.configure do
   config.active_support.deprecation = :notify
 
   config.log_formatter = ::Logger::Formatter.new
+
+  config.middleware.use ExceptionNotification::Rack,
+    :email => {
+      :email_prefix => "[Tapas Rails Notifier DEV]",
+      :sender_address => %{"notifier" <notifier@tapasrails.neu.edu>},
+      :exception_recipients => "e.zoller@northeastern.edu"
+    }
+
 end
