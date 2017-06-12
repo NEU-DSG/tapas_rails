@@ -5,7 +5,7 @@ class CommunitiesController < CatalogController
   self.copy_blacklight_config_from(CatalogController)
   self.configure_blacklight do |config|
     config.repository_class = Blacklight::Solr::Repository
-    config.connection_config = "#{::Rails.root}/config/blacklight.yml"
+    config.connection_config = "#{::Rails.root}/config/solr.yml"
   end
 
   before_filter :can_read?, only: [:show]
