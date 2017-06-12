@@ -12,6 +12,9 @@ class CatalogController < ApplicationController
   CatalogController.search_params_logic += [:exclude_unwanted_models]
 
   configure_blacklight do |config|
+    # config.connection_config = "#{::Rails.root}/config/solr.yml"
+    # config.solr_config = "#{::Rails.root}/config/solr.yml"
+    # config.blacklight_config_file = "#{::Rails.root}/config/solr.yml"
     config.view.gallery.partials = [:index_header, :index]
     # config.view.masonry.partials = [:index]
     # config.view.slideshow.partials = [:index]
@@ -21,9 +24,8 @@ class CatalogController < ApplicationController
 
     config.index.thumbnail_field = 'thumbnail_list_tesim'
     ## Class for sending and receiving requests from a search index
-    config.repository_class = Blacklight::Solr::Repository
-    config.connection_config = "#{::Rails.root}/config/solr.yml"
-    config.solr_config = "#{::Rails.root}/config/solr.yml"
+    # config.repository_class = Blacklight::Solr::Repository
+
     #
     ## Class for converting Blacklight's url parameters to into request parameters for the search index
     # config.search_builder_class = ::SearchBuilder
@@ -268,14 +270,17 @@ class CatalogController < ApplicationController
     solr_parameters[:fq] << "-#{Solrizer.solr_name("is_supplemental_material_for", :symbol)}:[* TO *]"
   end
 
-  def index
-    logger.error "We are in the catalog index method"
-    logger.error ENV.to_yaml
-    logger.error blacklight_config
-    logger.info repository.inspect
-    logger.info repository.connection.inspect
-    super
-  end
+  # def index
+  #   logger.error "We are in the catalog index method"
+  #   # blacklight_config.connection_config = "#{::Rails.root}/config/solr.yml"
+  #   # blacklight_config.solr_config = "#{::Rails.root}/config/solr.yml"
+  #   # blacklight_config.blacklight_config_file = "#{::Rails.root}/config/solr.yml"
+  #   logger.error ENV.to_yaml
+  #   logger.error blacklight_config
+  #   logger.info repository.inspect
+  #   logger.info repository.connection.inspect
+  #   super
+  # end
 
   def browse
     logger.info ENV.to_yaml
