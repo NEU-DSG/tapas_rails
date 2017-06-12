@@ -3,7 +3,7 @@
 development:
   url: http://localhost:8983/solr/development
 staging:
-  url: http://localhost:8080/solr/development
+  url: http://localhost:8080/solr/development-core
 production:
   url: http://localhost:8080/solr/development
 test: &TEST

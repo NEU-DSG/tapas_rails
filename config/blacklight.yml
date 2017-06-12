@@ -27,7 +27,7 @@ development:
   url: http://localhost:8983/solr/development
   adapter: solr
 staging:
-  url: http://localhost:8080/solr/development
+  url: http://localhost:8080/solr/development-core
   adapter: solr
 production:
   url: http://localhost:8080/solr/development
