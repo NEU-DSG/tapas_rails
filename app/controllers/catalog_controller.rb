@@ -21,7 +21,7 @@ class CatalogController < ApplicationController
 
     config.index.thumbnail_field = 'thumbnail_list_tesim'
     ## Class for sending and receiving requests from a search index
-    # config.repository_class = Blacklight::Solr::Repository
+    config.repository_class = Blacklight::Solr::Repository
     config.connection_config = "/config/blacklight.yml"
     #
     ## Class for converting Blacklight's url parameters to into request parameters for the search index
@@ -271,6 +271,8 @@ class CatalogController < ApplicationController
     logger.error "We are in the catalog index method"
     logger.error ENV.to_yaml
     logger.error blacklight_config
+    logger.info repository.inspect
+    logger.info repository.connection.inspect
     super
   end
 

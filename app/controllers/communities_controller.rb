@@ -29,6 +29,8 @@ class CommunitiesController < CatalogController
   def index
     @page_title = "All Projects"
     self.search_params_logic += [:communities_filter]
+    logger.debug repository.inspect
+    logger.debug repository.connection
     (@response, @document_list) = search_results(params, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
