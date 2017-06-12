@@ -23,6 +23,7 @@ class CatalogController < ApplicationController
     ## Class for sending and receiving requests from a search index
     config.repository_class = Blacklight::Solr::Repository
     config.connection_config = "#{::Rails.root}/config/blacklight.yml"
+    config.solr_config = "#{::Rails.root}/config/solr.yml"
     #
     ## Class for converting Blacklight's url parameters to into request parameters for the search index
     # config.search_builder_class = ::SearchBuilder
