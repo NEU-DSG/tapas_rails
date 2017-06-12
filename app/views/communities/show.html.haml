@@ -5,6 +5,8 @@
 %h2.page-header= @community.title
 
 %div.row
+  = ENV.inspect
+  = blacklight_config
   %div.col-md-3
     -if !@community.thumbnail_1.nil?
       =image_tag @community.download_path('thumbnail_1')
