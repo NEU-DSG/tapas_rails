@@ -5,10 +5,9 @@
 %h2.page-header= @community.title
 
 %div.row
-  = ENV.inspect
-  = blacklight_config
+  = ActiveFedora::SolrService.instance.conn.inspect
   %div.col-md-3
-    -if !@community.thumbnail_1.nil?
+    -if !@community.thumbnail_1.content.nil?
       =image_tag @community.download_path('thumbnail_1')
     %p= @community.description
     -# external links TODO

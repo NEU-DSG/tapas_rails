@@ -22,7 +22,7 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@collection.thumbnail_1.nil?
+            - if !@collection.thumbnail_1.content.nil?
               =image_tag @collection.download_path('thumbnail_1')
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
 
