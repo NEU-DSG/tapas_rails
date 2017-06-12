@@ -31,6 +31,7 @@ class CommunitiesController < CatalogController
     self.search_params_logic += [:communities_filter]
     logger.debug repository.inspect
     logger.debug repository.connection
+    logger.debug Blacklight.solr_config[:url]
     (@response, @document_list) = search_results(params, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
