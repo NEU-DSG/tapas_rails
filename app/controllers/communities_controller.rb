@@ -47,7 +47,7 @@ class CommunitiesController < CatalogController
     @page_title = @community.title || ""
     logger.error "We are in the catalog index method"
     logger.error ENV.to_yaml
-    logger.error Blacklight.config
+    logger.error blacklight_config
   end
 
   #This method is used to create a new community/project

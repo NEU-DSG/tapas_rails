@@ -19,5 +19,9 @@ module TapasRails
     def project
       Array(self['project_pid_ssi']).first
     end
+
+    def title
+      Array(self['title_info_title_ssi']).first
+    end
   end
 end

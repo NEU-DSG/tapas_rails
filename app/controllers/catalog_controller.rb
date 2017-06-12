@@ -270,7 +270,7 @@ class CatalogController < ApplicationController
   def index
     logger.error "We are in the catalog index method"
     logger.error ENV.to_yaml
-    logger.error Blacklight.config
+    logger.error blacklight_config
     super
   end
 
