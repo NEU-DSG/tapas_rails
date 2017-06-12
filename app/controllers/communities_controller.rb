@@ -3,6 +3,11 @@ class CommunitiesController < CatalogController
   include ControllerHelper
 
   self.copy_blacklight_config_from(CatalogController)
+  self.configure_blacklight do |config|
+    config.repository_class = Blacklight::Solr::Repository
+    config.connection_config = "/config/blacklight.yml"
+  end
+
   before_filter :can_read?, only: [:show]
 
   before_filter :enforce_show_permissions, :only=>:show
