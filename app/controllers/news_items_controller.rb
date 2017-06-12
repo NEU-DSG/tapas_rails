@@ -16,17 +16,17 @@ class NewsItemsController < ApplicationController
 
   def show
     @news_item = NewsItem.friendly.find(params[:id])
-    @news_item_title = @news_item.title
+    @page_title = @news_item.title
   end
 
   def edit
     @news_item = NewsItem.friendly.find(params[:id])
-    @news_item_title = @news_item.title
+    @page_title = @news_item.title
   end
 
   def update
     @news_item = NewsItem.friendly.find(params[:id])
-    @news_item_title = @news_item.title
+    @page_title = @news_item.title
     @news_item.update_attributes(news_item_params)
     if @news_item.valid?
       @news_item.save!
@@ -38,7 +38,7 @@ class NewsItemsController < ApplicationController
   end
 
   def new
-    @news_item_title = "New News Item"
+    @page_title = "New News Item"
     @news_item = NewsItem.new
     @users =[]
     User.all.each do |u|
@@ -58,7 +58,7 @@ class NewsItemsController < ApplicationController
   end
 
   def index
-    @news_item_title = "News Items"
+    @page_title = "News Items"
     @news_items = NewsItem.all
     if !session[:flash_success].blank?
       flash[:success] = session[:flash_success]

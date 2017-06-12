@@ -21,7 +21,7 @@ class UsersController < CatalogController
   end
 
   def index
-    @users_title = "Users"
+    @page_title = "Users"
     @users = User.all
   end
 

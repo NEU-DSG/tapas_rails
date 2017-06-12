@@ -15,6 +15,7 @@ class MenuLinksController < ApplicationController
 
   def show
     @menu_link = MenuLink.find(params[:id])
+    @page_title = @menu_link.link_text
   end
 
   def edit
@@ -23,6 +24,7 @@ class MenuLinksController < ApplicationController
     @menus << ["Main Menu", "main_menu"]
     @menus << ["Documentation Submenu", "documentation_sub"]
     @menus << ["Toolbar - Tools", "toolbar_tools"]
+    @page_title = "Edit Menu Links"
   end
 
   def update
@@ -38,7 +40,7 @@ class MenuLinksController < ApplicationController
   end
 
   def new
-    @menu_link_title = "New Menu Link"
+    @page_title = "New Menu Link"
     @menu_link = MenuLink.new
     @menus = []
     @menus << ["Main Menu", "main_menu"]
@@ -58,7 +60,7 @@ class MenuLinksController < ApplicationController
   end
 
   def index
-    @menu_link_title = "Menu Links"
+    @page_title = "Menu Links"
     @main_menu_links = MenuLink.all.where(:menu_name=>"main_menu").order(:link_order)
     @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub").order(:link_order)
     @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools").order(:link_order)
