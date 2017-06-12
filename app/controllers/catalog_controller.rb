@@ -22,7 +22,7 @@ class CatalogController < ApplicationController
     config.index.thumbnail_field = 'thumbnail_list_tesim'
     ## Class for sending and receiving requests from a search index
     config.repository_class = Blacklight::Solr::Repository
-    config.connection_config = "/config/blacklight.yml"
+    config.connection_config = "#{::Rails.root}/config/blacklight.yml"
     #
     ## Class for converting Blacklight's url parameters to into request parameters for the search index
     # config.search_builder_class = ::SearchBuilder
