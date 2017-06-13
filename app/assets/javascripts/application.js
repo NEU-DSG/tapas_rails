@@ -23,6 +23,7 @@
 //= require bootstrap/tab
 //= require bootstrap/carousel
 //= require plugins
+//= require tapasApp
 //= require bootsy
 //= require forem
 //= require jquery.nestable
