@@ -51,6 +51,12 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
       hsh['upload_status_time_dtsi'] = self.upload_status_time.first
     end
 
+    if self.depositor
+      if User.exists?(self.depositor[0])
+        hsh['depositor_name_ssim'] = User.find(self.depositor[0]).name
+      end
+    end
+
     return hsh
   end
 end

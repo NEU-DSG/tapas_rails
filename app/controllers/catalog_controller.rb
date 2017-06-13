@@ -85,12 +85,12 @@ class CatalogController < ApplicationController
     # facet bar
     # config.add_facet_field 'has_model_ssim', :label => 'Format'
     config.add_facet_field 'type_sim', :label => 'Type'
-    config.add_facet_field 'depositor_tesim', :label => 'Depositor'
+    config.add_facet_field 'depositor_name_ssim', :label => 'Owner'
     config.add_facet_field 'project_ssi', :label => 'Project'
     config.add_facet_field 'collections_ssim', :label => 'Collection'
     # config.add_facet_field 'creator_tesim', :label => 'Creator'
-    config.add_facet_field 'display_authors_tesim', :label => 'Authors'
-    config.add_facet_field 'display_contributors_tesim', :label => 'Contributors'
+    config.add_facet_field 'display_authors_ssim', :label => 'Authors'
+    config.add_facet_field 'display_contributors_ssim', :label => 'Contributors'
     # config.add_facet_field 'collections_ssim'
     # # config.add_facet_field 'pub_date', :label => 'Publication Year', :single => true
     # config.add_facet_field 'subject_topic_facet', :label => 'Topic', :limit => 20

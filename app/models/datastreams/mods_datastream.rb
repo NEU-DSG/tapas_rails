@@ -19,8 +19,8 @@ class ModsDatastream < CerberusCore::Datastreams::ModsDatastream
 
     solr_doc["did_ssim"] = self.did.first if self.did.first.present?
     solr_doc["abstract_tesim"] = self.abstract.first
-    solr_doc["display_authors_tesim"] = self.display_authors.name_part
-    solr_doc["display_contributors_tesim"] = self.display_contributors.name_part
+    solr_doc["display_authors_ssim"] = self.display_authors.name_part
+    solr_doc["display_contributors_ssim"] = self.display_contributors.name_part
     solr_doc["authors_tesim"] = self.authors
     solr_doc["contributors_tesim"] = self.contributors
     return solr_doc
