@@ -102,7 +102,13 @@ class UpsertCoreFile
   def update_associations!
     if params[:collection_dids].is_a?(Array)
       collections = params[:collection_dids].map do |did|
-        Collection.find_by_did(did)
+        if Collection.exists?(did)
+          Collection.find(did)
+        elsif Collection.exists_by_did?(did)
+          Collection.find_by_did(did)
+        else
+          raise "Collection does not exist"
+        end
       end
     end
 
