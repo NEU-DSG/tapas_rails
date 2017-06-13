@@ -10,10 +10,14 @@
     %dt.blacklight-collections
       = "Collections:"
     %dd.blacklight-collections
-      - document.collections.each do |col|
-        = col.inspect
+      - document['collections_pids_ssim'].each do |col|
+        - collection = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{col}\"").first)
+        = link_to(collection.title, collection_path(collection.id))
+        - if document.collections.count > 1
+          %br
   - if !document.project.blank?
+    - project = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{document.project}\"").first)
     %dt.blacklight-project
       = "Project:"
     %dd.blacklight-project
-      = document.project
+      = link_to(project.title, community_path(project.id))
