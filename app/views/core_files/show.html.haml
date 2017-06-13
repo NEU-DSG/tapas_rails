@@ -2,8 +2,12 @@
   %li
     = link_to @core_file.project.title, community_path(@core_file.project)
   %li.collection
-    -# TODO do a dropdown here?
-    -@core_file.collections.each do |col|
+    -if @core_file.collections.count > 1
+      -@core_file.collections.each_with_index do |col, i|
+        = link_to col.title, collection_path(col)
+        - if i+1 != @core_file.collections.count
+          = ", "
+    - else
       = link_to col.title, collection_path(col)
   %li
     = @core_file.title
