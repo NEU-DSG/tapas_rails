@@ -44,12 +44,12 @@ class CoreFilesController < CatalogController
     @page_title = "Create New Core File"
     model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'id, title_info_title_ssi', rows: count)
 
     @collections =[]
     results.each do |res|
-      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @collections << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
+        @collections << [res['title_info_title_ssi'],res['id']]
       end
     end
     @core_file = CoreFile.new
@@ -72,6 +72,7 @@ class CoreFilesController < CatalogController
       else
         core_file = CoreFile.create(did: params[:did],
                                     depositor: params[:depositor])
+        core_file.permissions({person: "#{current_user.id}"}, "edit")
         core_file.mark_upload_in_progress!
       end
 
@@ -91,7 +92,6 @@ class CoreFilesController < CatalogController
         Content::UpsertThumbnail.execute(core_file, thumbnail)
       end
 
-      core_file.permissions({person: current_user.id}, "edit")
       if params[:mass_permissions]
         core_file.mass_permissions = params[:mass_permissions]
       end
@@ -144,13 +144,13 @@ class CoreFilesController < CatalogController
     model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
     community = "info:fedora/"+@core_file.project.pid
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"", fl: 'did_ssim, title_info_title_ssi', rows: count)
+    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"", fl: 'id, title_info_title_ssi', rows: count)
+    logger.info results
 
     @collections =[]
     results.each do |res|
-      # @collections << [res['title_info_title_ssi'],res['did_ssim'][0]]
-      if !res['title_info_title_ssi'].blank? && !res['did_ssim'].blank? && res['did_ssim'].count > 0
-        @collections << [res['title_info_title_ssi'],res['did_ssim'][0]]
+      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
+        @collections << [res['title_info_title_ssi'],res['id']]
       end
     end
 
