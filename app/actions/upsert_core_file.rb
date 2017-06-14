@@ -83,6 +83,11 @@ class UpsertCoreFile
       upsert_logger.info("CoreFile upsert for #{core_file.pid} has did #{core_file.did}")
 
       Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
+      
+      if core_file.is_ography?
+        TapasRails::Application::Queue.push(RebuildCommunityReadingInterfaceJob.new(core_file.project.pid))
+        #if it is an ography then run a job to rebuild all the reading interfaces in this project
+      end
 
       core_file.mark_upload_complete!
     rescue => e
