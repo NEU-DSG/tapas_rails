@@ -13,7 +13,7 @@
         .form-group
           = f.label :community, "Community", class: "control-label col-md-2"
           .col-md-6
-            - parent = !@collection.community.blank? ? @collection.community.pid : nil
+            - parent = !@collection.community.blank? ? @collection.community.pid : params[:community]
             = f.select :community, options_for_select(@communities, parent), {}, {name: "community", class: "form-control"}
         .form-group
           = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
