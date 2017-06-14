@@ -3,17 +3,12 @@ class CommunitiesController < CatalogController
   include ControllerHelper
 
   self.copy_blacklight_config_from(CatalogController)
-  # configure_blacklight do |config|
-  #   config.repository_class = Blacklight::Solr::Repository
-  #   config.connection_config = "#{::Rails.root}/config/solr.yml"
-  # end
 
   before_filter :can_read?, only: [:show]
-
+  before_filter :can_edit?, only: [:edit, :update]
   before_filter :enforce_show_permissions, :only=>:show
 
   self.search_params_logic += [:add_access_controls_to_solr_params]
-
 
   def upsert
     if params[:thumbnail]
@@ -58,13 +53,18 @@ class CommunitiesController < CatalogController
   #This method is used to create a new community/project
   def new
     @page_title = "Create New Community"
-    @community = Community.new
+    @community = Community.new(:mass_permissions=>"public")
   end
 
   #This method contains the actual logic for creating a new community
   def create
     @community = Community.new(params[:community])
     @community.did = @community.pid
+    @community.depositor = current_user.id.to_s
+    if (params[:thumbnail])
+      params[:thumbnail] = create_temp_file(params[:thumbnail])
+      @community.add_thumbnail(:filepath => params[:thumbnail])
+    end
     @community.save!
     redirect_to @community and return
   end
@@ -79,7 +79,6 @@ class CommunitiesController < CatalogController
   def update
     @community = Community.find(params[:id])
     puts @community
-    # @community = Community.find_by_did(params[:id])
     @community.update_attributes(params[:community])
     @community.save!
     if params[:thumbnail]
