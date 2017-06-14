@@ -60,7 +60,10 @@
         %dt Collections:
         -@core_file.collections.each do |c|
           %dd= link_to c.mods.title.first, collection_path(c)
-      -#TODO add ography data
+      -if @core_file.is_ography?
+        %dt Ography Type:
+        - @core_file.ography_type.each do |o|
+          %dd= o.titleize
 
 :javascript
   $('.nav-tabs a').click(function (e) {
