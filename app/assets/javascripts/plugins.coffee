@@ -65,7 +65,7 @@ true
       # if lastInputParentDiv.length != 0 then lastInput.addClass 'span10'
       # if lastInputParentDiv.hasClass('col-md-4') then lastInput.addClass 'span10'
       # else lastInput.addClass 'span11'
-
+      lastInput.addClass("input-block-level")
       lastInput.after $removeButton.tooltip()
       lastInput.val("")
 
