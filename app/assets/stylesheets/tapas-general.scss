@@ -227,3 +227,7 @@ dd {
 .navbar-nav > li > a {
   line-height: 31px;
 }
+
+.text-muted, .appliedFilter .filterName:after, .search_history .filterName, .search_history .filterSeparator {
+  color: $gray-lighter;
+}
