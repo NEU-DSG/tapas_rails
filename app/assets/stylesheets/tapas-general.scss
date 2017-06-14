@@ -231,3 +231,7 @@ dd {
 .text-muted, .appliedFilter .filterName:after, .search_history .filterName, .search_history .filterSeparator {
   color: $gray-lighter;
 }
+
+#main-container img {
+  width: 100%;
+}
