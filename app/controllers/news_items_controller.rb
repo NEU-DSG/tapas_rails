@@ -59,7 +59,7 @@ class NewsItemsController < ApplicationController
 
   def index
     @page_title = "News Items"
-    @news_items = NewsItem.all.where(:published=>"true")
+    @news_items = NewsItem.all.where(:publish=>"true")
     if !session[:flash_success].blank?
       flash[:success] = session[:flash_success]
       session.delete(:flash_success)
