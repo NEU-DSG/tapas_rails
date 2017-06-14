@@ -19,7 +19,7 @@
           = "Collections"
           - if current_user_can? :edit, @community
             %small
-              %a{href:edit_community_path(@community), class: 'pull-right'}
+              %a{href:new_collection_path(:community => @community), class: 'pull-right'}
                 %i.fa.fa-plus
                 = "Add New"
       %div.panel-body
