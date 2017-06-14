@@ -1,6 +1,6 @@
 class NewsItemsController < ApplicationController
   extend ActiveSupport::Concern
-  before_filter :verify_admin, :except => :show
+  before_filter :verify_admin, :except => [:show, :index]
   before_filter :verify_published, :only => :show
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
@@ -59,7 +59,7 @@ class NewsItemsController < ApplicationController
 
   def index
     @page_title = "News Items"
-    @news_items = NewsItem.all
+    @news_items = NewsItem.all.where(:published=>"true")
     if !session[:flash_success].blank?
       flash[:success] = session[:flash_success]
       session.delete(:flash_success)
@@ -78,7 +78,7 @@ class NewsItemsController < ApplicationController
   private
 
     def verify_admin
-      redirect_to root_path unless current_user.admin?
+      redirect_to root_path unless current_user && current_user.admin?
     end
 
     def verify_published
