@@ -64,7 +64,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_fedora_model_ssi"] = self.class
     solr_doc['all_text_timv'] = self.canonical_object.content.content if self.canonical_object
-    solr_doc['type_sim'] = "Record"
+    solr_doc['type_sim'] = self.is_ography? ? self.ography_type : "Record"
     solr_doc['collections_ssim'] = self.collections.map{|c| c.title} if !self.collections.blank?
     solr_doc['collections_pids_ssim'] = self.collections.map{|c| c.pid} if !self.collections.blank?
     solr_doc['project_ssi'] = self.project.title if !self.project.blank?
@@ -155,6 +155,22 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
+  def is_ography?
+    CoreFile.all_ography_read_methods.any? do |ography_type|
+      self.send(ography_type).any?
+    end
+  end
+
+  def ography_type
+    type = []
+    CoreFile.all_ography_types.each do |o|
+      if !self.send("#{o}_for").blank?
+        type << o
+      end
+    end
+    return type
+  end
+
   private
 
   def render_failure_json
@@ -183,12 +199,6 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
       :depositor => depositor,
       :access => drupal_access
     }
-  end
-
-  def is_ography?
-    CoreFile.all_ography_read_methods.any? do |ography_type|
-      self.send(ography_type).any?
-    end
   end
 
   def calculate_drupal_access
