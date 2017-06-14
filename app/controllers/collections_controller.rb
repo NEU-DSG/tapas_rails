@@ -1,9 +1,11 @@
 class CollectionsController < CatalogController
   include ApiAccessible
   include ControllerHelper
-  self.copy_blacklight_config_from(CatalogController)
-  before_filter :can_read?, only: [:show]
 
+  self.copy_blacklight_config_from(CatalogController)
+
+  before_filter :can_read?, only: [:show]
+  before_filter :can_edit?, only: [:edit, :update]
   before_filter :enforce_show_permissions, :only=>:show
 
   self.search_params_logic += [:add_access_controls_to_solr_params]
@@ -66,17 +68,17 @@ class CollectionsController < CatalogController
     community = Community.find(params[:community]) if params[:community]
     params[:collection].delete("community")
     @collection = Collection.new(params[:collection])
+    @collection.depositor = current_user.id.to_s
     @collection.did = @collection.pid
-    @collection.depositor = "000000000" #temporarily set until users implemented
     @collection.mass_permissions = params[:mass_permissions]
     @collection.save! #object must be saved before community can be assigned
     @collection.community = community if community
     @collection.save!
 
-    if params[:thumbnail]
-      logger.info "we have a thumbnail"
+    if (params[:thumbnail])
       params[:thumbnail] = create_temp_file(params[:thumbnail])
       @collection.add_thumbnail(:filepath => params[:thumbnail])
+      @collection.save!
     end
     # can this be used instead of individually spelling out the methods?
     # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
@@ -111,10 +113,10 @@ class CollectionsController < CatalogController
     @collection.community = community if community
     @collection.save!
 
-    if params[:thumbnail]
-      logger.info "we have a thumbnail"
+    if (params[:thumbnail])
       params[:thumbnail] = create_temp_file(params[:thumbnail])
       @collection.add_thumbnail(:filepath => params[:thumbnail])
+      @collection.save!
     end
     # can this be used instead of individually spelling out the methods?
     # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
