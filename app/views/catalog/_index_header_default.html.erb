@@ -16,6 +16,13 @@
       </span> -->
     <!-- <% end %> -->
     <%= link_to_document document, document_show_link_field(document), counter: counter %>
+    <% if document.is_ography? %>
+      <% document.ography_type.each do |o| %>
+        <span class="badge">
+          <%= o %>
+        </span>
+      <% end %>
+    <% end %>
   </h5>
 
   <%= document_actions %>
