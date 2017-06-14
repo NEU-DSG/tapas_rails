@@ -52,7 +52,7 @@ class CoreFilesController < CatalogController
         @collections << [res['title_info_title_ssi'],res['id']]
       end
     end
-    @core_file = CoreFile.new
+    @core_file = CoreFile.new(:mass_permissions=>"public")
   end
 
   #This method contains the actual logic for creating a new core file

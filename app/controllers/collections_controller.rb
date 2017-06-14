@@ -56,7 +56,7 @@ class CollectionsController < CatalogController
         @communities << [res['title_info_title_ssi'],res['did_ssim'][0]]
       end
     end
-    @collection = Collection.new
+    @collection = Collection.new(:mass_permissions=>"public")
   end
 
   #This method contains the actual logic for creating a new collection
