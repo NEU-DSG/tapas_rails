@@ -2,6 +2,7 @@ class PagesController < ApplicationController
   extend ActiveSupport::Concern
   before_filter :verify_admin, :except => :show
   before_filter :verify_published, :only => :show
+  before_filter :get_submenu_options, :only => [:edit, :update, :create, :new]
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
@@ -22,10 +23,6 @@ class PagesController < ApplicationController
   def edit
     @page = Page.friendly.find(params[:id])
     @page_title = @page.title
-    @menus = []
-    @menus << ["Main Menu", "main_menu"]
-    @menus << ["Documentation Submenu", "documentation_sub"]
-    @menus << ["Toolbar - Tools", "toolbar_tools"]
   end
 
   def update
@@ -92,5 +89,12 @@ class PagesController < ApplicationController
 
     def page_params
       params.require(:page).permit(:content, :title, :slug, :bootsy_image_gallery_id, :publish, :submenu)
+    end
+
+    def get_submenu_options
+      @menus = []
+      @menus << ["Main Menu", "main_menu"]
+      @menus << ["Documentation Submenu", "documentation_sub"]
+      @menus << ["Toolbar - Tools", "toolbar_tools"]
     end
 end
