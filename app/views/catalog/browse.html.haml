@@ -22,35 +22,55 @@
 :javascript
   $(document).ready(function(){
     $(".browse-tabs a").click(function(e){
-      var type = $(this).data('type');
-      if (type == 'communities'){
-        $("#projects").append("<span class='fa fa-spinner fa-spin fa-3x fa-fw'></span>");
-        $.ajax({
-          url: '/communities',
-          type: 'get',
-          dataType: 'script',
-          complete: function(data){
-            $("#projects").html(data.responseText);
-          }
+      var data_type = $(this).data('type');
+      var type = "";
+      if (data_type == 'communities'){
+        type = "projects";
+      }
+      if (data_type == "collections"){
+        type = "collections";
+      }
+      if (data_type == "core_files"){
+        type = "records";
+      }
+      var href = "/" + data_type;
+      get_script(href, type);
+
+      function fixPagination() {
+        $('#sortAndPerPage a').click( function(e) {
+          e.preventDefault();
+          var href = $(this).attr('href');
+          var type = $(this).parents(".tab-pane").attr("id");
+          get_script(href, type);
         });
-      } else if (type == 'collections'){
-        $("#collections").append("<span class='fa fa-spinner fa-spin fa-3x fa-fw'></span>");
-        $.ajax({
-          url: '/collections',
-          type: 'get',
-          dataType: 'script',
-          complete: function(data){
-            $("#collections").html(data.responseText);
+        $(".facet_select, .constraint a, #startOverLink").click(function (e) {
+          e.preventDefault();
+          var type = $(this).parents(".tab-pane").attr("id");
+          var data_type = "";
+          if (type == "projects"){
+            data_type = "communities";
           }
+          if (type == "collections"){
+            data_type = "collections";
+          }
+          if (type == "records"){
+            data_type = "core_files";
+          }
+          var href = $(this).attr('href').replace("catalog", data_type);
+          get_script(href, type);
         });
-      } else if (type == 'core_files') {
-        $("#records").append("<span class='fa fa-spinner fa-spin fa-3x fa-fw'></span>");
-        $.ajax({
-          url: '/core_files',
-          type: 'get',
-          dataType: 'script',
-          complete: function(data){
-            $("#records").html(data.responseText);
+      }
+
+      function get_script(href, type){
+        $(".tab-pane:not(#"+type+")").html("Loading...");
+        $.getScript(href, function(data){
+          $("#"+type).html(data.responseText);
+        }).done( function() {
+          fixPagination();
+        }).fail(function(jqxhr){
+          if (jqxhr.status == 200){
+            $("#"+type).html(jqxhr.responseText);
+            fixPagination();
           }
         });
       }
