@@ -28,6 +28,25 @@
 //= require forem
 //= require jquery.nestable
 
+Bootsy.options = $.extend(true, Bootsy.options, {
+  parserRules: {
+    tags: {
+      a: {
+        set_attributes: {
+          target: "",
+          rel: ""
+        },
+        check_attributes: {
+          name: "alt",
+          href: "href"
+        }
+      },
+      script: {},
+      p: {}
+    }
+  }
+});
+
 Bootsy.options.parserRules.classes = {
   "navbar": 1,
   "caret": 1,
