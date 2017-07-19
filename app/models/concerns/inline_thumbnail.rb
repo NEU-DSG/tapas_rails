@@ -31,5 +31,6 @@ module InlineThumbnail
     logger.info self.thumbnail_1
     self.thumbnail_1.content = content
     self.thumbnail_list = [download_path('thumbnail_1')]
+    self.save!
   end
 end
