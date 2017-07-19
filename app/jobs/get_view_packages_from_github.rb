@@ -1,6 +1,7 @@
 class GetViewPackagesFromGithub
   require "net/http"
   require "uri"
+  require "git"
   include TapasRails::ViewPackages
 
   def initialize

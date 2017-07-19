@@ -69,7 +69,7 @@ gem 'namae'
 gem 'bootsy'
 
 # Forem gem for Forums
-gem 'forem', :github => "radar/forem", :branch => "rails4"
+gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
 
 # Configure email alerts on exception
 gem 'exception_notification'
@@ -105,7 +105,7 @@ gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
 gem 'capistrano-resque', '~> 0.2.2', :require => false
 gem 'capistrano-passenger'
-gem 'capistrano-git-submodule-strategy', '~> 0.1', :github => 'ekho/capistrano-git-submodule-strategy'
+gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -128,4 +128,4 @@ gem 'therubyracer',  platforms: :ruby
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
-gem "git"
+gem "git", :git => 'https://github.com/schacon/ruby-git.git'
