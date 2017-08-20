@@ -1,0 +1,8 @@
+%ul.breadcrumb
+  %li= link_to("Institutions", institutions_path)
+  %li= "Edit \"#{@institution.name}\""
+%h2.page-header
+  = "Edit"
+  %i="#{@institution.name}"
+
+= render 'data_form'

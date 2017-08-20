@@ -1,0 +1,22 @@
+- if current_user && current_user.admin?
+  = link_to "Edit", edit_institution_path(@institution), class:['btn', 'btn-info', 'btn-large']
+%ul.breadcrumb
+  %li= link_to("Institutions", institutions_path)
+  %li= "#{@institution.name}"
+%h2.page-header
+  = @institution.name
+%dl
+  - if !@institution.description.blank?
+    %dt= "Description"
+    %dd= @institution.description
+  - if !@institution.image.blank?
+    %dt= "Image"
+    %dd= @institution.image
+  - if !@institution.address.blank?
+    %dt= "Address"
+    %dd= @institution.address
+  - if !@institution.latitude.blank? && !@institution.longitude.blank?
+    -# TODO embed map here
+  - if !@institution.url.blank?
+    %dt= "URL"
+    %dd= link_to(@institution.url)
