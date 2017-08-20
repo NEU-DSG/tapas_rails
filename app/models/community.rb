@@ -20,6 +20,8 @@ class Community < CerberusCore::BaseModels::Community
   has_metadata :name => "properties", :type => PropertiesDatastream
 
   has_attributes :project_members, datastream: "properties", multiple: true
+  has_attributes :project_editors, datastream: "properties", multiple: true
+  has_attributes :project_admins, datastream: "properties", multiple: true
   has_attributes :og_reference, datastream:"properties"
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
@@ -42,6 +44,8 @@ class Community < CerberusCore::BaseModels::Community
   def as_json
     fname = (thumbnail_1.label == 'File Datastream' ? '' : thumbnail_1.label)
     { :members => project_members,
+      :admins => project_admins,
+      :editors => project_editors,
       :depositor => depositor,
       :access => drupal_access,
       :thumbnail => fname,

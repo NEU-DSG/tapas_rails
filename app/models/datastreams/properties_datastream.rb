@@ -7,6 +7,8 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     t.contributors
     t.og_reference
     t.project_members
+    t.project_editors
+    t.project_admins
     t.drupal_access
     t.html_type
     t.upload_status
@@ -21,6 +23,14 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
 
     if self.project_members.first
       hsh['project_members_ssim'] = self.project_members
+    end
+
+    if self.project_editors.first
+      hsh['project_editors_ssim'] = self.project_editors
+    end
+
+    if self.project_admins.first
+      hsh['project_admins_ssim'] = self.project_admins
     end
 
     if self.authors.first
