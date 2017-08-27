@@ -35,7 +35,7 @@ class RebuildReadingInterfaceJob
         core_file.set_stacktrace_message(e)
         core_file.mark_upload_failed!
       end
-      logger.error e
+      Rails.logger.error e
       raise ActiveFedora::ObjectNotFoundError
     ensure
       tmpfile.close if tmpfile
