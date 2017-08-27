@@ -23,7 +23,7 @@
       -# TODO - add institution
       -# TODO - add content date
       -# TODO - add keywords/subjects
-
+    .row
       .form-group.project_members
         = f.label :project_members, "Project Members", class: "control-label col-md-2"
         .col-md-6
@@ -41,7 +41,7 @@
           %button#add_another_project_member.btn.btn-success{:type => "button"}
             %i.fa-plus-sign.fa
             Add Member
-
+    .row
       .form-group.project_editors
         = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
         .col-md-6
@@ -59,6 +59,7 @@
           %button#add_another_project_editor.btn.btn-success{:type => "button"}
             %i.fa-plus-sign.fa
             Add Editor
+    .row
       .form-group.project_admins
         = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
         .col-md-6
