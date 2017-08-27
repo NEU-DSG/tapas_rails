@@ -10,6 +10,8 @@ class Community < CerberusCore::BaseModels::Community
 
   before_save :ensure_unique_did
   before_save :match_dc_to_mods
+  after_save :update_permissions
+  after_create :set_depositor_as_admin
 
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
@@ -66,5 +68,30 @@ class Community < CerberusCore::BaseModels::Community
     solr_doc["type_sim"] = "Project"
     super(solr_doc)
     return solr_doc
+  end
+
+  def update_permissions
+    if !self.properties.project_members.blank?
+      self.properties.project_members.each do |p|
+        self.rightsMetadata.permissions({person: p}, 'read')
+      end
+    end
+    if !self.properties.project_admins.blank?
+      self.properties.project_admins.each do |p|
+        self.rightsMetadata.permissions({person: p}, 'edit')
+      end
+    end
+    if !self.properties.project_editors.blank?
+      self.properties.project_editors.each do |p|
+        self.rightsMetadata.permissions({person: p}, 'edit')
+      end
+    end
+    self.save!
+  end
+
+  def set_depositor_as_admin
+    self.properties.project_admins = [self.depositor]
+    self.rightsMetadata.permissions({person: self.depositor}, 'edit')
+    self.save!
   end
 end
