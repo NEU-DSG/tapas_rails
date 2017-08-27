@@ -23,11 +23,60 @@
       -# TODO - add institution
       -# TODO - add content date
       -# TODO - add keywords/subjects
-      -# .row
-      -#   .col-md-2
-      -#     = f.label :project_members, "Members"
-      -#   .col-md-6
-      -#     -# = f.text_field :project_members, name: 'community[project_members][]', class: "form-control"TODO
+
+      .form-group.project_members
+        = f.label :project_members, "Project Members", class: "control-label col-md-2"
+        .col-md-6
+          - if @community.properties.project_members.blank?
+            %span.project_member
+              = f.text_field :project_members, name: 'community[project_members][]', class: "form-control", placeholder: "ID of user", value: ""
+          - else
+            - @community.project_members.each_with_index do |id, i|
+              %span.project_member{:class=> i != 0 ? "to-remove" : ""}
+                = f.text_field :project_members, value: id, name: "community[project_members][]", class: "form-control input-block-level"
+                -if i != 0
+                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project member", type: "button"}
+                    %i.fa.fa-remove
+                %br
+          %button#add_another_project_member.btn.btn-success{:type => "button"}
+            %i.fa-plus-sign.fa
+            Add Member
+
+      .form-group.project_editors
+        = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
+        .col-md-6
+          - if @community.properties.project_editors.blank?
+            %span.project_editor
+              = f.text_field :project_editors, name: 'community[project_editors][]', class: "form-control", placeholder: "ID of user", value: ""
+          - else
+            - @community.project_editors.each_with_index do |id, i|
+              %span.project_editor{:class=> i != 0 ? "to-remove" : ""}
+                = f.text_field :project_editors, value: id, name: "community[project_editors][]", class: "form-control input-block-level"
+                -if i != 0
+                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project editor", type: "button"}
+                    %i.fa.fa-remove
+                %br
+          %button#add_another_project_editor.btn.btn-success{:type => "button"}
+            %i.fa-plus-sign.fa
+            Add Editor
+      .form-group.project_admins
+        = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
+        .col-md-6
+          - if @community.properties.project_admins.blank?
+            %span.project_admin
+              = f.text_field :project_admins, name: 'community[project_admins][]', class: "form-control", placeholder: "ID of user", value: ""
+          - else
+            - @community.project_admins.each_with_index do |id, i|
+              %span.project_admin{:class=> i != 0 ? "to-remove" : ""}
+                = f.text_field :project_admins, value: id, name: "community[project_admins][]", class: "form-control input-block-level"
+                -if i != 0
+                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project admin", type: "button"}
+                    %i.fa.fa-remove
+                %br
+          %button#add_another_project_admin.btn.btn-success{:type => "button"}
+            %i.fa-plus-sign.fa
+            Add Admin
+
       -# .row
       -#   .col-md-2
       -#     = f.label :og_reference, "External links"

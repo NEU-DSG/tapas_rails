@@ -27,6 +27,7 @@ $(document).ready ->
 
     setup = ->
       CoreFilesPage()
+      CommunitiesPage()
       tooltipSetup()
       handleRequiredInputs()
       # ellipsisExpand()
@@ -153,6 +154,25 @@ $(document).ready ->
       $('#add_another_collection').addFormFields
         target: $('span.collection:not(.to-remove)')
         titleText: 'Remove collection'
+
+      return
+
+
+    #Handles spawning new permission related form elements on the communities/new and edit page.
+    CommunitiesPage = ->
+      # Adding the form fields behavior to the buttons on the communities.
+
+      $('#add_another_project_member').addFormFields
+        target: $('span.project_member:not(.to-remove)')
+        titleText: 'Remove member'
+
+      $('#add_another_project_editor').addFormFields
+        target: $('span.project_editor:not(.to-remove)')
+        titleText: 'Remove editor'
+
+      $('#add_another_project_admin').addFormFields
+        target: $('span.project_admin:not(.to-remove)')
+        titleText: 'Remove admin'
 
       return
 
