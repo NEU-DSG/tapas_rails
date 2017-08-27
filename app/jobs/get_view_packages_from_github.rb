@@ -1,7 +1,6 @@
 class GetViewPackagesFromGithub
   require "net/http"
   require "uri"
-  require "git"
   include TapasRails::ViewPackages
 
   def initialize
@@ -17,7 +16,7 @@ class GetViewPackagesFromGithub
       g = Git.clone("https://github.com/NEU-DSG/tapas-view-packages.git", Rails.root.join("public/view_packages"))
     end
     g.fetch()
-    g.checkout('feature/config-file') #for now TODO change this to develop or master when it is merged in - have it look for the environment - if production then use master, if staging then use develop, if development then use passed in branch or if none then use develop
+    g.checkout('develop') #for now TODO change this to develop or master when it is merged in - have it look for the environment - if production then use master, if staging then use develop, if development then use passed in branch or if none then use develop
     FileUtils.cd(Rails.root.join("public/view_packages"))
     system("git pull")
     system("git submodule update --init") #update or initialize any submodules, like tapas-generic
