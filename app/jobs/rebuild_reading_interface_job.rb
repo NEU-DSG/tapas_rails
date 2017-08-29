@@ -35,7 +35,7 @@ class RebuildReadingInterfaceJob
         core_file.set_stacktrace_message(e)
         core_file.mark_upload_failed!
       end
-      this_log = Logger.new("#{Rails.root}/log/#{job_id}/rebuild_job.log")
+      this_log = Logger.new("#{Rails.root}/log/rebuild_job.log")
       this_log.error e
       raise ActiveFedora::ObjectNotFoundError
     ensure
