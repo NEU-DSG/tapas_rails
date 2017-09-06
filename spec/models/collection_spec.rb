@@ -97,7 +97,7 @@ describe Collection do
       collection.orgographies << core_file
       collection.save!
 
-      expect(core_file.orgography_for.first.pid).to eq collection.pid
+      expect(core_file.reload.orgography_for.first.pid).to eq collection.pid
       expect(collection.reload.orgographies).to match_array [core_file]
     end
   end

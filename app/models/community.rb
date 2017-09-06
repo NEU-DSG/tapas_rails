@@ -86,12 +86,12 @@ class Community < CerberusCore::BaseModels::Community
         self.rightsMetadata.permissions({person: p}, 'edit')
       end
     end
-    self.save!
+    # self.save!
   end
 
   def set_depositor_as_admin
     self.properties.project_admins = [self.depositor]
     self.rightsMetadata.permissions({person: self.depositor}, 'edit')
-    self.save!
+    # self.save!
   end
 end
