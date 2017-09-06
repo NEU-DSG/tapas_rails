@@ -90,7 +90,7 @@ describe CollectionsController do
     before(:all) {
 
       Resque.inline = true
-
+      @user = FactoryGirl.create(:user)
       # Creation of Community object before all test begin which is used later for creating a Collection object
       @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
       @community.did = @community.pid
@@ -112,7 +112,9 @@ describe CollectionsController do
     after(:all) {
 
       Resque.inline = false
-      ActiveFedora::Base.delete_all}
+      ActiveFedora::Base.delete_all
+      User.destroy_all
+    }
 
     let(:collection) {
 
@@ -195,11 +197,12 @@ describe CollectionsController do
               :community => @community
           }
       }
+
     end
 
     # Purpose statement
     it 'should create a collection object and go to show page' do
-
+      sign_in @user
       # Calling the create function
       post :create, params
 
@@ -222,13 +225,16 @@ describe CollectionsController do
     Resque.inline = true
     let(:community) { FactoryGirl.create :community }
     let(:collection) { FactoryGirl.create :collection }
+    let(:user) { FactoryGirl.create(:user) }
 
     # Purpose statement
     it '302s for valid requests' do
       collection.did = collection.pid
       collection.community = community
+      collection.depositor = user.id.to_s
       collection.save!
       params = { :did=> collection.did, :id=>collection.pid, :collection=>{:title=>'Updated collection', :mass_permissions=>'public', :community=>community, :description=>'Updated description'}}
+      sign_in user
       # Calling the update function
       put :update, params
 
@@ -238,5 +244,8 @@ describe CollectionsController do
     Resque.inline = false
   end
 
-  after(:all){ActiveFedora::Base.delete_all}
+  after(:all){
+    ActiveFedora::Base.delete_all
+    User.destroy_all
+  }
 end

@@ -100,8 +100,8 @@ describe CommunitiesController do
     before(:all) {
 
       Resque.inline = true
-
-      @communityCreated = Community.new(title:'New Community',depositor:'000000000',description:'This is a test community.',mass_permissions:'public')
+      @user = FactoryGirl.create(:user)
+      @communityCreated = Community.new(title:'New Community',depositor:@user.id.to_s,description:'This is a test community.',mass_permissions:'public')
       @communityCreated.did = @communityCreated.pid
       @communityCreated.save!
       @did = @communityCreated.did
@@ -112,7 +112,9 @@ describe CommunitiesController do
 
     after(:all) {
 
-      Resque.inline = false }
+      Resque.inline = false
+      @user.destroy
+     }
 
     let(:community) {
 
@@ -123,17 +125,19 @@ describe CommunitiesController do
       {
           :community => {
               :title => 'New Community',
-              :depositor => '000000000',
               :description => 'This is a test community.',
-              :mass_permissions => 'public'
+              :mass_permissions => 'public',
+              :depositor => @user.id.to_s
           }
       }
+
     end
 
     # Purpose statement
     it 'should create a community object and go to show page' do
 
       # Calling the create function
+      sign_in @user
       post :create, params
 
       # Retrieving the first object created in Community class
@@ -160,7 +164,7 @@ describe CommunitiesController do
     it 'community depositor should be consistent' do
 
       # Expecting the community created with same parameters as params to have identical depositor value
-      expect(@communityCreated.depositor).to eq params[:community][:depositor]
+      expect(@communityCreated.depositor).to eq @user.id.to_s
     end
 
     # Purpose statement
@@ -182,10 +186,13 @@ describe CommunitiesController do
   describe 'post #update' do
     Resque.inline = true
     let(:community) { FactoryGirl.create :community }
+    let(:user) { FactoryGirl.create(:user) }
 
     # Purpose statement
     it '302s for valid requests' do
+      sign_in user
       community.did = community.pid
+      community.depositor = user.id.to_s
       community.save!
       params = { :did=> community.did, :id=>community.pid, :community=>{:title=>'Updated community', :mass_permissions=>'public', :description=>'Updated description'}}
 
@@ -198,5 +205,8 @@ describe CommunitiesController do
     Resque.inline = false
   end
 
-  after(:all){ActiveFedora::Base.delete_all}
+  after(:all){
+    ActiveFedora::Base.delete_all
+    User.destroy_all
+  }
 end
