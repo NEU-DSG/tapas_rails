@@ -62,6 +62,7 @@ set :resque_log_file, 'log/resque.log'
 
 # set :passenger_in_gemfile, true
 set :passenger_restart_options, -> { "#{current_path} --ignore-app-not-running" }
+set :passenger_restart_with_touch, false
 
 after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
