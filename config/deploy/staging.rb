@@ -60,7 +60,7 @@ set :user, 'tapas_rails'
 
 set :resque_log_file, 'log/resque.log'
 
-set :passenger_in_gemfile, true
+# set :passenger_in_gemfile, true
 set :passenger_restart_options, -> { "#{current_path} --ignore-app-not-running" }
 
 after 'deploy:restart', 'resque:restart'
