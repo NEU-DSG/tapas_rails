@@ -56,6 +56,7 @@ set :deploy_to, '/export/home/tapas_rails/tapas_rails'
 # set :branch, 'develop'
 set :rails_env, 'staging'
 set :stage, :staging
+set :user, 'tapas_rails'
 
 set :resque_log_file, 'log/resque.log'
 
