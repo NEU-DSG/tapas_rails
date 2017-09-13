@@ -305,7 +305,7 @@ GEM
       rails (> 3.2.0)
     orm_adapter (0.5.0)
     parseconfig (1.0.6)
-    passenger (5.1.8)
+    passenger (5.0.15)
       rack
       rake (>= 0.8.1)
     polyglot (0.3.5)
@@ -525,10 +525,10 @@ DEPENDENCIES
   blacklight-gallery
   bootstrap-sass (= 3.3.4.1)
   bootsy
-  capistrano
+  capistrano (~> 3.1)
   capistrano-git-submodule-strategy (~> 0.1)!
   capistrano-passenger
-  capistrano-rails
+  capistrano-rails (~> 1.1)
   capistrano-resque (~> 0.2.2)
   capistrano-rvm
   cerberus_core!
@@ -551,7 +551,7 @@ DEPENDENCIES
   namae
   nest
   parseconfig
-  passenger
+  passenger (= 5.0.15)
   pry
   rails (= 4.0.8)
   rails_config
