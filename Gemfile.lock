@@ -119,7 +119,7 @@ GEM
       capistrano (~> 3.1)
       sshkit (~> 1.2)
     capistrano-harrow (0.5.3)
-    capistrano-passenger (0.2.0)
+    capistrano-passenger (0.1.1)
       capistrano (~> 3.0)
     capistrano-rails (1.1.2)
       capistrano (~> 3.1)
@@ -527,7 +527,7 @@ DEPENDENCIES
   bootsy
   capistrano (~> 3.1)
   capistrano-git-submodule-strategy (~> 0.1)!
-  capistrano-passenger
+  capistrano-passenger (~> 0.1.1)
   capistrano-rails (~> 1.1)
   capistrano-resque (~> 0.2.2)
   capistrano-rvm
