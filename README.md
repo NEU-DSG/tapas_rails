@@ -36,15 +36,15 @@ Tomcat
 
 Fedora (run by Tomcat)
   - check status
-    - on staging: go to http://rails_api.tapasdev.neu.edu:8080/fedora
-    - on prod: go to http://rails_api.tapas.neu.edu:8080/fedora
+    - on staging: go to http://railsapi.tapasdev.neu.edu:8080/fedora
+    - on prod: go to http://railsapi.tapas.neu.edu:8080/fedora
     - should see description of fedora install
   - restart/stop/start - controlled by Tomcat
 
 Solr (run by Tomcat)
   - check status
-    - on staging: go to http://rails_api.tapasdev.neu.edu:8080/solr
-    - on prod: go to http://rails_api.tapas.neu.edu:8080/solr
+    - on staging: go to http://railsapi.tapasdev.neu.edu:8080/solr
+    - on prod: go to http://railsapi.tapas.neu.edu:8080/solr
     - should see admin interface without any giant red or yellow warnings along the top
   - run query
     - go to admin interface (see urls above)
@@ -60,15 +60,15 @@ Apache
 
 Passenger (run by Apache)
   - check status
-    - on staging: go to http://rails_api.tapasdev.neu.edu - TODO - check on what you should see
-    - on prod: go to http://rails_api.tapas.neu.edu - should see view_packages info
+    - on staging: go to http://railsapi.tapasdev.neu.edu - TODO - check on what you should see
+    - on prod: go to http://railsapi.tapas.neu.edu - should see view_packages info
   - restart/stop/start
     - restart/stop/start apache (see above)
 
 Resque
   - check queue
-    - on staging: go to http://rails_api.tapasdev.neu.edu/resque
-    - on prod: go to http://rails_api.tapas.neu.edu/resque
+    - on staging: go to http://railsapi.tapasdev.neu.edu/resque
+    - on prod: go to http://railsapi.tapas.neu.edu/resque
     - if jobs are processing you'll see them in the bottom part of the page
     - if jobs are queued you'll see them in the queued number in the upper left
     - if jobs have failed, you'll see them in the failed number in the upper left
