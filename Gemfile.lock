@@ -34,6 +34,14 @@ GIT
       workflow (= 1.0.0)
 
 GIT
+  remote: https://github.com/rapheld/pluot.git
+  revision: c4d66bb2996bac71cfea22c21c8531a09ba17f10
+  specs:
+    pluot (0.0.2)
+      faraday (~> 0.9.0)
+      faraday_middleware (~> 0.9.0)
+
+GIT
   remote: https://github.com/schacon/ruby-git.git
   revision: a223fcf873bd99658cd1d0bdee1818adc7e3e92c
   specs:
@@ -180,6 +188,10 @@ GEM
     factory_girl_rails (4.4.1)
       factory_girl (~> 4.4.0)
       railties (>= 3.0.0)
+    faraday (0.9.2)
+      multipart-post (>= 1.2, < 3)
+    faraday_middleware (0.9.2)
+      faraday (>= 0.7.4, < 0.10)
     fastercsv (1.5.5)
     ffi (1.9.8)
     figaro (0.7.0)
@@ -281,6 +293,7 @@ GEM
       i18n
       stanford-mods
     multi_json (1.11.0)
+    multipart-post (2.0.0)
     mysql2 (0.3.16)
     namae (0.9.2)
     nest (1.1.2)
@@ -333,7 +346,7 @@ GEM
       activesupport (= 4.0.8)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (12.1.0)
+    rake (10.5.0)
     rdf (1.99.1)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (1.99.0)
@@ -552,9 +565,11 @@ DEPENDENCIES
   nest
   parseconfig
   passenger (= 5.0.15)
+  pluot!
   pry
   rails (= 4.0.8)
   rails_config
+  rake (< 11.0)
   resque
   rest-client
   rsolr (~> 1.0.6)

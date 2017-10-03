@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.8'
+gem 'rake', '< 11.0'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -129,3 +130,5 @@ gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
 gem "git", :git => 'https://github.com/schacon/ruby-git.git'
+
+gem 'pluot', :git => 'https://github.com/rapheld/pluot.git'
