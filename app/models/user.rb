@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  require "net/http"
+  require "uri"
   # Connects this user object to Hydra behaviors.
   include Hydra::User
   # Connects this user object to Blacklights Bookmarks.
@@ -62,7 +64,39 @@ class User < ActiveRecord::Base
     return self.email
   end
 
-  # TODO - add interaction with wild apricot
+  def check_paid_status
+    api_key = ENV['WILD_APRICOT_API_KEY']
+    aid = 66796
+    Pluot.api_key = api_key
+    Pluot.account_id = aid
+    response = Pluot.contacts.filter("e-Mail eq #{self.email}")
+    contact = response[:Contacts][0]
+    if contact
+      logger.info(contact)
+      if contact[:Status] == "Active"
+        logger.info("active")
+        return true
+      else
+        logger.info("not active")
+        return false
+      end
+    else
+      logger.info("no user found")
+      return false
+    end
+  end
+
+
+  def after_database_authentication
+    if !self.admin?
+      if self.check_paid_status
+        self.role = 'paid_user'
+      else
+        self.role = 'unpaid_user'
+      end
+    end
+  end
+
   private
 
     def generate_api_key
