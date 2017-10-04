@@ -52,7 +52,7 @@
           .col-md-6
             - if @core_file.collections.blank?
               %span.collection
-                = f.select :collections, options_for_select(@collections, parent), {}, {name: "collections[]", class: "form-control"}
+                = f.select :collections, options_for_select(@collections), {}, {name: "collections[]", class: "form-control"}
             - else
               - @core_file.collections.each_with_index do |col, i|
                 %span.collection{:class=>i != 0 ? ".to-remove" : ""}
