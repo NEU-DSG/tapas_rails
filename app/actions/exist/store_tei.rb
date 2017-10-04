@@ -13,9 +13,11 @@ module Exist
     end
 
     def build_resource
-      did = core_file.did.to_s.gsub(':','_')
+      # did = core_file.did.to_s.gsub(':','_')
+      did = core_file.id.to_s.gsub(':','_')
       if !core_file.project.blank?
-        p_did = core_file.project.did.to_s.gsub(':','_')
+        # p_did = core_file.project.did.to_s.gsub(':','_')
+        p_did = core_file.project.id.to_s.gsub(':','_')
       else
         p_did = core_file.collections.first.community.did.to_s.gsub(':','_')
       end
@@ -25,6 +27,7 @@ module Exist
           :content_type => 'application/xml',
         }
       })
+      logger.info(url)
 
       self.resource = RestClient::Resource.new(url, options)
     end
