@@ -21,7 +21,7 @@
           = "Records"
           - if current_user_can? :edit, @collection
             %small
-              %a{href:edit_collection_path(@collection), class: 'pull-right'}
+              %a{href:new_core_file_path, class: 'pull-right'}
                 %i.fa.fa-plus
                 = "Add New"
       %div.panel-body
