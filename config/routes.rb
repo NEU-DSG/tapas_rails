@@ -44,7 +44,7 @@ TapasRails::Application.routes.draw do
   post "communities/:did" => "communities#upsert"
   get 'communities' => 'communities#index'
   #get '/catalog/:id' => 'communities#show'
-  # delete "communities/:did" => "communities#destroy"
+  delete "communities/:did" => "communities#destroy"
 
   # Collections
   resources :collections
@@ -85,10 +85,15 @@ TapasRails::Application.routes.draw do
   get '/admin' => 'admin#index'
   resources :pages
   resources :news_items, path: "/news"
+  resources :institutions, path: "/institutions"
 
   get 'my_tapas' => 'users#my_tapas'
   get 'my_projects' => 'users#my_projects'
+  get 'my_collections' => 'users#my_collections'
+  get 'my_records' => 'users#my_records'
   get 'users/:id' => 'users#admin_show'
+  get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
+  post 'mail_users' => 'users#mail_all_users'
   resources :users, :only => ['index', 'edit', 'new', 'create', 'update']
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
