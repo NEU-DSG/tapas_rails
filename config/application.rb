@@ -35,6 +35,7 @@ module TapasRails
     # the tapas repository.  Note that this doesn't map to any
     # project object that exists in the drupal head.
     config.tap_root = "tap:1"
+    config.encoding = "utf-8"
 
     # Enable pid generation on object instantiation
     config.cerberus_core.auto_generate_pid = true
