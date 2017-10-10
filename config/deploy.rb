@@ -89,6 +89,7 @@ namespace :deploy do
       execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)}"\
               " ~/.rvm/bin/rvm default do bundle exec thor"\
               " tapas_rails:create_view_packages"
+    end
   end
 
   after :publishing, :restart
