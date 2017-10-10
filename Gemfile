@@ -2,7 +2,6 @@ source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.0.8'
-gem 'rake', '< 11.0'
 
 # Use sqlite3 as the database for Active Record
 gem 'sqlite3'
@@ -105,7 +104,7 @@ gem 'capistrano', '~> 3.1', group: :development
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
 gem 'capistrano-resque', '~> 0.2.2', :require => false
-gem 'capistrano-passenger', '~> 0.1.1'
+gem 'capistrano-passenger'
 gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
 
 # Use debugger
@@ -129,6 +128,6 @@ gem 'therubyracer',  platforms: :ruby
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
-gem "git", :git => 'https://github.com/schacon/ruby-git.git'
+gem "git"
 
-gem 'pluot', :git => 'https://github.com/rapheld/pluot.git'
+gem "pluot", :git => "https://github.com/rapheld/pluot.git"

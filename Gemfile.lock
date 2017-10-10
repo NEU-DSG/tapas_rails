@@ -41,12 +41,6 @@ GIT
       faraday (~> 0.9.0)
       faraday_middleware (~> 0.9.0)
 
-GIT
-  remote: https://github.com/schacon/ruby-git.git
-  revision: a223fcf873bd99658cd1d0bdee1818adc7e3e92c
-  specs:
-    git (1.3.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -200,6 +194,7 @@ GEM
     friendly_id (5.0.5)
       activerecord (>= 4.0.0)
     gemoji (2.1.0)
+    git (1.3.0)
     haml (4.0.7)
       tilt
     hike (1.2.3)
@@ -540,7 +535,7 @@ DEPENDENCIES
   bootsy
   capistrano (~> 3.1)
   capistrano-git-submodule-strategy (~> 0.1)!
-  capistrano-passenger (~> 0.1.1)
+  capistrano-passenger
   capistrano-rails (~> 1.1)
   capistrano-resque (~> 0.2.2)
   capistrano-rvm
@@ -553,7 +548,7 @@ DEPENDENCIES
   figaro
   forem!
   friendly_id (~> 5.0.0)
-  git!
+  git
   jbuilder (~> 1.2)
   jettywrapper
   jquery-rails
@@ -569,7 +564,6 @@ DEPENDENCIES
   pry
   rails (= 4.0.8)
   rails_config
-  rake (< 11.0)
   resque
   rest-client
   rsolr (~> 1.0.6)
