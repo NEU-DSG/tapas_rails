@@ -69,4 +69,5 @@ set :passenger_restart_command, '/export/home/tapas_rails/tapas_rails/shared/bun
 after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
 after 'deploy:published', 'deploy:create_api_user'
+after 'deploy:published', 'deploy:load_view_packages'
 after 'deploy:published', 'deploy:create_tmp_dir'
