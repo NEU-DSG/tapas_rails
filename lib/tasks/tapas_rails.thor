@@ -50,4 +50,15 @@ class TapasRails < Thor
       Resque.enqueue(RebuildReadingInterfaceJob, did)
     end
   end
+
+  desc 'create_view_packages', <<-eos
+    Enqueues the create view packages job to load the assets on each deploy
+  eos
+
+  def create_view_packages()
+    say "creating view packages", :blue
+
+    Resque.enqueue(GetViewPackagesFromGithub)
+  end
+  
 end

@@ -83,6 +83,14 @@ namespace :deploy do
     end
   end
 
+  desc 'Load view packages'
+  task :load_view_packages do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)}"\
+              " ~/.rvm/bin/rvm default do bundle exec thor"\
+              " tapas_rails:create_view_packages"
+  end
+
   after :publishing, :restart
 
   after :restart, :clear_cache do

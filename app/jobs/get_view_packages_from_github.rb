@@ -1,10 +1,13 @@
 class GetViewPackagesFromGithub
   require "net/http"
   require "uri"
+  require "rubygems"
+  # require "git"
   include TapasRails::ViewPackages
 
   def initialize
   end
+  @queue = 'tapas_rails_maintenance'
 
   def run
     if File.directory?(Rails.root.join("public/view_packages"))
