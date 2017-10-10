@@ -1,5 +1,6 @@
 -# encoding: utf-8
 -# coding: UTF-8
+- cftitle = @core_file.title.encode(Encoding.find('UTF-8'), {invalid: :replace, undef: :replace, replace: ''})
 %ul.breadcrumb
   %li
     = link_to @core_file.project.title, community_path(@core_file.project)
@@ -12,12 +13,12 @@
     - else
       = link_to @core_file.collections.first.title, collection_path(@core_file.collections.first)
   %li
-    = @core_file.title
+    = @cftitle
 
 -# - if current_user_can? :edit, @core_file
   -# = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
 
-%h2.page-header= @core_file.title
+%h2.page-header= @cftitle
 
 %div.tabbable.tabs-left.vertical-tabs.node
   %ul.nav.nav-tabs.vertical-tabs-list
@@ -61,7 +62,7 @@
       -if @core_file.collections
         %dt Collections:
         -@core_file.collections.each do |c|
-          %dd= link_to c.mods.title.first, collection_path(c)
+          %dd= link_to c.title.first, collection_path(c)
       -if @core_file.is_ography?
         %dt Ography Type:
         - @core_file.ography_type.each do |o|
