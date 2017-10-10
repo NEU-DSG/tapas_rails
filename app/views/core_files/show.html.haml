@@ -14,8 +14,8 @@
   %li
     = @core_file.title
 
-- if current_user_can? :edit, @core_file
-  = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
+-# - if current_user_can? :edit, @core_file
+  -# = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
 
 %h2.page-header= @core_file.title
 
