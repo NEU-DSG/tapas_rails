@@ -1,24 +1,21 @@
--# encoding: utf-8
--# coding: UTF-8
-- cftitle = @core_file.title.encode(Encoding.find('UTF-8'), {invalid: :replace, undef: :replace, replace: ''})
--# %ul.breadcrumb
--#   %li
--#     = link_to @core_file.project.title, community_path(@core_file.project)
--#   %li.collection
--#     -if @core_file.collections.count > 1
--#       -@core_file.collections.each_with_index do |col, i|
--#         = link_to col.title, collection_path(col)
--#         - if i+1 != @core_file.collections.count
--#           = ", "
--#     - else
--#       = link_to @core_file.collections.first.title, collection_path(@core_file.collections.first)
--#   %li
--#     = @cftitle
+%ul.breadcrumb
+  %li
+    = link_to @core_file.project.title, community_path(@core_file.project)
+  %li.collection
+    -if @core_file.collections.count > 1
+      -@core_file.collections.each_with_index do |col, i|
+        = link_to col.title, collection_path(col)
+        - if i+1 != @core_file.collections.count
+          = ", "
+    - else
+      = link_to @core_file.collections.first.title, collection_path(@core_file.collections.first)
+  %li
+    = @core_file.title
 
--# - if current_user_can? :edit, @core_file
-  -# = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
+- if current_user_can? :edit, @core_file
+  = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
 
-%h2.page-header= @cftitle
+%h2.page-header= @core_file.title
 
 %div.tabbable.tabs-left.vertical-tabs.node
   %ul.nav.nav-tabs.vertical-tabs-list
