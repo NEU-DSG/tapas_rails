@@ -1,6 +1,7 @@
 %div.reading
   -@view_packages.each do |view|
     %div{class:"reader_#{view[1]}"}
+      - puts view
       -if view[1] == :tei
         %div.row
           %div.checkbox
@@ -14,4 +15,7 @@
         %pre#ace
           = @core_file.canonical_object.content.content
       -else
-        = @core_file.send(view[1].to_sym).content.content.html_safe
+        - if @core_file.send(view[1].to_sym)
+          = @core_file.send(view[1].to_sym).content.content.html_safe
+        - else
+          = "This view package could not be rendered"
