@@ -12,9 +12,9 @@
               ="Toggle Invisibles"
             =check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles'
         %pre#ace
-          = @core_file.canonical_object.content.content
+          = @core_file.canonical_object.content.content.force_encoding('utf-8')
       -else
         - if @core_file.send(view[1].to_sym)
-          = @core_file.send(view[1].to_sym).content.content.html_safe
+          = @core_file.send(view[1].to_sym).content.content.html_safe.force_encoding('utf-8')
         - else
           = "This view package could not be rendered"

@@ -59,7 +59,7 @@
       -if @core_file.collections
         %dt Collections:
         -@core_file.collections.each do |c|
-          %dd= link_to c.title.first, collection_path(c)
+          %dd= link_to c.title, collection_path(c)
       -if @core_file.is_ography?
         %dt Ography Type:
         - @core_file.ography_type.each do |o|
