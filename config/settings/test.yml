@@ -2,4 +2,4 @@ exist:
   username: 'tapas'
   password: 'tapas'
   url: 'http://localhost:8868/exist/apps/tapas-xq'
-base_url: 'http://rails_api.localhost:8080'
+base_url: 'http://railsapi.localhost:8080'
