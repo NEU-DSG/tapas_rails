@@ -18,7 +18,8 @@
 %h3
   = "View Packages"
 =link_to "View all View Packages", view_packages_path, class:['btn', 'btn-primary', 'btn-large']
-=link_to "Run View Package Job"
+%br
+=link_to "Run View Package Job", update_view_packages_path, class:['btn', 'btn-primary', 'btn-large']
 
 %h3
   = "Menus"
@@ -26,8 +27,12 @@
 
 %h3
   = "Users"
-=link_to "Create New User", new_user_path, class:['btn', 'btn-primary', 'btn-large']
+=link_to "Create New User", new_user_registration_path, class:['btn', 'btn-primary', 'btn-large']
 %br
 =link_to "View all Users", users_path, class:['btn', 'btn-primary', 'btn-large']
 %br
 =link_to "Send Mail to all Users", mail_users_path, class:['btn', 'btn-primary', 'btn-large']
+
+%h3
+  = "Resque Workers"
+= link_to "Resque Dashboard", resque_server_path, class:['btn', 'btn-primary', 'btn-large']
