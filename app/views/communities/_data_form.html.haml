@@ -20,7 +20,25 @@
             - if !@community.thumbnail_1.content.nil?
               =image_tag @community.download_path('thumbnail_1')
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
-      -# TODO - add institution
+    .row
+      .form-group.institutions
+        = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
+        .col-md-6
+          - if @community.properties.institutions.blank?
+            %span.institution
+              = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
+          - else
+            - @community.institutions.each_with_index do |id, i|
+              %span.institution{:class=> i != 0 ? "to-remove" : ""}
+                = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
+                -if i != 0
+                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove institution", type: "button"}
+                    %i.fa.fa-remove
+                %br
+          %button#add_another_institution.btn.btn-success{:type => "button"}
+            %i.fa-plus-sign.fa
+            Add Institution
+
       -# TODO - add content date
       -# TODO - add keywords/subjects
     .row

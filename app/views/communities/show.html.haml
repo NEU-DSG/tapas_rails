@@ -10,7 +10,11 @@
       =image_tag @community.download_path('thumbnail_1')
     %p= @community.description
     -# external links TODO
-    -# institution TODO
+    %h4 Affiliated Institutions
+    - @community.institutions.each do |i|
+      - int = Institution.find(i)
+      = link_to(int.name, institution_path(int))
+      %br
 
   %div.col-md-9
     %panel.panel-default.panel-records
