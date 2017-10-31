@@ -34,6 +34,10 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
       hsh['project_admins_ssim'] = self.project_admins
     end
 
+    if self.institutions.first
+      hsh['institutions_ssim'] = self.institutions
+    end
+
     if self.authors.first
       hsh['authors_ssim'] = self.authors.first
     end
