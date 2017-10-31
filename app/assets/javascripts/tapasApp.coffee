@@ -174,6 +174,10 @@ $(document).ready ->
         target: $('span.project_admin:not(.to-remove)')
         titleText: 'Remove admin'
 
+      $('#add_another_institution').addFormFields
+        target: $('span.institution:not(.to-remove)')
+        titleText: 'Remove admin'
+
       return
 
 
