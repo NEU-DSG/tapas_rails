@@ -6,8 +6,10 @@
 
 %div.row
   %div.col-md-3
-    -if !@community.thumbnail_1.content.nil?
-      =image_tag @community.download_path('thumbnail_1')
+    - if @community.thumbnail_list.blank?
+      =image_tag "tapaslogo-opaque.png"
+    -else
+      %img{src:@community.thumbnail_list.first}
     %p= @community.description
     -# external links TODO
     %h4 Affiliated Institutions
