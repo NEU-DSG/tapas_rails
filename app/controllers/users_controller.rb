@@ -108,15 +108,13 @@ class UsersController < CatalogController
       col_query = projects.map do |p|
         "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
       end
-      collections = ActiveFedora.SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Collection"}\" && (#{col_query.join(" OR ")})")
+      collections = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Collection"}\" && (#{col_query.join(" OR ")})")
       rec_query = collections.map do |y|
-        "collection_pid_ssi: #{RSolr.solr_escape(y['id'])}"
+        "collections_pids_ssim: \"#{RSolr.solr_escape(y['id'])}\""
       end
       solr_parameters[:fq] ||= []
       solr_parameters[:fq] << rec_query.join(" OR ")
       solr_parameters[:fq] << "has_model_ssim: \"#{model_type}\""
-      # get projects that the user is depositor, member, admin, or editor for then find collections where user is depositor or the collection belongs to one of the projects above, then get records where depositor or the record belongs to one of the collections above
-
     end
 
     def check_for_logged_in_user
