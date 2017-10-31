@@ -8,8 +8,10 @@
 
 %div.row
   %div.col-md-3
-    -if !@collection.thumbnail_1.content.nil?
-      =image_tag @collection.download_path('thumbnail_1')
+    - if @collection.thumbnail_list.blank?
+      =image_tag "tapaslogo-opaque.png"
+    -else
+      %img{src:@collection.thumbnail_list.first}
     %p= @collection.description
     %dt= "Project"
     %dd= link_to parent.title, parent
