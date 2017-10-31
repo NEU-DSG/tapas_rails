@@ -22,3 +22,8 @@
   - if !@institution.url.blank?
     %dt= "URL"
     %dd= link_to(@institution.url)
+- if !@communities.blank?
+  %h3 Projects
+  - @communities.each do |c|
+    %h4
+      = link_to(c['title_info_title_ssi'], community_path(c['id']))
