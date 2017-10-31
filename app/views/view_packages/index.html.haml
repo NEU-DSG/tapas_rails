@@ -1,5 +1,7 @@
 %h1= "View Packages"
 %ul.breadcrumb
+  - if current_user && current_user.admin?
+    %li= link_to("Admin", admin_path)
   %li= "View Packages"
 -if @view_packages.length > 0
   - @view_packages.each do |view|

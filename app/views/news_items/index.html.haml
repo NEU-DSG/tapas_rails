@@ -1,5 +1,6 @@
 %h1= "News Items"
 %ul.breadcrumb
+  %li= link_to("Admin", admin_path)
   %li= "News Items"
 - if current_user && current_user.admin?
   =link_to "Create New News Item", new_news_item_path, class:['btn', 'btn-primary', 'btn-large']

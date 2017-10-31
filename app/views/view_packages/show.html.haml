@@ -1,5 +1,7 @@
 %h1= @view.human_name
 %ul.breadcrumb
+  - if current_user && current_user.admin?
+    %li= link_to("Admin", admin_path)
   %li= link_to("View Packages", view_packages_path)
   %li= @view.human_name
 %h3
