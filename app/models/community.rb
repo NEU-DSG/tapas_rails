@@ -24,6 +24,7 @@ class Community < CerberusCore::BaseModels::Community
   has_attributes :project_members, datastream: "properties", multiple: true
   has_attributes :project_editors, datastream: "properties", multiple: true
   has_attributes :project_admins, datastream: "properties", multiple: true
+  has_attributes :institutions, datastream: "properties", multiple: true
   has_attributes :og_reference, datastream:"properties"
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"

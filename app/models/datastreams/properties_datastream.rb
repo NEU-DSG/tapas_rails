@@ -16,6 +16,7 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     t.errors_display
     t.errors_system
     t.stacktrace
+    t.institutions
   end
 
   def to_solr(hsh = {})
