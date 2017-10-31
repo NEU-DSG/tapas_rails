@@ -5,7 +5,7 @@ class CommunitiesController < CatalogController
   self.copy_blacklight_config_from(CatalogController)
 
   before_filter :can_read?, only: [:show]
-  before_filter :can_edit?, only: [:edit, :update]
+  before_filter :can_edit?, only: [:edit, :update, :destroy]
   before_filter :enforce_show_permissions, :only=>:show
 
   self.search_params_logic += [:add_access_controls_to_solr_params]
@@ -54,6 +54,11 @@ class CommunitiesController < CatalogController
   def new
     @page_title = "Create New Community"
     @community = Community.new(:mass_permissions=>"public")
+    i_s = Institution.all()
+    @institutions = []
+    i_s.each do |i|
+      @institutions << [i.name, i.id]
+    end
   end
 
   #This method contains the actual logic for creating a new community
@@ -71,8 +76,13 @@ class CommunitiesController < CatalogController
 
   #This method is used to edit a particular community
   def edit
-     @community = Community.find(params[:id])
-     @page_title = "Edit #{@community.title || ''}"
+    @community = Community.find(params[:id])
+    @page_title = "Edit #{@community.title || ''}"
+    i_s = Institution.all()
+    @institutions = []
+    i_s.each do |i|
+      @institutions << [i.name, i.id]
+    end
   end
 
   #This method contains the actual logic for editing a particular community
@@ -87,4 +97,10 @@ class CommunitiesController < CatalogController
     end
     redirect_to @community and return
   end
+
+  def destroy
+    @community = Community.find(params[:id])
+    @page_title = "Delete #{@community.title || ''}"
+    @community.destroy
+ end
 end
