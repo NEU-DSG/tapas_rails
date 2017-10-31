@@ -14,17 +14,17 @@ class InstitutionsController < ApplicationController
   end
 
   def show
-    @institution = Institution.friendly.find(params[:id])
+    @institution = Institution.find(params[:id])
     @page_title = @institution.name
   end
 
   def edit
-    @institution = Institution.friendly.find(params[:id])
+    @institution = Institution.find(params[:id])
     @page_title = @institution.name
   end
 
   def update
-    @institution = Institution.friendly.find(params[:id])
+    @institution = Institution.find(params[:id])
     @page_title = @institution.name
     @institution.update_attributes(institution_params)
     if @institution.valid?

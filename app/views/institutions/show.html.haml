@@ -1,10 +1,12 @@
-- if current_user && current_user.admin?
-  = link_to "Edit", edit_institution_path(@institution), class:['btn', 'btn-info', 'btn-large']
 %ul.breadcrumb
+  - if current_user && current_user.admin?
+    %li= link_to("Admin", admin_path)
   %li= link_to("Institutions", institutions_path)
   %li= "#{@institution.name}"
 %h2.page-header
   = @institution.name
+- if current_user && current_user.admin?
+  = link_to "Edit", edit_institution_path(@institution), class:['btn', 'btn-info', 'btn-large']
 %dl
   - if !@institution.description.blank?
     %dt= "Description"
