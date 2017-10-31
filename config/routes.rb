@@ -7,7 +7,7 @@ TapasRails::Application.routes.draw do
   # We ask that you don't use the :as option here, as Forem relies on it being the default of "forem"
   mount Forem::Engine, :at => '/forums'
 
-  devise_for :users
+  devise_for :users, :controllers => { :registrations => "registrations" }
 
   # root to: "catalog#index"
   root to: "pages#show", id: 'home'
@@ -80,6 +80,7 @@ TapasRails::Application.routes.draw do
     get 'core_files/:did' => 'core_files#api_show'
   end
   resources :view_packages
+  get 'admin/view_packages/update' => 'view_packages#run_job', as: 'update_view_packages'
   get 'api/view_packages' => 'view_packages#api_index'
 
   get '/admin' => 'admin#index'
@@ -94,7 +95,7 @@ TapasRails::Application.routes.draw do
   get 'users/:id' => 'users#admin_show'
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'
-  resources :users, :only => ['index', 'edit', 'new', 'create', 'update']
+  resources :users, :only => ['index', 'edit', 'create', 'update']
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
 
