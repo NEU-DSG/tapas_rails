@@ -70,10 +70,12 @@ class User < ActiveRecord::Base
     Pluot.api_key = api_key
     Pluot.account_id = aid
     response = Pluot.contacts.filter("e-Mail eq #{self.email}")
-    contact = response[':Contacts'][0]
+    logger.info(response)
+    contact = response[:Contacts][0]
+    logger.info(contact)
     if contact
       logger.info(contact)
-      if contact[':Status'] == "Active"
+      if contact[:Status] == "Active"
         logger.info("active")
         return true
       else
