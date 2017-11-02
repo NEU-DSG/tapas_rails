@@ -10,7 +10,7 @@ class Community < CerberusCore::BaseModels::Community
 
   before_save :ensure_unique_did
   before_save :match_dc_to_mods
-  after_save :update_permissions
+  before_save :update_permissions
   after_create :set_depositor_as_admin
 
   has_collection_types ["Collection"]

@@ -154,6 +154,7 @@
         read_access_group_ssim,read_access_person_ssim,
         edit_access_group_ssim,edit_access_person_ssim,
         depositor_ti,
+        project_members_ssim, project_editors_ssim, project_admins_ssim,
         embargo_release_date_dtsi
         inheritable_access_ssim,
         inheritable_discover_access_group_ssim,inheritable_discover_access_person_ssim,
