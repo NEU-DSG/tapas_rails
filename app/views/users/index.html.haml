@@ -1,7 +1,7 @@
 %h1= "Users"
 %ul.breadcrumb
   %li= "Users"
-=link_to "Create New User", new_user_path, class:['btn', 'btn-primary', 'btn-large']
+=link_to "Create New User", "/users/sign_up", class:['btn', 'btn-primary', 'btn-large']
 -if @users.length > 0
   %table.table.table-striped
     %tr
