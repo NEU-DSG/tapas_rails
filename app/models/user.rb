@@ -57,11 +57,11 @@ class User < ActiveRecord::Base
   end
 
   def forem_name
-    return self.name
+    self.name
   end
 
   def forem_email
-    return self.email
+    self.email
   end
 
   def check_paid_status
