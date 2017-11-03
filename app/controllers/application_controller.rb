@@ -51,8 +51,15 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_can?
 
   def current_user_can?(perm_level, record)
+    if record.respond_to? :project
+      if record.project
+        parent = record.project
+      end
+    end
     if current_user
       current_user.can? perm_level, record
+    elsif parent
+      current_user.can? perm_level, parent
     elsif perm_level != :read
       false
     else
