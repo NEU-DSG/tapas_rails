@@ -1,5 +1,5 @@
 TapasRails::Application.configure do
-
+  Rails.application.routes.default_url_options[:host] = 'railsapi.tapasdev.neu.edu'
   config.cache_classes = true
   config.fedora_home = "/opt/fedora/data/datastreamStore/"
 
