@@ -10,10 +10,10 @@ class User < ActiveRecord::Base
   validates_integrity_of :avatar
 
   if Blacklight::Utils.needs_attr_accessible?
-    attr_accessible :email, :password, :password_confirmation, :name, :role
-end
+    attr_accessible :email, :password, :password_confirmation, :name, :role, :bio
+  end
 
-  attr_accessible :email, :password, :password_confirmation, :name, :role if Rails::VERSION::MAJOR < 4
+  attr_accessible :email, :password, :password_confirmation, :name, :role, :bio if Rails::VERSION::MAJOR < 4
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,

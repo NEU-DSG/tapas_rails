@@ -2,7 +2,8 @@
   = link_to "Manage Account", edit_user_registration_path(@user), class:['btn', 'btn-info', 'btn-large']
 %h2.page-header
   = @user.name
-
+- if @user.bio
+  %p= @user.bio
 - if @user.institution
   %dt= "Institution"
   %dd= @user.institution.name
