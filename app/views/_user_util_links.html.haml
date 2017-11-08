@@ -13,7 +13,8 @@
             = link_to "Admin", defined?(admin_path) ? admin_path : main_app.admin_path
       - unless current_user.to_s.blank?
         %li
-          = link_to current_user.name, defined?(edit_user_registration_path) ? edit_user_registration_path : main_app.edit_user_registration_path
+          = link_to "My Tapas", "/my_tapas"
+          -# = link_to current_user.name, defined?(edit_user_registration_path) ? edit_user_registration_path : main_app.edit_user_registration_path
       - else
         %li
           = link_to t('blacklight.header_links.login'), defined?(new_user_session_path) ? new_user_session_path : main_app.new_user_session_path
