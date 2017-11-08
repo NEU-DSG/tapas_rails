@@ -50,6 +50,11 @@ class UsersController < CatalogController
 
   def edit
     @user = User.find(params[:id])
+    i_s = Institution.all()
+    @institutions = []
+    i_s.each do |i|
+      @institutions << [i.name, i.id]
+    end
   end
 
   def update
@@ -57,6 +62,7 @@ class UsersController < CatalogController
     @user.name = params[:user][:name]
     @user.email = params[:user][:email]
     @user.role = params[:user][:role]
+    @user.institution = Institution.find(params[:user][:institution_id])
     @user.save!
     redirect_to @user
   end
