@@ -92,7 +92,8 @@ TapasRails::Application.routes.draw do
   get 'my_projects' => 'users#my_projects'
   get 'my_collections' => 'users#my_collections'
   get 'my_records' => 'users#my_records'
-  get 'users/:id' => 'users#admin_show'
+  get 'admin/users/:id' => 'users#admin_show'
+  get 'users/:id' => 'users#profile'
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'
   resources :users, :only => ['index', 'edit', 'create', 'update']

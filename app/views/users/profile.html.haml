@@ -1,0 +1,21 @@
+- if current_user && current_user == @user
+  = link_to "Manage Account", edit_user_registration_path(@user), class:['btn', 'btn-info', 'btn-large']
+%h2.page-header
+  = @user.name
+
+- if @user.institution
+  %dt= "Institution"
+  %dd= @user.institution.name
+
+%div.row
+  - if @user.avatar
+    %div.col-sm-4
+      = image_tag(current_user.avatar.url)
+
+-# if @user.description
+
+%div.row
+  %div.col-sm-12
+    %h2 %Projects
+
+    %h2 Collections

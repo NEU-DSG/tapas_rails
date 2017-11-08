@@ -6,9 +6,12 @@ class User < ActiveRecord::Base
   # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
 
+  mount_uploader :avatar, AvatarUploader
+  validates_integrity_of :avatar
+
   if Blacklight::Utils.needs_attr_accessible?
     attr_accessible :email, :password, :password_confirmation, :name, :role
-  end
+end
 
   attr_accessible :email, :password, :password_confirmation, :name, :role if Rails::VERSION::MAJOR < 4
   # Include default devise modules. Others available are:
