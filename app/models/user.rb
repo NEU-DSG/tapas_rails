@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   include Blacklight::User
 
   if Blacklight::Utils.needs_attr_accessible?
-    attr_accessible :email, :password, :password_confirmation
+    attr_accessible :email, :password, :password_confirmation, :name, :role
   end
 
   attr_accessible :email, :password, :password_confirmation, :name, :role if Rails::VERSION::MAJOR < 4
@@ -17,6 +17,8 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable
 
   delegate :can?, :cannot?, :to => :ability
+
+  belongs_to :institution
 
   ROLES = %w[admin paid_user unpaid_user]
 
