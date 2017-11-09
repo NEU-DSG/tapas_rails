@@ -202,6 +202,7 @@ describe CollectionsController do
 
     # Purpose statement
     it 'should create a collection object and go to show page' do
+      Collection.destroy_all
       sign_in @user
       # Calling the create function
       post :create, params
