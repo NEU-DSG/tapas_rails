@@ -4,7 +4,6 @@ class CollectionsController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
 
-  before_filter :can_read?, only: [:show]
   before_filter :can_edit?, only: [:edit, :update]
   before_filter :enforce_show_permissions, :only=>:show
 

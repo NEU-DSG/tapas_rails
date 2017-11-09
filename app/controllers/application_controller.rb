@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
     end
     if current_user
       current_user.can? perm_level, record
-    elsif parent
+    elsif current_user && parent
       current_user.can? perm_level, parent
     elsif perm_level != :read
       false

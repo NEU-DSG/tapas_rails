@@ -4,7 +4,6 @@ class CommunitiesController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
 
-  before_filter :can_read?, only: [:show]
   before_filter :can_edit?, only: [:edit, :update, :destroy]
   before_filter :enforce_show_permissions, :only=>:show
 
@@ -45,7 +44,7 @@ class CommunitiesController < CatalogController
 
   #This method is used to display various attributes of community
   def show
-    authorize! :show, params[:id]
+    # authorize! :show, params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
   end
@@ -70,6 +69,9 @@ class CommunitiesController < CatalogController
       params[:thumbnail] = create_temp_file(params[:thumbnail])
       @community.add_thumbnail(:filepath => params[:thumbnail])
     end
+    if params[:mass_permissions]
+      @community.mass_permissions = params[:mass_permissions]
+    end
     @community.save!
     redirect_to @community and return
   end
@@ -90,6 +92,9 @@ class CommunitiesController < CatalogController
     @community = Community.find(params[:id])
     puts @community
     @community.update_attributes(params[:community])
+    if params[:mass_permissions]
+      @community.mass_permissions = params[:mass_permissions]
+    end
     @community.save!
     if params[:thumbnail]
       params[:thumbnail] = create_temp_file(params[:thumbnail])

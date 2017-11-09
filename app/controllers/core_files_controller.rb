@@ -12,12 +12,10 @@ class CoreFilesController < CatalogController
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
-  before_filter :can_read?, only: [:show]
   before_filter :can_edit?, only: [:edit, :update]
   before_filter :enforce_show_permissions, :only=>:show
 
   self.search_params_logic += [:add_access_controls_to_solr_params]
-  # before_filter :can_edit?, only: [:edit, :update]
 
   #This method displays all the core files created in the database
   def index
