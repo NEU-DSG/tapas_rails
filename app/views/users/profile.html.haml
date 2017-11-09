@@ -1,5 +1,3 @@
-- if current_user && current_user == @user
-  = link_to "Manage Account", edit_user_registration_path(@user), class:['btn', 'btn-info', 'btn-large']
 %h2.page-header
   = @user.name
 - if @user.bio
@@ -13,21 +11,5 @@
     %div.col-sm-4
       = image_tag(current_user.avatar.url)
 
-%div.row
-  %div.col-sm-12
-    %h2 Projects
-    %a{href:my_projects_path, class: ['btn','btn-default']}
-      = "View All"
-    %table.table.table-striped
-    - @projects.each do |p|
-      %tr
-        %td
-          = link_to(p['title_info_title_ssi'], community_path(p['id']))
-        -# %td
-        -#   %a{href:edit_community_path(p['id']), class: ['btn','btn-xs','btn-default']}
-        -#     %i.fa.fa-pencil
-        -#     = "Edit"
-
-    %h2 Collections
-    - @collections.each do |c|
-      = link_to(c['title_info_title_ssi'], collection_path(['c.id']))
+- if current_user && current_user == @user
+  = link_to "Manage Account", edit_user_registration_path(@user), class:['btn', 'btn-info', 'btn-large']

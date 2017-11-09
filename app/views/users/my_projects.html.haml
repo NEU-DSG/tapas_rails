@@ -1,3 +1,9 @@
 %h2= "My Projects"
 %hr
+- if current_user && (current_user.paid_user? || current_user.admin?)
+  %div.row
+    %div.col-sm-6
+      %a{href:new_community_path, class: 'btn btn-success btn-sm'}
+        %i.fa.fa-plus
+        = "Add New Project"
 = render "my_projects"
