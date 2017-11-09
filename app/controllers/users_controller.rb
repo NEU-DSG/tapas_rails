@@ -5,12 +5,11 @@ class UsersController < CatalogController
   before_filter :verify_admin, :only => [:index, :show, :create]
 
   def my_tapas
-    logger.info "my tapas"
     @page_title = "My TAPAS"
     @user = current_user
-    self.search_params_logic += [:my_communities_filter]
-    logger.error search_params_logic
-    (@projects, @document_list) = search_results(params, search_params_logic)
+    @projects = five_communities
+    @collections = five_collections
+    @records = five_records
     render 'my_tapas'
   end
 
@@ -50,9 +49,6 @@ class UsersController < CatalogController
 
   def profile
     @user = User.find(params[:id])
-    @projects = five_communities
-    @collections = five_collections
-    @records = five_records
     render 'profile'
   end
 
