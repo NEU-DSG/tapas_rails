@@ -78,6 +78,7 @@
         pane.find("#reader_css_2").attr("href", "/view_packages/tapas-generic/css/tapasGdiplo.css");
       }
       if (style == 'hieractivity'){
+        $.getScript("/view_packages/common/d3/d3.v4.min.js");
         $.getScript("/view_packages/hieractivity/js/hieractivity.js");
         pane.find("#reader_css_1").attr("href", "/view_packages/hieractivity/../common/jquery-ui-1.12.1/jquery-ui.min.css");
         pane.find("#reader_css_2").attr("href", "/view_packages/hieractivity/css/hieractivity.css");
