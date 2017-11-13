@@ -106,7 +106,7 @@ class UsersController < CatalogController
       if col_query.length < 1
         return nil
       end
-      query = "has_model_ssim: \"#{model_type}\" && (#{col_query.join("OR")})"
+      query = "has_model_ssim: \"#{model_type}\" && (#{col_query.join(" OR ")})"
 
       return ActiveFedora::SolrService.query(query, rows: 5)
     end
@@ -128,7 +128,7 @@ class UsersController < CatalogController
         return nil
       end
 
-      return ActiveFedora::SolrService.query("(#{rec_query.join("OR")}) AND has_model_ssim: \"#{model_type}\"")
+      return ActiveFedora::SolrService.query("(#{rec_query.join(" OR ")}) AND has_model_ssim: \"#{model_type}\"")
     end
 
     def my_communities_filter(solr_parameters, user_parameters)
