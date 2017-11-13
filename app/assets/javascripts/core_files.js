@@ -59,29 +59,26 @@
       pane.find("."+style_class).show();
       // THIS SECTION NEEDS A SERIOUS REFACTOR TO PULL THE CSS FILE LOCATIONS FROM THE API
       // AND TO GET THE JS FILE FROM THE API AND ADD THEM DYNAMICALLY
-      $.getScript("/view_packages/common/jquery/jquery-3.2.1.min.js");
-      $.getScript("/view_packages/common/jquery-ui-1.12.1/jquery-ui.min.js");
-      $.getScript("/view_packages/common/jquery/plugins/jquery.blockUI.min.js");
       if (style == 'teibp'){
         pane.find(".teibp").addClass("default");
         console.log("going to teibp");
         $.getScript("/view_packages/teibp/js/teibp.js");
         pane.find("#reader_css_1").attr("href", "/view_packages/teibp/css/teibp.css");
-        pane.find("#reader_css_2").attr("href", "/view_packages/teibp/css/sleepy.css");
-        pane.find("#reader_css_3").attr("href", "/view_packages/teibp/css/terminal.css");
+        pane.find("#reader_css_2").attr("href", "/view_packages/teibp/css/custom.css");
       }
       if (style == 'tapas_generic'){
         console.log("going to tapas G");
         $.getScript("/view_packages/tapas-generic/js/contextualItems.js");
         $.getScript("/view_packages/tapas-generic/js/tapas-generic.js");
-        pane.find("#reader_css_1").attr("href", "/view_packages/tapas-generic/css/tapasGnormal.css");
+        pane.find("#reader_css_1").attr("href", "/view_packages/tapas-generic/css/generic.css");
         pane.find("#reader_css_2").attr("href", "/view_packages/tapas-generic/css/tapasGdiplo.css");
+        pane.find("#reader_css_3").attr("href", "/view_packages/tapas-generic/css/tapasGnormal.css");
       }
       if (style == 'hieractivity'){
+        $.getScript("/view_packages/common/jquery.scrollTo/jquery.scrollTo.min.js");
         $.getScript("/view_packages/common/d3/d3.v4.min.js");
         $.getScript("/view_packages/hieractivity/js/hieractivity.js");
-        pane.find("#reader_css_1").attr("href", "/view_packages/hieractivity/../common/jquery-ui-1.12.1/jquery-ui.min.css");
-        pane.find("#reader_css_2").attr("href", "/view_packages/hieractivity/css/hieractivity.css");
+        pane.find("#reader_css_1").attr("href", "/view_packages/hieractivity/css/hieractivity.css");
       }
       if (style == 'tei'){
         $(".reader_tei pre").attr("id", "ace");
