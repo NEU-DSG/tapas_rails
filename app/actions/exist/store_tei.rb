@@ -27,7 +27,7 @@ module Exist
           :content_type => 'application/xml',
         }
       })
-      logger.info(url)
+      # logger.info(url)
 
       self.resource = RestClient::Resource.new(url, options)
     end
