@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170719223854) do
+ActiveRecord::Schema.define(version: 20171108213808) do
 
   create_table "bookmarks", force: true do |t|
     t.integer  "user_id",       null: false
@@ -223,9 +223,13 @@ ActiveRecord::Schema.define(version: 20170719223854) do
     t.string   "forem_state",            default: "pending_review"
     t.boolean  "forem_auto_subscribe",   default: false
     t.string   "name"
+    t.integer  "institution_id"
+    t.string   "avatar"
+    t.text     "bio"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true
+  add_index "users", ["institution_id"], name: "index_users_on_institution_id"
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
 
   create_table "view_packages", force: true do |t|
