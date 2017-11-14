@@ -76,7 +76,6 @@
       }
       if (style == 'hieractivity'){
         $.getScript("/view_packages/common/jquery.scrollTo/jquery.scrollTo.min.js");
-        $.getScript("/view_packages/common/d3/d3.v4.min.js");
         $.getScript("/view_packages/hieractivity/js/hieractivity.js");
         pane.find("#reader_css_1").attr("href", "/view_packages/hieractivity/css/hieractivity.css");
       }
