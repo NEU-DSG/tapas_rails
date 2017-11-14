@@ -155,7 +155,7 @@
             pane.prepend("<link rel='stylesheet' type='text/css' id='reader_css_1'></link><link rel='stylesheet' type='text/css' id='reader_css_2'></link><link rel='stylesheet' type='text/css' id='reader_css_3'></link>");
             var style = side.find("select[name='reading_selector']").val();
             make_clickable($("body"));
-            show_style(pane, style);
+            // show_style(pane, style);
           }
         }
       });
