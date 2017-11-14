@@ -12,13 +12,13 @@
       show_style(pane, style);
     });
 
-    $("select[name='reading_selector']").on("change", function(e){
-      e.preventDefault();
-      var style = $(this).val()
-      console.log(style);
-      var pane = $(this).parents(".node").find(".reading");
-      show_style(pane, style);
-    });
+    // $("select[name='reading_selector']").on("change", function(e){
+    //   e.preventDefault();
+    //   var style = $(this).val()
+    //   console.log(style);
+    //   var pane = $(this).parents(".node").find(".reading");
+    //   show_style(pane, style);
+    // });
 
     make_clickable($("body"));
 
