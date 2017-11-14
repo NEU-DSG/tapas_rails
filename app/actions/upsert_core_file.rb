@@ -19,6 +19,7 @@ class UpsertCoreFile
       end
 
       core_file.mark_upload_in_progress!
+      core_file.depositor = params[:depositor]
 
       # Validate TEI
       tei_errors = Exist::ValidateTei.execute params[:tei]
@@ -48,6 +49,7 @@ class UpsertCoreFile
 
       core_file.drupal_access = params[:access] if params.has_key? :access
       core_file.mass_permissions = params[:access] if params.has_key? :access
+      core_file.mass_permissions = params[:mass_permissions] if params.has_key? :mass_permissions
 
       update_associations!
 
@@ -83,7 +85,7 @@ class UpsertCoreFile
       upsert_logger.info("CoreFile upsert for #{core_file.pid} has did #{core_file.did}")
 
       Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
-      
+
       if core_file.is_ography?
         TapasRails::Application::Queue.push(RebuildCommunityReadingInterfaceJob.new(core_file.project.pid))
         #if it is an ography then run a job to rebuild all the reading interfaces in this project
@@ -93,9 +95,9 @@ class UpsertCoreFile
     rescue => e
       ExceptionNotifier.notify_exception(e, :data => { :params => params })
 
-      core_file.set_default_display_error
-      core_file.set_stacktrace_message(e)
-      core_file.mark_upload_failed!
+      # core_file.set_default_display_error
+      # core_file.set_stacktrace_message(e)
+      # core_file.mark_upload_failed!
       raise e
     ensure
       FileUtils.rm params[:tei] if should_delete_file? params[:tei]
@@ -154,7 +156,6 @@ class UpsertCoreFile
       puts "none of the above"
       puts params
     end
-
     core_file.save!
   end
 

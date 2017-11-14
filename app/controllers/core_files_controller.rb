@@ -57,7 +57,7 @@ class CoreFilesController < CatalogController
   def create
     begin
       params[:collection_dids] = params[:collections] if params[:collections]
-      params[:depositor] = "000000000" #temp setting this until users integrated
+      params[:depositor] = current_user.id.to_s #temp setting this until users integrated
 
       # Step 1: Find or create the CoreFile Object -
       # we do this here so that we have a stub record to
@@ -84,7 +84,9 @@ class CoreFilesController < CatalogController
       if params[:support_files]
         params[:support_files] = create_temp_file params[:support_files]
       end
-
+      if params[:core_file] && params[:core_file][:thumbnail]
+        params[:thumbnail] = params[:core_file][:thumbnail]
+      end
       if params[:thumbnail]
         thumbnail = create_temp_file params[:thumbnail]
         Content::UpsertThumbnail.execute(core_file, thumbnail)
