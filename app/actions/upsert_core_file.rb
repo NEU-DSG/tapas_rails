@@ -57,9 +57,11 @@ class UpsertCoreFile
         Content::UpsertTei.execute(core_file, params[:tei])
       end
 
+      upsert_logger.info(params)
       if params[:support_files].present?
         # extract files to a hash of temporary directories
         all_files = ExtractFiles.execute(params[:support_files])
+        upsert_logger.info(all_files)
         @directory = all_files[:directory]
 
         thumbnail = all_files[:thumbnail]
