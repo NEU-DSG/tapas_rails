@@ -43,8 +43,8 @@
             = "Add New"
           %br
         %table.table
-          - if @collections.length < 1
-            = "There are no collections yet."
+          - if !@collections || @collections.length < 1
+            = "You have no collections yet."
           - else
             - @collections.each do |c|
               %tr
