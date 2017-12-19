@@ -16,7 +16,7 @@
             = "Add New"
           %br
         %table.table
-          - if @projects.length < 1
+          - if !@projects || @projects.length < 1
             = "There are no projects yet."
           - else
             - @projects.each do |p|
@@ -70,7 +70,7 @@
             = "Add New"
           %br
         %table.table
-          - if @records.length < 1
+          - if !@records || @records.length < 1
             = "There are no collections yet."
           - else
             - @records.each do |r|
