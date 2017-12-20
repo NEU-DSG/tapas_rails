@@ -18,6 +18,9 @@ class PagesController < ApplicationController
   def show
     @page = Page.friendly.find(params[:id])
     @page_title = @page.title
+    if @page.slug == "home"
+      @news_items = NewsItem.where(:publish =>"true").limit(5).order('created_at desc')
+    end
   end
 
   def edit

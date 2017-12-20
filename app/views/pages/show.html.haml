@@ -7,7 +7,7 @@
 %h2.page-header
   = @page.title
 
--if @page.submenu
+-if @page.submenu != ""
   %div.row
     %div.col-sm-9
       = raw @page.content
@@ -15,3 +15,16 @@
       = render partial: "submenu", locals: {submenu: @page.submenu}
 - else
   = raw @page.content
+  - if @page.slug == "home"
+    %div.row
+      %div.col-sm-4
+        %h3="Featured"
+      %div.col-sm-4
+        %h3="News"
+        = render partial: "news_items/recent_news", locals: {news_items: @news_items}
+      %div.col-sm-4
+        %h3="Follow Us"
+        %a.twitter-timeline{"href"=>"https://twitter.com/search?q=%40tapas_project", "data-widget-id"=>"943497885143855104"}
+          -"Tweets about @tapas_project"
+        :javascript
+          !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
