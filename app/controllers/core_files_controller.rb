@@ -96,6 +96,10 @@ class CoreFilesController < CatalogController
         core_file.mass_permissions = params[:mass_permissions]
       end
 
+      if params[:featured]
+        core_file.featured = True
+      end
+
       # Step 2: If TEI was provided, generate a MODS record that can be sent back
       # to Drupal to populate the validate metadata page provided after initial
       # file upload

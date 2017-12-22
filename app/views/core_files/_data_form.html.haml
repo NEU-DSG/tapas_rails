@@ -73,6 +73,13 @@
             -#   .checkbox
             -#     = f.check_box m, {}, @core_file.collections
 
+        - if current_user.admin?
+          .form-group
+            = f.label :featured, class: "control-label col-md-2"
+            .col-md-6
+              .checkbox
+                = f.check_box :featured, {}, "true"
+
         .form-group
           = f.label :tei, "File", class: "control-label col-md-2"
           .col-md-6

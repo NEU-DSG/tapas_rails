@@ -17,6 +17,7 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
     t.errors_system
     t.stacktrace
     t.institutions
+    t.featured
   end
 
   def to_solr(hsh = {})
@@ -56,6 +57,10 @@ class PropertiesDatastream < CerberusCore::Datastreams::PropertiesDatastream
 
     if self.og_reference
       hsh['drupal_og_reference_ssim'] = self.og_reference
+    end
+
+    if self.featured
+      hsh['featured_ssim'] = self.featured.first
     end
 
     if self.upload_status

@@ -239,3 +239,15 @@ dd {
 #main-container img {
   width: 100%;
 }
+
+.carousel-caption {
+  position: static;
+}
+
+.carousel-indicators {
+  bottom: -10px;
+}
+
+.list-unstyled {
+  border-bottom: 1px solid $gray-lighter;
+}

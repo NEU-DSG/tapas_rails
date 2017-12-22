@@ -19,6 +19,7 @@
     %div.row
       %div.col-sm-4
         %h3="Featured"
+        = render partial: "core_files/featured", locals: {featured: @featured_core}
       %div.col-sm-4
         %h3="News"
         = render partial: "news_items/recent_news", locals: {news_items: @news_items}

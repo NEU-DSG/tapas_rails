@@ -19,7 +19,8 @@ class PagesController < ApplicationController
     @page = Page.friendly.find(params[:id])
     @page_title = @page.title
     if @page.slug == "home"
-      @news_items = NewsItem.where(:publish =>"true").limit(5).order('created_at desc')
+      @news_items = NewsItem.where(:publish=>"true").limit(5).order('created_at desc')
+      @featured_core = CoreFile.find(:featured_ssim=>"true").limit(5)
     end
   end
 

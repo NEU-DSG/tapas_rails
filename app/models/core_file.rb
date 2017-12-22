@@ -42,6 +42,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   has_metadata :name => "properties", :type => PropertiesDatastream
   has_attributes :title, datastream: "DC"
   has_attributes :description, datastream: "DC"
+  has_attributes :featured, :datastream => :properties, :multiple => false
   delegate :authors, to: "mods"
   delegate :contributors, to: "mods"
 
