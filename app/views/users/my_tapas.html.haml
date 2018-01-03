@@ -37,7 +37,7 @@
         %h2.panel-title
           = "Collections"
       %div.panel-body
-        - if current_user && (@projects.length > 0 || current_user.admin?)
+        - if current_user && ((@projects && @projects.length > 0) || current_user.admin?)
           %a{href:new_collection_path, class: 'btn btn-success btn-sm'}
             %i.fa.fa-plus
             = "Add New"
@@ -64,7 +64,7 @@
         %h2.panel-title
           = "Records"
       %div.panel-body
-        - if current_user && (@collections.length > 0 || current_user.admin?)
+        - if current_user && ((@collections && @collections.length > 0) || current_user.admin?)
           %a{href:new_core_file_path, class: 'btn btn-success btn-sm'}
             %i.fa.fa-plus
             = "Add New"
