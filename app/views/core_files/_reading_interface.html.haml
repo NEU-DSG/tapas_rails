@@ -14,7 +14,8 @@
         %pre#ace
           = @core_file.canonical_object.content.content.force_encoding('utf-8')
       -else
-        - if @core_file.send(view[1].to_sym)
-          = @core_file.send(view[1].to_sym).content.content.html_safe.force_encoding('utf-8')
+        - reader_view = @core_file.send(view[1].to_sym)
+        - if reader_view && reader_view.content.content
+          = reader_view.content.content.html_safe.force_encoding('utf-8')
         - else
           = "This view package could not be rendered"
