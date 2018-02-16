@@ -99,6 +99,8 @@
           .col-md-6
             - if !@core_file.thumbnail.blank?
               =image_tag @core_file.thumbnail.download_path('thumbnail_1')
+              = f.label :remove_thumbnail, "Remove Thumbnail"
+              = f.check_box "remove_thumbnail", {:checked => false}
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png"
 
     -# TODO add support_files?
