@@ -107,6 +107,12 @@ class CollectionsController < CatalogController
     params[:collection].delete("community")
     @collection = Collection.find(params[:id])
     # @core_files = CoreFile.find_by_did(params[:id])
+    if params[:collection][:remove_thumbnail] == "1"
+      params[:collection].delete :thumbnail
+      @collection.thumbnail_list = []
+      @collection.save!
+    end
+    params[:collection].delete :remove_thumbnail
     @collection.update_attributes(params[:collection])
     @collection.mass_permissions = params[:mass_permissions]
     @collection.save!

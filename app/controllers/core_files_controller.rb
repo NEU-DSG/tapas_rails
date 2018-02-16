@@ -56,7 +56,7 @@ class CoreFilesController < CatalogController
   #This method contains the actual logic for creating a new core file
   def create
     begin
-      params[:collection_dids] = params[:collections] if params[:collections]
+      params[:collection_dids] = params[:collections] ?  params[:collections] : nil
       params[:depositor] = current_user.id.to_s #temp setting this until users integrated
 
       # Step 1: Find or create the CoreFile Object -
@@ -165,6 +165,12 @@ class CoreFilesController < CatalogController
   def update
     cf = CoreFile.find(params[:id])
     params[:did] = cf.did
+    if params[:core_file][:remove_thumbnail] == "1"
+      params[:core_file].delete :thumbnail
+      cf.thumbnail_list = []
+      cf.save!
+    end
+    params[:core_file].delete :remove_thumbnail
     logger.warn("we are about to edit #{params[:did]}")
     logger.warn params
     create
