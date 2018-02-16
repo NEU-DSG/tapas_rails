@@ -7,7 +7,7 @@ TapasRails::Application.routes.draw do
   # We ask that you don't use the :as option here, as Forem relies on it being the default of "forem"
   mount Forem::Engine, :at => '/forums'
 
-  devise_for :users, :controllers => { :registrations => "registrations" }
+  devise_for :users, :controllers => { :registrations => "registrations", confirmations: 'confirmations' }
 
   # root to: "catalog#index"
   root to: "pages#show", id: 'home'
