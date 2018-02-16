@@ -1,10 +1,18 @@
 %h2.page-header
   = @user.name
+- if @user.email
+  %dt= "Email"
+  %dd= @user.email
+%dt= "Member Since"
+%dd= @user.created_at.strftime("%D")
 - if @user.bio
-  %p= @user.bio
+  %dt= "Bio"
+  %dd= @user.bio
 - if @user.institution
   %dt= "Institution"
   %dd= @user.institution.name
+%dt= "Role"
+%dd= @user.role
 
 %div.row
   - if @user.avatar
