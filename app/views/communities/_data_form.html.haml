@@ -17,9 +17,13 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@community.thumbnail_1.content.nil?
+            - if !@community.thumbnail_list.blank?
               =image_tag @community.download_path('thumbnail_1')
+              = f.label :remove_thumbnail, "Remove Thumbnail"
+              = f.check_box "remove_thumbnail", {:checked => false}
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
+
+
     .row
       .form-group.institutions
         = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
@@ -30,7 +34,7 @@
           - else
             - @community.institutions.each_with_index do |id, i|
               %span.institution{:class=> i != 0 ? "to-remove" : ""}
-                = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
+                = f.select :institutions, options_for_select(@institutions, id), {}, {name: "community[institutions][]", class: "form-control"}
                 -if i != 0
                   %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove institution", type: "button"}
                     %i.fa.fa-remove
@@ -47,11 +51,11 @@
         .col-md-6
           - if @community.properties.project_members.blank?
             %span.project_member
-              = f.text_field :project_members, name: 'community[project_members][]', class: "form-control", placeholder: "ID of user", value: ""
+              = f.select :project_members, options_for_select(@users), {}, { name: 'community[project_members][]', class: "form-control"}
           - else
             - @community.project_members.each_with_index do |id, i|
               %span.project_member{:class=> i != 0 ? "to-remove" : ""}
-                = f.text_field :project_members, value: id, name: "community[project_members][]", class: "form-control input-block-level"
+                = f.select :project_members, options_for_select(@users, id), {}, {name: "community[project_members][]", class: "form-control input-block-level" }
                 -if i != 0
                   %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project member", type: "button"}
                     %i.fa.fa-remove
@@ -65,11 +69,11 @@
         .col-md-6
           - if @community.properties.project_editors.blank?
             %span.project_editor
-              = f.text_field :project_editors, name: 'community[project_editors][]', class: "form-control", placeholder: "ID of user", value: ""
+              = f.select :project_editors, options_for_select(@users), {}, { name: 'community[project_editors][]', class: "form-control" }
           - else
             - @community.project_editors.each_with_index do |id, i|
               %span.project_editor{:class=> i != 0 ? "to-remove" : ""}
-                = f.text_field :project_editors, value: id, name: "community[project_editors][]", class: "form-control input-block-level"
+                = f.select :project_editors, options_for_select(@users, id), {}, { name: "community[project_editors][]", class: "form-control input-block-level" }
                 -if i != 0
                   %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project editor", type: "button"}
                     %i.fa.fa-remove
@@ -83,11 +87,11 @@
         .col-md-6
           - if @community.properties.project_admins.blank?
             %span.project_admin
-              = f.text_field :project_admins, name: 'community[project_admins][]', class: "form-control", placeholder: "ID of user", value: ""
+              = f.select :project_admins, options_for_select(@users), {}, { name: 'community[project_admins][]', class: "form-control" }
           - else
             - @community.project_admins.each_with_index do |id, i|
               %span.project_admin{:class=> i != 0 ? "to-remove" : ""}
-                = f.text_field :project_admins, value: id, name: "community[project_admins][]", class: "form-control input-block-level"
+                = f.select :project_admins, options_for_select(@users, id), {}, { name: "community[project_admins][]", class: "form-control input-block-level" }
                 -if i != 0
                   %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project admin", type: "button"}
                     %i.fa.fa-remove
