@@ -85,21 +85,33 @@ class CommunitiesController < CatalogController
     i_s.each do |i|
       @institutions << [i.name, i.id]
     end
+    u_s = User.all()
+    @users = []
+    u_s.each do |u|
+      @users << ["#{u.name} (#{u.email})", u.id]
+    end
   end
 
   #This method contains the actual logic for editing a particular community
   def update
     @community = Community.find(params[:id])
     puts @community
+    if params[:community][:remove_thumbnail] == "1"
+      params[:community].delete :thumbnail
+      @community.thumbnail_list = []
+      @community.save!
+    end
+    params[:community].delete :remove_thumbnail
     @community.update_attributes(params[:community])
     if params[:mass_permissions]
       @community.mass_permissions = params[:mass_permissions]
     end
-    @community.save!
     if params[:thumbnail]
       params[:thumbnail] = create_temp_file(params[:thumbnail])
       @community.add_thumbnail(:filepath => params[:thumbnail])
     end
+
+    @community.save!
     redirect_to @community and return
   end
 
