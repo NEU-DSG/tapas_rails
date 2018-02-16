@@ -34,7 +34,7 @@
                 %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}
                   %i.fa.fa-pencil
                   = "Edit"
-              - if record.thumbnail.blank?
+              - if record.thumbnail_list.blank?
                 =image_tag "tapaslogo-opaque.png"
               -else
                 %img{src:record.thumbnail.download_path('thumbnail_1')}
