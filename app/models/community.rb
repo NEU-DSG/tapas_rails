@@ -95,4 +95,9 @@ class Community < CerberusCore::BaseModels::Community
     self.rightsMetadata.permissions({person: self.depositor}, 'edit')
     # self.save!
   end
+
+  def remove_thumbnail
+    self.thumbnail_list = []
+    self.save!
+  end
 end

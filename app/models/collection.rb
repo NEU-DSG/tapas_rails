@@ -98,6 +98,11 @@ class Collection < CerberusCore::BaseModels::Collection
     end
   end
 
+  def remove_thumbnail
+    self.thumbnail_list = []
+    self.save!
+  end
+
   private
     def update_core_files
       return true unless @drupal_access_changed

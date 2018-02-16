@@ -172,6 +172,11 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     return type
   end
 
+  def remove_thumbnail
+    self.thumbnail_list = []
+    self.save!
+  end
+
   private
 
   def render_failure_json
