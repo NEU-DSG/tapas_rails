@@ -13,9 +13,9 @@ class CoreFilesController < CatalogController
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
   before_filter :can_edit?, only: [:edit, :update]
-  before_filter :enforce_show_permissions, :only=>:show
+  # before_filter :enforce_show_permissions, :only=>:show
 
-  self.search_params_logic += [:add_access_controls_to_solr_params]
+  # self.search_params_logic += [:add_access_controls_to_solr_params]
 
   #This method displays all the core files created in the database
   def index
@@ -126,10 +126,14 @@ class CoreFilesController < CatalogController
         logger.info("mods is present - the redirect may be where it's failing")
       #   render :xml => @mods, :status => 202
         flash[:notice] = "Your file has been updated."
-        redirect_to core_file
+        if params[:action] != "update"
+          redirect_to "/core_files/#{core_file.id}"
+        end
       else
         flash[:notice] = "Your file is being created. Check back soon."
-        redirect_to "/core_files"
+        if params[:action] != "update"
+          redirect_to "/core_files"
+        end
       #   @response[:message] = "Job processing"
       #   pretty_json(202) and return
       end
@@ -158,6 +162,18 @@ class CoreFilesController < CatalogController
       end
     end
 
+    @file_types = [['TEI Record',""]]
+    @sel_file_types = []
+    CoreFile.all_ography_types.each do |o|
+      @file_types << [o.titleize,o]
+    end
+    @core_file.ography_type.each do |o|
+      @sel_file_types << o
+    end
+    if @sel_file_types.blank?
+      @sel_file_types << ""
+    end
+
     @page_title = "Edit #{@core_file.title}"
   end
 
@@ -171,9 +187,12 @@ class CoreFilesController < CatalogController
       cf.save!
     end
     params[:core_file].delete :remove_thumbnail
+    params[:file_types].reject! { |c| c.blank? }
     logger.warn("we are about to edit #{params[:did]}")
     logger.warn params
+
     create
+    redirect_to cf and return
   end
 
   def view_package_html
