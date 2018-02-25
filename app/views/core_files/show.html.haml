@@ -35,6 +35,14 @@
 
     #metadata.tab-pane
       = @mods_html
+      - if @core_file.file_type != :tei_content
+        %dt  File Type
+        %dd
+          %ul
+            - @core_file.ography_type.each do |ot|
+              %li
+                = ot.titleize
+
 
     #files.tab-pane
       -if @core_file.canonical_object

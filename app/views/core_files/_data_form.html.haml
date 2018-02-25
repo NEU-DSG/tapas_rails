@@ -9,7 +9,7 @@
         .form-group
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'description', class: "form-control", placeholder: "Brief description of the record"
+            = f.text_area :description, pattern: ".*\\S.*", name: 'description', class: "form-control", placeholder: "Brief description of the record"
 
         .form-group.authors
           = f.label :authors, "Authors", class: "control-label col-md-2"
@@ -68,10 +68,9 @@
         .form-group
           = f.label "Ography Type", class: "control-label col-md-2"
           .col-md-6
-          -# TODO - get this working
-            -# - CoreFile.all_ography_read_methods.each do |m|
-            -#   .checkbox
-            -#     = f.check_box m, {}, @core_file.collections
+            = f.select :file_type, options_for_select(@file_types, @sel_file_types), {}, {name: "file_types[]", class: "form-control", multiple: true}
+            %p.help-block
+              = "Select multiple values by holding CTRL"
 
         - if current_user.admin?
           .form-group
