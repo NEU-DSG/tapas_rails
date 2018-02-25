@@ -25,7 +25,7 @@
                   %h4
                     = link_to(p['title_info_title_ssi'], community_path(p['id']))
                 %td
-                  - if current_user && ((p['edit_access_person_assim'] && p['edit_access_person_ssim'].include? current_user.id) || current_user.admin?)
+                  - if current_user && ((p['edit_access_person_ssim'] && (p['edit_access_person_ssim'].include? current_user.id)) || current_user.admin?)
                     %a{href:edit_community_path(p['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"
