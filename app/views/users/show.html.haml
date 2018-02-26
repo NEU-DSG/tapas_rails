@@ -28,5 +28,6 @@
 %dt= "Last logged in"
 %dd= @user.last_sign_in_at
 
-%dt= "Role"
-%dd= @user.role
+- if @user.role
+  %dt= "Role"
+  %dd= @user.role.gsub("_"," ").titleize

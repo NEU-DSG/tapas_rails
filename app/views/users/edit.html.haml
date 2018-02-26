@@ -18,11 +18,12 @@
           = f.label :institution, "Institution", class: "control-label col-md-2"
           .col-md-6
             = f.collection_select(:institution_id, Institution.all, :id, :name, :prompt => 'Please select institution')
-        .form-group
-          = f.label :role, "Admin", class: "control-label col-md-2"
-          .col-md-6
-            .checkbox
-              = f.check_box :role, {}, "admin"
+        - if current_user.admin?
+          .form-group
+            = f.label :role, "Admin", class: "control-label col-md-2"
+            .col-md-6
+              .checkbox
+                = f.select :role, options_for_select([['Admin', 'admin'], ['Unpaid User', 'unpaid_user'], ['Paid User', 'paid_user']], @user.role), {}
 
     %hr
   .form-actions
