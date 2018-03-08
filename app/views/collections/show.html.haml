@@ -24,6 +24,8 @@
     - if !@collection.description.blank?
       %dt= "Description"
       %dd= @collection.description
+    %dt= "Record Count"
+    %dd= records.count
 
 
   %div.col-md-9
