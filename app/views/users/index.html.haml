@@ -10,6 +10,8 @@
       %th
         = "Updated at"
       %th
+        = "Last Login"
+      %th
         = "Role"
     - @users.each do |user|
       %tr
@@ -21,6 +23,8 @@
                 = "Edit"
         %td
           = user.updated_at
+        %td
+          = user.current_sign_in_at
         %td
           - if user.role
             = user.role.gsub("_"," ").titleize
