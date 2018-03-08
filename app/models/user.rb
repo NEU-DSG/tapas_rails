@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
     logger.warn(response)
     contact = response[:Contacts]
     logger.warn(contact)
-    if contact
+    if !contact.blank?
       contact = contact[0]
       logger.warn(contact)
       if contact[:Status] && contact[:Status] == "Active"
