@@ -56,7 +56,7 @@
             - else
               - @core_file.collections.each_with_index do |col, i|
                 %span.collection{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.select :collections, options_for_select(@collections), {}, {name: "collections[]", class: "form-control input-block-level"}
+                  = f.select :collections, options_for_select(@collections, col.id), {}, {name: "collections[]", class: "form-control input-block-level"}
                   - if i != 0
                     %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove collection", type: "button"}
                       %i.fa.fa-remove
