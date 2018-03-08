@@ -48,10 +48,15 @@ class CommunitiesController < CatalogController
     # authorize! :show, params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
+    @rec_count = 0
+    @community.children.each do |cc|
+      @rec_count = @rec_count + cc.children.count
+  end
   end
 
   #This method is used to create a new community/project
   def new
+    if current_user && (current_user.paid_user? || current_user.admin?)
     @page_title = "Create New Community"
     @community = Community.new(:mass_permissions=>"public")
     i_s = Institution.all()
@@ -63,6 +68,10 @@ class CommunitiesController < CatalogController
     @users = []
     u_s.each do |u|
       @users << ["#{u.name} (#{u.email})", u.id]
+    end
+    else
+      flash[:notice] = "In order to create a project, you must be a member of the TEI. <a href="">Join now!</a>"
+      redirect_to root_path
     end
   end
 

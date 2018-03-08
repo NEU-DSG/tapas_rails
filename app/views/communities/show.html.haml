@@ -10,14 +10,20 @@
       =image_tag "tapaslogo-opaque.png"
     -else
       %img{src:@community.thumbnail_list.first}
-    %p= @community.description
+    %dt= "Description"
+    %dd= @community.description
     -# external links TODO
     - if !@community.institutions.blank?
-      %h4 Affiliated Institutions
+      %dt Affiliated Institutions
       - @community.institutions.each do |i|
         - int = Institution.find(i)
-        = link_to(int.name, institution_path(int))
+        %dd
+          = link_to(int.name, institution_path(int))
         %br
+    %dt= "Collection Count"
+    %dd= collections.count
+    %dt= "Record Count"
+    %dd= @rec_count
 
   %div.col-md-9
     %panel.panel-default.panel-records
