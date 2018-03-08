@@ -23,7 +23,14 @@
     %dt= "URL"
     %dd= link_to(@institution.url)
 - if !@communities.blank?
-  %h3 Projects
-  - @communities.each do |c|
-    %h4
-      = link_to(c['title_info_title_ssi'], community_path(c['id']))
+  %panel.panel-default.panel-projects
+    %div.panel-heading
+      %h2.panel-title
+        = "Projects"
+    %div.panel-body
+      %table.table
+        - @communities.each do |p|
+          %tr
+            %td
+              %h4
+                = link_to(p['title_info_title_ssi'], community_path(p['id']))
