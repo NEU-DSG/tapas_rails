@@ -24,6 +24,13 @@
     %dd= collections.count
     %dt= "Record Count"
     %dd= @rec_count
+    %dt= "Project Members"
+    - @community.members_with_roles.each do |pm|
+      %dd
+        = link_to(pm[:user].name, user_path(pm[:user].id))
+        - if pm[:roles][0] != "member"
+          = "(#{pm[:roles][0]})"
+
 
   %div.col-md-9
     %panel.panel-default.panel-records

@@ -100,4 +100,66 @@ class Community < CerberusCore::BaseModels::Community
     self.thumbnail_list = []
     self.save!
   end
+
+  def member_objects
+    member_objects = {}
+    if !self.project_admins.blank?
+      member_objects[:admins] = []
+      self.project_admins.each do |pa|
+        if User.exists?(pa)
+          member_objects[:admins] << User.find(pa)
+        end
+      end
+    end
+    if !self.project_editors.blank?
+      member_objects[:editors] = []
+      self.project_editors.each do |pe|
+        if User.exists?(pe)
+          member_objects[:editors] << User.find(pe)
+        end
+      end
+end
+    if !self.project_members.blank?
+      member_objects[:members] = []
+      self.project_members.each do |pm|
+        if User.exists?(pm)
+          member_objects[:members] << User.find(pm)
+        end
+      end
+    end
+    return member_objects
+  end
+
+  def members_with_roles
+    members_with_roles = []
+    if !self.project_admins.blank?
+      self.project_admins.each do |pa|
+        if User.exists?(pa)
+          members_with_roles << {user:User.find(pa), roles:["admin"]}
+        end
+      end
+    end
+    if !self.project_editors.blank?
+      self.project_editors.each do |pe|
+        if User.exists?(pe)
+          user = User.find(pe)
+          if not self.project_admins.include?(pe)
+            members_with_roles << {user:user, roles:["editor"]}
+          end
+        end
+      end
+    end
+    if !self.project_members.blank?
+      self.project_members.each do |pm|
+        if User.exists?(pm)
+          user = User.find(pm)
+          if (not self.project_admins.include?(pm)) && (not self.project_editors.include?(pm))
+            members_with_roles << {user:user, roles:["member"]}
+          end
+        end
+      end
+    end
+    return members_with_roles
+  end
+
 end
