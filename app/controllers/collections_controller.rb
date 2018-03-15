@@ -49,8 +49,11 @@ class CollectionsController < CatalogController
   def new
     @page_title = "Create New Collection"
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
-    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi, id', rows: count)
+    query = "has_model_ssim:\"#{model_type}\" && (depositor_tesim:\"#{current_user.id.to_s}\" OR project_admins_ssim:\"#{current_user.id.to_s}\" OR project_editors_ssim:\"#{current_user.id.to_s}\")"
+    count = ActiveFedora::SolrService.count(query)
+    results = ActiveFedora::SolrService.query(query)
+    # count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
+    # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi, id', rows: count)
 
     @communities =[]
     results.each do |res|

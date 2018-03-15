@@ -11,7 +11,7 @@
           .col-md-6
             = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'collection[description][]', class: "form-control", placeholder: "Brief description of the collection"
         .form-group
-          = f.label :community, "Community", class: "control-label col-md-2"
+          = f.label :community, "Project", class: "control-label col-md-2"
           .col-md-6
             - parent = !@collection.community.blank? ? @collection.community.pid : params[:community]
             = f.select :community, options_for_select(@communities, parent), {}, {name: "community", class: "form-control"}
