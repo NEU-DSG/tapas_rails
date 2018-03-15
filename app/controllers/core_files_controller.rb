@@ -39,10 +39,15 @@ class CoreFilesController < CatalogController
 
   #This method is used to create a new core file
   def new
-    @page_title = "Create New Core File"
+    @page_title = "Create New Record"
     model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'id, title_info_title_ssi', rows: count)
+    projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{current_user.id.to_s}\" OR depositor_tesim:\"#{current_user.id.to_s}\" OR project_admins_ssim:\"#{current_user.id.to_s}\" OR project_editors_ssim:\"#{current_user.id.to_s}\")")
+    col_query = projects.map do |p|
+      "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
+    end
+    query = "has_model_ssim: \"#{model_type}\" && (#{col_query.join(" OR ")})"
+    count = ActiveFedora::SolrService.count(query)
+    results = ActiveFedora::SolrService.query(query, fl: 'id, title_info_title_ssi', rows: count)
 
     @collections =[]
     results.each do |res|
