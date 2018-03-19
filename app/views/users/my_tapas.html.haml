@@ -14,6 +14,11 @@
           %a{href:new_community_path, class: 'btn btn-success btn-sm'}
             %i.fa.fa-plus
             = "Add New"
+        - else
+          = "In order to create a project, you must be a member of the TEI. "
+          %a{href:"/pages/choosing-account"}
+            = "Join now!"
+          %br
           %br
         %table.table
           - if !@projects || @projects.length < 1
