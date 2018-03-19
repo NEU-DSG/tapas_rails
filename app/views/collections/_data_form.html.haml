@@ -10,6 +10,7 @@
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
             = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'collection[description][]', class: "form-control", placeholder: "Brief description of the collection"
+            %p.small.help-block="This field accepts plain text"
         .form-group
           = f.label :community, "Project", class: "control-label col-md-2"
           .col-md-6

@@ -12,6 +12,7 @@
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
             = f.text_area :description, class: "form-control", placeholder: "description"
+            %p.small.help-block="This field accepts plain text"
 
         .form-group
           = f.label :address, "Address", class: "control-label col-md-2"
