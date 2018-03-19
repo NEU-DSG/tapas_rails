@@ -9,15 +9,10 @@
     %section#tools.tools.wrench.collapse
       %div.tools-content
         %ul.menu.nav
+          = render partial: "/shared/menu", locals:{menu:"toolbar_tools"}
           %li.leaf
             %a{:href=>"/users/#{current_user.id}"}
               = "My Account"
-          %li.leaf
-            %a{:href=>"/my_tapas"}
-              = "My TAPAS"
-          %li.leaf
-            %a{:href=>"/my_projects"}
-              = "My Projects"
   - else
     %a{:href => new_user_session_path, :class => "toolbar-link"}
       %span.fa-stack.fa-lg
