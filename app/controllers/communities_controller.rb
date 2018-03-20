@@ -6,7 +6,7 @@ class CommunitiesController < CatalogController
 
   before_filter :can_edit?, only: [:edit, :update, :destroy]
   before_filter :can_read?, :only => :show
-  # before_filter :enforce_show_permissions, :only=>:show
+  # before_filter :enforce_show_permissions, :only=>:index
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
 
@@ -24,6 +24,7 @@ class CommunitiesController < CatalogController
   def index
     @page_title = "All Projects"
     self.search_params_logic += [:communities_filter]
+    self.search_params_logic += [:add_access_controls_to_solr_params]
     logger.debug repository.inspect
     logger.debug repository.connection
     logger.debug Blacklight.solr_config[:url]
