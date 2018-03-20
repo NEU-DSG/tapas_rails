@@ -4,10 +4,9 @@ class CollectionsController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
 
-  before_filter :can_edit?, only: [:edit, :update]
+  before_filter :can_edit?, only: [:edit, :update, :destroy]
+  before_filter :can_read?, :only => :show
   # before_filter :enforce_show_permissions, :only=>:show
-
-  # self.search_params_logic += [:add_access_controls_to_solr_params]
 
   def upsert
     if params[:thumbnail]
@@ -23,6 +22,7 @@ class CollectionsController < CatalogController
   def index
     @page_title = "All Collections"
     self.search_params_logic += [:collections_filter]
+    self.search_params_logic += [:add_access_controls_to_solr_params]
     (@response, @document_list) = search_results(params, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
@@ -51,7 +51,7 @@ class CollectionsController < CatalogController
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     query = "has_model_ssim:\"#{model_type}\" && (depositor_tesim:\"#{current_user.id.to_s}\" OR project_admins_ssim:\"#{current_user.id.to_s}\" OR project_editors_ssim:\"#{current_user.id.to_s}\")"
     count = ActiveFedora::SolrService.count(query)
-    results = ActiveFedora::SolrService.query(query)
+    results = ActiveFedora::SolrService.query(query, fl: 'did_ssim, title_info_title_ssi, id', rows: count)
     # count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
     # results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'did_ssim, title_info_title_ssi, id', rows: count)
 
