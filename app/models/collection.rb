@@ -9,6 +9,7 @@ class Collection < CerberusCore::BaseModels::Collection
 
   before_save :ensure_unique_did
   before_save :match_dc_to_mods
+  before_save :update_permissions
   after_save :update_core_files
 
   has_core_file_types  ["CoreFile"]
@@ -101,6 +102,38 @@ class Collection < CerberusCore::BaseModels::Collection
   def remove_thumbnail
     self.thumbnail_list = []
     self.save!
+  end
+
+  def update_permissions
+    proj_prop = self.project.properties
+    if !proj_prop.project_members.blank? && (self.mass_permissions != "public" || self.project.mass_permissions != "public")
+      proj_prop.project_members.each do |p|
+        self.rightsMetadata.permissions({person: p}, 'read')
+      end
+    end
+    if self.mass_permissions == "public" && self.project.mass_permissions == "public"
+      self.project.read_users.each do |p|
+        # if its public don't put the project_members as read users
+        self.rightsMetadata.permissions({person: p}, 'none')
+      end
+    end
+    if !proj_prop.project_admins.blank?
+      proj_prop.project_admins.each do |p|
+        self.rightsMetadata.permissions({person: p}, 'edit')
+      end
+    end
+    if !proj_prop.project_editors.blank?
+      proj_prop.project_editors.each do |p|
+        self.rightsMetadata.permissions({person: p}, 'edit')
+      end
+    end
+    # if diff between project_admins + project_editors and edit_users then remove the diff
+    edits = (proj_prop.project_admins + proj_prop.project_editors).uniq
+    diff = self.project.edit_users - edits
+    diff.each do |d|
+      self.rightsMetadata.permissions({person: d}, 'none')
+    end
+    logger.info(self.rightsMetadata.content)
   end
 
   private

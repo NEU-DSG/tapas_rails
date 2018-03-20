@@ -72,9 +72,15 @@ class Community < CerberusCore::BaseModels::Community
   end
 
   def update_permissions
-    if !self.properties.project_members.blank?
+    if !self.properties.project_members.blank? && self.mass_permissions != "public"
       self.properties.project_members.each do |p|
         self.rightsMetadata.permissions({person: p}, 'read')
+      end
+    end
+    if self.mass_permissions == "public"
+      self.read_users.each do |p|
+        # if its public don't put the project_members as read users
+        self.rightsMetadata.permissions({person: p}, 'none')
       end
     end
     if !self.properties.project_admins.blank?
@@ -87,7 +93,17 @@ class Community < CerberusCore::BaseModels::Community
         self.rightsMetadata.permissions({person: p}, 'edit')
       end
     end
-    # self.save!
+    # if diff between project_admins + project_editors and edit_users then remove the diff
+    edits = (self.properties.project_admins + self.properties.project_editors).uniq
+    diff = self.edit_users - edits
+    logger.info(diff)
+    diff.each do |d|
+      self.rightsMetadata.permissions({person: d}, 'none')
+    end
+    # TODO - do i need to propagate permissions to the collection at this time?
+    self.collections.each do |col|
+      col.save!
+    end
   end
 
   def set_depositor_as_admin
@@ -118,7 +134,7 @@ class Community < CerberusCore::BaseModels::Community
           member_objects[:editors] << User.find(pe)
         end
       end
-end
+    end
     if !self.project_members.blank?
       member_objects[:members] = []
       self.project_members.each do |pm|

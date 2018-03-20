@@ -76,6 +76,10 @@ class User < ActiveRecord::Base
     Pluot.account_id = aid
     response = Pluot.contacts.filter("e-Mail eq #{self.email}")
     logger.warn(response)
+    if response.blank?
+      # probably an issue where we were unable to connect with wild apricot at all
+      return true
+    end
     contact = response[:Contacts]
     logger.warn(contact)
     if !contact.blank?
