@@ -50,8 +50,10 @@ class CommunitiesController < CatalogController
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
     @rec_count = 0
-    @community.children.each do |cc|
-      @rec_count = @rec_count + cc.children.count
+    if @community.children
+      @community.children.each do |cc|
+        @rec_count = @rec_count + cc.children.count
+      end
     end
   end
 
