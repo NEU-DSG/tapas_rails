@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
 
   ROLES = %w[admin paid_user unpaid_user]
 
-  ACCOUNT_TYPES = %w[free teic]
+  ACCOUNT_TYPES = %w[free teic teic_inst]
 
   def api_key=(api_key)
     @api_key = Digest::SHA512.hexdigest api_key

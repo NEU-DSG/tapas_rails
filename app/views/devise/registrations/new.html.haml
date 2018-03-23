@@ -15,7 +15,7 @@
       %div.form-inputs
         = f.label :account_type, "Account Type"
         %br
-        = f.select :account_type, options_for_select([['Free Account', 'free'], ['TEI-C Member Account', 'teic']], 'free'), {}, required: true, class:"form-control"
+        = f.select :account_type, options_for_select([['Free Account', 'free'], ['TEI-C Member Account', 'teic'], ['TEI-C Member via my institution', 'teic_inst']], 'free'), {}, required: true, class:"form-control"
         %p.help-block
           %a{:href=>"/pages/choosing-account"}
             = "More information about TAPAS accounts and TEI membership"
