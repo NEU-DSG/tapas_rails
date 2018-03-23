@@ -101,8 +101,12 @@ class Community < CerberusCore::BaseModels::Community
       self.rightsMetadata.permissions({person: d}, 'none')
     end
     # TODO - do i need to propagate permissions to the collection at this time?
-    self.collections.each do |col|
-      col.save!
+    if self.collections
+      self.collections.each do |col|
+        if col && Collection.exists?(col.id)
+          col.save!
+        end
+      end
     end
   end
 
