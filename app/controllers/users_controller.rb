@@ -66,6 +66,7 @@ class UsersController < CatalogController
     @user.name = params[:user][:name]
     @user.email = params[:user][:email]
     @user.role = params[:user][:role]
+    @user.account_type = params[:user][:account_type]
     @user.institution = Institution.find(params[:user][:institution_id])
     @user.save!
     redirect_to @user

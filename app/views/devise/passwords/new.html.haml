@@ -2,38 +2,18 @@
 
 %ul.nav.nav-tabs
   %li
-    = link_to "Create New Account", '#new'
+    = link_to "Create New Account", '/users/sign_up'
   %li
-    = link_to "Sign In", '#sign_in'
+    = link_to "Sign In", '/users/sign_in'
   %li.active
     = link_to "Recover Password", '#password'
 
 .tab-content
   #new.tab-pane
-    = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-      = f.error_notification
-      %div.form-inputs
-        = f.input :email, required: true, autofocus: true
-        = f.input :name, required: true
-        = f.input :institution_id, collection: Institution.all, value_method: :id, label_method: :name, prompt: 'Please select institution'
-        = f.input :password, required: true
-        %p.help-block
-          = "Minimum length: 8 characters"
-        = f.input :password_confirmation, required: true
-        = f.input :avatar
-        = f.input :bio
-      %div.form-actions
-        = f.button :submit, "Sign up"
+
 
   #sign_in.tab-pane
-    = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-      %div.form-inputs
-        = f.input :email, required: false, autofocus: true
-        = f.input :password, required: false
-        = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
 
-      %div.form-actions
-        = f.button :submit, "Sign in"
 
   #password.tab-pane.active
     = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: {method: :post}) do |f|
@@ -46,6 +26,11 @@
 :javascript
   $('.nav-tabs a').click(function (e) {
     e.preventDefault();
-    $(this).tab('show');
+    if (e.currentTarget.href.indexOf('#') != -1){
+      $(this).tab('show');
+    } else {
+      window.location = e.currentTarget.href;
+    }
   });
+
 

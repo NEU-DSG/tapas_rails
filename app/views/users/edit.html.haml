@@ -18,6 +18,10 @@
           = f.label :institution, "Institution", class: "control-label col-md-2"
           .col-md-6
             = f.collection_select(:institution_id, Institution.all, :id, :name, :prompt => 'Please select institution')
+        .form-group
+          = f.label :account_type, "Account Type", class: "control-label col-md-2"
+          .col-md-6
+            = f.select :account_type, options_for_select([['Free Account', 'free'], ['TEI-C Member Account', 'teic']], @user.account_type), {}
         - if current_user.admin?
           .form-group
             = f.label :role, "Admin", class: "control-label col-md-2"
