@@ -28,6 +28,14 @@
 %dt= "Last logged in"
 %dd= @user.last_sign_in_at
 
+%dt= "Account Type"
+%dd= @user.account_type
+
 - if @user.role
   %dt= "Role"
   %dd= @user.role.gsub("_"," ").titleize
+
+%dt="Association Counts"
+%dd="Projects - #{}"
+%dd="Collections - #{}"
+%dd="Records - #{}"

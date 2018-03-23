@@ -12,6 +12,8 @@
     <%= f.input :name, required: true %>
     <%= f.input :institution_id, collection: Institution.all, value_method: :id, label_method: :name, selected: current_user.institution ? current_user.institution.id : "", prompt: 'Please select institution' %>
     <%= f.input :bio %>
+    <%= f.label :account_type, "Account Type" %>
+    <%= f.select :account_type, options_for_select([['Free Account', 'free'], ['TEI-C Member Account', 'teic']], resource.account_type), {}, required: true, class:"form-control"%>
     <%= f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false %>
     <%= f.input :password_confirmation, required: false %>
     <%= f.input :current_password, hint: "we need your current password to confirm your changes", required: true %>
