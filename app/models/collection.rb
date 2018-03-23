@@ -129,7 +129,7 @@ class Collection < CerberusCore::BaseModels::Collection
     end
     # if diff between project_admins + project_editors and edit_users then remove the diff
     edits = (proj_prop.project_admins + proj_prop.project_editors).uniq
-    diff = self.project.edit_users - edits
+    diff = self.project.clean_edit_users - edits
     diff.each do |d|
       self.rightsMetadata.permissions({person: d}, 'none')
     end

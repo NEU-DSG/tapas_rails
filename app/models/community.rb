@@ -74,7 +74,9 @@ class Community < CerberusCore::BaseModels::Community
   def update_permissions
     if !self.properties.project_members.blank? && self.mass_permissions != "public"
       self.properties.project_members.each do |p|
-        self.rightsMetadata.permissions({person: p}, 'read')
+        if !p.blank?
+          self.rightsMetadata.permissions({person: p}, 'read')
+        end
       end
     end
     if self.mass_permissions == "public"
@@ -85,20 +87,26 @@ class Community < CerberusCore::BaseModels::Community
     end
     if !self.properties.project_admins.blank?
       self.properties.project_admins.each do |p|
-        self.rightsMetadata.permissions({person: p}, 'edit')
+        if !p.blank?
+          self.rightsMetadata.permissions({person: p}, 'edit')
+        end
       end
     end
     if !self.properties.project_editors.blank?
       self.properties.project_editors.each do |p|
-        self.rightsMetadata.permissions({person: p}, 'edit')
+        if !p.blank?
+          self.rightsMetadata.permissions({person: p}, 'edit')
+        end
       end
     end
     # if diff between project_admins + project_editors and edit_users then remove the diff
     edits = (self.properties.project_admins + self.properties.project_editors).uniq
-    diff = self.edit_users - edits
+    diff = self.clean_edit_users - edits
     logger.info(diff)
     diff.each do |d|
-      self.rightsMetadata.permissions({person: d}, 'none')
+      if !d.blank?
+        self.rightsMetadata.permissions({person: d}, 'none')
+      end
     end
     # TODO - do i need to propagate permissions to the collection at this time?
     if self.collections
@@ -180,6 +188,10 @@ class Community < CerberusCore::BaseModels::Community
       end
     end
     return members_with_roles
+  end
+
+  def clean_edit_users
+    return self.edit_users.keep_if{ |k| k != "" }
   end
 
 end
