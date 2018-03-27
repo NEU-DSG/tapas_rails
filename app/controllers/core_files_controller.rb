@@ -56,6 +56,12 @@ class CoreFilesController < CatalogController
       end
     end
     @core_file = CoreFile.new(:mass_permissions=>"public")
+
+    @file_types = [['TEI Record',""]]
+    @sel_file_types = []
+    CoreFile.all_ography_types.each do |o|
+      @file_types << [o.titleize,o]
+  end
   end
 
   #This method contains the actual logic for creating a new core file
