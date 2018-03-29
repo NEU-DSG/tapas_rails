@@ -10,8 +10,8 @@ class UpsertCoreFile
 
   def execute
     begin
-      logger.info("params in job")
-      logger.info(params)
+      # logger.info("params in job")
+      # logger.info(params)
       if params[:did] && Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did])
       else
@@ -19,7 +19,7 @@ class UpsertCoreFile
         core_file.save!
         core_file.did = core_file.pid
       end
-      logger.info(core_file)
+      # logger.info(core_file)
 
       core_file.mark_upload_in_progress!
       core_file.depositor = params[:depositor]
@@ -112,7 +112,7 @@ class UpsertCoreFile
   end
 
   def update_associations!
-    logger.info("starting update_associations")
+    # upsert_logger.info("starting update_associations")
     if params[:collection_dids].is_a?(Array)
       collections = params[:collection_dids].map do |did|
         if Collection.exists?(did)
@@ -124,8 +124,8 @@ class UpsertCoreFile
         end
       end
     end
-    logger.info("we are in update associations")
-    logger.info(collections)
+    # logger.info("we are in update associations")
+    # logger.info(collections)
 
     # In the case where new collection_dids and new file_types are provided,
     # overwrite both the ography types and the collection memberships this
@@ -165,13 +165,13 @@ class UpsertCoreFile
         end
       end
     else
-      logger.info("none of the above")
-      logger.info(params)
+      # logger.info("none of the above")
+      upsert_logger.info(params)
     end
     core_file.save!
-    logger.info("done with associations")
-    logger.info(core_file.collections)
-    logger.info(params)
+    # logger.info("done with associations")
+    # logger.info(core_file.collections)
+    # logger.info(params)
   end
 
   private
