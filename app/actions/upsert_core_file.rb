@@ -10,6 +10,8 @@ class UpsertCoreFile
 
   def execute
     begin
+      logger.info("params in job")
+      logger.info(params)
       if params[:did] && Did.exists_by_did?(params[:did])
         self.core_file = CoreFile.find_by_did(params[:did])
       else
@@ -17,6 +19,7 @@ class UpsertCoreFile
         core_file.save!
         core_file.did = core_file.pid
       end
+      logger.info(core_file)
 
       core_file.mark_upload_in_progress!
       core_file.depositor = params[:depositor]
@@ -109,6 +112,7 @@ class UpsertCoreFile
   end
 
   def update_associations!
+    logger.info("starting update_associations")
     if params[:collection_dids].is_a?(Array)
       collections = params[:collection_dids].map do |did|
         if Collection.exists?(did)
@@ -120,6 +124,8 @@ class UpsertCoreFile
         end
       end
     end
+    logger.info("we are in update associations")
+    logger.info(collections)
 
     # In the case where new collection_dids and new file_types are provided,
     # overwrite both the ography types and the collection memberships this
@@ -127,8 +133,10 @@ class UpsertCoreFile
     if params[:file_types].is_a?(Array) && params[:collection_dids].is_a?(Array)
       core_file.clear_ographies!
       core_file.collections = collections
-      params[:file_types].each do |ography|
-        core_file.send(:"#{ography}_for=", collections)
+      params[:file_types].each do |ogmethod|
+        if !ogmethod.blank?
+          core_file.send(:"#{ogmethod}_for=", collections)
+        end
       end
     # In the case where only collection_dids are provided, update the
     # collections association to use the new collections AND make sure
@@ -151,14 +159,19 @@ class UpsertCoreFile
     elsif params[:file_types].is_a?(Array)
       old_collections = core_file.collections.to_a
       core_file.clear_ographies!
-      params[:file_types].each do |ography|
-        core_file.send(:"#{ography}_for=", old_collections)
+      params[:file_types].each do |ogmethod|
+        if !ogmethod.blank?
+          core_file.send(:"#{ogmethod}_for=", old_collections)
+        end
       end
     else
-      puts "none of the above"
-      puts params
+      logger.info("none of the above")
+      logger.info(params)
     end
     core_file.save!
+    logger.info("done with associations")
+    logger.info(core_file.collections)
+    logger.info(params)
   end
 
   private
