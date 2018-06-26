@@ -76,7 +76,13 @@ class User < ActiveRecord::Base
     aid = 66796
     Pluot.api_key = api_key
     Pluot.account_id = aid
-    response = Pluot.contacts.filter("e-Mail eq #{self.email}")
+    logger.warn("e-Mail eq #{self.email}")
+    begin
+      response = Pluot.contacts.filter("e-Mail eq #{self.email}")
+    rescue Faraday::ConnectionFailed => e
+      print e
+      return false
+    end
     logger.warn(response)
     if response.blank?
       # probably an issue where we were unable to connect with wild apricot at all
