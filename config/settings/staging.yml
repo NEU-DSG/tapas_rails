@@ -2,4 +2,4 @@ exist:
   username: 'tapas'
   password: <%=  ENV['STAGING_EXIST_PASSWORD'] %>
   url: 'http://localhost:8868/exist/apps/tapas-xq'
-base_url: 'http://railsapi.tapasdev.neu.edu'
+base_url: 'http://beta.tapasproject.org'
