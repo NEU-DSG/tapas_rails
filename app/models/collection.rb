@@ -105,35 +105,40 @@ class Collection < CerberusCore::BaseModels::Collection
   end
 
   def update_permissions
-    proj_prop = self.project.properties
-    if !proj_prop.project_members.blank? && (self.mass_permissions != "public" || self.project.mass_permissions != "public")
-      proj_prop.project_members.each do |p|
-        self.rightsMetadata.permissions({person: p}, 'read')
+    if self.project
+      logger.info("updating permissions")
+      proj_prop = self.project.properties
+      if !proj_prop.project_members.blank? && (self.mass_permissions != "public" || self.project.mass_permissions != "public")
+        proj_prop.project_members.each do |p|
+          self.rightsMetadata.permissions({person: p}, 'read')
+        end
       end
-    end
-    if self.mass_permissions == "public" && self.project.mass_permissions == "public"
-      self.project.read_users.each do |p|
-        # if its public don't put the project_members as read users
-        self.rightsMetadata.permissions({person: p}, 'none')
+      if self.mass_permissions == "public" && self.project.mass_permissions == "public"
+        self.project.read_users.each do |p|
+          # if its public don't put the project_members as read users
+          self.rightsMetadata.permissions({person: p}, 'none')
+        end
       end
-    end
-    if !proj_prop.project_admins.blank?
-      proj_prop.project_admins.each do |p|
-        self.rightsMetadata.permissions({person: p}, 'edit')
+      if !proj_prop.project_admins.blank?
+        proj_prop.project_admins.each do |p|
+          self.rightsMetadata.permissions({person: p}, 'edit')
+        end
       end
-    end
-    if !proj_prop.project_editors.blank?
-      proj_prop.project_editors.each do |p|
-        self.rightsMetadata.permissions({person: p}, 'edit')
+      if !proj_prop.project_editors.blank?
+        proj_prop.project_editors.each do |p|
+          self.rightsMetadata.permissions({person: p}, 'edit')
+        end
       end
+      # if diff between project_admins + project_editors and edit_users then remove the diff
+      edits = (proj_prop.project_admins + proj_prop.project_editors).uniq
+      diff = self.project.clean_edit_users - edits
+      diff.each do |d|
+        self.rightsMetadata.permissions({person: d}, 'none')
+      end
+      logger.info(self.rightsMetadata.content)
+    else
+      logger.info("permissions will be updated soon")
     end
-    # if diff between project_admins + project_editors and edit_users then remove the diff
-    edits = (proj_prop.project_admins + proj_prop.project_editors).uniq
-    diff = self.project.clean_edit_users - edits
-    diff.each do |d|
-      self.rightsMetadata.permissions({person: d}, 'none')
-    end
-    logger.info(self.rightsMetadata.content)
   end
 
   private
