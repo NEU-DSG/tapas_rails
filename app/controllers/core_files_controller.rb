@@ -12,7 +12,8 @@ class CoreFilesController < CatalogController
 
   skip_before_filter :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
-  before_filter :can_edit?, only: [:edit, :update]
+  before_filter :can_edit?, only: [:edit, :update, :destroy]
+  before_filter :can_read?, :only => :show
   # before_filter :enforce_show_permissions, :only=>:show
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
@@ -61,7 +62,7 @@ class CoreFilesController < CatalogController
     @sel_file_types = []
     CoreFile.all_ography_types.each do |o|
       @file_types << [o.titleize,o]
-  end
+    end
   end
 
   #This method contains the actual logic for creating a new core file
@@ -76,13 +77,24 @@ class CoreFilesController < CatalogController
       if params[:did].blank? && !params[:id].blank?
         params[:did] = params[:id]
       end
-      if CoreFile.exists_by_did?(params[:did])
+      if params[:did] && CoreFile.exists_by_did?(params[:did]) &&
         core_file = CoreFile.find_by_did(params[:did])
+      elsif params[:id] && CoreFile.exists?(params[:id])
+        logger.info("using existing cf at #{params[:id]}")
+        core_file = CoreFile.find(params[:id])
       else
+        logger.info("time to create a new CF")
         core_file = CoreFile.create(did: params[:did],
                                     depositor: params[:depositor])
         core_file.permissions({person: "#{current_user.id}"}, "edit")
         core_file.mark_upload_in_progress!
+      end
+      logger.info(core_file.id)
+      if params[:id].blank?
+        params[:id] = core_file.id
+      end
+      if params[:did].blank?
+        params[:did] = core_file.id
       end
 
       # Step 1: Extract uploaded files to temporary locations if they exist
@@ -138,12 +150,13 @@ class CoreFilesController < CatalogController
       #   render :xml => @mods, :status => 202
         flash[:notice] = "Your file has been updated."
         if params[:action] != "update"
-          redirect_to "/core_files/#{core_file.id}"
+          # redirect_to "/core_files/#{core_file.id}"
+          redirect_to request.referer
         end
       else
         flash[:notice] = "Your file is being created. Check back soon."
         if params[:action] != "update"
-          redirect_to "/core_files"
+          redirect_to :back
         end
       #   @response[:message] = "Job processing"
       #   pretty_json(202) and return
