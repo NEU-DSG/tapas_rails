@@ -13,7 +13,7 @@ gem 'rubyzip'
 gem 'passenger', '5.0.15'
 
 # Use mysql2 for the staging environment
-gem 'mysql2', '0.3.16'
+gem 'mysql2', '0.3.17'
 
 gem 'minitest', '4.7.5'
 
