@@ -214,7 +214,7 @@ GEM
       rdf-turtle (>= 1.1.2)
       sparql (>= 1.1.2)
       sparql-client (>= 1.1.1)
-    logger (1.2.8)
+    logger (1.4.1)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -368,7 +368,7 @@ GEM
       mime-types
       nokogiri
       rest-client
-    rubyzip (1.1.7)
+    rubyzip (2.0.0)
     rufus-scheduler (2.0.24)
       tzinfo (>= 0.3.22)
     sass (3.2.19)
