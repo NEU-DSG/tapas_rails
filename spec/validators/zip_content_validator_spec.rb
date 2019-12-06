@@ -25,7 +25,7 @@ describe ZipContentValidator do
 
     it "that accepts files that are valid TEI" do 
       p = fixture_file "tei.xml" 
-      expect { zcv.send(method, p) }.not_to raise_error Exceptions::InvalidZipError
+      expect { zcv.send(method, p) }.not_to raise_error 
     end
   end
 
@@ -41,11 +41,6 @@ describe ZipContentValidator do
   describe ".tei" do 
     it_should_behave_like "an xml validating operation", :tei
     it_should_behave_like "a TEI validating operation", :tei
-  end
-
-  describe ".tfc" do 
-    it_should_behave_like "an xml validating operation", :tfc
-    it_should_behave_like "a TEI validating operation", :tfc
   end
 
   describe ".html" do 

@@ -5,11 +5,10 @@ module OGReference
   # as its parent via drupal og nids.
   def self.find_all_in_og(og)
     results = ActiveFedora::SolrService.query("drupal_og_reference_ssim:\"#{og}\"")
-
     results.map { |result| SolrDocument.new(result) } 
   end
   
   included do 
-    has_attributes :og_reference, datastream: "properties", multiple: false
+    has_attributes :og_reference, datastream: "properties", multiple: true
   end
 end

@@ -11,8 +11,8 @@ class TapasRails < Thor
   eos
 
   def create_api_user
-
-    api_config = YAML.load_file("#{::Rails.root}/config/tapas_api.yml")
+    processed  = ERB.new(File.read("#{::Rails.root}/config/tapas_api.yml")).result
+    api_config = YAML.load(processed)
 
     u = User.new
     u.email    = api_config[::Rails.env]["email"]
@@ -24,6 +24,30 @@ class TapasRails < Thor
     else
       u.save!
       say "User #{u.email} created successfully!", :blue 
+    end
+  end
+
+  desc 'rebuild_reading_interfaces', <<-eos 
+    Rebuilds the reading interfaces for every TEI File uploaded to the repo.
+
+    Uses a separate 'tapas_rails_maintenance' queue to avoid clogging the main
+    work queue (which handles things like processing uploads).  Can specify a 
+    number of rows to process over, default is set to 500.
+  eos
+
+  def rebuild_reading_interfaces(rows=500)
+    q = "active_fedora_model_ssi:CoreFile"
+
+    say "Requesting #{rows} IDS from solr for rebuid", :blue
+
+    all_dids = ActiveFedora::SolrService.query(q, fl: 'did_ssim', rows: rows).map do |doc|
+      doc['did_ssim'].first
+    end
+
+    say "Updating #{all_dids.count} records", :blue
+
+    all_dids.each do |did|
+      Resque.enqueue(RebuildReadingInterfaceJob, did)
     end
   end
 end

@@ -9,15 +9,25 @@ development:
   pool: 5
   timeout: 5000
 
-staging: 
-  adapter: mysql2 
+staging:
+  adapter: mysql2
   encoding: utf8
   host: localhost
   port: 3306
   pool: 5
   database: tapas_rails_staging
-  username: tapas_rails 
+  username: tapas_rails
   password: <%= ENV['MYSQL_STAGING_PASSWORD'] %>
+
+production:
+  adapter: mysql2
+  encoding: utf8
+  host: localhost
+  port: 3306
+  pool: 5
+  database: tapas_rails
+  username: tapas_rails
+  password: <%= ENV['MYSQL_PRODUCTION_PASSWORD'] %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -25,11 +35,5 @@ staging:
 test:
   adapter: sqlite3
   database: db/test.sqlite3
-  pool: 5
-  timeout: 5000
-
-production:
-  adapter: sqlite3
-  database: db/production.sqlite3
   pool: 5
   timeout: 5000

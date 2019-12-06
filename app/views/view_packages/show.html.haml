@@ -1,0 +1,56 @@
+%h1= @view.human_name
+%ul.breadcrumb
+  %li= link_to("View Packages", view_packages_path)
+  %li= @view.human_name
+%h3
+  = link_to(@view.human_name, view_package_path(@view.id))
+- if !@view.description.blank?
+  %h4= "Description"
+  %p= @view.description
+- if !@view.machine_name.blank?
+  %h4= "Machine Name"
+  %p= @view.machine_name
+- if !@view.dir_name.blank?
+  %h4= "Directory Name"
+  %p= @view.dir_name
+- if !@view.git_timestamp.blank?
+  %h4= "Last Updated"
+  %p= @view.git_timestamp
+- if !@view.git_branch.blank?
+  %h4= "Git Branch"
+  %p= @view.git_branch
+- if !@view.file_type.blank?
+  %h4= "File Types"
+  %ul
+    - @view.file_type.each do |file|
+      %li= file
+- if !@view.css_files.blank?
+  %h4= "CSS Files"
+  %ul
+    - @view.css_files.each do |file|
+      %li= link_to(file, root_url+"view_packages/#{@view.dir_name}/#{file}")
+- if !@view.js_files.blank?
+  %h4= "JS Files"
+  %ul
+    - @view.js_files.each do |file|
+      %li= link_to(file, root_url+"view_packages/#{@view.dir_name}/#{file}")
+-if !@view.parameters.blank?
+  %h4= "Parameters"
+  %table.table.table-bordered.table-striped
+    %tr
+      %th= "Name"
+      %th= "Description"
+    - @view.parameters.each do |param, desc|
+      %tr
+        %td= param
+        %td= desc
+-if !@view.run_process.blank?
+  %h4="Process to Run"
+  %table.table.table-borderd.table-striped
+    %tr
+      %th= "Type"
+      %th= "File Path"
+    - @view.run_process.each do |param, desc|
+      %tr
+        %td= param
+        %td= desc

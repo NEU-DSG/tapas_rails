@@ -1,59 +1,106 @@
-module ApiAccessible 
-  extend ActiveSupport::Concern 
+module ApiAccessible
+  extend ActiveSupport::Concern
 
-  included do 
+  included do
     # Disable CSRF protection...
     skip_before_action :verify_authenticity_token
 
     # But enforce credential checks on each and every request.
-    # Note that this and the csrf disable up top will have to be 
+    # Note that this and the csrf disable up top will have to be
     # reworked once tapas_rails is the actual frontend for tapas.
-    if Rails.env.development?
-      before_action :authenticate_api_request, except: [:show_tfc] 
-    else
-      before_action :authenticate_api_request
-    end
+    before_action :authenticate
 
-    before_action :validate_request_params, only: [:upsert]
+    # This is necessary because of apparent limitations in Drupal.
+    # Ensure that numerically keyed hashes are transformed into
+    # arrays before passing them further down the chain.
+    before_action :associative_array_to_array
+
+    # Certain actions in the API rely on an empty array, but we
+    # disallow arrays populated with blank strings.  The quick/dirty
+    # fix for this is to strip out blank strings from the array and
+    # then send it along.
+    before_action :remove_empty_strings_from_array
+
+    before_action :load_resource_by_did, :except => [:upsert]
+
+    before_action :validate_upsert, :only => [:upsert]
   end
+
+  def show
+    resource = get_loaded_resource
+    @response[:message] = resource.as_json
+    pretty_json(200) and return
+  end
+
+  # def destroy
+  #   resource = get_loaded_resource
+  #
+  #   if resource.destroy
+  #     @response[:message] = 'Resource successfully deleted'
+  #     pretty_json(200) and return
+  #   end
+  # end
+
 
   private
 
-  def authenticate_api_request
-    email   = params[:email]
-    api_key = params[:token]
+  def load_resource_by_did
+    model  = controller_path.classify.constantize
+    object = model.find_by_did(params[:did])
 
-    render_json_403 = Proc.new do 
-      render(json: { message: "Access denied" }, status: 403) and return 
-    end
-
-    if User.where(:email => email).any?
-      user = User.where(:email => email).first
-      render_json_403.call and return unless (user.api_key == api_key)
+    if object
+      instance_variable_set("@#{model.to_s.underscore}", object)
     else
-      render_json_403.call and return
+      @response[:message] = "Resource not found"
+      pretty_json(404) and return
     end
+  end
 
-    # Strip api_key and validation email so they're never 
-    # displayed/used past this point
-    params.except!(:token, :email)
+  def get_loaded_resource
+    instance_variable_get("@#{controller_path.classify.underscore}")
+  end
+
+  def authenticate
+    authenticate_api_request || render_403
+  end
+
+  def authenticate_api_request
+    authenticate_with_http_token do |token, options|
+      hash = Digest::SHA512.hexdigest token
+      return User.exists?(:encrypted_api_key => hash)
+    end
+  end
+
+  def render_403
+    render(:json => "Access denied", :status => 403) and return
+  end
+
+  def associative_array_to_array
+    params.each do |key, value|
+      if value.is_a?(Hash) && value.keys.all? { |k| is_numeric?(k) }
+        params[key] = value.values
+      end
+    end
+  end
+
+  def remove_empty_strings_from_array
+    params.each do |key, value|
+      value.delete_if { |x| x.blank? } if value.is_a?(Array)
+    end
   end
 
   # Validate the params associated with update and create API requests
-  def validate_request_params
+  def validate_upsert
+    puts 'running upsert validate'
     validator = "#{controller_name.classify}Validator".constantize
-    errors    = validator.validate_params(params)
+    errors    = validator.validate_upsert(params)
 
     if errors.present?
-      # Build a json error response with all errors and the original 
+      # Build a json error response with all errors and the original
       # params of the request as interpreted by the server
-      # Ensure api_key is NOT displayed by this
       msg = {
-        message: "Resource creation failed.  Invalid parameters! " + 
-                 "Note that original_object_parameters deliberately " +
-                 "does not display your api key.",
+        message: "Resource creation failed.  Invalid parameters!",
         errors:  errors,
-
         original_object_parameters: original_post_params
       }
       render json: JSON.pretty_generate(msg), status: 422
@@ -64,15 +111,25 @@ module ApiAccessible
     pcopy = params
     # Returns a sanitized json display of original post params
 
-    # Remove controller and action hash elems 
-    pcopy.except!(:controller, :action)
+    # Remove controller and action hash elems
+    pcopy.delete(:controller)
+    pcopy.delete(:action)
 
     # If original request involved a file, clean up what we display
     # back to the end user.
-    if pcopy[:file]
-      pcopy[:file] = pcopy[:file].as_json.except!("tempfile")
+    if pcopy[:tei]
+      pcopy[:tei] = pcopy[:tei].as_json.except!('tempfile')
     end
 
+    if pcopy[:support_files]
+      pcopy[:support_files] = pcopy[:support_files].as_json.except!('tempfile')
+    end
+    logger.info("#{pcopy} from original_post_params")
+
     return pcopy
+  end
+
+  def is_numeric?(str)
+    /\A[-+]?\d+\z/ === str
   end
 end

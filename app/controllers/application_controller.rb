@@ -1,11 +1,11 @@
 class ApplicationController < ActionController::Base
-<<<<<<< HEAD
-  # Adds a few additional behaviors into the application controller 
-   include Blacklight::Controller
-  # Please be sure to impelement current_user and user_session. Blacklight depends on 
-  # these methods in order to perform user specific actions. 
+  # Adds a few additional behaviors into the application controller
 
-  # Uncomment this once there is a frontend. 
+   include Blacklight::Controller
+  # Please be sure to impelement current_user and user_session. Blacklight depends on
+  # these methods in order to perform user specific actions.
+
+  # Uncomment this once there is a frontend.
   # layout 'blacklight'
 
   # Prevent CSRF attacks by raising an exception.
@@ -14,23 +14,15 @@ class ApplicationController < ActionController::Base
 
   before_action :create_response_object
 
-  def destroy
-    object = controller_name.classify.constantize.find_by_did(params[:did])
+  def create_temp_file(file)
+    fpath = file.path
+    fname = file.original_filename
 
-    if object
-      if object.respond_to?(:descendents)
-        object.descendents(:models).each { |d| d.delete }
-      end
-
-      object.destroy 
-
-      @response[:message] = "Object and descendents deleted" 
-      pretty_json(200) and return 
-    else
-      @response[:message] = "Object of type #{controller_name.classify} with " +
-        "did #{params[:did]} not found in the repository." 
-      pretty_json(422) and return
-    end
+    tmpdir = Rails.root.join("tmp", "#{Time.now.to_i}")
+    FileUtils.mkdir_p(tmpdir)
+    tmpfile = Rails.root.join(tmpdir, fname)
+    FileUtils.mv(fpath, tmpfile)
+    return tmpfile.to_s
   end
 
   def pretty_json(status)

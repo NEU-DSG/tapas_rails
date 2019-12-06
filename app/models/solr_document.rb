@@ -18,4 +18,23 @@ class SolrDocument
   # and Blacklight::Solr::Document#to_semantic_values
   # Recommendation: Use field names from Dublin Core
   use_extension( Blacklight::Document::DublinCore)    
+
+  def any_public_collections?
+    return false unless klass == 'CoreFile'
+
+    pids = self['is_member_of_ssim']
+
+    return false if pids.nil?
+
+    # If pids is a string, this object only has a single collection 
+    # relationship.  However, to simplify the code, make it an array 
+    # before proceeding.
+    pids = [pids] if pids.instance_of? String
+    pids = pids.map { |x| "id:#{RSolr.solr_escape(x[12..-1])}" }
+    query = pids.join ' OR '
+
+    ActiveFedora::SolrService.query(query).any? do |collection|
+      collection['drupal_access_ssim'] == ['public']
+    end
+  end
 end

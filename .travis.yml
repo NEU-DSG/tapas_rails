@@ -1,0 +1,15 @@
+language: ruby
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install imagemagick libmagickcore-dev libmagic-dev redis-server libreoffice-common libimage-exiftool-perl poppler-utils
+  - gem install bundler
+rvm:
+  - 2.0.0
+before_script:
+  - "sudo service redis-server start"
+cache:
+  bundler: true
+script: "bundle exec rake ci:build"
+branches:
+  only:
+    - develop

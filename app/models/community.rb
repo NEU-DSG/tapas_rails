@@ -2,10 +2,14 @@ class Community < CerberusCore::BaseModels::Community
   include Did
   include OGReference
   include DrupalAccess
+  include TapasQueries
+  include InlineThumbnail
+  include StatusTracking
+
+  before_save :ensure_unique_did
 
   has_collection_types ["Collection"]
   has_community_types  ["Community"]
-  has_core_file_types  ["CoreFile"]
 
   parent_community_relationship :community 
 
@@ -26,5 +30,16 @@ class Community < CerberusCore::BaseModels::Community
       community.save!
       return community
     end
+  end
+
+  def as_json
+    fname = (thumbnail_1.label == 'File Datastream' ? '' : thumbnail_1.label)
+    { :members => project_members, 
+      :depositor => depositor, 
+      :access => drupal_access, 
+      :thumbnail => fname, 
+      :title => mods.title.first, 
+      :description => mods.abstract.first
+    }
   end
 end

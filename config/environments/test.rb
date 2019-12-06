@@ -11,6 +11,7 @@ TapasRails::Application.configure do
   # just for the purpose of running a single test. If you are using a tool that
   # preloads Rails for running tests, you may have to set it to true.
   config.eager_load = false
+  config.log_level = :debug
 
   # Configure static asset server for tests with Cache-Control for performance.
   config.serve_static_assets  = true
@@ -33,7 +34,7 @@ TapasRails::Application.configure do
 
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
-  
+
   config.middleware.use ExceptionNotification::Rack,
     :email => {
       :email_prefix => "[Tapas Rails Notifier TEST]",

@@ -9,8 +9,11 @@ gem 'sqlite3'
 # Use rubyzip to handle Zipped content files from Drupal
 gem 'rubyzip'
 
-# Use mysql2 for the staging environment 
-gem 'mysql2'
+# Use passenger as the application server
+gem 'passenger', '5.0.15'
+
+# Use mysql2 for the staging environment
+gem 'mysql2', '0.3.16'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
@@ -33,13 +36,13 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
-# Use Figaro to manage sensitive application configuration 
-gem 'figaro' 
+# Use Figaro to manage sensitive application configuration
+gem 'figaro'
 
-# Use CerberusCore as the basis for this project 
+# Use CerberusCore as the basis for this project
 gem 'cerberus_core', git: "https://github.com/NEU-Libraries/cerberus_core.git", :branch => "master"
 
-# Use Resque to handle background tasks 
+# Use Resque to handle background tasks
 gem 'resque', :require => 'resque/server'
 
 # Use Nest because some inherited config uses Nest
@@ -60,6 +63,15 @@ gem 'exception_notification'
 # Use ParseConfig to do some exception mailer related conf
 gem 'parseconfig'
 
+# Use rest-client to handle building calls to eXist
+gem 'rest-client'
+
+# Use rails_config gem for less crappy custom config
+gem 'rails_config'
+
+# Use mods_display to generate html from mods
+gem 'mods_display', '~> 0.3'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
@@ -75,15 +87,21 @@ end
 gem 'capistrano', '~> 3.1', group: :development
 gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
+gem 'capistrano-resque', '~> 0.2.2', :require => false
+gem 'capistrano-passenger'
+gem 'capistrano-git-submodule-strategy', '~> 0.1', :github => 'ekho/capistrano-git-submodule-strategy'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
 group :development, :test do
-  gem "rspec-rails"
+  gem "pry"
+  gem "rspec-rails", "~>2.15"
+  gem "rspec-its"
   gem "jettywrapper"
   gem "factory_girl_rails"
 end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
+gem "git"

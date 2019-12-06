@@ -1,6 +1,13 @@
 GIT
+  remote: git://github.com/ekho/capistrano-git-submodule-strategy.git
+  revision: e3b8a78fbe7d3f7d03d473ee488a9c805f8f6fac
+  specs:
+    capistrano-git-submodule-strategy (0.1.17)
+      capistrano (~> 3.1)
+
+GIT
   remote: https://github.com/NEU-Libraries/cerberus_core.git
-  revision: 81d86a73a72de2000ab62b0d3a9c088667e0cda2
+  revision: ca848bd48808e88729cb7cf59e02196ccc36fac1
   branch: master
   specs:
     cerberus_core (0.0.1)
@@ -52,15 +59,11 @@ GEM
       multi_json (~> 1.3)
       thread_safe (~> 0.1)
       tzinfo (~> 0.3.37)
-    addressable (2.3.8)
     arel (4.0.2)
-    autoprefixer-rails (5.2.0)
+    autoprefixer-rails (6.3.5)
       execjs
-      json
-    bcp47 (0.3.3)
-      i18n
     bcrypt (3.1.7)
-    blacklight (5.13.1)
+    blacklight (5.18.0)
       bootstrap-sass (~> 3.2)
       deprecation
       kaminari (>= 0.15)
@@ -69,11 +72,11 @@ GEM
       rsolr (~> 1.0.11)
     block_helpers (0.3.3)
       activesupport (>= 2.0)
-    bootstrap-sass (3.3.4.1)
+    bootstrap-sass (3.3.5)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
     builder (3.1.4)
-    cancancan (1.10.1)
+    cancancan (1.13.1)
     capistrano (3.2.1)
       i18n
       rake (>= 10.0.0)
@@ -81,14 +84,21 @@ GEM
     capistrano-bundler (1.1.3)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
+    capistrano-passenger (0.1.1)
+      capistrano (~> 3.0)
     capistrano-rails (1.1.2)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
+    capistrano-resque (0.2.2)
+      capistrano
+      resque
+      resque-scheduler
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
     childprocess (0.5.6)
       ffi (~> 1.0, >= 1.0.11)
+    coderay (1.1.0)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0, < 5.0)
@@ -97,8 +107,8 @@ GEM
       execjs
     coffee-script-source (1.7.1)
     colorize (0.7.3)
-    curb (0.8.8)
-    daemons (1.2.2)
+    curb (0.9.1)
+    daemons (1.2.3)
     deprecation (0.2.2)
       activesupport
     devise (3.3.0)
@@ -109,10 +119,10 @@ GEM
       warden (~> 1.2.3)
     devise-guests (0.3.3)
       devise
-    diff-lcs (1.2.4)
+    diff-lcs (1.3)
     domain_name (0.5.24)
       unf (>= 0.0.5, < 1.0.0)
-    ebnf (0.3.9)
+    ebnf (1.0.0)
       rdf (~> 1.1)
       sxp (~> 0.1, >= 0.1.3)
     equivalent-xml (0.6.0)
@@ -132,12 +142,13 @@ GEM
     figaro (0.7.0)
       bundler (~> 1.0)
       rails (>= 3, < 5)
-    haml (4.0.6)
+    git (1.3.0)
+    haml (4.0.7)
       tilt
     hike (1.2.3)
     hooks (0.3.6)
       uber (~> 0.0.4)
-    htmlentities (4.3.3)
+    htmlentities (4.3.4)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     hydra-access-controls (7.2.0)
@@ -158,13 +169,14 @@ GEM
       activesupport (>= 3.2.13, < 5.0)
       hydra-file_characterization
       mini_magick
-    hydra-file_characterization (0.3.1)
+    hydra-file_characterization (0.3.3)
       activesupport (>= 3.0.0)
     hydra-head (7.2.0)
       hydra-access-controls (= 7.2.0)
       hydra-core (= 7.2.0)
       rails (>= 3.2.6)
     i18n (0.7.0)
+    iso-639 (0.2.5)
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
@@ -178,42 +190,47 @@ GEM
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.1)
-    json-ld (1.1.8)
-      rdf (~> 1.1, >= 1.1.7)
+    json-ld (1.99.2)
+      multi_json (~> 1.11)
+      rdf (~> 1.99)
     kaminari (0.16.3)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     link_header (0.0.8)
-    linkeddata (1.1.11)
-      equivalent-xml (~> 0.5)
-      json-ld (~> 1.1, >= 1.1.8)
-      nokogiri (~> 1.6)
-      rdf (~> 1.1, >= 1.1.11)
-      rdf-aggregate-repo (~> 1.1)
-      rdf-isomorphic (~> 1.1)
-      rdf-json (~> 1.1, >= 1.1.2)
-      rdf-microdata (~> 2.0, >= 2.0.1)
-      rdf-n3 (~> 1.1, >= 1.1.3)
-      rdf-rdfa (~> 1.1, >= 1.1.6)
-      rdf-rdfxml (~> 1.1, >= 1.1.4)
-      rdf-reasoner (~> 0.2, >= 0.2.1)
-      rdf-tabular (~> 0.1, >= 0.1.2)
-      rdf-trig (~> 1.1, >= 1.1.4)
-      rdf-trix (~> 1.1)
-      rdf-turtle (~> 1.1, >= 1.1.6)
-      rdf-vocab (~> 0.8)
-      rdf-xsd (~> 1.1, >= 1.1.3)
-      sparql (~> 1.1, >= 1.1.5)
-      sparql-client (~> 1.1, >= 1.1.3)
+    linkeddata (1.1.1)
+      equivalent-xml (>= 0.4.0)
+      json-ld (>= 1.1.1)
+      nokogiri (>= 1.6.1)
+      rdf (>= 1.1.1)
+      rdf-aggregate-repo (>= 1.1.0)
+      rdf-isomorphic (>= 1.1.0)
+      rdf-json (>= 1.1.0)
+      rdf-microdata (>= 1.1.1)
+      rdf-n3 (>= 1.1.0)
+      rdf-rdfa (>= 1.1.1)
+      rdf-rdfxml (>= 1.1.0)
+      rdf-trig (>= 1.1.2)
+      rdf-trix (>= 1.1.0)
+      rdf-turtle (>= 1.1.2)
+      sparql (>= 1.1.2)
+      sparql-client (>= 1.1.1)
     logger (1.2.8)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mediashelf-loggable (0.4.10)
+    method_source (0.8.2)
     mime-types (1.25.1)
-    mini_magick (4.2.7)
+    mini_magick (4.5.1)
     mini_portile (0.6.2)
     minitest (4.7.5)
+    mods (2.0.3)
+      iso-639
+      nokogiri
+      nom-xml (~> 0.5.2)
+    mods_display (0.3.3)
+      i18n
+      stanford-mods
     multi_json (1.11.0)
     mysql2 (0.3.16)
     namae (0.9.2)
@@ -237,8 +254,15 @@ GEM
       solrizer (~> 3.3)
     orm_adapter (0.5.0)
     parseconfig (1.0.6)
+    passenger (5.0.15)
+      rack
+      rake (>= 0.8.1)
     polyglot (0.3.5)
-    rack (1.5.3)
+    pry (0.10.2)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
+    rack (1.5.5)
     rack-protection (1.5.0)
       rack
     rack-test (0.6.3)
@@ -251,62 +275,51 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.0.8)
       sprockets-rails (~> 2.0)
+    rails_config (0.4.2)
+      activesupport (>= 3.0)
     railties (4.0.8)
       actionpack (= 4.0.8)
       activesupport (= 4.0.8)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rake (10.4.2)
-    rdf (1.1.13)
+    rdf (1.99.1)
       link_header (~> 0.0, >= 0.0.8)
-    rdf-aggregate-repo (1.1.0)
-      rdf (>= 1.1)
-    rdf-isomorphic (1.1.0)
-      rdf (>= 1.1)
-    rdf-json (1.1.2)
-      rdf (~> 1.1)
-    rdf-microdata (2.0.1)
+    rdf-aggregate-repo (1.99.0)
+      rdf (~> 1.99)
+    rdf-isomorphic (1.99.0)
+      rdf (~> 1.99)
+    rdf-json (1.99.0)
+      rdf (~> 1.99)
+    rdf-microdata (2.0.2)
       htmlentities (~> 4.3)
       nokogiri (~> 1.6)
       rdf (~> 1.1)
       rdf-xsd (~> 1.1)
-    rdf-n3 (1.1.3)
-      rdf (~> 1.1, >= 1.1.5)
-    rdf-rdfa (1.1.6)
+    rdf-n3 (1.99.0)
+      rdf (~> 1.99)
+    rdf-rdfa (1.99.0)
       haml (~> 4.0)
       htmlentities (~> 4.3)
-      rdf (~> 1.1, >= 1.1.6)
+      rdf (~> 1.99)
       rdf-aggregate-repo (~> 1.1)
       rdf-xsd (~> 1.1)
-    rdf-rdfxml (1.1.4)
+    rdf-rdfxml (1.1.5)
       htmlentities (~> 4.3)
       rdf (~> 1.1, >= 1.1.6)
       rdf-rdfa (~> 1.1, >= 1.1.4.1)
       rdf-xsd (~> 1.1)
-    rdf-reasoner (0.2.2)
-      rdf (~> 1.1, >= 1.1.4.2)
-      rdf-turtle (~> 1.1)
-      rdf-vocab (~> 0.8)
-      rdf-xsd (~> 1.1)
-    rdf-tabular (0.1.3.1)
-      addressable (~> 2.3)
-      bcp47 (~> 0.3, >= 0.3.3)
-      json-ld (~> 1.1)
-      rdf (~> 1.1, >= 1.1.7)
-      rdf-xsd (~> 1.1)
-    rdf-trig (1.1.4)
-      ebnf (~> 0.3, >= 0.3.7)
-      rdf (~> 1.1, >= 1.1.11)
-      rdf-turtle (~> 1.1, >= 1.1.6)
-    rdf-trix (1.1.0)
-      rdf (>= 1.1)
-    rdf-turtle (1.1.7)
-      ebnf (~> 0.3, >= 0.3.6)
-      rdf (~> 1.1, >= 1.1.10)
-    rdf-vocab (0.8.3)
-      rdf (~> 1.1, >= 1.1.10)
-    rdf-xsd (1.1.3)
-      rdf (~> 1.1, >= 1.1.9)
+    rdf-trig (1.99.0.1)
+      ebnf (~> 1.0)
+      rdf (~> 1.99)
+      rdf-turtle (~> 1.99)
+    rdf-trix (1.99.0)
+      rdf (~> 1.1)
+    rdf-turtle (1.99.0)
+      ebnf (~> 1.0)
+      rdf (~> 1.99)
+    rdf-xsd (1.99.0)
+      rdf (~> 1.99)
     rdoc (4.1.1)
       json (~> 1.4)
     redis (3.0.4)
@@ -317,23 +330,34 @@ GEM
       redis-namespace (~> 1.0)
       sinatra (>= 0.9.2)
       vegas (~> 0.1.2)
+    resque-scheduler (2.2.0)
+      redis (>= 3.0.0)
+      resque (>= 1.20.0, < 1.25)
+      rufus-scheduler (~> 2.0)
     rest-client (1.8.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 3.0)
       netrc (~> 0.7)
-    rsolr (1.0.12)
+    rsolr (1.0.13)
       builder (>= 2.1.2)
-    rspec-core (2.14.5)
-    rspec-expectations (2.14.2)
+    rspec-collection_matchers (1.1.3)
+      rspec-expectations (>= 2.99.0.beta1)
+    rspec-core (2.99.2)
+    rspec-expectations (2.99.2)
       diff-lcs (>= 1.1.3, < 2.0)
-    rspec-mocks (2.14.3)
-    rspec-rails (2.14.0)
+    rspec-its (1.0.1)
+      rspec-core (>= 2.99.0.beta1)
+      rspec-expectations (>= 2.99.0.beta1)
+    rspec-mocks (2.99.4)
+    rspec-rails (2.99.0)
       actionpack (>= 3.0)
+      activemodel (>= 3.0)
       activesupport (>= 3.0)
       railties (>= 3.0)
-      rspec-core (~> 2.14.0)
-      rspec-expectations (~> 2.14.0)
-      rspec-mocks (~> 2.14.0)
+      rspec-collection_matchers
+      rspec-core (~> 2.99.0)
+      rspec-expectations (~> 2.99.0)
+      rspec-mocks (~> 2.99.0)
     rubydora (1.8.1)
       activemodel
       activesupport
@@ -345,6 +369,8 @@ GEM
       nokogiri
       rest-client
     rubyzip (1.1.7)
+    rufus-scheduler (2.0.24)
+      tzinfo (>= 0.3.22)
     sass (3.2.19)
     sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
@@ -358,21 +384,23 @@ GEM
       rack (~> 1.4)
       rack-protection (~> 1.4)
       tilt (~> 1.3, >= 1.3.4)
-    solrizer (3.3.0)
+    slop (3.6.0)
+    solrizer (3.4.0)
       activesupport
       daemons
       nokogiri
       stomp
       xml-simple
-    sparql (1.1.5)
-      builder (~> 3.0)
-      ebnf (~> 0.3, >= 0.3.5)
-      rdf (~> 1.1, >= 1.1.4)
-      rdf-aggregate-repo (~> 1.1, >= 1.1.0)
-      rdf-xsd (~> 1.1)
-      sparql-client (~> 1.1)
-      sxp (~> 0.1)
-    sparql-client (1.1.5)
+    sparql (1.1.2.1)
+      builder (>= 3.0)
+      ebnf (>= 0.3.2)
+      json (>= 1.7)
+      rdf (>= 1.1.0)
+      rdf-aggregate-repo (>= 1.1.0)
+      rdf-xsd (>= 1.0.2)
+      sparql-client (>= 1.1)
+      sxp (>= 0.1.3)
+    sparql-client (1.99.0)
       net-http-persistent (~> 2.9)
       rdf (~> 1.1)
     sprockets (2.12.3)
@@ -389,7 +417,9 @@ GEM
       colorize
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
-    stomp (1.3.4)
+    stanford-mods (1.1.4)
+      mods (~> 2.0.2)
+    stomp (1.3.5)
     sxp (0.1.5)
     thor (0.19.1)
     thor-rails (0.0.1)
@@ -403,7 +433,7 @@ GEM
     turbolinks (2.3.0)
       coffee-rails
     tzinfo (0.3.44)
-    uber (0.0.13)
+    uber (0.0.15)
     uglifier (2.5.3)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
@@ -421,7 +451,10 @@ PLATFORMS
 
 DEPENDENCIES
   capistrano (~> 3.1)
+  capistrano-git-submodule-strategy (~> 0.1)!
+  capistrano-passenger
   capistrano-rails (~> 1.1)
+  capistrano-resque (~> 0.2.2)
   capistrano-rvm
   cerberus_core!
   coffee-rails (~> 4.0.0)
@@ -430,16 +463,23 @@ DEPENDENCIES
   exception_notification
   factory_girl_rails
   figaro
+  git
   jbuilder (~> 1.2)
   jettywrapper
   jquery-rails
-  mysql2
+  mods_display (~> 0.3)
+  mysql2 (= 0.3.16)
   namae
   nest
   parseconfig
+  passenger (= 5.0.15)
+  pry
   rails (= 4.0.8)
+  rails_config
   resque
-  rspec-rails
+  rest-client
+  rspec-its
+  rspec-rails (~> 2.15)
   rubyzip
   sass-rails (~> 4.0.2)
   sdoc
@@ -450,4 +490,4 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
 
 BUNDLED WITH
-   1.10.2
+   1.14.3

@@ -1,56 +1,126 @@
 class CoreFilesController < ApplicationController
   include ApiAccessible
-  include Hydra::Controller::DownloadBehavior
+  include ModsDisplay::ControllerExtension
 
-  skip_before_filter :load_asset, :load_datastream, :authorize_download!
-  before_filter :load_core_file, :only => %i(show_teibp show_tapas_generic)
-
-  skip_before_filter :authenticate_api_request, :only => [:show_teibp, :show_tapas_generic]
-
-  def show_teibp 
-    render_asset(@core_file.teibp)
+  configure_mods_display do
+    identifier { ignore! }
   end
 
-  def show_tapas_generic 
-    render_asset(@core_file.tapas_generic)
+  skip_before_filter :load_asset, :load_datastream, :authorize_download!
+
+  def view_package_html
+    @core_file = CoreFile.find_by_did(params[:did])
+    @core_file.create_view_package_methods
+    view_package = ViewPackage.where(:machine_name => "#{params[:view_package]}").to_a.first
+    if !view_package.blank?
+      e = "Could not find a #{view_package.human_name} representation of this object."\
+        "Please retry in a few minutes."
+      html = @core_file.send("#{view_package.machine_name}".to_sym)
+      render_content_asset html, e
+    else
+      render :text => "The view package #{params[:view_package]} could not be found", :status => 422
+    end
+  end
+
+  def mods
+    @html = render_mods_display(@core_file).to_html
+    render :text => @html
+  end
+
+  def tei
+    e = "Could not find TEI associated with this file.  Please retry in a "\
+      "few minutes and contact an administrator if the problem persists."
+    render_content_asset @core_file.canonical_object, e
+  end
+
+  def rebuild_reading_interfaces
+    RebuildReadingInterfaceJob.perform(params[:did])
+    @response[:message] = "Record updated successfully"
+    pretty_json(200) and return
+  end
+
+  def show
+    @core_file = CoreFile.find_by_did(params[:did])
+
+    if @core_file.upload_status.blank?
+      @core_file.retroactively_set_status!
+    end
+
+    if @core_file.stuck_in_progress?
+      @core_file.set_default_display_error
+      @core_file.errors_system = ['Object was processing for more than five minutes']
+      @core_file.mark_upload_failed!
+    end
+
+    @response = @core_file.as_json
+    pretty_json(200) and return
   end
 
   def upsert
-    # If params[:file] is set to anything, we assume 
-    # we need to perform a file content update - extract 
-    # filepath and filename
-    if params[:files].present?
-      fpath = params[:files].path
-      fname = params[:files].original_filename
-      tmp = Rails.root.join("tmp", "#{SecureRandom.hex}-#{fname}").to_s
-      FileUtils.mv(fpath, tmp)
-      params[:files] = tmp
-    end
+    begin
+      # Step 1: Find or create the CoreFile Object -
+      # we do this here so that we have a stub record to
+      # attach error messages & status tracking to.
+      if CoreFile.exists_by_did?(params[:did])
+        core_file = CoreFile.find_by_did(params[:did])
+        core_file.mark_upload_in_progress!
+      else
+        core_file = CoreFile.create(did: params[:did],
+                                    depositor: params[:depositor])
+        core_file.mark_upload_in_progress!
+      end
 
-    TapasRails::Application::Queue.push TapasObjectUpsertJob.new params 
-    @response[:message] = "CoreFile create/update in progress" 
-    pretty_json(202) and return 
+      # Step 2: Extract uploaded files to temporary locations if they exist
+      if params[:tei]
+        params[:tei] = create_temp_file params[:tei]
+      end
+
+      if params[:support_files]
+        params[:support_files] = create_temp_file params[:support_files]
+      end
+
+      # Step 3: If TEI was provided, generate a MODS record that can be sent back
+      # to Drupal to populate the validate metadata page provided after initial
+      # file upload
+      if params[:tei]
+        opts = {
+          :authors => params[:display_authors],
+          :contributors => params[:display_contributors],
+          :"timeline-date" => params[:display_date],
+          :title => params[:title]
+        }
+
+        @mods = Exist::GetMods.execute(params[:tei], opts)
+      end
+
+      # Step 4: Kick off an upsert job
+      job = TapasObjectUpsertJob.new params
+      TapasRails::Application::Queue.push job
+
+      # Step 5: Respond with MODS if it is available, otherwise send a generic
+      # success message
+      if @mods
+        render :xml => @mods, :status => 202
+      else
+        @response[:message] = "Job processing"
+        pretty_json(202) and return
+      end
+    rescue => e
+      core_file.set_default_display_error
+      core_file.set_stacktrace_message(e)
+      core_file.mark_upload_failed!
+      logger.error e
+      raise e
+    end
   end
 
   private
 
-  def load_core_file
-    @core_file = CoreFile.find_by_did(params[:did]) 
-
-    unless @core_file 
-      @response[:message] = "No content with that did exists" 
-      pretty_json(422) and return 
+  def render_content_asset(asset, error_msg)
+    if asset && asset.content.content.present?
+      render :text => asset.content.content
+    else
+      render :text => error_msg, :status => 404
     end
-  end
-
-  def render_asset(asset)
-    unless asset 
-      @response[:message] = "That content doesn't exist!" 
-      pretty_json(422) and return 
-    end
-
-    @asset = asset 
-    @ds = asset.datastreams["content"]
-    send_content
   end
 end

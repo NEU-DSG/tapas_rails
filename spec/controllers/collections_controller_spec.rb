@@ -1,64 +1,66 @@
 require 'spec_helper'
 
 describe CollectionsController do
-  let(:user) { FactoryGirl.create(:user) } 
-  let(:params) { { email: user.email, token: "test_api_key" } } 
+  include ValidAuthToken
+  include FileHelpers
 
-  it_should_behave_like "an API enabled controller"
+  it_should_behave_like 'an API enabled controller'
 
-  describe "DELETE destroy" do 
-    after(:each) { ActiveFedora::Base.delete_all }
+  # describe 'DELETE destroy' do
+  #   after(:each) { ActiveFedora::Base.delete_all }
+  #
+  #   it '404s for nonexistant dids' do
+  #     delete :destroy, { :did => 'not a real did' }
+  #     expect(response.status).to eq 404
+  #   end
+  #
+  #   it '404s for dids that do not belong to a Collection' do
+  #     community = FactoryGirl.create :community
+  #     delete :destroy, { :did => community.did }
+  #     expect(response.status).to eq 404
+  #   end
+  #
+  #   it '200s for dids that belong to a Collection and removes the resource' do
+  #     collection = FactoryGirl.create :collection
+  #     delete :destroy, { :did => collection.did }
+  #     expect(response.status).to eq 200
+  #     expect(Collection.find_by_did collection.did).to be nil
+  #   end
+  # end
 
-    it "422s for nonexistant dids" do 
-      delete :destroy, params.merge(:did => "not a real did") 
-      expect(response.status).to eq 422
-    end
+  describe 'POST upsert' do
+    after(:all) { ActiveFedora::Base.delete_all }
 
-    it "422s for dids that don't belong to a Collection" do 
-      begin
-        community = Community.create(:did => "115", :depositor => "test")
-        delete :destroy, params.merge(:did => community.did)
-        expect(response.status).to eq 422
-      ensure
-        community.delete if community.persisted?
-      end
-    end
-
-    it "200s for dids that belong to a Collection and removes the resource" do 
-      collection = Collection.create(:did => "938401", :depositor => "test")
-      delete :destroy, params.merge(:did => collection.did)
-      expect(response.status).to eq 200
-      expect(Collection.find_by_did collection.did).to be nil 
-    end
-  end
-
-  describe "POST upsert" do 
-    after(:all) { ActiveFedora::Base.delete_all } 
-
-    it "403s for unauthorized requests" do 
-      post :upsert, params.except(:token)
+    it '403s for unauthorized requests' do
+      set_auth_token('bupkes')
+      post :upsert, :did => SecureRandom.uuid
       expect(response.status).to eq 403
     end
 
-    it "422s for invalid requests" do 
-      post :upsert, params 
-      expect(response.status).to eq 422 
+    it '422s for invalid requests' do
+      post :upsert, :did => SecureRandom.uuid
+      expect(response.status).to eq 422
     end
 
-    it "returns a 202 and creates the requested collection on a valid request" do 
-      Resque.inline = true 
-      post_params = { title: "Collection", 
-        access: "private",  
-        did: "8018", 
-        project_did: "invalid", 
-        description: "This is a test collection",
-        depositor: "101" }
-      post_params = post_params.merge params
+    it 'returns a 202 and creates the requested collection on a valid request' do
+      Resque.inline = true
+      community = FactoryGirl.create :community
+
+      post_params = { title: 'Collection',
+        access: 'private',
+        did: '8018',
+        project_did: community.did,
+        description: 'This is a test collection',
+        depositor: '101',
+        thumbnail: Rack::Test::UploadedFile.new(fixture_file('image.jpg')), }
+
       post :upsert, post_params
 
       expect(response.status).to eq 202
-      expect(Collection.find_by_did("8018")).not_to be nil 
-      Resque.inline = false 
+      collection = Collection.find_by_did '8018'
+      expect(collection).not_to be nil
+      expect(collection.depositor).to eq post_params[:depositor]
+      Resque.inline = false
     end
   end
 end
