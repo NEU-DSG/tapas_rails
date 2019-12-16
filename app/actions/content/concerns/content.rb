@@ -1,4 +1,4 @@
-module Content 
+module Content
 
   def add_unique_file(content, opts)
     # If we have a blob and a name use those
@@ -23,8 +23,8 @@ module Content
     names_match = (new_name == current_name)
     content_matches = (new_content == current_content)
 
-    unless names_match && content_matches 
-      ds = content.instance_of?(::ImageThumbnailFile)?'thumbnail_1':'content'
+    unless names_match && content_matches
+      ds = content.instance_of?(::ImageThumbnailFile) ? 'thumbnail_1' : 'content'
       content.add_file(new_content, ds, new_name)
     end
 

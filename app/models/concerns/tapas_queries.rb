@@ -49,6 +49,28 @@ module TapasQueries
       tei_files.map { |x| load_specified_type(x, as) }
   end
 
+  def is_ography?
+    all_verbs = ["is_personography_for_ssim",
+      "is_orgography_for_ssim",
+      "is_bibliography_for_ssim",
+      "is_otherography_for_ssim",
+      "is_odd_file_for_ssim",
+      "is_placeography_for_ssim"]
+    all_verbs.any? do |og_type|
+      !self["#{og_type}"].blank?
+    end
+  end
+
+  def ography_type
+    type = []
+    CoreFile.all_ography_types.each do |o|
+      if !self["is_#{o}_for_ssim"].blank?
+        type << o
+      end
+    end
+    return type
+  end
+
   private
 
   def expected_class?(class_constant)

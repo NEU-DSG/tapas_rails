@@ -1,0 +1,92 @@
+%h2
+  = "My TAPAS"
+%hr
+
+
+%div.row
+  %div.col-sm-6
+    %panel.panel-default.panel-projects
+      %div.panel-heading
+        %h2.panel-title
+          = "Projects"
+      %div.panel-body
+        - if current_user && (current_user.paid_user? || current_user.admin?)
+          %a{href:new_community_path, class: 'btn btn-success btn-sm'}
+            %i.fa.fa-plus
+            = "Add New"
+        - else
+          = "In order to create a project, you must be a member of the TEI. "
+          %a{href:"/pages/choosing-account"}
+            = "Join now!"
+          %br
+          %br
+        %table.table
+          - if !@projects || @projects.length < 1
+            = "There are no projects yet."
+          - else
+            - @projects.each do |p|
+              %tr
+                %td
+                  %h4
+                    = link_to(p['title_info_title_ssi'], community_path(p['id']))
+                %td
+                  - if current_user && ((p['edit_access_person_ssim'] && (p['edit_access_person_ssim'].include? current_user.id)) || current_user.admin?)
+                    %a{href:edit_community_path(p['id']), class: ['btn','btn-xs','btn-default']}
+                      %i.fa.fa-pencil
+                      = "Edit"
+        %a{href:my_projects_path, class: ['btn','btn-default']}
+          = "View All"
+    %br
+    %panel.panel-default.panel-collections
+      %div.panel-heading
+        %h2.panel-title
+          = "Collections"
+      %div.panel-body
+        - if current_user && ((@projects && @projects.length > 0) || current_user.admin?)
+          %a{href:new_collection_path, class: 'btn btn-success btn-sm'}
+            %i.fa.fa-plus
+            = "Add New"
+          %br
+        %table.table
+          - if !@collections || @collections.length < 1
+            = "You have no collections yet."
+          - else
+            - @collections.each do |c|
+              %tr
+                %td
+                  %h4
+                    = link_to(c['title_info_title_ssi'], collection_path(c['id']))
+                %td
+                  - if current_user && ((c['edit_access_person_ssim'].include? current_user.id) || current_user.admin?)
+                    %a{href:edit_collection_path(c['id']), class: ['btn','btn-xs','btn-default']}
+                      %i.fa.fa-pencil
+                      = "Edit"
+        %a{href:my_collections_path, class: ['btn','btn-default']}
+          = "View All"
+  %div.col-sm-6
+    %panel.panel-default.panel-records
+      %div.panel-heading
+        %h2.panel-title
+          = "Records"
+      %div.panel-body
+        - if current_user && ((@collections && @collections.length > 0) || current_user.admin?)
+          %a{href:new_core_file_path, class: 'btn btn-success btn-sm'}
+            %i.fa.fa-plus
+            = "Add New"
+          %br
+        %table.table
+          - if !@records || @records.length < 1
+            = "There are no collections yet."
+          - else
+            - @records.each do |r|
+              %tr
+                %td
+                  %h4
+                    = link_to(r['title_info_title_ssi'], core_file_path(r['id']))
+                %td
+                  - if current_user && ((r['edit_access_person_ssim'].include? current_user.id) || current_user.admin?)
+                    %a{href:edit_core_file_path(r['id']), class: ['btn','btn-xs','btn-default']}
+                      %i.fa.fa-pencil
+                      = "Edit"
+        %a{href:my_records_path, class: ['btn','btn-default']}
+          = "View All"

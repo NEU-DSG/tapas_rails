@@ -1,0 +1,36 @@
+%h2.page-header= "User Account"
+
+%ul.nav.nav-tabs
+  %li
+    = link_to "Create New Account", '/users/sign_up'
+  %li
+    = link_to "Sign In", '/users/sign_in'
+  %li.active
+    = link_to "Recover Password", '#password'
+
+.tab-content
+  #new.tab-pane
+
+
+  #sign_in.tab-pane
+
+
+  #password.tab-pane.active
+    = simple_form_for(resource, as: resource_name, url: password_path(resource_name), html: {method: :post}) do |f|
+      = f.error_notification
+      %div.form-inputs
+        = f.input :email, required: true, autofocus: true
+      %div.form-actions
+        = f.button :submit, "Send me reset password instructions"
+
+:javascript
+  $('.nav-tabs a').click(function (e) {
+    e.preventDefault();
+    if (e.currentTarget.href.indexOf('#') != -1){
+      $(this).tab('show');
+    } else {
+      window.location = e.currentTarget.href;
+    }
+  });
+
+

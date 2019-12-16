@@ -1,0 +1,55 @@
+%h1.page_title
+  = "Menu Links"
+
+%ul.breadcrumb
+  %li= link_to("Admin", admin_path)
+  %li= "Menu Links"
+
+%hr
+
+%h3
+  = "Main Menu"
+  - if current_user.admin?
+    %small
+      %a{href:new_menu_link_path(:menu_name => "main_menu")}
+        %i.fa.fa-plus
+        = "Add New"
+%div.dd#main_menu
+  = render partial: "nestable", locals: {links: @main_menu_links}
+
+%h3
+  = "Documentation Submenu"
+  - if current_user.admin?
+    %small
+      %a{href:new_menu_link_path(:menu_name => "documentation_sub")}
+        %i.fa.fa-plus
+        = "Add New"
+%div.dd#documentation_sub
+  = render partial: "nestable", locals: {links: @documentation_sub_links}
+
+%h3
+  = "Toolbar Tools Menu"
+  - if current_user.admin?
+    %small
+      %a{href:new_menu_link_path(:menu_name => "toolbar_tools")}
+        %i.fa.fa-plus
+        = "Add New"
+%div.dd#toolbar_tools
+  = render partial: "nestable", locals: {links: @toolbar_tools_links}
+
+:javascript
+  $('.dd').nestable({});
+  $('.dd').on('change', function(){
+    console.log($(this).nestable('serialize'));
+    console.log($(this).attr('id'))
+    var menu_name = $(this).attr('id');
+    var menu_order = $(this).nestable('serialize');
+    $.ajax({
+      url: "#{update_menu_order_path}",
+      type: 'POST',
+      data: {menu_name: menu_name, menu_order: menu_order},
+      success: function(data){
+        console.log(data);
+      },
+    });
+  });

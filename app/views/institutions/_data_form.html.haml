@@ -1,0 +1,33 @@
+= form_for @institution do |f|
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :name, "Name", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :name, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Institution Name"
+
+            -# :image, :url
+        .form-group
+          = f.label :description, "Description", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_area :description, class: "form-control", placeholder: "description"
+            %p.small.help-block="This field accepts plain text"
+
+        .form-group
+          = f.label :address, "Address", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :address, class: "form-control", placeholder: "address"
+        .form-group
+          = f.label :latitude, "Latitude", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :latitude, class: "form-control", placeholder: "latitude"
+        .form-group
+          = f.label :longitude, "Longitude", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :longitude, class: "form-control", placeholder: "longitude"
+
+
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

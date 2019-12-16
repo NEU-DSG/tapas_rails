@@ -9,9 +9,9 @@ class UpsertCommunity
       else
         community = Community.new(:did => params[:did])
         community.depositor = params[:depositor]
+        update_metadata! community
         community.save!
         community.community = Community.root_community
-        update_metadata! community
       end
 
       if params[:thumbnail]
@@ -30,10 +30,18 @@ class UpsertCommunity
   private
 
     def update_metadata!(community)
-      community.mods.title = params[:title] if params.has_key? :title
-      community.mods.abstract = params[:description] if params.has_key? :description
+      # community.mods.title = params[:title] if params.has_key? :title
+      community.DC.title = params[:title] if params.has_key? :title
+      # community.mods.abstract = params[:description] if params.has_key? :description
+      community.DC.description = params[:description] if params.has_key? :description
+      community.match_dc_to_mods
       community.project_members = params[:members] if params.has_key? :members
+      community.properties.project_members = params[:members] if params.has_key? :members
       community.drupal_access = params[:access] if params.has_key? :access
+      community.mass_permissions = params[:access] if params.has_key? :access
+      community.properties.project_members.each do |p|
+        community.rightsMetadata.permissions({person: p}, 'edit')
+      end
       community.save!
     end
 

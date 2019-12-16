@@ -12,8 +12,21 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
+//= require jquery-ui
+//= require jquery-ui/widgets/resizable
+
 //
 // Required by Blacklight
 //= require blacklight/blacklight
-//= require_tree .
+//= require bootstrap/button
+//= require bootstrap/tooltip
+//= require bootstrap/popover
+//= require bootstrap/tab
+//= require bootstrap/carousel
+//= require plugins
+//= require tapasApp
+//= require bootsy
+//= require forem
+//= require jquery.nestable
+//= require bootsy_options
+

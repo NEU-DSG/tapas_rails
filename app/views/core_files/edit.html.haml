@@ -1,0 +1,9 @@
+= link_to "<< Back", core_file_path(@core_file), class: ['btn', 'btn-info', 'btn-large']
+
+%h2.page-header
+  = "Edit"
+  %i="#{@core_file.title}"
+
+%p Note: your file's header metadata will be extracted upon file upload for display in the reading interface.
+
+= render 'data_form'

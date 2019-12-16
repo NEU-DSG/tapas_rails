@@ -1,0 +1,15 @@
+-if @news_items.length > 0
+  %ul.list-unstyled
+    - @news_items.each do |n|
+      %li
+        %h4
+          = link_to(n.title, news_item_path(n.slug))
+        %h5
+          = "posted #{n.created_at.strftime("%D")}"
+        %p.small
+          = n.content[0,300]
+        %p.text-right
+          = link_to("Read More", news_item_path(n.slug))
+
+-else
+  "There isn't any news right now. Check back soon!"

@@ -1,6 +1,9 @@
 development:
   archivist:
     - archivist1@example.com
+    - tapas@neu.edu
+  admin:
+    - tapas@neu.edu
 test:
   archivist:
     - archivist1@example.com
@@ -17,3 +20,15 @@ test:
   patron:
     - patron1@example.com
     - leland_himself@example.com
+staging:
+  archivist:
+    - archivist1@example.com
+    - tapas@neu.edu
+  admin:
+    - tapas@neu.edu
+production:
+  archivist:
+    - archivist1@example.com
+    - tapas@neu.edu
+  admin:
+    - tapas@neu.edu

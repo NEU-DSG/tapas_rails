@@ -11,5 +11,11 @@ module TapasRails
         ViewPackage.where("").pluck(:dir_name).to_a
       end
     end
+
+    def available_view_packages
+      Rails.cache.fetch("view_packages", expires_in: 48.hours) do
+        ViewPackage.where("").pluck(:machine_name, :human_name)
+      end
+    end
   end
 end
