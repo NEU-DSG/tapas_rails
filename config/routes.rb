@@ -1,4 +1,5 @@
 TapasRails::Application.routes.draw do
+<<<<<<< HEAD
 
   # This line mounts Forem's routes at /forums by default.
   # This means, any requests to the /forums URL of your application will go to Forem::ForumsController#index.
@@ -14,6 +15,8 @@ TapasRails::Application.routes.draw do
   blacklight_for :catalog
   # Blacklight.add_routes(self)
   # HydraHead.add_routes(self)
+=======
+>>>>>>> develop
   # At some point we'll want all this, but I'm going to disable these routes
   # until we're ready to migrate to 100% Hydra-Head usage for tapas.
   # root :to => "view_packages#index"
