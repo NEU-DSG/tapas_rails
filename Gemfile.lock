@@ -341,11 +341,7 @@ GEM
       activesupport (= 4.0.8)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-<<<<<<< HEAD
     rake (13.0.1)
-=======
-    rake (10.5.0)
->>>>>>> feature/rails_interface
     rdf (1.99.1)
       link_header (~> 0.0, >= 0.0.8)
     rdf-aggregate-repo (1.99.0)
@@ -443,6 +439,8 @@ GEM
       sass (~> 3.2.2)
       sprockets (~> 2.8, < 3.0)
       sprockets-rails (~> 2.0)
+    sassc (2.2.1)
+      ffi (~> 1.9)
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
@@ -563,12 +561,7 @@ DEPENDENCIES
   namae
   nest
   parseconfig
-<<<<<<< HEAD
   passenger (= 6.0.4)
-=======
-  passenger (= 5.0.15)
-  pluot!
->>>>>>> feature/rails_interface
   pry
   rails (= 4.0.8)
   rails_config
