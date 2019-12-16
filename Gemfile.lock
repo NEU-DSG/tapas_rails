@@ -86,7 +86,7 @@ GEM
     airbrussh (1.3.0)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (4.0.2)
-    autoprefixer-rails (7.0.1)
+    autoprefixer-rails (9.7.3)
       execjs
     bcrypt (3.1.7)
     blacklight (5.18.0)
@@ -103,9 +103,9 @@ GEM
       rails
     block_helpers (0.3.3)
       activesupport (>= 2.0)
-    bootstrap-sass (3.3.4.1)
-      autoprefixer-rails (>= 5.0.0.1)
-      sass (>= 3.2.19)
+    bootstrap-sass (3.4.1)
+      autoprefixer-rails (>= 5.2.1)
+      sassc (>= 2.0.0)
     bootsy (2.3.1)
       carrierwave (~> 0.11)
       mini_magick (~> 4.5)
@@ -533,7 +533,7 @@ PLATFORMS
 
 DEPENDENCIES
   blacklight-gallery
-  bootstrap-sass (= 3.3.4.1)
+  bootstrap-sass (= 3.4.1)
   bootsy
   capistrano (~> 3.1)
   capistrano-git-submodule-strategy (~> 0.1)!
@@ -562,6 +562,7 @@ DEPENDENCIES
   nest
   parseconfig
   passenger (= 6.0.4)
+  pluot!
   pry
   rails (= 4.0.8)
   rails_config
