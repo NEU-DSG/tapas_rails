@@ -1,4 +1,5 @@
 TapasRails::Application.configure do
+  Rails.application.routes.default_url_options[:host] = 'railsapi.tapas.neu.edu'
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -10,9 +11,13 @@ TapasRails::Application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
+  config.fedora_home = "/opt/fedora/data/datastreamStore/"
+
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
+
+  config.action_mailer.default_url_options = { :host => "tapas.neu.edu"}
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.

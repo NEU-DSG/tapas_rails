@@ -1,6 +1,6 @@
 # Takes a presumed complete CoreFile and handles indexing it into exist.
 module Exist
-  class IndexCoreFile 
+  class IndexCoreFile
     attr_accessor :core_file, :filepath, :mod_opts
 
     def initialize(core_file, filepath, **mod_opts)

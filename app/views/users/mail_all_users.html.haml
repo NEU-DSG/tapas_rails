@@ -1,0 +1,20 @@
+- @page_title = "Send Mail to All Users"
+= link_to "<< Back", "/admin", class: ['btn', 'btn-info', 'btn-large']
+%h2.page-header
+  Send Mail to All Users
+= form_tag({controller: "users", action:"mail_all_users"}, method: "post") do
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = label_tag(:subject, nil, class: "control-label col-md-2")
+          .col-md-6
+            = text_field_tag(:subject, nil, class: "form-control")
+    .row
+      .form-horizontal
+        .form-group
+          = label_tag(:content, nil, class: "control-label col-md-2")
+          .col-md-6
+            = text_area_tag(:content, nil, class: "form-control")
+  .form-actions
+    = submit_tag("Send", class: 'btn btn-primary btn-large')

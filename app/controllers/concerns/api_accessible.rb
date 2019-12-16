@@ -3,30 +3,30 @@ module ApiAccessible
 
   included do
     # Disable CSRF protection...
-    skip_before_action :verify_authenticity_token
+    skip_before_action :verify_authenticity_token, :only => [:upsert, :api_show]
 
     # But enforce credential checks on each and every request.
     # Note that this and the csrf disable up top will have to be
     # reworked once tapas_rails is the actual frontend for tapas.
-    before_action :authenticate
+    before_action :authenticate, :only => [:upsert, :api_show]
 
     # This is necessary because of apparent limitations in Drupal.
     # Ensure that numerically keyed hashes are transformed into
     # arrays before passing them further down the chain.
-    before_action :associative_array_to_array
+    before_action :associative_array_to_array, :only => [:upsert, :api_show]
 
     # Certain actions in the API rely on an empty array, but we
     # disallow arrays populated with blank strings.  The quick/dirty
     # fix for this is to strip out blank strings from the array and
     # then send it along.
-    before_action :remove_empty_strings_from_array
+    before_action :remove_empty_strings_from_array, :only => [:upsert, :api_show]
 
-    before_action :load_resource_by_did, :except => [:upsert]
+    before_action :load_resource_by_did, :only => [:api_show, :teibp, :tei, :tapas_generic, :mods]
 
     before_action :validate_upsert, :only => [:upsert]
   end
 
-  def show
+  def api_show
     resource = get_loaded_resource
     @response[:message] = resource.as_json
     pretty_json(200) and return
@@ -91,7 +91,6 @@ module ApiAccessible
 
   # Validate the params associated with update and create API requests
   def validate_upsert
-    puts 'running upsert validate'
     validator = "#{controller_name.classify}Validator".constantize
     errors    = validator.validate_upsert(params)
 

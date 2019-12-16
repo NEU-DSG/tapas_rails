@@ -1,0 +1,47 @@
+%div.toolbar#toolbar
+  - if current_user
+    %a.collapsed.toolbar-link{:href => "#tools", "data-toggle" => "collapse"}
+      %span.fa-stack.fa-lg
+        %i.fa.fa-square.fa-stack-2x
+        %i.fa.fa-wrench.fa-stack-1x
+      %span.toolbar-title
+        = "Tools"
+    %section#tools.tools.wrench.collapse
+      %div.tools-content
+        %ul.menu.nav
+          = render partial: "/shared/menu", locals:{menu:"toolbar_tools"}
+          %li.leaf
+            %a{:href=>"/users/#{current_user.id}"}
+              = "My Account"
+  - else
+    %a{:href => new_user_session_path, :class => "toolbar-link"}
+      %span.fa-stack.fa-lg
+        %i.fa.fa-square.fa-stack-2x
+        %i.fa.fa-sign-in.fa-stack-1x.fa-inverse
+      %span.toolbar-title
+        = "Sign In"
+  -# %a.collapsed.toolbar-link{:href => "#news", "data-toggle" => "collapse"}
+  -#   %span.fa-stack.fa-lg
+  -#     %i.fa.fa-square.fa-stack-2x
+  -#     %i.fa.fa-newspaper-o.fa-stack-1x
+  -#   %span.toolbar-title
+  -#     = "My Feed"
+  -# %section#news.news.feed.collapse
+    -# %div.news-content
+      -# TODO - add news feed here
+  %a.collapse.toolbar-link{:href => "#search_tool", "data-toggle" => "collapse"}
+    %span.fa-stack.fa-lg
+      %i.fa.fa-square.fa-stack-2x
+      %i.fa.fa-search.fa-stack-1x
+    %span.toolbar-title
+      = "Search"
+  %section#search_tool.search.collapse
+    %div.search-content
+      = render :partial=>'catalog/search_form'
+  - if current_user
+    %a{:href => "/user/sign_out", :class => "toolbar-link"}
+      %span.fa-stack.fa-lg
+        %i.fa.fa-square.fa-stack-2x
+        %i.fa.fa-sign-out.fa-stack-1x.fa-inverse
+      %span.toolbar-title
+        = "Sign Out"

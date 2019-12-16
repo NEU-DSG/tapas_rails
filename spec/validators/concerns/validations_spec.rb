@@ -7,7 +7,7 @@ class TestObjectValidator
 
   def validate_upsert
     validate_all_present_params
-    errors 
+    errors
   end
 
   def validate_empty_string
@@ -35,9 +35,9 @@ describe TestObjectValidator do
   include FileHelpers
   include ValidatorHelpers
 
-  let(:params) do 
+  let(:params) do
     { :empty_string => '',
-      :present_string => "A nonblank string", 
+      :present_string => "A nonblank string",
       :string_array => %w(an array of strings),
       :access => 'public',
       :file => Rack::Test::UploadedFile.new(
@@ -45,48 +45,48 @@ describe TestObjectValidator do
       ) }
   end
 
-  it 'raises no errors when all fields are valid' do 
-    expect(validate(params).length).to eq 0 
+  it 'raises no errors when all fields are valid' do
+    expect(validate(params).length).to eq 0
   end
 
-  it 'raises no error the string array is empty' do 
+  it 'raises no error the string array is empty' do
     expect(validate(params.merge(string_array: [])).length).to eq 0
   end
 
-  it 'raises an error when an array of strings is not an array' do 
+  it 'raises an error when an array of strings is not an array' do
     validate(params.merge(string_array: 'string_one'))
     it_raises_a_single_error 'string_array expects an array'
   end
 
-  it 'raises an error when an array of strings contains nonstrings' do 
+  it 'raises an error when an array of strings contains nonstrings' do
     validate(params.merge(string_array: ['string', ['string_two']]))
-    it_raises_a_single_error 'contained blank or non-string values' 
+    it_raises_a_single_error 'contained blank or non-string values'
   end
 
-  it 'raises an error when a nonblank string is blank' do 
+  it 'raises an error when a nonblank string is blank' do
     validate(params.merge(present_string: '     '))
     it_raises_a_single_error 'must be nonblank string'
   end
 
-  it 'raises an error when a string is not a string' do 
+  it 'raises an error when a string is not a string' do
     validate(params.merge(present_string: %w(array of strings)))
     it_raises_a_single_error 'must be nonblank string'
   end
 
-  it 'raises an error when access is not "public" or "private"' do 
+  it 'raises an error when access is not "public" or "private"' do
     validate(params.merge(access: 'secret'))
-    it_raises_a_single_error 'access must be one of: ' 
+    it_raises_a_single_error 'access must be one of: '
   end
 
-  it 'raises an error when a file is not a file' do 
+  it 'raises an error when a file is not a file' do
     validate(params.merge(file: 'path/to/file'))
-    it_raises_a_single_error 'must be a file upload' 
+    it_raises_a_single_error 'must be a file upload'
   end
 
-  it 'raises an error when a file has an invalid extension' do 
+  it 'raises an error when a file has an invalid extension' do
     validate(params.merge(file: Rack::Test::UploadedFile.new(
       fixture_file('image.jpg'), 'image/jpeg')))
 
-    it_raises_a_single_error 'must be file with extension' 
+    it_raises_a_single_error 'must be file with extension'
   end
 end

@@ -30,4 +30,10 @@ class ViewPackagesController < ApplicationController
     end
     render json: @view_packages
   end
+
+  def run_job
+    Resque.enqueue(GetViewPackagesFromGithub)
+    flash[:notice] = "The job to update view packages from source has been sent to the queue"
+    redirect_to admin_path
+  end
 end

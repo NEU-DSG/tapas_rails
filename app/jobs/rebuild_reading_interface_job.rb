@@ -1,9 +1,12 @@
 class RebuildReadingInterfaceJob
   @queue = 'tapas_rails_maintenance'
-# TODO run this for real
   def self.perform(did)
     begin
-      core_file = CoreFile.find_by_did(did)
+      if CoreFile.exists?("#{did}")
+        core_file = CoreFile.find("#{did}")
+      else
+        core_file = CoreFile.find_by_did("#{did}")
+      end
 
       if !(core_file)
         raise 'Could not find record with specified Drupal ID'
@@ -32,7 +35,9 @@ class RebuildReadingInterfaceJob
         core_file.set_stacktrace_message(e)
         core_file.mark_upload_failed!
       end
-      raise e
+      this_log = Logger.new("#{Rails.root}/log/rebuild_job.log")
+      this_log.error e
+      raise ActiveFedora::ObjectNotFoundError
     ensure
       tmpfile.close if tmpfile
       tmpfile.unlink if tmpfile

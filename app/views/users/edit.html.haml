@@ -1,0 +1,34 @@
+%h2.page-header
+  = "Edit"
+  %i="#{@user.name}"
+
+= form_for @user do |f|
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :name, "Name", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :name, required: true, class: "form-control", placeholder: "Full Name"
+        .form-group
+          = f.label :email, "Email", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :email, required: true, class: "form-control", placeholder: "Email"
+        .form-group
+          = f.label :institution, "Institution", class: "control-label col-md-2"
+          .col-md-6
+            = f.collection_select(:institution_id, Institution.all, :id, :name, :prompt => 'Please select institution')
+        .form-group
+          = f.label :account_type, "Account Type", class: "control-label col-md-2"
+          .col-md-6
+            = f.select :account_type, options_for_select([['Free Account', 'free'], ['TEI-C Member Account', 'teic'], ['TEI-C Member via my institution', 'teic_inst']], @user.account_type), {}
+        - if current_user.admin?
+          .form-group
+            = f.label :role, "Admin", class: "control-label col-md-2"
+            .col-md-6
+              .checkbox
+                = f.select :role, options_for_select([['Admin', 'admin'], ['Unpaid User', 'unpaid_user'], ['Paid User', 'paid_user']], @user.role), {}
+
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'
