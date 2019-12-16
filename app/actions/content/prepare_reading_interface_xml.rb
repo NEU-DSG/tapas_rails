@@ -1,6 +1,7 @@
 # Takes a Nokogiri::XML document and the CoreFile that this xml will
-# eventually be attached to and rewrites all image/link tags to point 
+# eventually be attached to and rewrites all image/link tags to point
 # at repository assets
+# aka url munge / munging
 class PrepareReadingInterfaceXML
   attr_reader :core_file, :xml, :support_file_map
 
@@ -11,15 +12,15 @@ class PrepareReadingInterfaceXML
   end
 
   def self.execute(core_file, xml)
-    self.new(core_file, xml).execute 
+    self.new(core_file, xml).execute
   end
 
-  def execute 
+  def execute
     support_file_map = SupportFileMap.build_map core_file
     puts support_file_map.result
     all_relevant_attrs = %w(target url ref corresp facs)
 
-    xml.traverse do |node| 
+    xml.traverse do |node|
       node.each do |attr_name, attr_value|
         if attr_name.in?(all_relevant_attrs)
           node.set_attribute(attr_name, transform_urls(attr_value))
@@ -32,15 +33,15 @@ class PrepareReadingInterfaceXML
 
   def transform_urls(urls)
     urls = urls.split(" ")
-    urls.map! { |url| url = process_individual_url(url) } 
+    urls.map! { |url| url = process_individual_url(url) }
     urls.join(' ')
   end
 
-  private 
+  private
 
     def process_individual_url(url)
       puts "<<<<<"
-      puts "processing url #{url}" 
+      puts "processing url #{url}"
       puts "<<<<<"
       begin
         if url.starts_with?('#') || URI.parse(url).absolute?
@@ -50,7 +51,7 @@ class PrepareReadingInterfaceXML
           puts "filename was #{filename}"
           puts "frag was #{frag}"
           new_url = support_file_map.get_url(filename)
-          puts "new url was #{new_url}" 
+          puts "new url was #{new_url}"
         end
 
         if new_url.present?
@@ -58,7 +59,7 @@ class PrepareReadingInterfaceXML
         else
           return url
         end
-      rescue URI::InvalidURIError => e 
+      rescue URI::InvalidURIError => e
         return url
       end
     end

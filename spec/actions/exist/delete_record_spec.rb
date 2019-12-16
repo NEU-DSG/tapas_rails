@@ -5,9 +5,12 @@ describe Exist::DeleteRecord do
 
   before(:all) do
     community = FactoryGirl.create :community
-
+    community.did = community.pid
+    community.save!
     collection = FactoryGirl.create :collection
     collection.community = community
+    collection.did = collection.pid
+
     collection.save!
 
     @core_file = FactoryGirl.create :core_file

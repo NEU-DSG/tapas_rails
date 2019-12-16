@@ -1,0 +1,7 @@
+= link_to "<< Back", collection_path(@collection), class: ['btn', 'btn-info', 'btn-large']
+
+%h2.page-header
+  = "Edit"
+  %i="#{@collection.title}"
+
+= render 'data_form'

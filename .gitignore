@@ -4,6 +4,8 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+# Ruby Mine stuff
+.idea/
 # Ignore bundler config.
 /.bundle
 
@@ -15,10 +17,11 @@
 /log/*.log
 /tmp
 
-# Ignore everything associated with jetty 
+# Ignore everything associated with jetty
 /jetty
+jetty/*
 
-# Ignore Figaro generated configuration file 
+# Ignore Figaro generated configuration file
 /config/application.yml
 
 # Ignore Redis generated dump file
@@ -45,7 +48,7 @@ config/secrets.yml
 
 /vendor/cache
 
-# Ignore swp files 
+# Ignore swp files
 **.swp
 
 .DS_Store
@@ -53,7 +56,14 @@ config/secrets.yml
 config/settings.local.yml
 config/settings/*.local.yml
 config/environments/*.local.yml
+coverage/*
+test.txt
+testout.txt
+.idea/*
 
 # Ignore directories which are pulled down from github
 public/view_packages
 public/view_packages/*
+
+log/*-resolrize
+public/uploads/*

@@ -1,5 +1,5 @@
 module Exist
-  class StoreMods 
+  class StoreMods
     include Exist::Concerns::Helpers
     include Exist::Concerns::Mods
 
@@ -16,10 +16,13 @@ module Exist
     end
 
     def execute
-      url = build_url "#{core_file.project.did}/#{core_file.did}/mods"
+      # did = core_file.did.to_s.gsub(':','_')
+      did = core_file.id.to_s.gsub(':','_')
+      # p_did = core_file.project.did.to_s.gsub(':','_')
+      p_did = core_file.project.id.to_s.gsub(':','_')
+      url = build_url "#{p_did}/#{did}/mods"
       build_resource(url)
       send_mods_request
     end
   end
 end
-

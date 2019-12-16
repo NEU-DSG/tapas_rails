@@ -4,7 +4,14 @@ require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(*Rails.groups)
+# Bundler.require(*Rails.groups)
+
+if defined?(Bundler)
+  # If you precompile assets before deploying to production, use this line
+  Bundler.require(*Rails.groups(:assets => %w(development staging test)))
+  # If you want your assets lazily compiled in production, use this line
+  # Bundler.require(:default, :assets, Rails.env)
+end
 
 module TapasRails
   class Application < Rails::Application
@@ -28,6 +35,7 @@ module TapasRails
     # the tapas repository.  Note that this doesn't map to any
     # project object that exists in the drupal head.
     config.tap_root = "tap:1"
+    config.encoding = "utf-8"
 
     # Enable pid generation on object instantiation
     config.cerberus_core.auto_generate_pid = true

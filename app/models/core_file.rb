@@ -4,6 +4,7 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   include DrupalAccess
   include TapasQueries
   include StatusTracking
+  include SolrHelpers
   include TapasRails::ViewPackages
 
   # Configure mods_display gem
@@ -11,6 +12,8 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
   mods_xml_source do |model|
     model.mods.content
   end
+
+  before_save :match_dc_to_mods
 
   before_save :ensure_unique_did, :calculate_drupal_access
 
@@ -37,6 +40,12 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
 
   has_metadata :name => "mods", :type => ModsDatastream
   has_metadata :name => "properties", :type => PropertiesDatastream
+  has_attributes :title, datastream: "DC"
+  has_attributes :description, datastream: "DC"
+  has_attributes :featured, :datastream => :properties, :multiple => false
+  delegate :authors, to: "mods"
+  delegate :contributors, to: "mods"
+
 
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
@@ -51,6 +60,18 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     CoreFile.all_ography_read_methods.each do |ography_type|
       self.send(:"#{ography_type}=", [])
     end
+  end
+
+  def to_solr(solr_doc = Hash.new())
+    solr_doc["active_fedora_model_ssi"] = self.class
+    solr_doc['all_text_timv'] = self.canonical_object.content.content if self.canonical_object
+    solr_doc['type_sim'] = self.is_ography? ? self.ography_type : "Record"
+    solr_doc['collections_ssim'] = self.collections.map{|c| c.title} if !self.collections.blank?
+    solr_doc['collections_pids_ssim'] = self.collections.map{|c| c.pid} if !self.collections.blank?
+    solr_doc['project_ssi'] = self.project.title if !self.project.blank?
+    solr_doc['project_pid_ssi'] = self.project.pid if !self.project.blank?
+    super(solr_doc)
+    return solr_doc
   end
 
   def create_view_package_methods
@@ -135,6 +156,27 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     end
   end
 
+  def is_ography?
+    CoreFile.all_ography_read_methods.any? do |ography_type|
+      self.send(ography_type).any?
+    end
+  end
+
+  def ography_type
+    type = []
+    CoreFile.all_ography_types.each do |o|
+      if !self.send("#{o}_for").blank?
+        type << o
+      end
+    end
+    return type
+  end
+
+  def remove_thumbnail
+    self.thumbnail_list = []
+    self.save!
+  end
+
   private
 
   def render_failure_json
@@ -165,17 +207,19 @@ class CoreFile < CerberusCore::BaseModels::CoreFile
     }
   end
 
-  def is_ography?
-    CoreFile.all_ography_read_methods.any? do |ography_type|
-      self.send(ography_type).any?
-    end
-  end
-
   def calculate_drupal_access
     if collections.any? { |collection| collection.drupal_access == 'public' }
       self.drupal_access = 'public'
     else
       self.drupal_access = 'private'
     end
+  end
+
+  def match_dc_to_mods
+    self.DC.title = self.mods.title.first
+    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    # self.mods.title = self.DC.title.first
+    # self.mods.abstract = self.DC.description.first
+    #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 end

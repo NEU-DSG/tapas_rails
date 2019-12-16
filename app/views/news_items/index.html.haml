@@ -1,0 +1,28 @@
+%h1= "News Items"
+%ul.breadcrumb
+  - if current_user && current_user.admin?
+    %li= link_to("Admin", admin_path)
+  %li= "News Items"
+- if current_user && current_user.admin?
+  =link_to "Create New News Item", new_news_item_path, class:['btn', 'btn-primary', 'btn-large']
+-if @news_items.length > 0
+  %table.table.table-striped
+    %tr
+      %th
+        = "News Item"
+      %th
+        = "Updated at"
+    - @news_items.each do |news_item|
+      %tr
+        %td
+          %h3
+            = link_to(news_item.title, news_item_path(news_item.slug))
+            - if current_user && current_user.admin?
+              %a.btn.btn-default.btn-sm{:href=>edit_news_item_path(news_item.id)}
+                = "Edit"
+              %a.btn.btn-danger.btn-sm{:href=>news_item_path(news_item.id), "data-method"=>"delete"}
+                %i.fa.fa-trash
+        %td
+          = news_item.updated_at
+-else
+  There are currently no news items available

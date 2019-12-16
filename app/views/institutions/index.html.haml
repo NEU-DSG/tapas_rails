@@ -1,0 +1,28 @@
+%h1= "Institutions"
+%ul.breadcrumb
+  - if current_user && current_user.admin?
+    %li= link_to("Admin", admin_path)
+  %li= "Institutions"
+- if current_user && current_user.admin?
+  =link_to "Create New Institution", new_institution_path, class:['btn', 'btn-primary', 'btn-large']
+-if @institutions.length > 0
+  %table.table.table-striped
+    %tr
+      %th
+        = "Institution"
+      %th
+        = "Updated at"
+    - @institutions.each do |institution|
+      %tr
+        %td
+          %h3
+            = link_to(institution.name, institution_path(institution.id))
+            - if current_user && current_user.admin?
+              %a.btn.btn-default.btn-sm{:href=>edit_institution_path(institution.id)}
+                = "Edit"
+              %a.btn.btn-danger.btn-sm{:href=>institution_path(institution.id), "data-method"=>"delete"}
+                %i.fa.fa-trash
+        %td
+          = institution.updated_at
+-else
+  There are currently no institutions available

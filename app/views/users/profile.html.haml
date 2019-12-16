@@ -1,0 +1,25 @@
+%h2.page-header
+  = @user.name
+- if current_user && current_user == @user
+  = link_to "Manage Account", edit_user_registration_path(@user), class:['btn', 'btn-info', 'btn-large']
+- if @user.email
+  %dt= "Email"
+  %dd= @user.email
+%dt= "Member Since"
+%dd= @user.created_at.strftime("%D")
+- if @user.bio
+  %dt= "Bio"
+  %dd= @user.bio
+- if @user.institution
+  %dt= "Institution"
+  %dd= @user.institution.name
+%dt= "Account Type"
+%dd= @user.account_type
+%dt= "Role"
+%dd= @user.role
+
+%div.row
+  - if @user.avatar
+    %div.col-sm-4
+      = image_tag(@user.avatar.url)
+

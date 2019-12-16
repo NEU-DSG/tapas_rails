@@ -7,6 +7,12 @@ describe Exist::StoreTfe do
   before(:all) do
     unless ENV['TRAVIS']
       @core_file, @collections, @community = FixtureBuilders.create_all
+      @collections.each do |col|
+        col.community = @community
+        col.save!
+      end
+      @core_file.collections = @collections
+      @core_file.save!
 
       @core_file_unindexed = FactoryGirl.create :core_file
       @core_file_unindexed.collections = @collections

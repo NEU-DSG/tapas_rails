@@ -1,0 +1,79 @@
+%h2.page-title= "Browse"
+
+= render :partial=>'catalog/search_form'
+%br
+
+%ul.nav.nav-tabs.browse-tabs
+  %li.active
+    %a{:href=>"#projects", "data-toggle"=>"tab", "data-type"=>"communities"} Projects
+  %li
+    %a{:href=>"#collections", "data-toggle"=>"tab", "data-type"=>"collections"} Collections
+  %li
+    %a{:href=>"#records", "data-toggle"=>"tab", "data-type"=>"core_files"} Records
+.tab-content
+  #projects.tab-pane.active
+    Loading...
+  #collections.tab-pane
+    Loading...
+  #records.tab-pane
+    Loading...
+
+
+:javascript
+  $(document).ready(function(){
+    $(".browse-tabs a").click(function(e){
+      var data_type = $(this).data('type');
+      var type = "";
+      if (data_type == 'communities'){
+        type = "projects";
+      }
+      if (data_type == "collections"){
+        type = "collections";
+      }
+      if (data_type == "core_files"){
+        type = "records";
+      }
+      var href = "/" + data_type;
+      get_script(href, type);
+
+      function fixPagination() {
+        $('#sortAndPerPage a').click( function(e) {
+          e.preventDefault();
+          var href = $(this).attr('href');
+          var type = $(this).parents(".tab-pane").attr("id");
+          get_script(href, type);
+        });
+        $(".facet_select, .constraint a, #startOverLink").click(function (e) {
+          e.preventDefault();
+          var type = $(this).parents(".tab-pane").attr("id");
+          var data_type = "";
+          if (type == "projects"){
+            data_type = "communities";
+          }
+          if (type == "collections"){
+            data_type = "collections";
+          }
+          if (type == "records"){
+            data_type = "core_files";
+          }
+          var href = $(this).attr('href').replace("catalog", data_type);
+          get_script(href, type);
+        });
+      }
+
+      function get_script(href, type){
+        $(".tab-pane:not(#"+type+")").html("Loading...");
+        $.getScript(href, function(data){
+          $("#"+type).html(data.responseText);
+        }).done( function() {
+          fixPagination();
+        }).fail(function(jqxhr){
+          if (jqxhr.status == 200){
+            $("#"+type).html(jqxhr.responseText);
+            fixPagination();
+          }
+        });
+      }
+    });
+    $(".browse-tabs li.active a").click();
+  });

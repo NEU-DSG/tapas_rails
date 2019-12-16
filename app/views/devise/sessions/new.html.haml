@@ -1,0 +1,36 @@
+%h2.page-header= "User Account"
+
+%ul.nav.nav-tabs
+  %li
+    = link_to "Create New Account", '/users/sign_up'
+  %li.active
+    = link_to "Sign In", '#sign_in'
+  %li
+    = link_to "Recover Password", '/users/password/new'
+
+.tab-content
+  #new.tab-pane
+
+  #sign_in.tab-pane.active
+    = simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+      %div.form-inputs
+        = f.input :email, required: false, autofocus: true
+        = f.input :password, required: false
+        = f.input :remember_me, as: :boolean if devise_mapping.rememberable?
+
+      %div.form-actions
+        = f.button :submit, "Sign in"
+
+  #password.tab-pane
+
+
+:javascript
+  $('.nav-tabs a').click(function (e) {
+    e.preventDefault();
+    if (e.currentTarget.href.indexOf('#') != -1){
+      $(this).tab('show');
+    } else {
+      window.location = e.currentTarget.href;
+    }
+  });
+

@@ -1,0 +1,36 @@
+%ul.breadcrumb
+  - if current_user && current_user.admin?
+    %li= link_to("Admin", admin_path)
+  %li= link_to("Institutions", institutions_path)
+  %li= "#{@institution.name}"
+%h2.page-header
+  = @institution.name
+- if current_user && current_user.admin?
+  = link_to "Edit", edit_institution_path(@institution), class:['btn', 'btn-info', 'btn-large']
+%dl
+  - if !@institution.description.blank?
+    %dt= "Description"
+    %dd= @institution.description
+  - if !@institution.image.blank?
+    %dt= "Image"
+    %dd= @institution.image
+  - if !@institution.address.blank?
+    %dt= "Address"
+    %dd= @institution.address
+  - if !@institution.latitude.blank? && !@institution.longitude.blank?
+    -# TODO embed map here
+  - if !@institution.url.blank?
+    %dt= "URL"
+    %dd= link_to(@institution.url)
+- if !@communities.blank?
+  %panel.panel-default.panel-projects
+    %div.panel-heading
+      %h2.panel-title
+        = "Projects"
+    %div.panel-body
+      %table.table
+        - @communities.each do |p|
+          %tr
+            %td
+              %h4
+                = link_to(p['title_info_title_ssi'], community_path(p['id']))

@@ -10,13 +10,16 @@ gem 'sqlite3'
 gem 'rubyzip'
 
 # Use passenger as the application server
-gem 'passenger', '5.0.15'
+gem 'passenger', '6.0.4'
 
 # Use mysql2 for the staging environment
-gem 'mysql2', '0.3.16'
+gem 'mysql2', '0.3.17'
+
+gem 'minitest', '4.7.5'
 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.2'
+gem 'bootstrap-sass', '3.3.4.1'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
@@ -29,9 +32,14 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
+
+# for handling slugs in URLS instead of IDs
+gem 'friendly_id', '~> 5.0.0' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
+# hand to downgrade from 5.1.0 to 5.0.0 for forem to work
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
@@ -57,6 +65,12 @@ gem 'thor-rails'
 # Use Namae to try to parse arbitrary names
 gem 'namae'
 
+# Bootstrap WYSIWYG Editor
+gem 'bootsy'
+
+# Forem gem for Forums
+gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
+
 # Configure email alerts on exception
 gem 'exception_notification'
 
@@ -77,6 +91,8 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+gem 'blacklight-gallery'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -89,7 +105,7 @@ gem 'capistrano-rails', '~> 1.1'
 gem 'capistrano-rvm'
 gem 'capistrano-resque', '~> 0.2.2', :require => false
 gem 'capistrano-passenger'
-gem 'capistrano-git-submodule-strategy', '~> 0.1', :github => 'ekho/capistrano-git-submodule-strategy'
+gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
@@ -104,4 +120,14 @@ end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
+
+gem "rsolr", "~> 1.0.6"
+gem 'therubyracer',  platforms: :ruby
+
+
+gem 'simplecov', :require => false, :group => :test
+gem 'simplecov-json', :require => false, :group => :test
+gem 'simplecov-rcov', :require => false, :group => :test
 gem "git"
+
+gem "pluot", :git => "https://github.com/rapheld/pluot.git"
