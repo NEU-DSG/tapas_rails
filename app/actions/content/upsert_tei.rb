@@ -7,23 +7,23 @@ module Content
 
     def initialize(core_file, file)
       @core_file = core_file
-      @file = file 
+      @file = file
     end
 
     def self.execute(core_file, file)
       self.new(core_file, file).upsert!
     end
 
-    def upsert! 
+    def upsert!
       ZipContentValidator.tei file
 
       content = core_file.canonical_object
 
-      unless content 
+      unless content
         content = ::TEIFile.create
         content.canonize
         content.core_file = core_file
-        content.save! 
+        content.save!
       end
 
       add_unique_file(content, :filepath => file)

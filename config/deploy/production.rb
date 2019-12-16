@@ -58,4 +58,5 @@ set :passenger_restart_options, -> { "#{current_path} --ignore-app-not-running" 
 after 'deploy:restart', 'resque:restart'
 after 'deploy:updating', 'deploy:copy_figaro_conf'
 after 'deploy:published', 'deploy:create_api_user'
+after 'deploy:published', 'deploy:load_view_packages'
 after 'deploy:published', 'deploy:create_tmp_dir'

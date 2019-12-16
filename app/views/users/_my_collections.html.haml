@@ -1,0 +1,5 @@
+-@response = @collections
+%div#sidebar{ :class =>  sidebar_classes }
+  = render 'catalog/search_sidebar'
+%div#content{ :class => main_content_classes }
+  = render 'catalog/search_results'

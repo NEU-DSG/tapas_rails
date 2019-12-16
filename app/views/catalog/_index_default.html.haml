@@ -1,0 +1,23 @@
+-# default partial to display solr document fields in catalog index view
+%dl.document-metadata.dl-horizontal.dl-invert
+  - index_fields(document).each do |field_name, field|
+    - if should_render_index_field? document, field
+      %dt{:class=>"blacklight-#{field_name.parameterize}"}
+        = render_index_field_label document, field: field_name
+      %dd{:class=>"blacklight-#{field_name.parameterize}"}
+        = render_index_field_value document, field: field_name
+  - if !document.collections.blank?
+    %dt.blacklight-collections
+      = "Collections:"
+    %dd.blacklight-collections
+      - document['collections_pids_ssim'].each do |col|
+        - collection = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{col}\"").first)
+        = link_to(collection.title, collection_path(collection.id))
+        - if document.collections.count > 1
+          %br
+  - if !document.project.blank?
+    - project = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{document.project}\"").first)
+    %dt.blacklight-project
+      = "Project:"
+    %dd.blacklight-project
+      = link_to(project.title, community_path(project.id))

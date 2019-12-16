@@ -9,7 +9,7 @@ describe "The Did module" do
   let(:tester) { DidTester.new }
 
   after(:each) do
-    ActiveFedora::Base.destroy_all
+    ActiveFedora::Base.delete_all
   end
 
   it "gives access to did setter/getter methods" do
@@ -30,6 +30,7 @@ describe "The Did module" do
   it "returns nil when an item of the wrong class is searched for" do
     c = Collection.new
     c.depositor = "Johnny"
+    c.title = "Test"
     c.save!
     expect(DidTester.find_by_did("#{c.did}")).to be nil
   end
@@ -41,6 +42,7 @@ describe "The Did module" do
       c = Collection.new
       c.did = "not_used"
       c.depositor = "whomever"
+      c.title = "Test"
       c.save!
 
       expect(Did.exists_by_did? "not_used").to be true

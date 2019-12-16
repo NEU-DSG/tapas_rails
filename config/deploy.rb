@@ -1,8 +1,8 @@
 # config valid only for Capistrano 3.1
-lock '3.2.1'
+lock '3.6.1'
 
 set :application, 'tapas_rails'
-set :stages, ["staging", "production"]
+# set :stages, ["staging", "production"]
 set :repo_url, 'https://github.com/NEU-DSG/tapas_rails'
 
 # Ensure that the Rails environment is always loaded for Resque workers
@@ -80,6 +80,15 @@ namespace :deploy do
   task :create_tmp_dir do
     on roles(:all), in: :sequence, wait: 5 do
       execute "cd #{release_path} && mkdir tmp"
+    end
+  end
+
+  desc 'Load view packages'
+  task :load_view_packages do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute "cd #{current_path} && RAILS_ENV=#{fetch(:rails_env)}"\
+              " ~/.rvm/bin/rvm default do bundle exec thor"\
+              " tapas_rails:create_view_packages"
     end
   end
 

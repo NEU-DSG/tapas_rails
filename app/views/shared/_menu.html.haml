@@ -1,0 +1,18 @@
+- MenuLink.all.where(:menu_name=>menu).order(:link_order).each do |l|
+  - if l.parent_link_id.blank?
+    - child_links = MenuLink.all.where(:parent_link_id => l.id).order(:link_order)
+    - klass = ""
+    - if !child_links.blank?
+      - klass = "expanded dropdown"
+    - if params[:id] == l.link_href[1..-1]
+      - klass += " active"
+    %li{:class=>klass}
+      %a{:href=> l.link_href, :class=>!child_links.blank? ? "dropdown-toggle" : "", "data-target"=> "#", "data-toggle"=>!child_links.blank? ? "dropdown": ""}
+        =l.link_text
+        -if !child_links.blank?
+          %span.caret
+      -if !child_links.blank?
+        %ul.dropdown-menu
+          - child_links.each do |cl|
+            %li
+              = link_to(cl.link_text, cl.link_href, {:class=>params[:id] == cl.link_href[1..-1] ? "active" : ""})

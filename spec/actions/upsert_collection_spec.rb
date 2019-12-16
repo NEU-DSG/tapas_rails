@@ -10,27 +10,29 @@ describe UpsertCollection do
       :title => 'A Test Collection',
       :access => 'public',
       :project_did => '333',
+      :community => '333',
       :thumbnail => tmp_fixture_file('image_copy.jpg'),
     }
   end
 
   def build_parent_community
-    if !Community.find_by_did("333")
+    if !Community.all.blank?
       @community = Community.new
+      @community.title = "Test Community"
       @community.did = params[:project_did]
       @community.save!
     else
-      @community = Community.find_by_did("333")
+      @community = Community.all.first
     end
   end
 
   subject(:collection) { Collection.find_by_did(params[:did]) }
 
   RSpec.shared_examples 'a metadata assigning operation' do
-    its('mods.title') { should eq [params[:title]] }
+    its(:title) { should eq params[:title] }
     its('mods.abstract') { should eq [params[:description]] }
     its(:drupal_access) { should eq params[:access] }
-    its(:mass_permissions) { should eq 'private' }
+    its(:mass_permissions) { should eq 'public' }
   end
 
   RSpec.shared_examples 'a thumbnail updating operation' do
@@ -92,6 +94,7 @@ describe UpsertCollection do
       build_parent_community
       collection = Collection.new
       collection.did = params[:did]
+      collection.title = "Test Collection"
       collection.depositor = 'Old Depositor'
       collection.save!
       collection.community = FactoryGirl.create(:community)
@@ -143,11 +146,6 @@ describe UpsertCollection do
   end
 
   def clean_up
-    if Collection.find_by_did("111")
-      Collection.find_by_did("111").destroy
-    end
-    if Community.find_by_did("333")
-      Community.find_by_did("333").destroy
-    end
+    ActiveFedora::Base.delete_all
   end
 end

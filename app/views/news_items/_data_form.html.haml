@@ -1,0 +1,29 @@
+= form_for @news_item do |f|
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :title, "Title", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :title, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "News Item Title"
+        .form-group
+          = f.label :slug, "URL Slug", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :slug, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "url_path_for_news_item"
+        .form-group
+          = f.label :author, "Author", class: 'control-label col-md-2'
+          .col-md-6
+            = f.select :author, options_for_select(@users, current_user.id), {}, {required: true, class: "form-control", name: "author"}
+        .form-group
+          = f.label :publish, class: "control-label col-md-2"
+          .col-md-6
+            .checkbox
+              = f.check_box :publish, {}, "true"
+        .form-group
+          = f.label :content, "Content", class: "control-label col-md-2"
+          .col-md-6
+            = f.bootsy_area :content, required: true, class: "form-control", placeholder: "HTML Content of news item", rows: 16, editor_options: {html: true}
+
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

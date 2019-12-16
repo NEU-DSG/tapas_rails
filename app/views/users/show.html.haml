@@ -1,0 +1,41 @@
+- if current_user && current_user.admin?
+  = link_to "Edit", edit_user_path(@user), class:['btn', 'btn-info', 'btn-large']
+%h2.page-header
+  = @user.name
+
+%dt= "ID"
+%dd= @user.id
+
+%dt= "Name"
+%dd= @user.name
+
+%dt= "Email"
+%dd= @user.email
+
+- if @user.institution
+  %dt= "Institution"
+  %dd= @user.institution.name
+
+%dt= "Created At"
+%dd= @user.created_at
+
+%dt= "Updated At"
+%dd= @user.updated_at
+
+%dt= "Currently logged in since"
+%dd= @user.current_sign_in_at
+
+%dt= "Last logged in"
+%dd= @user.last_sign_in_at
+
+%dt= "Account Type"
+%dd= @user.account_type
+
+- if @user.role
+  %dt= "Role"
+  %dd= @user.role.gsub("_"," ").titleize
+
+%dt="Association Counts"
+%dd="Projects - #{}"
+%dd="Collections - #{}"
+%dd="Records - #{}"

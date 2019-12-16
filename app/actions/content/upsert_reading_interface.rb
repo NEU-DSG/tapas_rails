@@ -41,7 +41,7 @@ module Content
 
       filename = "#{interface_type}.xhtml"
 
-      # Prepare the tei file for eXist by handling relative urls
+      # Prepare the tei file for eXist by handling relative urls aka munging
       xml_updated = ::PrepareReadingInterfaceXML.execute(core_file,
         Nokogiri::XML(File.read(file_path))).to_xml
 

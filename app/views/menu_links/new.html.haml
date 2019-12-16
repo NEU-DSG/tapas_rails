@@ -1,0 +1,7 @@
+%ul.breadcrumb
+  %li= link_to("Admin", admin_path)
+  %li= link_to("Menu Links", menu_links_path)
+  %li= "New Menu Link"
+
+%h2.page-header New Menu Link
+= render 'data_form'

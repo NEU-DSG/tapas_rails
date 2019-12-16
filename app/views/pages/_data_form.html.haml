@@ -1,0 +1,31 @@
+= form_for @page do |f|
+  .container-fluid
+    .row
+      .form-horizontal
+        .form-group
+          = f.label :title, "Title", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :title, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Page Title"
+        .form-group
+          = f.label :slug, "URL Slug", class: "control-label col-md-2"
+          .col-md-6
+            = f.text_field :slug, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "test_path"
+            %p.help-block
+              = "Do not include leading slash"
+        .form-group
+          = f.label :publish, class: "control-label col-md-2"
+          .col-md-6
+            .checkbox
+              = f.check_box :publish, {}, "true"
+        .form-group
+          = f.label :submenu, class: "control-label col-md-2"
+          .col-md-6
+            = f.select :submenu, options_for_select(@menus, !@page.submenu.blank? ? @page.submenu : nil), {:prompt => "Which submenu belongs on this page"}, {class: "form-control"}
+        .form-group
+          = f.label :content, "Content", class: "control-label col-md-2"
+          .col-md-6
+            = f.bootsy_area :content, required: true, class: "form-control", placeholder: "HTML Content of page", rows: 16, editor_options: {html: true}
+
+    %hr
+  .form-actions
+    = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

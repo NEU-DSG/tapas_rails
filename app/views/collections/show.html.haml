@@ -1,0 +1,63 @@
+- parent = @collection.community || nil
+
+%ul.breadcrumb
+  %li
+    = link_to parent.title, community_path(parent)
+  %li
+    = @collection.title
+
+- if current_user_can? :edit, @collection
+  = link_to "Edit", edit_collection_path(@collection), class:['btn', 'btn-info', 'btn-large']
+- records = @collection.children || []
+
+%h2.page-header= @collection.title
+
+
+%div.row
+  %div.col-md-3
+    %dt= "Project"
+    %dd= link_to parent.title, parent
+    - if !parent.institutions.blank?
+      %dt Affiliated Institutions
+      - parent.institutions.each do |i|
+        - int = Institution.find(i)
+        %dd
+          = link_to(int.name, institution_path(int))
+        %br
+    - if @collection.thumbnail_list.blank?
+      =image_tag "tapaslogo-opaque.png"
+    -else
+      %img{src:@collection.thumbnail_list.first}
+    - if !@collection.description.blank?
+      %dt= "Description"
+      %dd= @collection.description
+    %dt= "Record Count"
+    %dd= records.count
+
+
+  %div.col-md-9
+    %panel.panel-default.panel-records
+      %div.panel-heading
+        %h3.panel-title
+          = "Records"
+          - if current_user_can? :edit, @collection
+            %small
+              %a{href:new_core_file_path, class: 'pull-right'}
+                %i.fa.fa-plus
+                = "Add New"
+      %div.panel-body
+        - records.each do |record|
+          %div.col-lg-3
+            .record.tile
+              - if current_user_can? :edit, record
+                %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}
+                  %i.fa.fa-pencil
+                  = "Edit"
+              - if record.thumbnail_list.blank?
+                =image_tag "tapaslogo-opaque.png"
+              -else
+                %img{src:record.thumbnail.download_path('thumbnail_1')}
+              %h4= link_to record.title, record
+              - if record.file_type != :tei_content
+                %span.btn-xs.btn.btn-info
+                  = "Support File"
