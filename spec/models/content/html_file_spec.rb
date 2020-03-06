@@ -7,8 +7,8 @@ describe HTMLFile do
 
     it "raises an error when set to an unexpected value" do
       skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
+      FactoryBot.create :tapas_generic
+      FactoryBot.create :teibp
 
       e = Exceptions::InvalidHTMLTypeError
       expect { html_file.html_type = "new format" }.to raise_error e
@@ -16,8 +16,8 @@ describe HTMLFile do
 
     it "can be set to an expected value" do
       skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
+      FactoryBot.create :tapas_generic
+      FactoryBot.create :teibp
 
       html_file.html_type = "teibp"
       expect(html_file.html_type).to eq "teibp"

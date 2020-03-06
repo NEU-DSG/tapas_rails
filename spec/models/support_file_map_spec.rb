@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe SupportFileMap do
-  let(:core_file) { FactoryGirl.create :core_file }
-  let(:collection) { FactoryGirl.create :collection }
-  let(:community) { FactoryGirl.create :community }
+  let(:core_file) { FactoryBot.create :core_file }
+  let(:collection) { FactoryBot.create :collection }
+  let(:community) { FactoryBot.create :community }
 
   after(:each) { ActiveFedora::Base.delete_all }
 
@@ -11,7 +11,7 @@ describe SupportFileMap do
 
     it "creates a download url based on the given content file object" do
       x = SupportFileMap.new(nil)
-      img = FactoryGirl.create :image_master_file
+      img = FactoryBot.create :image_master_file
 
       expected_url = "http://railsapi.localhost:8080/downloads/#{img.pid}/?datastream_id=content"
       expect(x.download_url img).to eq expected_url
@@ -22,7 +22,7 @@ describe SupportFileMap do
     after(:all) { ActiveFedora::Base.delete_all }
 
     def attach_ography(ography, type, collection)
-      core_file = FactoryGirl.create :core_file
+      core_file = FactoryBot.create :core_file
 
       assignment = :"#{type}_for="
       filename = "#{type}.xml"
@@ -44,21 +44,21 @@ describe SupportFileMap do
 
 
     before(:all) do
-      @core_file   = FactoryGirl.create :core_file
-      @collection  = FactoryGirl.create :collection
-      @collection2 = FactoryGirl.create :collection
+      @core_file   = FactoryBot.create :core_file
+      @collection  = FactoryBot.create :collection
+      @collection2 = FactoryBot.create :collection
 
       @core_file.collections = [@collection, @collection2]
       @core_file.save!
 
       # Create three unique image files at the file scope
-      @one, @two, @three = FactoryGirl.create_list(:image_master_file, 3)
+      @one, @two, @three = FactoryBot.create_list(:image_master_file, 3)
 
       # Create @three unique xml files at the collection
-      @four, @five, @six = FactoryGirl.create_list(:tei_file, 3)
+      @four, @five, @six = FactoryBot.create_list(:tei_file, 3)
 
       # Create an image file at the collection scope that will conflict with @two
-      @seven = FactoryGirl.create :image_master_file
+      @seven = FactoryBot.create :image_master_file
 
       attach_page_image(@one, 'file_one.jpeg')
       attach_page_image(@two, 'file_two.png')
