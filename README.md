@@ -89,4 +89,22 @@ To run the job that reruns all of the core_files through the reading interface b
 
 
 To modify the main menu
-  - open the menu.en.yml file and modify/reorder/add/delete values where necessary 
+  - open the menu.en.yml file and modify/reorder/add/delete values where necessary
+
+
+## Development
+
+ - install libv8 on OSX with `gem install libv8 -v '3.16.14.19' -- --with-system-v8`
+
+ - installing nokogiri on OSX: `$ gem install nokogiri -- --with-xml2-include=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libxml2 --use-system-libraries`
+ - configuring bundle install with correct openssl from brew:
+ ```
+ $ bundle config --global build.mysql2 --with-opt-dir="$(brew --prefix openssl)"
+ $ bundle install
+ ```
+ - if running with MAMP: `gem install mysql2 -- --with-mysql-config=/Applications/MAMP/Library/bin/mysql_config`
+
+ - gem uninstall libv8
+ - brew install v8
+ - gem install therubyracer
+ - gem install libv8 -v '3.16.14.15' -- --with-system-v8
