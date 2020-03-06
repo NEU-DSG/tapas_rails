@@ -5,12 +5,12 @@ describe CoreFile do
   include FixtureBuilders
   include TapasRails::ViewPackages
 
-  let(:core_file) { FactoryGirl.create :core_file }
-  let(:collection) { FactoryGirl.create :collection }
-  let(:community) { FactoryGirl.create :community }
+  let(:core_file) { FactoryBot.create :core_file }
+  let(:collection) { FactoryBot.create :collection }
+  let(:community) { FactoryBot.create :community }
 
   describe "Collections relationship" do
-    let(:core_file) { FactoryGirl.create :core_file }
+    let(:core_file) { FactoryBot.create :core_file }
 
     it { respond_to :collections }
     it { respond_to :collections= }
@@ -20,7 +20,7 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "are manipulated as arrays" do
-      c, d = FactoryGirl.create_list(:collection, 2)
+      c, d = FactoryBot.create_list(:collection, 2)
 
       core_file.collections << c
       core_file.collections << d
@@ -94,7 +94,7 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "can be set on the CoreFile but is written to the TEIFile" do
-      tei  = FactoryGirl.create :tei_file
+      tei  = FactoryBot.create :tei_file
       core_file.tfc << tei ; core_file.save!
       expect(tei.tfc_for).to match_array [core_file]
     end
@@ -102,13 +102,13 @@ describe CoreFile do
 
   describe "view package methods" do
     it "should have tapas_generic method when tapas_generic view package object exists" do
-      FactoryGirl.create :tapas_generic
+      FactoryBot.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)
     end
 
     it "should not have method if the view_package doesn't exist" do
-      FactoryGirl.create :tapas_generic
+      FactoryBot.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)
       CoreFile.remove_view_package_methods(["tapas_generic"])
@@ -136,7 +136,7 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "are manipulated as arrays" do
-      other_collection = FactoryGirl.create :collection
+      other_collection = FactoryBot.create :collection
 
       core_file.otherography_for << collection
       core_file.otherography_for << other_collection
@@ -156,7 +156,7 @@ describe CoreFile do
     after(:each) { ActiveFedora::Base.delete_all }
 
     it "can be set on the Core File object but are written to the IMF" do
-      imf = FactoryGirl.create :image_master_file
+      imf = FactoryBot.create :image_master_file
 
       expect(core_file.page_images).to eq []
 
@@ -177,17 +177,17 @@ describe CoreFile do
     }
 
     def setup_html_tests
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
+      FactoryBot.create :tapas_generic
+      FactoryBot.create :teibp
       core_file.create_view_package_methods
 
-      @teibp = FactoryGirl.create :html_file
+      @teibp = FactoryBot.create :html_file
       @teibp.html_for << core_file
       @teibp.core_file = core_file
       @teibp.html_type = "teibp"
       @teibp.save!
 
-      @tapas_generic = FactoryGirl.create :html_file
+      @tapas_generic = FactoryBot.create :html_file
       @tapas_generic.html_for << core_file
       @tapas_generic.core_file = core_file
       @tapas_generic.html_type = "tapas_generic"
@@ -257,7 +257,7 @@ describe CoreFile do
     end
 
     it 'saves the object as public if it has a single public collection' do
-      c1, c2, c3 = FactoryGirl.create_list :collection, 3
+      c1, c2, c3 = FactoryBot.create_list :collection, 3
       c1.drupal_access = 'private' ; c1.save!
       c1.drupal_access = 'private' ; c2.save!
       c3.drupal_access = 'public'  ; c3.save!
@@ -268,7 +268,7 @@ describe CoreFile do
     end
 
     it 'saves the object as private if it has all private collections' do
-      collections = FactoryGirl.create_list :collection, 2
+      collections = FactoryBot.create_list :collection, 2
       collections.each do |collection|
         collection.drupal_access = 'private'
         collection.save!

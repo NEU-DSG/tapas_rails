@@ -60,5 +60,5 @@ class TapasRails < Thor
 
     Resque.enqueue(GetViewPackagesFromGithub)
   end
-  
+
 end
