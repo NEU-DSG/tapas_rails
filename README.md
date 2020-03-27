@@ -94,7 +94,6 @@ To modify the main menu
 
 ## Development
 
- - install libv8 on OSX with `gem install libv8 -v '3.16.14.19' -- --with-system-v8`
 
  - installing nokogiri on OSX: `$ gem install nokogiri -- --with-xml2-include=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libxml2 --use-system-libraries`
  - configuring bundle install with correct openssl from brew:
@@ -104,7 +103,9 @@ To modify the main menu
  ```
  - if running with MAMP: `gem install mysql2 -- --with-mysql-config=/Applications/MAMP/Library/bin/mysql_config`
 
- - gem uninstall libv8
- - brew install v8
- - gem install therubyracer
- - gem install libv8 -v '3.16.14.15' -- --with-system-v8
+
+ - install libv8 on OSX with the following:
+  `$ brew install v8@3.15`
+  `$ bundle config build.libv8 --with-system-v8`
+  `$ bundle config build.therubyracer --with-v8-dir=$(brew --prefix v8@3.15)`
+  `$ bundle install`
