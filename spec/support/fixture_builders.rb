@@ -3,9 +3,9 @@ module FixtureBuilders
   # attached to a Community.  Returns a triplet of the form
   # CoreFile, [Collections], Community
   def self.create_all(collections = 1)
-    core = FactoryGirl.create :core_file
-    collections = FactoryGirl.create_list(:collection, collections)
-    community = FactoryGirl.create :community
+    core = FactoryBot.create :core_file
+    collections = FactoryBot.create_list(:collection, collections)
+    community = FactoryBot.create :community
 
     core.collections = collections
     core.save!

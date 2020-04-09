@@ -113,7 +113,7 @@ group :development, :test do
   gem "rspec-rails", "~>2.15"
   gem "rspec-its"
   gem "jettywrapper"
-  gem "factory_girl_rails"
+  gem "factory_bot_rails"
 end
 
 gem "devise"
