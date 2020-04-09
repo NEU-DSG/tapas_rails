@@ -13,7 +13,7 @@ describe CommunitiesController do
   #   end
   #
   #   it '404s for dids that do not belong to a Community' do
-  #     core_file = FactoryGirl.create :core_file
+  #     core_file = FactoryBot.create :core_file
   #     delete :destroy, { :did => core_file.did }
   #     expect(response.status).to eq 404
   #     expect { core_file.reload }.not_to raise_error
@@ -100,7 +100,7 @@ describe CommunitiesController do
     before(:all) {
 
       Resque.inline = true
-      @user = FactoryGirl.create(:user)
+      @user = FactoryBot.create(:user)
       @communityCreated = Community.new(title:'New Community',depositor:@user.id.to_s,description:'This is a test community.',mass_permissions:'public')
       @communityCreated.did = @communityCreated.pid
       @communityCreated.save!
@@ -185,8 +185,8 @@ describe CommunitiesController do
 
   describe 'post #update' do
     Resque.inline = true
-    let(:community) { FactoryGirl.create :community }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:community) { FactoryBot.create :community }
+    let(:user) { FactoryBot.create(:user) }
 
     # Purpose statement
     it '302s for valid requests' do

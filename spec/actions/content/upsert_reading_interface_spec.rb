@@ -3,15 +3,15 @@ require 'spec_helper'
 describe Content::UpsertReadingInterface do
   include FileHelpers
 
-  let(:core_file) { FactoryGirl.create :core_file }
+  let(:core_file) { FactoryBot.create :core_file }
 
   it 'raises an error when given invalid TEI' do
     skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     file = fixture_file('xml.xml')
     Rails.cache.delete("view_packages_machine")
     Rails.cache.delete("view_packages_dir")
-    FactoryGirl.create :tapas_generic
-    FactoryGirl.create :teibp
+    FactoryBot.create :tapas_generic
+    FactoryBot.create :teibp
     action = Content::UpsertReadingInterface
     error = Exceptions::InvalidZipError
     expect { action.execute_all(core_file, file) }.to raise_error error
@@ -20,11 +20,11 @@ describe Content::UpsertReadingInterface do
   describe '.execute_all' do
     before(:all) do
       unless ENV['TRAVIS']
-        @core_file = FactoryGirl.create :core_file
-        @core_file.collections = FactoryGirl.create_list(:collection, 2)
+        @core_file = FactoryBot.create :core_file
+        @core_file.collections = FactoryBot.create_list(:collection, 2)
         @core_file.save!
-        FactoryGirl.create :tapas_generic
-        FactoryGirl.create :teibp
+        FactoryBot.create :tapas_generic
+        FactoryBot.create :teibp
         @tei = fixture_file 'tei.xml'
 
         Content::UpsertReadingInterface.execute_all @core_file, @tei
