@@ -38,7 +38,7 @@ gem 'jquery-ui-rails'
 gem 'turbolinks'
 
 # for handling slugs in URLS instead of IDs
-gem 'friendly_id', '~> 5.0.0' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
+gem 'friendly_id', '~> 5.2.4' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
 # hand to downgrade from 5.1.0 to 5.0.0 for forem to work
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -89,6 +89,8 @@ group :doc do
 end
 
 gem "blacklight"
+gem 'hydra-head', '~> 10.0'
+gem 'hydra-derivatives'
 # gem 'blacklight-gallery'
 
 # Use ActiveModel has_secure_password
@@ -110,7 +112,7 @@ gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/e
 
 group :development, :test do
   gem "pry"
-  gem "rspec-rails", "~>2.15"
+  gem "rspec-rails", "~> 3"
   gem "rspec-its"
   gem "jettywrapper"
   gem "factory_bot_rails"
@@ -119,16 +121,13 @@ end
 gem "devise"
 gem "devise-guests", "~> 0.3"
 
-gem "rsolr", "~> 1.0.6"
-
+gem "rsolr"
 
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
 gem "git"
 
-gem "pluot", :git => "https://github.com/rapheld/pluot.git"
-
 gem "json", "~> 2.3"
 gem 'simple_form'
-gem 'active-fedora'
+gem 'active-fedora', "~> 11.0"
