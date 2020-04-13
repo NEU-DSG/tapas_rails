@@ -1,6 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
-require 'rake' 
+require 'rake'
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
