@@ -10,11 +10,12 @@ module CerberusCore::BaseModels
     include CerberusCore::Concerns::Relatable
     include CerberusCore::Concerns::AutoMintedPid
 
-    has_metadata name: 'DC', type: CerberusCore::Datastreams::DublinCoreDatastream
-    has_metadata name: 'rightsMetadata', type: CerberusCore::Datastreams::ParanoidRightsDatastream
-    has_metadata name: 'properties', type: CerberusCore::Datastreams::PropertiesDatastream 
-    has_metadata name: 'characterization', type: CerberusCore::Datastreams::FitsDatastream
-    has_file_datastream name: 'content', type: CerberusCore::Datastreams::FileContentDatastream 
+    # FIXME (charles): has_metadata is no longer defined -- what replaced it?
+    # has_metadata name: 'DC', type: CerberusCore::Datastreams::DublinCoreDatastream
+    # has_metadata name: 'rightsMetadata', type: CerberusCore::Datastreams::ParanoidRightsDatastream
+    # has_metadata name: 'properties', type: CerberusCore::Datastreams::PropertiesDatastream
+    # has_metadata name: 'characterization', type: CerberusCore::Datastreams::FitsDatastream
+    # has_file_datastream name: 'content', type: CerberusCore::Datastreams::FileContentDatastream
 
     def type_label
       self.class.name
@@ -22,18 +23,18 @@ module CerberusCore::BaseModels
 
     # We assume in the logic for a core_record object that content objects point
     # at it using the is_part_of relationship.  Using this method to define core record
-    # relationships enforces that constraint. 
+    # relationships enforces that constraint.
     # ==== Attributes
-    # * +rel_name+ - The symbol name of the relationship.  
+    # * +rel_name+ - The symbol name of the relationship.
     # * +rel_class+ - The stringified model name (class) of the fedora object
     #   this class of content objects belongs to.  Only needs to be passed in when
-    #   the model name cannot be inferred from rel_name.  E.g., if the rel_name is 
+    #   the model name cannot be inferred from rel_name.  E.g., if the rel_name is
     #   :core_file, and it points at a class called CoreFile, this can be left set
     #   to nil
     def self.core_file_relationship(rel_name, rel_class = nil)
-      self.relation_asserter(:belongs_to, 
-                             rel_name, 
-                             :is_part_of, 
+      self.relation_asserter(:belongs_to,
+                             rel_name,
+                             :is_part_of,
                              rel_class)
     end
   end
