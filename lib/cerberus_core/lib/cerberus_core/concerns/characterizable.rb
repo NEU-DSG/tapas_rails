@@ -1,13 +1,15 @@
 # Implements delegations for/basic characterization method to use with
 # objects that have a content datastream.  Since characterization is slow
 # and will typically need to be implemented in a job that runs outside of
-# the response cycle no default callback is created. 
+# the response cycle no default callback is created.
 module CerberusCore::Concerns::Characterizable
-  extend ActiveSupport::Concern 
+  extend ActiveSupport::Concern
 
-  included do 
-    delegate :mime_type, :to => :characterization, :unique => true
-    has_attributes :format_label, :file_size, :last_modified,
+  included do
+    # FIXME: delegate :unique => true did not work because
+    # :unique was not reconized as a keyword anymore
+    delegate :mime_type, :to => :characterization
+    class_attribute :format_label, :file_size, :last_modified,
                    :filename, :original_checksum, :rights_basis,
                    :copyright_basis, :copyright_note,
                    :well_formed, :valid, :status_message,
@@ -23,13 +25,13 @@ module CerberusCore::Concerns::Characterizable
                    :character_set, :markup_basis,
                    :markup_language, :duration, :bit_depth,
                    :sample_rate, :channels, :data_format, :offset,
-                   datastream: "characterization", 
+                   datastream: "characterization",
                    multiple: true
   end
 
-  # Uses the extract_metadata method defined on FileDatastream to 
+  # Uses the extract_metadata method defined on FileDatastream to
   # run FITS characterization.
-  def characterize 
-    self.characterization.ng_xml = self.content.extract_metadata 
+  def characterize
+    self.characterization.ng_xml = self.content.extract_metadata
   end
 end
