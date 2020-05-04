@@ -63,7 +63,7 @@ gem 'nest'
 gem 'namae'
 
 # Bootstrap WYSIWYG Editor
-gem 'bootsy'
+# gem 'bootsy' NO LONGER MAINTAINED
 
 # Forem gem for Forums
 # gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
@@ -91,7 +91,7 @@ end
 gem "blacklight"
 gem 'hydra-head', '~> 10.0'
 gem 'hydra-derivatives'
-# gem 'blacklight-gallery'
+gem 'blacklight-gallery'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -136,3 +136,4 @@ gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
 gem 'sprockets', '~> 3.7.2'
+gem 'carrierwave', '~> 1.3.1'
