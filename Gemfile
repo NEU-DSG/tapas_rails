@@ -135,3 +135,4 @@ gem 'active_fedora-datastreams'
 gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
+gem 'sprockets', '~> 3.7.2'
