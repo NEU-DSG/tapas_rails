@@ -26,6 +26,12 @@ module TapasRails
     config.autoload_paths += Dir[Rails.root.join('app', 'actions', '**/')]
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
+    # Dir.glob("#{config.root}/lib/**/[^spec]**/").each do |dir|
+    #   puts dir
+    #   config.autoload_paths << dir
+    # end
+
+
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
     # Pid to use for the Collection that stores TEI files
