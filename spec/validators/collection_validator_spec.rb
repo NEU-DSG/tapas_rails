@@ -5,7 +5,7 @@ describe CollectionValidator do
   include FileHelpers
 
   before(:all) do
-    @community = FactoryGirl.create :community
+    @community = FactoryBot.create :community
   end
 
   after(:all) { ActiveFedora::Base.delete_all }
@@ -29,7 +29,7 @@ describe CollectionValidator do
   end
 
   context 'update with valid data' do
-    before(:all) { @collection = FactoryGirl.create :collection }
+    before(:all) { @collection = FactoryBot.create :collection }
     after(:all) { @collection.destroy }
 
     it 'raises no errors' do
