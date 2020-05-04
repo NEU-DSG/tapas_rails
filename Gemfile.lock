@@ -194,6 +194,7 @@ GEM
     edtf (3.0.5)
       activesupport (>= 3.0, < 7.0)
     erubi (1.9.0)
+    erubis (2.7.0)
     et-orbi (1.2.4)
       tzinfo
     exception_notification (4.4.0)
@@ -222,9 +223,20 @@ GEM
     haml (5.1.2)
       temple (>= 0.8.0)
       tilt
+    haml-rails (2.0.1)
+      actionpack (>= 5.1)
+      activesupport (>= 5.1)
+      haml (>= 4.0.6, < 6.0)
+      html2haml (>= 1.0.1)
+      railties (>= 5.1)
     hamster (3.0.0)
       concurrent-ruby (~> 1.0)
     hiredis (0.6.3)
+    html2haml (2.2.0)
+      erubis (~> 2.7.0)
+      haml (>= 4.0, < 6)
+      nokogiri (>= 1.6.0)
+      ruby_parser (~> 3.5)
     htmlentities (4.3.4)
     http-accept (1.7.0)
     http-cookie (1.0.3)
@@ -476,6 +488,8 @@ GEM
     rspec-support (3.9.2)
     ruby-progressbar (1.10.1)
     ruby2_keywords (0.0.2)
+    ruby_parser (3.14.2)
+      sexp_processor (~> 4.9)
     rubyzip (2.3.0)
     rufus-scheduler (3.6.0)
       fugit (~> 1.1, >= 1.1.6)
@@ -486,6 +500,7 @@ GEM
       rb-inotify (~> 0.9, >= 0.9.7)
     sdoc (1.1.0)
       rdoc (>= 5.0)
+    sexp_processor (4.14.1)
     simple_form (5.0.2)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -578,6 +593,7 @@ DEPENDENCIES
   factory_bot_rails
   friendly_id (~> 5.2.4)
   git
+  haml-rails (~> 2.0)
   hydra-derivatives
   hydra-head (~> 10.0)
   jbuilder (= 2.10)
