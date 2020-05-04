@@ -1,8 +1,8 @@
 class PagesController < ApplicationController
   extend ActiveSupport::Concern
-  before_filter :verify_admin, :except => :show
-  before_filter :verify_published, :only => :show
-  before_filter :get_submenu_options, :only => [:edit, :update, :create, :new]
+  before_action :verify_admin, :except => :show
+  before_action :verify_published, :only => :show
+  before_action :get_submenu_options, :only => [:edit, :update, :create, :new]
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
