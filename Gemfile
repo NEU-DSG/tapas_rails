@@ -133,3 +133,5 @@ gem 'simple_form'
 gem 'active-fedora', "~> 11.0"
 gem 'active_fedora-datastreams'
 gem 'openseadragon'
+
+gem "haml-rails", "~> 2.0"
