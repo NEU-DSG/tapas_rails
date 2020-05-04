@@ -129,6 +129,13 @@ GEM
       mime-types (>= 1.16)
     childprocess (3.0.0)
     coderay (1.1.2)
+    coffee-rails (5.0.0)
+      coffee-script (>= 2.2.0)
+      railties (>= 5.2.0)
+    coffee-script (2.4.1)
+      coffee-script-source
+      execjs
+    coffee-script-source (1.12.2)
     concurrent-ruby (1.1.6)
     config (2.2.1)
       deep_merge (~> 1.2, >= 1.2.1)
@@ -587,6 +594,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.1)
   capistrano-resque (~> 0.2.2)
   capistrano-rvm
+  coffee-rails (~> 5.0.0)
   devise
   devise-guests (~> 0.3)
   exception_notification
