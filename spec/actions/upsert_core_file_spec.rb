@@ -6,14 +6,14 @@ describe UpsertCoreFile do
   describe '#update_associations' do
     context 'on create (:collection_dids && :file_type mandatory)' do
       before(:all) do
-        c_one, c_two, c_three = FactoryGirl.create_list(:collection, 3)
+        c_one, c_two, c_three = FactoryBot.create_list(:collection, 3)
         did = SecureRandom.uuid
         @params = {
           :file_types => ['otherography', 'placeography', 'odd_file'],
           :collection_dids => [c_one.did, c_two.did, c_three.did]
         }
-        FactoryGirl.create :tapas_generic
-        FactoryGirl.create :teibp
+        FactoryBot.create :tapas_generic
+        FactoryBot.create :teibp
         upserter = UpsertCoreFile.new @params
         @core_file = CoreFile.create(:did => did, :depositor => 'test')
         upserter.core_file = @core_file
@@ -46,21 +46,21 @@ describe UpsertCoreFile do
 
     context 'on update with new :collection_dids && no :file_types' do
       before(:all) do
-        @old_collections = FactoryGirl.create_list(:collection, 2)
-        @core_file = FactoryGirl.create :core_file
+        @old_collections = FactoryBot.create_list(:collection, 2)
+        @core_file = FactoryBot.create :core_file
         @core_file.collections = @old_collections
         @core_file.bibliography_for = @old_collections
         @core_file.orgography_for = @old_collections
         @core_file.save!
 
-        @new_collections = FactoryGirl.create_list(:collection, 3)
+        @new_collections = FactoryBot.create_list(:collection, 3)
         @new_dids = @new_collections.map { |collection| collection.did }
         @params = {
           :collection_dids => @new_dids
         }
 
-        FactoryGirl.create :tapas_generic
-        FactoryGirl.create :teibp
+        FactoryBot.create :tapas_generic
+        FactoryBot.create :teibp
         upserter = UpsertCoreFile.new @params
         upserter.core_file = @core_file
         upserter.update_associations!
@@ -91,8 +91,8 @@ describe UpsertCoreFile do
 
     context 'on update with new :file_types && no :collection_dids' do
       before(:all) do
-        @old_collections = FactoryGirl.create_list(:collection, 2)
-        @core_file = FactoryGirl.create :core_file
+        @old_collections = FactoryBot.create_list(:collection, 2)
+        @core_file = FactoryBot.create :core_file
         @core_file.collections = @old_collections
         @core_file.bibliography_for = @old_collections
         @core_file.placeography_for = @old_collections
@@ -101,8 +101,8 @@ describe UpsertCoreFile do
         @params = {
           :file_types => ['odd_file', 'otherography']
         }
-        FactoryGirl.create :tapas_generic
-        FactoryGirl.create :teibp
+        FactoryBot.create :tapas_generic
+        FactoryBot.create :teibp
 
         upserter = UpsertCoreFile.new @params
         upserter.core_file = @core_file
@@ -139,9 +139,9 @@ describe UpsertCoreFile do
       @zip = copy_fixture('all_files.zip', 'zip_copy.zip')
       @tei = copy_fixture('tei.xml', 'tei_copy.xml')
 
-      @collections = FactoryGirl.create_list(:collection, 3)
+      @collections = FactoryBot.create_list(:collection, 3)
 
-      @community   = FactoryGirl.create :community
+      @community   = FactoryBot.create :community
 
       # Make all the collections private
       @collections.each do |collection|
@@ -180,8 +180,8 @@ describe UpsertCoreFile do
         Content::UpsertPageImages.any_instance.stub(:execute) do |e|
           raise 'I am a stubbed exception'
         end
-        FactoryGirl.create :tapas_generic
-        FactoryGirl.create :teibp
+        FactoryBot.create :tapas_generic
+        FactoryBot.create :teibp
 
         expect { UpsertCoreFile.execute(@params) }.to raise_error RuntimeError
         core_file = CoreFile.find_by_did(@params[:did])
@@ -197,8 +197,8 @@ describe UpsertCoreFile do
       before(:all) do
         unless ENV['TRAVIS']
           setup_valid_upsert
-          FactoryGirl.create :tapas_generic
-          FactoryGirl.create :teibp
+          FactoryBot.create :tapas_generic
+          FactoryBot.create :teibp
           UpsertCoreFile.execute(@params)
 
           @core_file = CoreFile.find_by_did(@params[:did])

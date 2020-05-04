@@ -15,13 +15,13 @@ describe CollectionsController do
   #   end
   #
   #   it '404s for dids that do not belong to a Collection' do
-  #     community = FactoryGirl.create :community
+  #     community = FactoryBot.create :community
   #     delete :destroy, { :did => community.did }
   #     expect(response.status).to eq 404
   #   end
   #
   #   it '200s for dids that belong to a Collection and removes the resource' do
-  #     collection = FactoryGirl.create :collection
+  #     collection = FactoryBot.create :collection
   #     delete :destroy, { :did => collection.did }
   #     expect(response.status).to eq 200
   #     expect(Collection.find_by_did collection.did).to be nil
@@ -44,7 +44,7 @@ describe CollectionsController do
 
     it 'returns a 202 and creates the requested collection on a valid request' do
       Resque.inline = true
-      community = FactoryGirl.create :community
+      community = FactoryBot.create :community
 
       post_params = { title: 'Collection',
         access: 'private',
@@ -90,7 +90,7 @@ describe CollectionsController do
     before(:all) {
 
       Resque.inline = true
-      @user = FactoryGirl.create(:user)
+      @user = FactoryBot.create(:user)
       # Creation of Community object before all test begin which is used later for creating a Collection object
       @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
       @community.did = @community.pid
@@ -224,9 +224,9 @@ describe CollectionsController do
   # Testing the update function in the Collection Controller
   describe 'post #update' do
     Resque.inline = true
-    let(:community) { FactoryGirl.create :community }
-    let(:collection) { FactoryGirl.create :collection }
-    let(:user) { FactoryGirl.create(:user) }
+    let(:community) { FactoryBot.create :community }
+    let(:collection) { FactoryBot.create :collection }
+    let(:user) { FactoryBot.create(:user) }
 
     # Purpose statement
     it '302s for valid requests' do

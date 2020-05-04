@@ -6,13 +6,13 @@ describe RebuildReadingInterfaceJob do
 
   after(:each) { ActiveFedora::Base.delete_all }
 
-  let(:core) { FactoryGirl.create :core_file }
-  let(:tei) { FactoryGirl.create :tei_file }
+  let(:core) { FactoryBot.create :core_file }
+  let(:tei) { FactoryBot.create :tei_file }
 
   it 'rebuilds the reading interface when given a valid CoreFile' do
     skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-    FactoryGirl.create :tapas_generic
-    FactoryGirl.create :teibp
+    FactoryBot.create :tapas_generic
+    FactoryBot.create :teibp
     cf, cl, p = FixtureBuilders.create_all
     tei.core_file = cf
     tei.canonize

@@ -97,7 +97,7 @@ describe UpsertCollection do
       collection.title = "Test Collection"
       collection.depositor = 'Old Depositor'
       collection.save!
-      collection.community = FactoryGirl.create(:community)
+      collection.community = FactoryBot.create(:community)
       collection.og_reference = [collection.community.did]
       collection.save!
       @count_before = Collection.count
