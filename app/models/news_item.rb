@@ -1,6 +1,5 @@
 class NewsItem < ActiveRecord::Base
   extend FriendlyId
-  include Bootsy::Container
   include SolrHelpers
 
 
