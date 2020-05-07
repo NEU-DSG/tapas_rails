@@ -1,8 +1,8 @@
 class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
-  before :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
-  before :verify_admin, :only => [:index, :show, :create]
+  before_action :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
+  # before_action :verify_admin, :only => [:index, :show, :create]
 
   def my_tapas
     @page_title = "My TAPAS"
@@ -74,7 +74,8 @@ class UsersController < CatalogController
 
   def search_action_url(options = {})
     # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
-    catalog_index_path(options.except(:controller, :action))
+    # catalog_index_path(options.except(:controller, :action))
+    "/"
   end
 
   def mail_all_users
