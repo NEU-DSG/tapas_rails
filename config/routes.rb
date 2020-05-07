@@ -85,8 +85,6 @@ TapasRails::Application.routes.draw do
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
 
-  mount Bootsy::Engine => '/bootsy', as: 'bootsy'
-
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
 
   # Example of regular route:

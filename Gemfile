@@ -25,7 +25,7 @@ gem 'bootstrap-sass', '3.3.4.1'
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-# gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 5.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
@@ -63,7 +63,7 @@ gem 'nest'
 gem 'namae'
 
 # Bootstrap WYSIWYG Editor
-gem 'bootsy'
+# gem 'bootsy' NO LONGER MAINTAINED
 
 # Forem gem for Forums
 # gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
@@ -91,7 +91,7 @@ end
 gem "blacklight"
 gem 'hydra-head', '~> 10.0'
 gem 'hydra-derivatives'
-# gem 'blacklight-gallery'
+gem 'blacklight-gallery'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -136,3 +136,4 @@ gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
 gem 'sprockets', '~> 3.7.2'
+gem 'carrierwave', '~> 1.3.1'

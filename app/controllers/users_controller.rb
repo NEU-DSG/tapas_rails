@@ -16,24 +16,24 @@ class UsersController < CatalogController
   def my_projects
     @page_title = "My Projects"
     @user = current_user
-    self.search_params_logic += [:my_communities_filter]
-    (@projects, @document_list) = search_results(params, search_params_logic)
+    # self.search_params_logic += [:my_communities_filter]
+    (@projects, @document_list) = search_results(params) #, search_params_logic)
     render 'my_projects'
   end
 
   def my_collections
     @page_title = "My Collections"
     @user = current_user
-    self.search_params_logic += [:my_collections_filter]
-    (@collections, @document_list) = search_results(params, search_params_logic)
+    # self.search_params_logic += [:my_collections_filter]
+    (@collections, @document_list) = search_results(params) #, search_params_logic)
     render 'my_collections'
   end
 
   def my_records
     @page_title = "My Records"
     @user = current_user
-    self.search_params_logic += [:my_records_filter]
-    (@records, @document_list) = search_results(params, search_params_logic)
+    # self.search_params_logic += [:my_records_filter]
+    (@records, @document_list) = search_results(params) #, search_params_logic)
     render 'my_records'
   end
 
