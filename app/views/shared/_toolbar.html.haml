@@ -14,7 +14,8 @@
             %a{:href=>"/users/#{current_user.id}"}
               = "My Account"
   - else
-    %a{:href => new_user_session_path, :class => "toolbar-link"}
+    -# %a{:href => new_user_session_path, :class => "toolbar-link"}
+    %a{:href => '/', :class => "toolbar-link"}
       %span.fa-stack.fa-lg
         %i.fa.fa-square.fa-stack-2x
         %i.fa.fa-sign-in.fa-stack-1x.fa-inverse

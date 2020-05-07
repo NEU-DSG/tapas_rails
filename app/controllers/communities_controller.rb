@@ -4,9 +4,9 @@ class CommunitiesController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
 
-  before_filter :can_edit?, only: [:edit, :update, :destroy]
-  before_filter :can_read?, :only => :show
-  # before_filter :enforce_show_permissions, :only=>:index
+  before_action :can_edit?, only: [:edit, :update, :destroy]
+  before_action :can_read?, :only => :show
+  # before_action :enforce_show_permissions, :only=>:index
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
 
@@ -23,12 +23,12 @@ class CommunitiesController < CatalogController
   #This method displays all the communities/projects created in the database
   def index
     @page_title = "All Projects"
-    self.search_params_logic += [:communities_filter]
-    self.search_params_logic += [:add_access_controls_to_solr_params]
+    # self.search_params_logic += [:communities_filter]
+    # self.search_params_logic += [:add_access_controls_to_solr_params]
     logger.debug repository.inspect
     logger.debug repository.connection
-    logger.debug Blacklight.solr_config[:url]
-    (@response, @document_list) = search_results(params, search_params_logic)
+    # logger.debug Blacklight.solr_config[:url]
+    (@response, @document_list) = search_results(params) #, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }
