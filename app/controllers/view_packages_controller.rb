@@ -1,5 +1,4 @@
 class ViewPackagesController < ApplicationController
-
   def show
     @view = ViewPackage.find(params[:id])
     @page_title = @view.human_name
