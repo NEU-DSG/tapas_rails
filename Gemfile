@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2'
 
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.3.6'
-
 # Use rubyzip to handle Zipped content files from Drupal
 gem 'rubyzip'
 
@@ -45,7 +42,7 @@ gem 'friendly_id', '~> 5.2.4' # Note: You MUST use 5.0.0 or greater for Rails 4.
 gem 'jbuilder', '2.10'
 
 # Use Figaro to manage sensitive application configuration
-# gem 'figaro'
+gem 'figaro'
 
 # Use Resque to handle background tasks
 gem 'resque', :require => 'resque/server'
