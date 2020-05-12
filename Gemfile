@@ -90,6 +90,8 @@ gem 'hydra-head', '~> 10.0'
 gem 'hydra-derivatives'
 gem 'blacklight-gallery'
 
+gem 'sunspot_rails'
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
@@ -111,6 +113,7 @@ group :development, :test do
   gem "pry"
   gem "rspec-rails", "~> 3"
   gem "rspec-its"
+  gem "sunspot_solr"
   gem "jettywrapper"
   gem "factory_bot_rails"
 end
