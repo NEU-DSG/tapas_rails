@@ -98,7 +98,6 @@ class UsersController < CatalogController
 
   def five_communities
     @user.communities.limit(5).order("RAND()")
-    # ActiveFedora::SolrService.query("has_model_ssim:\"#{ RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{@user.id.to_s}\" OR depositor_tesim:\"#{@user.id.to_s}\" OR project_admins_ssim:\"#{@user.id.to_s}\" OR project_editors_ssim:\"#{@user.id.to_s}\")", rows: 5)
   end
 
   def five_collections
