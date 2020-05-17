@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_16_172928) do
+ActiveRecord::Schema.define(version: 2020_05_17_195728) do
 
   create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -37,6 +37,20 @@ ActiveRecord::Schema.define(version: 2020_05_16_172928) do
     t.datetime "updated_at"
   end
 
+  create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "collection_id"
+    t.integer "parent_collection_id", null: false
+    t.index ["collection_id", "parent_collection_id"], name: "index_collections_parent", unique: true
+    t.index ["collection_id"], name: "index_collection_collections_on_collection_id"
+  end
+
+  create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -44,11 +58,26 @@ ActiveRecord::Schema.define(version: 2020_05_16_172928) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "collection_id"
+    t.bigint "community_id"
+    t.index ["collection_id", "community_id"], name: "index_community_collections_on_collection_id_and_community_id", unique: true
+    t.index ["collection_id"], name: "index_community_collections_on_collection_id"
+    t.index ["community_id"], name: "index_community_collections_on_community_id"
+  end
+
+  create_table "community_communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "community_id"
+    t.integer "parent_community_id", null: false
+    t.index ["community_id", "parent_community_id"], name: "index_community_parent", unique: true
+    t.index ["community_id"], name: "index_community_communities_on_community_id"
+  end
+
   create_table "community_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "community_id"
     t.bigint "user_id"
     t.string "member_type", limit: 6, default: "member"
-    t.index ["community_id", "user_id"], name: "index_community_members_on_community_id_and_user_id"
+    t.index ["community_id", "user_id"], name: "index_community_members_on_community_id_and_user_id", unique: true
     t.index ["community_id"], name: "index_community_members_on_community_id"
     t.index ["user_id"], name: "index_community_members_on_user_id"
   end

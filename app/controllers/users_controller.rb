@@ -101,17 +101,12 @@ class UsersController < CatalogController
   end
 
   def five_collections
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{@user.id.to_s}\" OR depositor_tesim:\"#{@user.id.to_s}\" OR project_admins_ssim:\"#{@user.id.to_s}\" OR project_editors_ssim:\"#{@user.id.to_s}\")")
-    col_query = projects.map do |p|
-      "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
+    # FIXME: (charles) There has to be a better way to get a user's collections
+    projects = five_communities
+    collections = projects.map do |p|
+      p.collections
     end
-    if col_query.length < 1
-      return nil
-    end
-      query = "has_model_ssim: \"#{model_type}\" && (#{col_query.join(" OR ")})"
-
-      return ActiveFedora::SolrService.query(query, rows: 5)
+    collections.sample(5)
   end
 
   def five_records

@@ -1,45 +1,52 @@
-class Collection < CerberusCore::BaseModels::Collection
-  include Did
-  include OGReference
-  include DrupalAccess
-  include InlineThumbnail
-  include TapasQueries
-  include StatusTracking
-  include SolrHelpers
+class Collection < ActiveRecord::Base
+  # include Did
+  # include OGReference
+  # include DrupalAccess
+  # include InlineThumbnail
+  # include TapasQueries
+  # include StatusTracking
+  # include SolrHelpers
 
-  before_save :ensure_unique_did
-  before_save :match_dc_to_mods
-  before_save :update_permissions
-  after_save :update_core_files
+  # before_save :ensure_unique_did
+  # before_save :match_dc_to_mods
+  # before_save :update_permissions
+  # after_save :update_core_files
 
-  has_core_file_types  ["CoreFile"]
-  has_collection_types ["Collection"]
+  # has_core_file_types  ["CoreFile"]
+  # has_collection_types ["Collection"]
 
-  parent_community_relationship  :community
-  parent_collection_relationship :collection
+  # parent_community_relationship  :community
+  # parent_collection_relationship :collection
 
-  has_metadata :name => "mods", :type => ModsDatastream
-  has_metadata :name => "properties", :type => PropertiesDatastream
-  has_attributes :title, datastream: "DC"
-  has_attributes :description, datastream: "DC"
+  # has_metadata :name => "mods", :type => ModsDatastream
+  # has_metadata :name => "properties", :type => PropertiesDatastream
+  # has_attributes :title, datastream: "DC"
+  # has_attributes :description, datastream: "DC"
 
-  validates_presence_of :title
+  # validates_presence_of :title
 
-  has_many :personographies, :property => :is_personography_for,
-    :class_name => "CoreFile"
-  has_many :orgographies, :property => :is_orgography_for,
-    :class_name => "CoreFile"
-  has_many :bibliographies, :property => :is_bibliography_for,
-    :class_name => "CoreFile"
-  has_many :otherographies, :property => :is_otherography_for,
-    :class_name => "CoreFile"
-  has_many :odd_files, :property => :is_odd_file_for,
-    :class_name => "CoreFile"
-  has_many :placeographies, :property => :is_placeography_for,
-    :class_name => 'CoreFile'
+  # has_many :personographies, :property => :is_personography_for,
+  #   :class_name => "CoreFile"
+  # has_many :orgographies, :property => :is_orgography_for,
+  #   :class_name => "CoreFile"
+  # has_many :bibliographies, :property => :is_bibliography_for,
+  #   :class_name => "CoreFile"
+  # has_many :otherographies, :property => :is_otherography_for,
+  #   :class_name => "CoreFile"
+  # has_many :odd_files, :property => :is_odd_file_for,
+  #   :class_name => "CoreFile"
+  # has_many :placeographies, :property => :is_placeography_for,
+  #   :class_name => 'CoreFile'
 
   # Return the collection where we store TEI files that reference
   # non-existant collections.  If it doesn't exist create it.
+
+  has_and_belongs_to_many :collections,
+                          join_table: "collection_collections",
+                          association_foreign_key: "parent_collection_id"
+
+  validates_presence_of :title
+
   def self.phantom_collection
     pid = Rails.configuration.phantom_collection_pid
     if Collection.exists?(pid)
