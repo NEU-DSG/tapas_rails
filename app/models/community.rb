@@ -29,8 +29,11 @@ class Community < ActiveRecord::Base
   # has_attributes :title, datastream: "DC"
   # has_attributes :description, datastream: "DC"
 
+  has_many :community_collections
+  has_many :collections, through: :community_collections, source: :collection
   has_many :community_members
   has_many :members, through: :community_members, source: :user
+  has_and_belongs_to_many :communities, join_table: "community_communities", association_foreign_key: "parent_community_id"
 
   validates_presence_of :title
 
