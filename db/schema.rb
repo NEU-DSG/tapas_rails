@@ -51,6 +51,14 @@ ActiveRecord::Schema.define(version: 2020_05_18_165403) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "core_file_id"
+    t.bigint "collection_id"
+    t.index ["collection_id", "core_file_id"], name: "index_collections_core_files_on_collection_id_and_core_file_id", unique: true
+    t.index ["collection_id"], name: "index_collections_core_files_on_collection_id"
+    t.index ["core_file_id"], name: "index_collections_core_files_on_core_file_id"
+  end
+
   create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -87,14 +95,6 @@ ActiveRecord::Schema.define(version: 2020_05_18_165403) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "core_files_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.bigint "core_file_id"
-    t.bigint "collection_id"
-    t.index ["collection_id"], name: "index_core_files_collections_on_collection_id"
-    t.index ["core_file_id", "collection_id"], name: "index_core_files_collections_on_core_file_id_and_collection_id", unique: true
-    t.index ["core_file_id"], name: "index_core_files_collections_on_core_file_id"
   end
 
   create_table "forem_categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
