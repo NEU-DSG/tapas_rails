@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_17_195728) do
+ActiveRecord::Schema.define(version: 2020_05_18_165403) do
 
   create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -80,6 +80,21 @@ ActiveRecord::Schema.define(version: 2020_05_17_195728) do
     t.index ["community_id", "user_id"], name: "index_community_members_on_community_id_and_user_id", unique: true
     t.index ["community_id"], name: "index_community_members_on_community_id"
     t.index ["user_id"], name: "index_community_members_on_user_id"
+  end
+
+  create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "core_files_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "core_file_id"
+    t.bigint "collection_id"
+    t.index ["collection_id"], name: "index_core_files_collections_on_collection_id"
+    t.index ["core_file_id", "collection_id"], name: "index_core_files_collections_on_core_file_id_and_collection_id", unique: true
+    t.index ["core_file_id"], name: "index_core_files_collections_on_core_file_id"
   end
 
   create_table "forem_categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|

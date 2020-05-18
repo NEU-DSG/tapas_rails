@@ -101,10 +101,20 @@ class UsersController < CatalogController
   end
 
   def five_collections
-    Collection.limit(5).order("RAND()").joins(communities: [{ community_members: :user }])
+    Collection
+      .limit(5)
+      .order("RAND()")
+      .joins(communities: [{ community_members: :user }])
+      .where("users.id": @user.id)
   end
 
   def five_records
+    CoreFile
+      .limit(5)
+      .order("RAND()")
+      .joins(collections: [{ communities: { community_members: :user } } ])
+      .where("users.id": @user.id)
+
     model_type = RSolr.solr_escape "info:fedora/afmodel:CoreFile"
     projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{@user.id.to_s}\" OR depositor_tesim:\"#{@user.id.to_s}\" OR project_admins_ssim:\"#{@user.id.to_s}\" OR project_editors_ssim:\"#{@user.id.to_s}\")")
     col_query = projects.map do |p|
