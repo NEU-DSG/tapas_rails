@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_20_195340) do
+ActiveRecord::Schema.define(version: 2020_05_22_180625) do
 
   create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -250,6 +250,16 @@ ActiveRecord::Schema.define(version: 2020_05_20_195340) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["user_id"], name: "index_searches_on_user_id"
+  end
+
+  create_table "thumbnails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "url", null: false
+    t.text "caption"
+    t.string "owner_type"
+    t.bigint "owner_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["owner_type", "owner_id"], name: "index_thumbnails_on_owner_type_and_owner_id"
   end
 
   create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
