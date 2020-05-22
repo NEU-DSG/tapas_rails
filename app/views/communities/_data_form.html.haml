@@ -28,7 +28,7 @@
       .form-group.institutions
         = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
         .col-md-6
-          - if @community.properties.institutions.blank?
+          - if @community.institutions.any?
             %span.institution
               = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
           - else
@@ -49,7 +49,7 @@
       .form-group.project_members
         = f.label :project_members, "Project Members", class: "control-label col-md-2"
         .col-md-6
-          - if @community.properties.project_members.blank?
+          - if @community.project_members.blank?
             %span.project_member
               = f.select :project_members, options_for_select(@users), {}, { name: 'community[project_members][]', class: "form-control"}
           - else
@@ -67,7 +67,7 @@
       .form-group.project_editors
         = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
         .col-md-6
-          - if @community.properties.project_editors.blank?
+          - if @community.project_editors.blank?
             %span.project_editor
               = f.select :project_editors, options_for_select(@users), {}, { name: 'community[project_editors][]', class: "form-control" }
           - else
@@ -85,7 +85,7 @@
       .form-group.project_admins
         = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
         .col-md-6
-          - if @community.properties.project_admins.blank?
+          - if @community.project_admins.blank?
             %span.project_admin
               = f.select :project_admins, options_for_select(@users), {}, { name: 'community[project_admins][]', class: "form-control" }
           - else
