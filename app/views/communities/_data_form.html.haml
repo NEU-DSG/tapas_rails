@@ -32,13 +32,8 @@
             %span.institution
               = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
           - else
-            - @community.institutions.each_with_index do |id, i|
-              %span.institution{:class=> i != 0 ? "to-remove" : ""}
-                = f.select :institutions, options_for_select(@institutions, id), {}, {name: "community[institutions][]", class: "form-control"}
-                -if i != 0
-                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove institution", type: "button"}
-                    %i.fa.fa-remove
-                %br
+            %span.institution
+              = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
           %button#add_another_institution.btn.btn-success{:type => "button"}
             %i.fa-plus-sign.fa
             Add Institution

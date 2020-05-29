@@ -151,10 +151,7 @@ class UsersController < CatalogController
   end
 
   def check_for_logged_in_user
-    if current_user
-    else
-      render_404("User not signed in") and return
-    end
+    redirect_to new_user_session_path if current_user.nil?
   end
 
   def verify_admin
