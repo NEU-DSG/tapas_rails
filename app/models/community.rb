@@ -1,33 +1,42 @@
-class Community < CerberusCore::BaseModels::Community
-  include Did
-  include OGReference
-  include DrupalAccess
-  include TapasQueries
-  include InlineThumbnail
-  include StatusTracking
-  include SolrHelpers
-  include TapasRails::MetadataAssignment
+class Community < ActiveRecord::Base
+  # include Did
+  # include OGReference
+  # include DrupalAccess
+  # include TapasQueries
+  # include InlineThumbnail
+  # include StatusTracking
+  # include SolrHelpers
+  # include TapasRails::MetadataAssignment
 
-  before_save :ensure_unique_did
-  before_save :match_dc_to_mods
-  before_save :update_permissions
-  after_create :set_depositor_as_admin
+  # before_save :ensure_unique_did
+  # before_save :match_dc_to_mods
+  # before_save :update_permissions
+  # after_create :set_depositor_as_admin
 
-  has_collection_types ["Collection"]
-  has_community_types  ["Community"]
+  # has_collection_types ["Collection"]
+  # has_community_types  ["Community"]
 
-  parent_community_relationship :community
+  # parent_community_relationship :community
 
-  has_metadata :name => "mods", :type => ModsDatastream
-  has_metadata :name => "properties", :type => PropertiesDatastream
+  # has_metadata :name => "mods", :type => ModsDatastream
+  # has_metadata :name => "properties", :type => PropertiesDatastream
 
-  has_attributes :project_members, datastream: "properties", multiple: true
-  has_attributes :project_editors, datastream: "properties", multiple: true
-  has_attributes :project_admins, datastream: "properties", multiple: true
-  has_attributes :institutions, datastream: "properties", multiple: true
-  has_attributes :og_reference, datastream:"properties"
-  has_attributes :title, datastream: "DC"
-  has_attributes :description, datastream: "DC"
+  # has_attributes :project_members, datastream: "properties", multiple: true
+  # has_attributes :project_editors, datastream: "properties", multiple: true
+  # has_attributes :project_admins, datastream: "properties", multiple: true
+  # has_attributes :institutions, datastream: "properties", multiple: true
+  # has_attributes :og_reference, datastream:"properties"
+  # has_attributes :title, datastream: "DC"
+  # has_attributes :description, datastream: "DC"
+
+  has_many :community_collections
+  has_many :collections, through: :community_collections, source: :collection
+  has_many :community_members
+  has_many :members, through: :community_members, source: :user
+  has_and_belongs_to_many :communities, join_table: "community_communities", association_foreign_key: "parent_community_id"
+
+  has_many :institutions
+  has_many :thumbnails, as: :owner
 
   validates_presence_of :title
 
@@ -42,6 +51,18 @@ class Community < CerberusCore::BaseModels::Community
       community.save!
       return community
     end
+  end
+
+  def project_members
+    members
+  end
+
+  def project_editors
+    members.where(member_type: ["editor", "admin"])
+  end
+
+  def project_admins
+    members.where(member_type: "admin")
   end
 
   def as_json
