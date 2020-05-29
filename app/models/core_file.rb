@@ -1,51 +1,52 @@
-class CoreFile < CerberusCore::BaseModels::CoreFile
-  include Did
-  include OGReference
-  include DrupalAccess
-  include TapasQueries
-  include StatusTracking
-  include SolrHelpers
-  include TapasRails::ViewPackages
+class CoreFile < ActiveRecord::Base
+  # include Did
+  # include OGReference
+  # include DrupalAccess
+  # include TapasQueries
+  # include StatusTracking
+  # include SolrHelpers
+  # include TapasRails::ViewPackages
 
   # Configure mods_display gem
-  include ModsDisplay::ModelExtension
-  mods_xml_source do |model|
-    model.mods.content
-  end
+  # include ModsDisplay::ModelExtension
+  # mods_xml_source do |model|
+  #   model.mods.content
+  # end
 
-  before_save :match_dc_to_mods
+  # before_save :match_dc_to_mods
 
-  before_save :ensure_unique_did, :calculate_drupal_access
+  # before_save :ensure_unique_did, :calculate_drupal_access
 
-  has_and_belongs_to_many :collections, :property => :is_member_of,
-    :class_name => 'Collection'
+  # has_and_belongs_to_many :collections, :property => :is_member_of,
+  #   :class_name => 'Collection'
 
-  has_many :page_images, :property => :is_page_image_for,
-    :class_name => "ImageMasterFile"
-  has_many :tfc, :property => :is_tfc_for, :class_name => "TEIFile"
-  has_many :html_files, :property => :is_html_for, :class_name => "HTMLFile"
+  # has_many :page_images, :property => :is_page_image_for,
+  #   :class_name => "ImageMasterFile"
+  # has_many :tfc, :property => :is_tfc_for, :class_name => "TEIFile"
+  # has_many :html_files, :property => :is_html_for, :class_name => "HTMLFile"
 
-  has_and_belongs_to_many :personography_for, :property => :is_personography_for,
-    :class_name => 'Collection'
-  has_and_belongs_to_many :orgography_for, :property => :is_orgography_for,
-    :class_name => 'Collection'
-  has_and_belongs_to_many :bibliography_for, :property => :is_bibliography_for,
-    :class_name => 'Collection'
-  has_and_belongs_to_many :otherography_for, :property => :is_otherography_for,
-    :class_name => 'Collection'
-  has_and_belongs_to_many :odd_file_for, :property => :is_odd_file_for,
-    :class_name => 'Collection'
-  has_and_belongs_to_many :placeography_for, :property => :is_placeography_for,
-    :class_name => 'Collection'
+  # has_and_belongs_to_many :personography_for, :property => :is_personography_for,
+  #   :class_name => 'Collection'
+  # has_and_belongs_to_many :orgography_for, :property => :is_orgography_for,
+  #   :class_name => 'Collection'
+  # has_and_belongs_to_many :bibliography_for, :property => :is_bibliography_for,
+  #   :class_name => 'Collection'
+  # has_and_belongs_to_many :otherography_for, :property => :is_otherography_for,
+  #   :class_name => 'Collection'
+  # has_and_belongs_to_many :odd_file_for, :property => :is_odd_file_for,
+  #   :class_name => 'Collection'
+  # has_and_belongs_to_many :placeography_for, :property => :is_placeography_for,
+  #   :class_name => 'Collection'
 
-  has_metadata :name => "mods", :type => ModsDatastream
-  has_metadata :name => "properties", :type => PropertiesDatastream
-  has_attributes :title, datastream: "DC"
-  has_attributes :description, datastream: "DC"
-  has_attributes :featured, :datastream => :properties, :multiple => false
-  delegate :authors, to: "mods"
-  delegate :contributors, to: "mods"
+  # has_metadata :name => "mods", :type => ModsDatastream
+  # has_metadata :name => "properties", :type => PropertiesDatastream
+  # has_attributes :title, datastream: "DC"
+  # has_attributes :description, datastream: "DC"
+  # has_attributes :featured, :datastream => :properties, :multiple => false
+  # delegate :authors, to: "mods"
+  # delegate :contributors, to: "mods"
 
+  has_and_belongs_to_many :collections
 
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',

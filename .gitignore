@@ -67,3 +67,10 @@ public/view_packages/*
 
 log/*-resolrize
 public/uploads/*
+
+# Ignore solr file
+solr/data
+solr/test/data
+solr/development/data
+solr/default/data
+solr/pids
