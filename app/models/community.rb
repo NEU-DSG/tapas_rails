@@ -38,6 +38,8 @@ class Community < ActiveRecord::Base
   has_many :institutions
   has_many :thumbnails, as: :owner
 
+  belongs_to :depositor, class_name: "User"
+
   validates_presence_of :title
 
  # Look up or create the root community of the graph
@@ -76,6 +78,10 @@ class Community < ActiveRecord::Base
       :title => mods.title.first,
       :description => mods.abstract.first
     }
+  end
+
+  def can_read?(user)
+    community_members.where(user_id: user.id).any?
   end
 
   def match_dc_to_mods

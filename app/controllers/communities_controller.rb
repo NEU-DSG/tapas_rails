@@ -1,6 +1,5 @@
 class CommunitiesController < CatalogController
   include ApiAccessible
-  include ControllerHelper
 
   self.copy_blacklight_config_from(CatalogController)
 
@@ -49,12 +48,7 @@ class CommunitiesController < CatalogController
     # authorize! :show, params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
-    @rec_count = 0
-    if @community.children
-      @community.children.each do |cc|
-        @rec_count = @rec_count + cc.children.count
-      end
-    end
+    # TODO: Communities can have_many other communities
   end
 
   #This method is used to create a new community/project
@@ -80,16 +74,14 @@ class CommunitiesController < CatalogController
 
   #This method contains the actual logic for creating a new community
   def create
-    @community = Community.new(params[:community])
-    @community.did = @community.pid
-    @community.depositor = current_user.id.to_s
-    if (params[:thumbnail])
-      params[:thumbnail] = create_temp_file(params[:thumbnail])
-      @community.add_thumbnail(:filepath => params[:thumbnail])
+    @community = Community.new(community_params)
+    @community.depositor = current_user
+
+    if (thumbnail_params[:thumbnail])
+      # TODO: (pletcher) Create Thumbnail by uploading (to S3?) and saving URL
+      # Thumbnail.create!(url: url, owner: @community)
     end
-    if params[:mass_permissions]
-      @community.mass_permissions = params[:mass_permissions]
-    end
+
     @community.save!
     redirect_to @community and return
   end
@@ -137,5 +129,31 @@ class CommunitiesController < CatalogController
     @community = Community.find(params[:id])
     @page_title = "Delete #{@community.title || ''}"
     @community.destroy
- end
+  end
+
+  protected
+
+  def can_read?
+    current_user && Community.find(params[:id]).can_read?(current_user)
+  end
+
+  private
+
+  def community_params
+    params
+      .require(:community)
+      .permit(
+        :description,
+        :institutions,
+        :project_admins,
+        :project_editors,
+        :project_members,
+        :thumbnail,
+        :title
+      )
+  end
+
+  def thumbnail_params
+    params.permit(:thumbnail)
+  end
 end
