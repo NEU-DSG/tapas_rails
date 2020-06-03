@@ -7,8 +7,8 @@
   %div.carousel-inner{"role"=>"listbox"}
     - @featured_core.each_with_index do |c, i|
       %div.item{"class"=>("active" if i == 0)}
-        - if c.thumbnail_list.length > 0
-          %img{"src"=>c.thumbnail_list[0]}
+        - if c.thumbnails.length > 0
+          %img{"src"=>c.thumbnails[0]}
         - else
           %img{"src"=>"/assets/tapaslogo-opaque.png"}
         %div.carousel-caption

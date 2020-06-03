@@ -1,9 +1,9 @@
 module Content
-  class UpsertThumbnail 
+  class UpsertThumbnail
     include Content
 
     attr_reader :core_file, :filepath
-    
+
     def initialize(core_file, filepath)
       @core_file = core_file
       @filepath = filepath
@@ -23,9 +23,9 @@ module Content
       end
 
       add_unique_file(thumbnail, :filepath => filepath)
-      
+
       # Clear and update the CoreFile's thumbnail list
-      core_file.thumbnail_list = [thumbnail.download_path('thumbnail_1')]
+      core_file.thumbnails = [thumbnail.download_path('thumbnail_1')]
       core_file.save!
     end
   end

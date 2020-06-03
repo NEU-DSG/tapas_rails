@@ -14,7 +14,7 @@ module CerberusCore::Concerns::PropertiesDatastreamDelegations
     class_attribute :depositor, :download_filename,
                    datastream: "properties",
                    multiple: false
-    class_attribute :thumbnail_list, datastream: "properties", multiple: true
+    class_attribute :thumbnails, datastream: "properties", multiple: true
 
     # Ensures that the current depositor always has edit permissions, and that
     # people who are unflagged as the depositor (for whatever reason) lose their
