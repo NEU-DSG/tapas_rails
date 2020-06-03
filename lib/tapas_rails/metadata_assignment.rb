@@ -32,12 +32,12 @@ module TapasRails
         if_properties_exists_strict { self.properties.original_filename.first }
       end
 
-      def thumbnail_list=(array_of_strings)
-        if_properties_exists_strict { self.properties.thumbnail_list = array_of_strings }
+      def thumbnails=(array_of_strings)
+        if_properties_exists_strict { self.properties.thumbnails = array_of_strings }
       end
 
-      def thumbnail_list
-        if_properties_exists_strict { self.properties.thumbnail_list }
+      def thumbnails
+        if_properties_exists_strict { self.properties.thumbnails }
       end
 
       def title=(string)
