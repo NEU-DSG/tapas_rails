@@ -188,31 +188,32 @@ class Community < ActiveRecord::Base
   end
 
   def members_with_roles
+    # FIXME: (charles) This is all redundant
     members_with_roles = []
     if !self.project_admins.blank?
       self.project_admins.each do |pa|
-        if User.exists?(pa)
-          members_with_roles << {user:User.find(pa), roles:["admin"]}
+        if User.exists?(pa.id)
+          members_with_roles << {user:User.find(pa.id), roles:["admin"]}
         end
       end
     end
+
     if !self.project_editors.blank?
       self.project_editors.each do |pe|
-        if User.exists?(pe)
-          user = User.find(pe)
-          if not self.project_admins.include?(pe)
-            members_with_roles << {user:user, roles:["editor"]}
-          end
+        if User.exists?(pe.id)
+          user = User.find(pe.id)
+          members_with_roles << { user: user, roles: ["editor"] }
         end
       end
     end
+
     if !self.project_members.blank?
       self.project_members.each do |pm|
-        if User.exists?(pm)
-          user = User.find(pm)
-          if (not self.project_admins.include?(pm)) && (not self.project_editors.include?(pm))
-            members_with_roles << {user:user, roles:["member"]}
-          end
+        if User.exists?(pm.id)
+          user = User.find(pm.id)
+
+          members_with_roles << {user:user, roles:["member"]}
+
         end
       end
     end
