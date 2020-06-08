@@ -5,7 +5,7 @@ class AddCommunityIdToInstitutions < ActiveRecord::Migration[5.2]
   end
 
   def down
-    remove_column :institutions, :community_id
     remove_foreign_key :institutions, :communities
+    remove_column :institutions, :community_id
   end
 end
