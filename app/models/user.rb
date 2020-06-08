@@ -13,7 +13,6 @@ class User < ActiveRecord::Base
     attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
   end
 
-  attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type if Rails::VERSION::MAJOR < 4
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -24,7 +23,7 @@ class User < ActiveRecord::Base
   belongs_to :institution
 
   has_many :community_members
-  has_many :communities, through: :community_members, source: :community
+  has_many :communities, through: :community_members
 
   ROLES = %w[admin paid_user unpaid_user]
 
