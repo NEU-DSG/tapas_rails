@@ -16,8 +16,8 @@ class UsersController < CatalogController
   def my_projects
     @page_title = "My Projects"
     @user = current_user
-    # self.search_params_logic += [:my_communities_filter]
-    (@projects, @document_list) = search_results(params) #, search_params_logic)
+    @projects = @user.communities
+
     render 'my_projects'
   end
 
