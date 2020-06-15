@@ -14,12 +14,11 @@
         .form-group
           = f.label :community, "Project", class: "control-label col-md-2"
           .col-md-6
-            - parent = !@collection.community.blank? ? @collection.community.pid : params[:community]
-            = f.select :community, options_for_select(@communities, parent), {}, {name: "community", class: "form-control"}
+            = f.select :community, options_from_collection_for_select(@communities, 'id', 'title', @collection.community), {}, {name: "community", class: "form-control"}
         .form-group
-          = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
+          = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
-            = f.select :mass_permissions, options_for_select(['public', 'private'], @collection.mass_permissions), {}, {:class => "form-control", :name=> "mass_permissions"}
+            = f.select :is_public, { checked: true }
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
