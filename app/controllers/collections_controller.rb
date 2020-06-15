@@ -39,7 +39,6 @@ class CollectionsController < CatalogController
     solr_parameters[:fq] << query
   end
 
-  #This method is used to display various attributes of a collection
   def show
     @collection = Collection.find(params[:id])
     @page_title = @collection.title
@@ -53,30 +52,21 @@ class CollectionsController < CatalogController
 
   #This method contains the actual logic for creating a new collection
   def create
-    # @collection = Collection.new
-    puts params
-    community = Community.find(params[:community]) if params[:community]
-    params[:collection].delete("community")
-    @collection = Collection.new(params[:collection])
-    @collection.depositor = current_user.id.to_s
-    @collection.did = @collection.pid
-    @collection.mass_permissions = params[:mass_permissions]
-    @collection.save! #object must be saved before community can be assigned
-    @collection.community = community if community
+    @collection = Collection.new(collection_params)
+    @collection.depositor = current_user
     @collection.save!
 
-    if (params[:thumbnail])
-      params[:thumbnail] = create_temp_file(params[:thumbnail])
-      @collection.add_thumbnail(:filepath => params[:thumbnail])
-      @collection.save!
-    end
+    # if (params[:thumbnail])
+    #   params[:thumbnail] = create_temp_file(params[:thumbnail])
+    #   @collection.add_thumbnail(:filepath => params[:thumbnail])
+    #   @collection.save!
+    # end
     # can this be used instead of individually spelling out the methods?
     # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
 
     redirect_to @collection and return
   end
 
-  #This method is used to edit a particular collection
   def edit
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
@@ -91,7 +81,6 @@ class CollectionsController < CatalogController
     @page_title = "Edit #{@collection.title}"
   end
 
-  #This method contains the actual logic for editing a particular collection
   def update
     community = Community.find(params[:community]) if params[:community]
     params[:collection].delete("community")
@@ -118,5 +107,25 @@ class CollectionsController < CatalogController
     # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
 
     redirect_to @collection and return
+  end
+
+  protected
+
+  def can_read?
+    collection = Collection.find(params[:id])
+    can? :read, collection
+  end
+
+  private
+
+  def collection_params
+    params
+      .require(:collection)
+      .permit(
+        :community_id,
+        :description,
+        :is_public,
+        :title
+      )
   end
 end

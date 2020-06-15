@@ -22,11 +22,10 @@ class CommunitiesController < CatalogController
   #This method displays all the communities/projects created in the database
   def index
     @page_title = "All Projects"
-    # self.search_params_logic += [:communities_filter]
-    # self.search_params_logic += [:add_access_controls_to_solr_params]
+
     logger.debug repository.inspect
     logger.debug repository.connection
-    # logger.debug Blacklight.solr_config[:url]
+
     (@response, @document_list) = search_results(params) #, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
@@ -43,7 +42,6 @@ class CommunitiesController < CatalogController
     solr_parameters[:fq] << query
   end
 
-  #This method is used to display various attributes of community
   def show
     # authorize! :show, params[:id]
     @community = Community.find(params[:id])
@@ -51,7 +49,6 @@ class CommunitiesController < CatalogController
     # TODO: Communities can have_many other communities
   end
 
-  #This method is used to create a new community/project
   def new
     if current_user && (current_user.paid_user? || current_user.admin?)
       @page_title = "Create New Community"
@@ -72,7 +69,6 @@ class CommunitiesController < CatalogController
     end
   end
 
-  #This method contains the actual logic for creating a new community
   def create
     @community = Community.new(community_params)
     @community.depositor = current_user
@@ -148,7 +144,8 @@ class CommunitiesController < CatalogController
   protected
 
   def can_read?
-    current_user && Community.find(params[:id]).can_read?(current_user)
+    community = Community.find(params[:id])
+    can? :read, community
   end
 
   private
