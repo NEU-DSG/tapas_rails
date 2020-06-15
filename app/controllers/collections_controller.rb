@@ -47,7 +47,7 @@ class CollectionsController < CatalogController
 
   def new
     @page_title = "Create New Collection"
-    @communities = Community.where(community_members: { user_id: current_user.id, member_type: ["editor", "admin"] })
+    @communities = Community.joins(:community_members).where(community_members: { user_id: current_user.id, member_type: ["editor", "admin"] })
     @collection = Collection.new(community: @community)
   end
 
