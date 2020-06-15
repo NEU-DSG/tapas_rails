@@ -18,7 +18,7 @@
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
-            = f.select :is_public, { checked: true }
+            = f.check_box :is_public, { checked: true }
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
