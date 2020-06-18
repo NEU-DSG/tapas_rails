@@ -18,7 +18,6 @@ class CollectionsController < CatalogController
     pretty_json(202) and return
   end
 
-  #This method displays all the collections present
   def index
     @page_title = "All Collections"
     # self.search_params_logic += [:collections_filter]
@@ -28,15 +27,6 @@ class CollectionsController < CatalogController
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }
     end
-  end
-
-  #This method is the helper method for index. It basically gets the collections
-  # using solr queries
-  def collections_filter(solr_parameters, user_parameters)
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    query = "has_model_ssim:\"#{model_type}\""
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << query
   end
 
   def show
@@ -50,7 +40,6 @@ class CollectionsController < CatalogController
     @collection = Collection.new(community: @community)
   end
 
-  #This method contains the actual logic for creating a new collection
   def create
     @collection = Collection.new(collection_params)
     @collection.depositor = current_user
