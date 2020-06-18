@@ -29,8 +29,10 @@ class Community < ActiveRecord::Base
   # has_attributes :title, datastream: "DC"
   # has_attributes :description, datastream: "DC"
 
-  has_many :community_collections
-  has_many :collections, through: :community_collections
+  # TODO: (charles) Unclear whether a collection can be shared among multiple communities.
+  # What's the best way to find out?
+  # has_many :community_collections
+  has_many :collections #, through: :community_collections
   has_many :children, through: :community_collections, source: :collection
   has_many :community_members
   has_many :users, through: :community_members

@@ -90,16 +90,9 @@ class Collection < ActiveRecord::Base
     }
   end
 
-  def to_solr(solr_doc = Hash.new())
-    solr_doc["active_fedora_model_ssi"] = self.class
-    solr_doc["type_sim"] = "Collection"
-    solr_doc['project_ssi'] = self.project.title if self.project
-    solr_doc['project_pid_ssi'] = self.project.pid if self.project
-    super(solr_doc)
-    return solr_doc
-  end
-
   def project
+    # TODO: (charles) This makes it look like a collection belongs_to a single community,
+    # but elsewhere it seems like collections can be shared. Which way should we go?
     if !self.community_id.blank?
       if Community.exists?(self.community_id)
         return Community.find(community_id)

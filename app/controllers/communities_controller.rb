@@ -33,19 +33,11 @@ class CommunitiesController < CatalogController
     end
   end
 
-  #This method is the helper method for index. It basically gets the communities
-  # using solr queries
-  def communities_filter(solr_parameters, user_parameters)
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
-    query = "has_model_ssim:\"#{model_type}\""
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << query
-  end
-
   def show
     # authorize! :show, params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
+    @collections = @community.collections
     # TODO: Communities can have_many other communities
   end
 
