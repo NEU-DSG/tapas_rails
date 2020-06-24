@@ -5,11 +5,11 @@
         .form-group
           = f.label :title, "Title", class: "control-label col-md-2"
           .col-md-6
-            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control", placeholder: "Record Title"
+            = f.text_field :title, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Record Title"
         .form-group
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :description, pattern: ".*\\S.*", name: 'description', class: "form-control", placeholder: "Brief description of the record"
+            = f.text_area :description, pattern: ".*\\S.*", class: "form-control", placeholder: "Brief description of the record"
             %p.small.help-block="This field accepts plain text"
 
         .form-group.authors
@@ -53,11 +53,11 @@
           .col-md-6
             - if @core_file.collections.blank?
               %span.collection
-                = f.select :collections, options_for_select(@collections), {}, {name: "collections[]", class: "form-control"}
+                = f.select :collections, options_from_collection_for_select(@collections, 'id', 'title'), {}, {name: "collections[]", class: "form-control"}
             - else
               - @core_file.collections.each_with_index do |col, i|
                 %span.collection{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.select :collections, options_for_select(@collections, col.id), {}, {name: "collections[]", class: "form-control input-block-level"}
+                  = f.select :collections, options_from_collection_for_select(@collections, 'id', 'title'), {}, {name: "collections[]", class: "form-control input-block-level"}
                   - if i != 0
                     %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove collection", type: "button"}
                       %i.fa.fa-remove
@@ -66,12 +66,13 @@
               %i.fa-plus-sign.fa
               Add Collection
 
-        .form-group
-          = f.label "Ography Type", class: "control-label col-md-2"
-          .col-md-6
-            = f.select :file_type, options_for_select(@file_types, @sel_file_types), {}, {name: "file_types[]", class: "form-control", multiple: true}
-            %p.help-block
-              = "Select multiple values by holding CTRL"
+        -# TODO: (charles) Figure out why we need Ography Type and reimplement it
+        -# .form-group
+        -#   = f.label "Ography Type", class: "control-label col-md-2"
+        -#   .col-md-6
+        -#     = f.select :file_type, options_for_select(@file_types, @sel_file_types), {}, {name: "file_types[]", class: "form-control", multiple: true}
+        -#     %p.help-block
+        -#       = "Select multiple values by holding CTRL"
 
         - if current_user.admin?
           .form-group
@@ -79,21 +80,21 @@
             .col-md-6
               .checkbox
                 = f.check_box :featured, {}, "true"
-
+        -# TODO: (charles) Figure out what a canonical_object is and reimplement it
+        -# .form-group
+        -#   = f.label :tei, "File", class: "control-label col-md-2"
+        -#   .col-md-6
+        -#     = f.file_field 'tei', name: "tei"
+        -#     -if @core_file.canonical_object
+        -#       %p
+        -#         ="Current File:"
+        -#         %a{href: @core_file.canonical_object.download_path}
+        -#           %span.fa.fa-file-code-o
+        -#           = @core_file.canonical_object.filename
         .form-group
-          = f.label :tei, "File", class: "control-label col-md-2"
+          = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
-            = f.file_field 'tei', name: "tei"
-            -if @core_file.canonical_object
-              %p
-                ="Current File:"
-                %a{href: @core_file.canonical_object.download_path}
-                  %span.fa.fa-file-code-o
-                  = @core_file.canonical_object.filename
-        .form-group
-          = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
-          .col-md-6
-            = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {}, {class: "form-control", name: "mass_permissions"}
+            = f.check_box :is_public, { checked: true }
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
