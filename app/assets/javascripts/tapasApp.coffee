@@ -155,6 +155,10 @@ $(document).ready ->
         target: $('span.collection:not(.to-remove)')
         titleText: 'Remove collection'
 
+      # TODO: (charles) possible quick and dirty way to autocomplete users when creating a record
+      # $('.core_file_authors').autocomplete
+      #   source: $('#core_file_authors').data('autocomplete-source')
+
       return
 
 

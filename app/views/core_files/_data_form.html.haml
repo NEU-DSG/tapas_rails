@@ -17,7 +17,7 @@
           .col-md-6
             - if @core_file.authors.blank?
               %span.author
-                = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors[]', class: "form-control", placeholder: "Name(s) of persons responsible for the creation of document", value: ""
+                = f.text_field :authors, pattern: ".*\\S.*", class: "form-control", placeholder: "Name(s) of persons responsible for the creation of document", value: ""
             - else
               - @core_file.authors.each_with_index do |name, i|
                 %span.author{:class=>i != 0 ? ".to-remove" : ""}
