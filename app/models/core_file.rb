@@ -64,8 +64,20 @@ class CoreFile < ActiveRecord::Base
     users.where(user_type: "author")
   end
 
+  def authors=(user_ids)
+    user_ids.reject(&:blank?).each do |user_id|
+      UsersCoreFile.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "author")
+    end
+  end
+
   def contributors
     users.where(user_type: "contributor")
+  end
+
+  def contributors=(user_ids)
+    user_ids.reject(&:blank?).each do |user_id|
+      UsersCoreFile.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "contributor")
+    end
   end
 
   def clear_ographies!
