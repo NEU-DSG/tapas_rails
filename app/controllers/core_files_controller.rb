@@ -138,17 +138,6 @@ class CoreFilesController < CatalogController
 
   def show #inherited from catalog controller
     @core_file = CoreFile.find(params[:id])
-    @mods_html = render_mods_display(@core_file).to_html.html_safe
-    avail_views = available_view_packages
-    @core_file.create_view_package_methods
-    @view_packages = {}
-    avail_views.each do |v|
-      @view_packages[v[1]] = v[0]
-    end
-    @view_packages["XML View"] = :tei
-    # get the default_view_package TODO - store this on collection, core_file like in drupal
-    e = "Could not find TEI associated with this file.  Please retry in a "\
-      "few minutes and contact an administrator if the problem persists."
   end
 
   def api_show
@@ -227,6 +216,14 @@ class CoreFilesController < CatalogController
   end
 
   protected
+
+  def can_edit?
+    can? :manage, CoreFile.find(params[:id])
+  end
+
+  def can_read?
+    can? :read, CoreFile.find(params[:id])
+  end
 
   def core_file_params
     params.require(:core_file).permit(:authors, :collections, :contributors, :depositor, :description, :title)
