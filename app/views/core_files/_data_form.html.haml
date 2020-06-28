@@ -15,38 +15,14 @@
         .form-group.authors
           = f.label :authors, "Authors", class: "control-label col-md-2"
           .col-md-6
-            - if @core_file.authors.blank?
-              %span.author
-                = f.text_field :authors, pattern: ".*\\S.*", class: "form-control", placeholder: "Name(s) of persons responsible for the creation of document", value: ""
-            - else
-              - @core_file.authors.each_with_index do |name, i|
-                %span.author{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.text_field :authors, pattern: ".*\\S.*", value: name, name: 'display_authors[]', class: "form-control input-block-level"
-                  - if i != 0
-                    %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove author", type: "button"}
-                      %i.fa.fa-remove
-                  %br
-            %button#add_another_author.btn.btn-success{:type => "button"}
-              %i.fa-plus-sign.fa
-              Add Author
+            %span.author
+              = f.select :authors, options_for_select(@users), {}, {class: "form-control", multiple: true}
 
         .form-group.contributors
           = f.label :contributors, "Contributors", class: "control-label col-md-2"
           .col-md-6
-            - if @core_file.contributors.blank?
-              %span.contributor
-                = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors[]', class: "form-control", placeholder: "Name(s) of contributors responsible for the creation of this TAPAS record", value: ""
-            - else
-              - @core_file.contributors.each_with_index do |name, i|
-                %span.contributor{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.text_field :contributors, pattern: ".*\\S.*", value: name, name: 'display_contributors[]', class: "form-control input-block-level"
-                  - if i != 0
-                    %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove contributor", type: "button"}
-                      %i.fa.fa-remove
-                  %br
-            %button#add_another_contributor.btn.btn-success{:type => "button"}
-              %i.fa-plus-sign.fa
-              Add Contributor
+            %span.contributor
+              = f.select :contributors, options_for_select(@users), {}, { class: "form-control", multiple: true }
 
         .form-group
           = f.label :collections, "Collection", class: "control-label col-md-2"
