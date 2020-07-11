@@ -21,6 +21,7 @@
 //= require bootstrap/popover
 //= require bootstrap/tab
 //= require bootstrap/carousel
+//= require activestorage
 //= require plugins
 //= require tapasApp
 //= require jquery.nestable
