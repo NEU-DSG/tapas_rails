@@ -33,8 +33,9 @@ class CoreFilesController < CatalogController
 
   def new
     @page_title = "Create New Record"
-    # projects = Community.where(depositor: current_user).or(Community.where(community_members: { user_id: current_user.id }))
-    @collections = Collection.joins(communities: { community_members: :user }).where(community_members: { user_id: current_user.id })
+    @collections = Collection
+                     .joins(community: :community_members)
+                     .where(community: { community_members: { user_id: current_user.id } })
     @core_file = CoreFile.new(is_public: true)
     @users = User.order(:name)
 
@@ -47,7 +48,13 @@ class CoreFilesController < CatalogController
   end
 
   def create
-    file = CoreFile.create!(core_file_params.merge({ depositor_id: current_user.id }))
+    file = CoreFile.new(core_file_params.merge({ depositor_id: current_user.id }))
+
+    params[:core_file][:collections].each do |c|
+      file.collections. << Collection.find(c) unless c.blank?
+    end
+
+    file.save!
 
     redirect_to file
   end

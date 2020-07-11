@@ -108,18 +108,19 @@ class UsersController < CatalogController
 
   def five_collections
     Collection
+      .joins(community: :community_members)
+      .where(community: { community_members: { user_id: @user.id } })
       .limit(5)
       .order("RAND()")
-      .joins(communities: [{ community_members: :user }])
-      .where("users.id": @user.id)
+
   end
 
   def five_records
     CoreFile
+      .joins(collections: { community: :community_members })
+      .where(collections: { community: { community_members: { user_id: @user.id } } })
       .limit(5)
       .order("RAND()")
-      .joins(collections: [{ communities: { community_members: :user } } ])
-      .where("users.id": @user.id)
   end
 
   def my_communities_filter(solr_parameters, user_parameters)
