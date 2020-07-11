@@ -44,17 +44,16 @@
             .col-md-6
               .checkbox
                 = f.check_box :featured, {}, "true"
-        -# TODO: (charles) Figure out what a canonical_object is and reimplement it
-        -# .form-group
-        -#   = f.label :tei, "File", class: "control-label col-md-2"
-        -#   .col-md-6
-        -#     = f.file_field 'tei', name: "tei"
-        -#     -if @core_file.canonical_object
-        -#       %p
-        -#         ="Current File:"
-        -#         %a{href: @core_file.canonical_object.download_path}
-        -#           %span.fa.fa-file-code-o
-        -#           = @core_file.canonical_object.filename
+        .form-group
+          = f.label :canonical_object, "File", class: "control-label col-md-2"
+          .col-md-6
+            = f.file_field :canonical_object, direct_upload: true
+            -if @core_file.canonical_object.attached?
+              %p
+                ="Current File:"
+                %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
+                  %span.fa.fa-file-code-o
+                    = @core_file.canonical_object.filename
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
@@ -62,8 +61,8 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@core_file.thumbnail.blank?
-              =image_tag @core_file.thumbnail.download_path('thumbnail_1')
+            - if @core_file.thumbnail.attached?
+              =image_tag url_for(@core_file.thumbnail)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", {:checked => false}
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png"

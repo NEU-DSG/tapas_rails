@@ -46,10 +46,10 @@
 
 
     #files.tab-pane
-      -if @core_file.canonical_object
+      -if @core_file.canonical_object.attached?
         %dt TEI File:
         %dd
-          %a{href: @core_file.canonical_object.download_path}
+          %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
             %span.fa.fa-file-code-o
             = @core_file.canonical_object.filename
       -# TODO add other auxilliary files

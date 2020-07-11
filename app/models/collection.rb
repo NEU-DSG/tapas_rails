@@ -46,7 +46,10 @@ class Collection < ActiveRecord::Base
   # has_and_belongs_to_many :collections,
   #                         join_table: "collection_collections",
   #                         association_foreign_key: "parent_collection_id"
-  has_many :thumbnails, as: :owner
+
+  has_and_belongs_to_many :core_files
+
+  has_many_attached :thumbnails
 
   validates :depositor, :description, :title, presence: true
 
