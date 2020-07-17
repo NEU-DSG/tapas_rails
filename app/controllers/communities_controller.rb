@@ -127,12 +127,18 @@ class CommunitiesController < CatalogController
   end
 
   def destroy
-    @community = Community.find(params[:id])
-    @page_title = "Delete #{@community.title || ''}"
-    @community.destroy
+    community = Community.find(params[:id])
+    community.destroy
+
+    redirect_to my_tapas_path
   end
 
   protected
+
+  def can_edit?
+    community = Community.find(params[:id])
+    can? :manage, community
+  end
 
   def can_read?
     community = Community.find(params[:id])

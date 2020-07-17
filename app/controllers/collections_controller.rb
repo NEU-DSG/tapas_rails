@@ -1,6 +1,5 @@
 class CollectionsController < CatalogController
   include ApiAccessible
-  include ControllerHelper
 
   self.copy_blacklight_config_from(CatalogController)
 
@@ -56,6 +55,15 @@ class CollectionsController < CatalogController
     redirect_to @collection and return
   end
 
+  def destroy
+    collection = Collection.find(params[:id])
+    community = collection.community
+
+    collection.destroy!
+
+    redirect_to community
+  end
+
   def edit
     model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
     count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
@@ -99,6 +107,11 @@ class CollectionsController < CatalogController
   end
 
   protected
+
+  def can_edit?
+    collection = Collection.find(params[:id])
+    can? :manage, collection
+  end
 
   def can_read?
     collection = Collection.find(params[:id])
