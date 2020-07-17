@@ -20,7 +20,6 @@ class CoreFilesController < CatalogController
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
 
-  #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
     # self.search_params_logic += [:core_files_filter]
@@ -59,7 +58,16 @@ class CoreFilesController < CatalogController
     redirect_to file
   end
 
-  #This method is used to load the edit partial
+  def destroy
+    file = CoreFile.find(params[:id])
+    # FIXME: (charles) Should go to the collection where the user is, but the routes aren't set up RESTfully
+    collection = file.collections.first
+
+    file.destroy!
+
+    redirect_to collection
+  end
+
   def edit
     @core_file = CoreFile.find(params[:id])
     model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
