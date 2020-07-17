@@ -1,5 +1,6 @@
 - if can? :manage, @community
   = link_to "Edit", edit_community_path(@community), class:['btn', 'btn-info', 'btn-large']
+  = link_to "Delete", community_path(@community), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this community?"
 
 %h2.page-header= @community.title
 
