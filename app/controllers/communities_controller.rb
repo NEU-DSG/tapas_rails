@@ -39,20 +39,16 @@ class CommunitiesController < CatalogController
     @collections = @community.collections
   end
 
+  def format_users_for_form
+    User.pluck(:name, :email, :id).map { |u| ["#{u[0]} (#{u[1]})", u[2]] }
+  end
+
   def new
     if current_user && (current_user.paid_user? || current_user.admin?)
       @page_title = "Create New Community"
       @community = Community.new
-      i_s = Institution.all()
-      @institutions = []
-      i_s.each do |i|
-        @institutions << [i.name, i.id]
-      end
-      u_s = User.all()
-      @users = []
-      u_s.each do |u|
-        @users << ["#{u.name} (#{u.email})", u.id]
-      end
+      @institutions = Institution.pluck(:name, :id)
+      @users = format_users_for_form
     else
       flash[:notice] = "In order to create a project, you must be a member of the TEI. <a href="">Join now!</a>"
       redirect_to root_path
@@ -67,44 +63,26 @@ class CommunitiesController < CatalogController
     @community.depositor = current_user
     @community.save!
 
-    params[:community][:project_admins].each do |a|
-      CommunityMember.find_or_create_by(community: @community, user_id: a, member_type: 'admin')
-    end
-
-    params[:community][:project_editors].each do |e|
-      CommunityMember.create!(community: @community, user_id: e, member_type: 'editor')
-    end
-
-    params[:community][:project_members].each do |m|
-      CommunityMember.create!(community: @community, user_id: m, member_type: 'member')
-    end
-
     if (thumbnail_params[:thumbnail])
       # TODO: (pletcher) Create Thumbnail by uploading (to S3?) and saving URL
       # Thumbnail.create!(url: url, owner: @community)
     end
 
-    redirect_to @community and return
+    redirect_to @community
   end
 
   #This method is used to edit a particular community
   def edit
     @community = Community.find(params[:id])
     @page_title = "Edit #{@community.title || ''}"
-    i_s = Institution.all()
-    @institutions = []
-    i_s.each do |i|
-      @institutions << [i.name, i.id]
-    end
-    u_s = User.all()
-    @users = []
-    u_s.each do |u|
-      @users << ["#{u.name} (#{u.email})", u.id]
-    end
+    @institutions = Institution.pluck(:name, :id)
+    @users = format_users_for_form
   end
 
   def update
     @community = Community.find(params[:id])
+    @community.community_members.destroy_all
+    @community.communities_institutions.destroy_all
     @community.update(community_params)
 
     redirect_to @community
@@ -136,12 +114,12 @@ class CommunitiesController < CatalogController
       .require(:community)
       .permit(
         :description,
-        :institutions,
-        :project_admins,
-        :project_editors,
-        :project_members,
         :thumbnail,
-        :title
+        :title,
+        :institutions => [],
+        :project_admins => [],
+        :project_editors => [],
+        :project_members => []
       )
   end
 
