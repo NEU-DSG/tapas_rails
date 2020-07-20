@@ -90,7 +90,7 @@ class CommunitiesController < CatalogController
 
   def destroy
     community = Community.find(params[:id])
-    community.destroy
+    community.discard
 
     redirect_to my_tapas_path
   end
