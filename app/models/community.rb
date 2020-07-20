@@ -1,6 +1,5 @@
 class Community < ActiveRecord::Base
-
-  default_scope { where(deleted_at: nil) }
+  include Discard::Model
 
   has_many :collections
   has_many :children, through: :community_collections, source: :collection
@@ -88,7 +87,7 @@ class Community < ActiveRecord::Base
   end
 
   def can_read?(user)
-    community_members.where(user_id: user.id).any?
+    can? :read
   end
 
   def remove_thumbnail

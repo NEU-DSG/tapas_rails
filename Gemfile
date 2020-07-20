@@ -52,6 +52,8 @@ gem 'nest'
 
 gem 'aws-sdk-s3', require: false
 
+gem 'discard', '~> 1.2'
+
 # Use thor for command line tasks
 # gem 'thor', '1.0.1'
 

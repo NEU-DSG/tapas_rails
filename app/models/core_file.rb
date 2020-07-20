@@ -51,7 +51,7 @@ class CoreFile < ActiveRecord::Base
   has_and_belongs_to_many :collections
 
   # ActiveStorage
-  has_one_attached :thumbnail
+  has_many_attached :thumbnails
   has_one_attached :canonical_object
 
   def self.all_ography_types
