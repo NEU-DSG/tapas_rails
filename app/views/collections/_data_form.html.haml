@@ -22,11 +22,11 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@collection.thumbnails.blank?
-              =image_tag @collection.download_path('thumbnail_1')
+            - if @collection.thumbnails.attached?
+              =image_tag url_for(@collection.thumbnails.first)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", { :checked => false }
-            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
+            = f.file_field :thumbnails, accept: ".jpeg, .jpeg, .png", multiple: true, direct_upload: true
 
 
     %hr

@@ -59,7 +59,7 @@ class CollectionsController < CatalogController
     collection = Collection.find(params[:id])
     community = collection.community
 
-    collection.destroy!
+    collection.discard!
 
     redirect_to community
   end
@@ -98,7 +98,8 @@ class CollectionsController < CatalogController
         :community_id,
         :description,
         :is_public,
-        :title
+        :title,
+        thumbnails: []
       )
   end
 end
