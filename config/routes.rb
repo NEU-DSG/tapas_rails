@@ -84,7 +84,7 @@ TapasRails::Application.routes.draw do
   get 'users/:id' => 'users#profile'
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'
-  resources :users, :only => ['index', 'edit', 'create', 'update']
+  resources :users, :only => ['index', 'edit', 'create', 'update', 'destroy']
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
 
