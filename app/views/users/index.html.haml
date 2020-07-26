@@ -13,6 +13,8 @@
         = "Last Login"
       %th
         = "Role"
+      %th
+        = "Discarded at"
     - @users.each do |user|
       %tr
         %td
@@ -21,12 +23,21 @@
             - if current_user.try(:admin?)
               %a.btn.btn-default.btn-sm{:href=>edit_user_path(user.id)}
                 = "Edit"
+              = link_to "Delete", user_path(user.id), class: ['btn', 'btn-default', 'btn-sm', 'btn-danger'], method: :delete, data: { confirm: "Are you sure you want to delete #{user.name}?" }
         %td
           = user.updated_at
         %td
           = user.current_sign_in_at
         %td
-          - if user.role
-            = user.role.gsub("_"," ").titleize
+          - if !user.admin_at.nil?
+            = "Admin"
+          - elsif !user.paid_at.nil?
+            = "Paid user"
+          - else
+            = "Unpaid user"
+        %td
+          - unless user.discarded_at.nil?
+            = user.discarded_at
+            = link_to "Really delete", user_path(user.id), class: ['btn', 'btn-default', 'btn-sm', 'btn-danger'], method: :delete, data: { confirm: "Are you sure you want to delete #{user.name} for real? This record will no longer exist." }
 -else
   There are currently no users available

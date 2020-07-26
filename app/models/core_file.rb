@@ -1,4 +1,6 @@
 class CoreFile < ActiveRecord::Base
+  include Discard::Model
+
   belongs_to :depositor, class_name: "User"
 
   has_and_belongs_to_many :users
