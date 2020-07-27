@@ -122,6 +122,7 @@ end
 
 gem "devise"
 gem "devise-guests", "~> 0.3"
+gem 'devise_invitable', '~> 2.0.0'
 gem "cancancan"
 
 gem "rsolr"

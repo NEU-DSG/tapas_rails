@@ -2,7 +2,7 @@ class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
   before_action :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
-  before_action :verify_admin, :only => [:index, :show, :create, :delete]
+  before_action :verify_admin, :only => [:index, :show, :create, :delete, :admin_show]
 
   def my_tapas
     @page_title = "My TAPAS"
