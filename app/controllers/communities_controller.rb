@@ -59,14 +59,8 @@ class CommunitiesController < CatalogController
   def create
     @community = Community.create!(community_params.merge({ depositor_id: current_user.id }))
 
-    unless child_params[:project_admins].include?(current_user.id.to_s)
-      CommunityMember.create!(community_id: @community.id, user_id: current_user.id, member_type: 'admin')
-    end
-
-    child_params[:institutions].reject(&:empty?).map { |iid| CommunitiesInstitution.create!(community_id: @community.id, institution_id: iid) }
-    child_params[:project_admins].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'admin') }
-    child_params[:project_editors].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'editor') }
-    child_params[:project_members].reject(&:empty?).map { |uid| CommunityMember.create(community_id: @community.id, user_id: uid, member_type: 'member') }
+    add_institutions
+    add_members
 
     redirect_to @community
   end
@@ -85,7 +79,28 @@ class CommunitiesController < CatalogController
     @community.institutions.destroy_all
     @community.update(community_params)
 
+    add_institutions
+    add_members
+
+    if params[:community][:remove_thumbnail].present?
+      @community.thumbnail.purge_later
+    end
+
     redirect_to @community
+  end
+
+  def add_institutions
+    child_params[:institutions].reject(&:empty?).map { |iid| CommunitiesInstitution.create!(community_id: @community.id, institution_id: iid) }
+  end
+
+  def add_members
+    child_params[:project_members].reject(&:empty?).map { |uid| CommunityMember.create(community_id: @community.id, user_id: uid, member_type: 'member') }
+    child_params[:project_editors].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'editor') }
+    child_params[:project_admins].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'admin') }
+
+    unless child_params[:project_admins].include?(current_user.id.to_s)
+      CommunityMember.create!(community_id: @community.id, user_id: current_user.id, member_type: 'admin')
+    end
   end
 
   def destroy
