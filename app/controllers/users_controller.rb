@@ -115,7 +115,7 @@ class UsersController < CatalogController
   private
 
   def five_communities
-    @user.communities.limit(5).order("RAND()")
+    @user.communities.kept.limit(5).order("RAND()")
   end
 
   def five_collections
