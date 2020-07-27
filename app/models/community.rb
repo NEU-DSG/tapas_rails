@@ -19,11 +19,11 @@ class Community < ActiveRecord::Base
   validates_presence_of :title
 
   def project_members
-    users
+    users.where(community_members: { member_type: "member" })
   end
 
   def project_editors
-    users.where(community_members: { member_type: ["editor", "admin"] })
+    users.where(community_members: { member_type: "editor" })
   end
 
   def project_admins
