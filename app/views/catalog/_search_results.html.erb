@@ -5,6 +5,34 @@
 <%= render 'catalog/search_header' %>
 
 <h2 class="sr-only"><%= t('blacklight.search.search_results') %></h2>
+
+<table class="table table-striped">
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Depositor</th>
+    <th>Actions</th>
+  </tr>
+  <%- @records.map do |r| %>
+    <tr>
+      <td>
+        <%= r.title %>
+      </td>
+      <td>
+        <%= r.description %>
+      </td>
+      <td>
+        <%= r.depositor.email %>
+      </td>
+      <td>
+        <%- if can? :manage, r %>
+          <a class="btn btn-default btn-sm" href="<%= edit_core_file_path(r.id) %>">Edit</a>
+          <a class="btn btn-danger btn-sm" href="<%= core_file_path(r.id) %>" data-method="delete" data-confirm="Are you sure you want to delete this record?">Delete</a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
 <%- if @response.empty? %>
   <%= render "zero_results" %>
 <%- end %>
