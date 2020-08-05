@@ -13,7 +13,7 @@
     <th>Depositor</th>
     <th>Actions</th>
   </tr>
-  <%- @records.map do |r| %>
+  <%- @results.map do |r| %>
     <tr>
       <td>
         <%= r.title %>
@@ -26,13 +26,10 @@
       </td>
       <td>
         <%- if can? :manage, r %>
-          <a class="btn btn-default btn-sm" href="<%= edit_core_file_path(r.id) %>">Edit</a>
-          <a class="btn btn-danger btn-sm" href="<%= core_file_path(r.id) %>" data-method="delete" data-confirm="Are you sure you want to delete this record?">Delete</a>
+          <a class="btn btn-default btn-sm" href="<%= url_for(only_path: true, controller: request.path.sub('my_', '').sub('records', 'core_files').sub('projects', 'communities'), action: 'edit', id: r.id) %>">Edit</a>
+          <a class="btn btn-danger btn-sm" href="<%= url_for(only_path: true, controller: request.path.sub('my_', '').sub('records', 'core_files').sub('projects', 'communities'), action: 'destroy', id: r.id) %>" data-method="delete" data-confirm="Are you sure you want to delete this <%= r.class.to_s %>?">Delete</a>
         <% end %>
       </td>
     </tr>
   <% end %>
 </table>
-<%- if @response.empty? %>
-  <%= render "zero_results" %>
-<%- end %>

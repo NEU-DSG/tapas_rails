@@ -16,7 +16,7 @@ class UsersController < CatalogController
   def my_projects
     @page_title = "My Projects"
     @user = current_user
-    @projects = @user.communities
+    @results = @user.communities
 
     render 'my_projects'
   end
@@ -24,14 +24,14 @@ class UsersController < CatalogController
   def my_collections
     @page_title = "My Collections"
     @user = current_user
-    @collections = Collection.kept.where(depositor_id: @user.id)
+    @results = Collection.kept.accessible_by(current_ability)
     render 'my_collections'
   end
 
   def my_records
     @page_title = "My Records"
     @user = current_user
-    @records = CoreFile.kept.where(depositor_id: @user.id)
+    @results = CoreFile.kept.accessible_by(current_ability)
     render 'my_records'
   end
 
