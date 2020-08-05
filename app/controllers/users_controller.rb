@@ -24,16 +24,14 @@ class UsersController < CatalogController
   def my_collections
     @page_title = "My Collections"
     @user = current_user
-    # self.search_params_logic += [:my_collections_filter]
-    (@collections, @document_list) = search_results(params) #, search_params_logic)
+    @collections = Collection.kept.where(depositor_id: @user.id)
     render 'my_collections'
   end
 
   def my_records
     @page_title = "My Records"
     @user = current_user
-    # self.search_params_logic += [:my_records_filter]
-    (@records, @document_list) = search_results(params) #, search_params_logic)
+    @records = CoreFile.kept.where(depositor_id: @user.id)
     render 'my_records'
   end
 
