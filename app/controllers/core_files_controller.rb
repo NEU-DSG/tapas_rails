@@ -1,10 +1,10 @@
-class CoreFilesController < CatalogController
+class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
   include ControllerHelper
   include TapasRails::ViewPackages
 
-  self.copy_blacklight_config_from(CatalogController)
+  # self.copy_blacklight_config_from(CatalogController)
 
   configure_mods_display do
     identifier { ignore! }
