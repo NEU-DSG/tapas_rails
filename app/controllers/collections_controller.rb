@@ -19,9 +19,8 @@ class CollectionsController < CatalogController
 
   def index
     @page_title = "All Collections"
-    # self.search_params_logic += [:collections_filter]
-    # self.search_params_logic += [:add_access_controls_to_solr_params]
-    (@response, @document_list) = search_results(params) #, search_params_logic)
+    @results = Collection.order(updated_at: :desc)
+
     respond_to do |format|
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }
