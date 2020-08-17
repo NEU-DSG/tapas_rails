@@ -14,13 +14,6 @@
 //= require jquery_ujs
 //= require jquery-ui
 //= require jquery-ui/widgets/resizable
-
-//
-//= require bootstrap/button
-//= require bootstrap/tooltip
-//= require bootstrap/popover
-//= require bootstrap/tab
-//= require bootstrap/carousel
 //= require activestorage
 //= require plugins
 //= require tapasApp

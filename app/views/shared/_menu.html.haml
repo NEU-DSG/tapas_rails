@@ -9,8 +9,6 @@
     %li{:class=>klass}
       %a{:href=> l.link_href, :class=>!child_links.blank? ? "dropdown-toggle" : "", "data-target"=> "#", "data-toggle"=>!child_links.blank? ? "dropdown": ""}
         =l.link_text
-        -if !child_links.blank?
-          %span.caret
       -if !child_links.blank?
         %ul.dropdown-menu
           - child_links.each do |cl|
