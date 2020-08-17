@@ -14,10 +14,6 @@ gem 'mysql2', '0.5.3'
 
 # gem 'minitest', '4.7.5'
 
-# Use SCSS for stylesheets
-# gem 'sass-rails', '~> 4.0.2'
-gem 'bootstrap-sass', '3.3.4.1'
-
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
@@ -112,32 +108,28 @@ gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/e
 # gem 'debugger', group: [:development, :test]
 
 group :development, :test do
-  gem "pry"
-  gem "rspec-rails", "~> 3"
-  gem "rspec-its"
-  gem "sunspot_solr"
-  gem "jettywrapper"
   gem "factory_bot_rails"
+  gem "jettywrapper"
+  gem "pry"
+  gem "rspec-its"
+  gem "rspec-rails", "~> 3"
 end
 
+gem 'active-fedora', "~> 11.0"
+gem 'active_fedora-datastreams'
+gem 'carrierwave', '~> 1.3.1'
+gem "cancancan"
 gem "devise"
 gem "devise-guests", "~> 0.3"
 gem 'devise_invitable', '~> 2.0.0'
-gem "cancancan"
-
+gem "forty_facets"
+gem "git"
+gem "haml-rails", "~> 2.0"
+gem "json", "~> 2.3"
+gem 'openseadragon'
 gem "rsolr"
-
+gem 'simple_form'
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test
 gem 'simplecov-rcov', :require => false, :group => :test
-gem "git"
-
-gem "json", "~> 2.3"
-gem 'simple_form'
-gem 'active-fedora', "~> 11.0"
-gem 'active_fedora-datastreams'
-gem 'openseadragon'
-
-gem "haml-rails", "~> 2.0"
 gem 'sprockets', '~> 3.7.2'
-gem 'carrierwave', '~> 1.3.1'
