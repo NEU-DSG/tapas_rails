@@ -25,6 +25,35 @@
         </div>
       </div>
 
+      <% description_filter = @search.filter(:description) %>
+      <div class="filter">
+        <div class="filter-title">
+          <%= description_filter.name.titlecase %>
+        </div>
+        <div class="filter-values">
+          <%= text_field_tag 'search[description]', description_filter.value, class: 'form-control', placeholder: "This project..." %>
+        </div>
+      </div>
+
+      <% depositor_filter = @search.filter(:depositor) %>
+      <div class="filter">
+        <div class="filter-title">
+          <%= depositor_filter.name.pluralize.titlecase %>
+        </div>
+        <div class="filter-values">
+          <ul class="selected">
+            <% depositor_filter.selected.each do |dep| %>
+              <li><%= link_to dep.email, depositor_filter.remove(dep).path %></li>
+            <% end %>
+          </ul>
+          <ul class="selectable">
+            <% depositor_filter.facet.reject(&:selected).each do |facet| %>
+              <% dep = facet.entity %>
+              <li><%= link_to dep.email, depositor_filter.add(dep).path %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
       <div class="dropdown">
         <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" id="sort-dropdown-menu-button" aria-haspopup="true" aria-expanded="false">
           Sort by <%= @search.order.title if @search.order %>
