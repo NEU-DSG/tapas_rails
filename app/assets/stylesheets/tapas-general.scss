@@ -2,6 +2,14 @@
   max-width: 250px;
 }
 
+.filter .filter-values .selected {
+    list-style: none;
+    a:before {
+        content: "x";
+        margin-right: 5px;
+    }
+}
+
 #toolbar {
  z-index: 1600;
  position: fixed;
