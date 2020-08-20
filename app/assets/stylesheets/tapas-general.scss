@@ -2,11 +2,14 @@
   max-width: 250px;
 }
 
-.filter .filter-values .selected {
-    list-style: none;
-    a:before {
-        content: "x";
-        margin-right: 5px;
+.filter {
+    margin-top: 16px;
+    .filter-values .selected {
+        list-style: noneone;
+        a:before {
+            content: "x";
+            margin-right: 5px;
+        }
     }
 }
 
