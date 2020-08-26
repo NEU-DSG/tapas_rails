@@ -82,7 +82,7 @@ TapasRails::Application.routes.draw do
   get 'my_records' => 'users#my_records'
 
   get 'admin/users/index' => 'users#admin_index', as: 'admin_users'
-  delete 'admin/users/delete' => 'users#admin_bulk_destroy', as: 'admin_destroy_users'
+  post 'admin/users/index' => 'users#admin_bulk_actions', as: 'admin_bulk_users'
   get 'admin/users/:id' => 'users#admin_show'
   post 'admin/users' => 'users#admin_create', as: 'admin_create_user'
 

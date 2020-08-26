@@ -46,9 +46,21 @@ class UsersController < CatalogController
     end
   end
 
-  def admin_bulk_destroy
-    users = User.where(id: params[:user_ids])
-    users.each do |user|
+  def admin_bulk_actions
+    # NOTE: (charles) We have disabled checking both boxes in JavaScript,
+    # but the admin might have worked around that. To be safe, we're going
+    # to assume that if the admin has checked a user's restore check box,
+    # then we should restore it --- thus we take the difference
+    # `params[:destroy_user_ids] - params[:restore_user_ids]` when determining
+    # which users to destroy
+    restore_users = User.where(id: params[:restore_user_ids])
+    destroy_users = User.where(id: params[:destroy_user_ids] - params[:restore_user_ids])
+
+    restore_users.each do |user|
+      user.undiscard
+    end
+
+    destroy_users.each do |user|
       user.discarded? ? user.delete : user.discard
     end
 

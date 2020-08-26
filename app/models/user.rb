@@ -34,6 +34,11 @@ class User < ActiveRecord::Base
     self.encrypted_api_key = @api_key
   end
 
+  # https://github.com/jhawthorn/discard#working-with-devise
+  def active_for_authentication?
+    super && !discarded_at
+  end
+
   # Method added by Blacklight; Blacklight uses #to_s on your
   # user class to get a user-displayable login/identifier for
   # the account.

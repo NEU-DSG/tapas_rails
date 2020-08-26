@@ -18,3 +18,4 @@
 //= require plugins
 //= require tapasApp
 //= require jquery.nestable
+//= require users
