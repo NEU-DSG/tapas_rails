@@ -1,7 +1,9 @@
 %h1= "Users"
-%ul.breadcrumb
-  %li= "Users"
-=link_to "Create New User", "/users/sign_up", class:['btn', 'btn-primary', 'btn-large']
+
+%div.container.px-0.py-1
+  =link_to "Create New User", new_user_invitation_path, class:['btn', 'btn-primary', 'btn-large']
+  - if current_user.try(:admin?)
+    = link_to "Bulk actions", admin_users_path, class: ['btn', 'btn-danger', 'btn-large']
 -if @users.length > 0
   %table.table.table-striped
     %tr
@@ -10,7 +12,7 @@
       %th
         = "Updated at"
       %th
-        = "Last Login"
+        = "Last login"
       %th
         = "Role"
       %th
@@ -29,9 +31,9 @@
         %td
           = user.current_sign_in_at
         %td
-          - if !user.admin_at.nil?
+          - if user.admin?
             = "Admin"
-          - elsif !user.paid_at.nil?
+          - elsif user.paid_user?
             = "Paid user"
           - else
             = "Unpaid user"

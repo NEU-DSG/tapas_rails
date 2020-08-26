@@ -1,0 +1,56 @@
+<h1>Bulk User Actions (admin only)</h1>
+
+<% if @users.length > 0 %>
+  <%= form_with(url: admin_destroy_users_path, method: 'delete') do %>
+    <table class="table table-striped">
+      <tr>
+        <th></th>
+        <th>User</th>
+        <th>Updated at</th>
+        <th>Last login</th>
+        <th>Role</th>
+        <th>Discarded at</th>
+      </tr>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <%= check_box_tag("user_ids[]", user.id) %>
+          </td>
+          <td>
+            <%= link_to(user.name, user_path(user.id)) %>
+          </td>
+          <td>
+            <%= user.updated_at %>
+          </td>
+          <td>
+            <%= user.current_sign_in_at %>
+          </td>
+          <td>
+            <% if user.admin? %>
+              "Admin"
+            <% elsif user.paid_user? %>
+              "Paid user"
+            <% else %>
+              "Unpaid user"
+            <% end %>
+          </td>
+          <td>
+            <% unless user.discarded_at.nil? %>
+              <%= user.discarded_at %>
+            <% else %>
+              <%= link_to "Delete", user_path(user.id),
+               class: 'btn btn-danger btn-sm',
+               method: :delete,
+               data: { confirm: "Are you sure you want to delete #{user.email}? (They can be recovered later.)" } %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <%= submit_tag("Delete selected", class: 'btn btn-danger btn-sm', data: { confirm: "Are you sure? This will completely destroy discarded users (and discard non-discarded ones)." }) %>
+  <% end %>
+<% else %>
+  <div class="error">
+    <p>Hm, it seems like there aren't any users yet. <%= link_to "Create a user?", new_user_invitation_path %></p>
+  </div>
+<% end %>

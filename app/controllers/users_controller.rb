@@ -2,7 +2,7 @@ class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
   before_action :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
-  before_action :verify_admin, :only => [:index, :show, :create, :delete, :admin_show]
+  before_action :verify_admin, :only => [:index, :show, :create, :delete, :admin_bulk_destroy, :admin_index, :admin_show]
 
   def my_tapas
     @page_title = "My TAPAS"
@@ -44,6 +44,20 @@ class UsersController < CatalogController
       format.html  # index.html.erb
       format.json  { render json: @users.map(&:email) }
     end
+  end
+
+  def admin_bulk_destroy
+    users = User.where(id: params[:user_ids])
+    users.each do |user|
+      user.discarded? ? user.delete : user.discard
+    end
+
+    redirect_to admin_users_path
+  end
+
+  def admin_index
+    @users = User.order(:name, :email)
+    @users = @users.where("name like ? or email like ?", "%#{params[:term]}%", "%#{params[:term]}%") if params[:term]
   end
 
   def admin_show
