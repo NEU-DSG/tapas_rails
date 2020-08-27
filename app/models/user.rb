@@ -132,17 +132,6 @@ class User < ActiveRecord::Base
     # end
   end
 
-
-  def after_database_authentication
-    if !self.admin?
-      if self.check_paid_status
-        self.role = 'paid_user'
-      else
-        self.role = 'unpaid_user'
-      end
-    end
-  end
-
   private
 
   def generate_api_key
