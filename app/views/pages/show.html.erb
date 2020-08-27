@@ -1,0 +1,77 @@
+<div class="row">
+  <% if current_user && current_user.admin? %>
+    <%= link_to "Edit", edit_page_path(@page), class:['btn', 'btn-info', 'btn-large'] %>
+    <ul class="breadcrumb">
+      <li>
+        <%= link_to("Admin", admin_path) %>
+      </li>
+      <li>
+        <%= link_to("Pages", pages_path) %>
+      </li>
+      <li>
+        <%= @page.title %>
+      </li>
+    </ul>
+  <% end %>
+</div>
+<div class="row">
+  <h2 class="page-header">
+    <%= @page.title %>
+  </h2>
+</div>
+<% if @page.submenu != "" %>
+  <div class="row">
+    <div class="row">
+      <div class="col-sm-9">
+        <%= raw @page.content %>
+      </div>
+      <div class="col-sm-3">
+        <%= render partial: "submenu", locals: {submenu: @page.submenu} %>
+      </div>
+    </div>
+  </div>
+<% else %>
+  <div class="row">
+    <%= raw @page.content %>
+    <% if @page.slug == "home" %>
+      <div class="row">
+        <div class="col-sm-4">
+          <h3>
+            <%= "Featured" %>
+          </h3>
+          <%= render partial: "core_files/featured", locals: {featured: @featured_core} %>
+        </div>
+        <div class="col-sm-4">
+          <h3>
+            <%= "News" %>
+          </h3>
+          <%= render partial: "news_items/recent_news", locals: {news_items: @news_items} %>
+        </div>
+        <div class="col-sm-4">
+          <h3>
+            <%= "Follow Us" %>
+          </h3>
+          <a class="twitter-timeline" href="https://twitter.com/TAPAS_Project?ref_src=twsrc%5Etfw">
+            <% "Tweets by @tapas_project" %>
+            </a>
+            <script>
+
+              !function (d, s, id) {
+                var js,
+                  fjs = d.getElementsByTagName(s)[0],
+                  p = /^http:/.test(d.location)
+                    ? 'http'
+                    : 'https';
+                if (!d.getElementById(id)) {
+                  js = d.createElement(s);
+                  js.id = id;
+                  js.src = p + "://platform.twitter.com/widgets.js";
+                  fjs.parentNode.insertBefore(js, fjs);
+                }
+              }(document, "script", "twitter-wjs");
+            </script>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>

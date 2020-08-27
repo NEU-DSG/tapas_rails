@@ -11,11 +11,4 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery_ujs
-//= require jquery-ui
-//= require jquery-ui/widgets/resizable
 //= require activestorage
-//= require plugins
-//= require tapasApp
-//= require jquery.nestable
-//= require users
