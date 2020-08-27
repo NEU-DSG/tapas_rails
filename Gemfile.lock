@@ -615,7 +615,6 @@ DEPENDENCIES
   aws-sdk-s3
   blacklight
   blacklight-gallery
-  bootstrap-sass (= 3.3.4.1)
   cancancan
   capistrano (~> 3.1)
   capistrano-git-submodule-strategy (~> 0.1)!
