@@ -1,7 +1,5 @@
 class Page < ActiveRecord::Base
   extend FriendlyId
-  include SolrHelpers
-
 
   attr_accessible :title, :content, :slug, :publish, :submenu if Rails::VERSION::MAJOR < 4
   validates_presence_of :title, :content, :slug

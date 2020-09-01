@@ -1,0 +1,32 @@
+<%= form_for @page do |f| %>
+  <div class="container">
+    <div class="row">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <%= f.label :title, "Title", class: "control-label col-md-2" %>
+          <%= f.text_field :title, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Page Title" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :slug, "URL Slug", class: "control-label col-md-2" %>
+          <%= f.text_field :slug, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "test_path" %>
+          <p class="help-block">
+            Do not include leading slash
+          </p>
+        </div>
+        <div class="form-group">
+          <%= f.label :publish, class: "control-label col-md-2" %>
+          <%= f.check_box :publish, {}, "true" %>
+        </div>
+        <div class="form-group">
+          <%= f.label :submenu, class: "control-label col-md-2" %>
+          <%= f.select :submenu, options_for_select(@menus, !@page.submenu.blank? ? @page.submenu : nil), {:prompt => "Which submenu belongs on this page"}, {class: "form-control"} %>
+        </div>
+        <div class="form-group">
+          <%= f.label :content, "Content", class: "control-label col-md-2" %>
+          <%= f.text_area :content, required: true, class: "form-control", placeholder: "HTML Content of page", rows: 16, editor_options: {html: true} %>
+        </div>
+      </div>
+    </div>
+    <hr/>
+  </div>
+<% end %>

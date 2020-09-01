@@ -14,20 +14,16 @@
     </ul>
   <% end %>
 </div>
-<div class="row">
-  <h2 class="page-header">
-    <%= @page.title %>
-  </h2>
-</div>
+<h2 class="page-header">
+  <%= @page.title %>
+</h2>
 <% if @page.submenu != "" %>
   <div class="row">
-    <div class="row">
-      <div class="col-sm-9">
-        <%= raw @page.content %>
-      </div>
-      <div class="col-sm-3">
-        <%= render partial: "submenu", locals: {submenu: @page.submenu} %>
-      </div>
+    <div class="col-sm-9">
+      <%= raw @page.content %>
+    </div>
+    <div class="col-sm-3">
+      <%= render partial: "submenu", locals: {submenu: @page.submenu} %>
     </div>
   </div>
 <% else %>
