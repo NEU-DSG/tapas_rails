@@ -14,7 +14,8 @@ module Blacklight::Solr::Document::Mods
   end
 
   def export_as_mods_xml
-    cf = ActiveFedora::Base.find(self.pid, cast: true)
+    raise "This isn't going to work because we're not using ActiveFedora"
+    # cf = ActiveFedora::Base.find(self.pid, cast: true)
     return Nokogiri::XML(cf.mods.content).to_xml  {|config| config.no_declaration}.strip
   end
 

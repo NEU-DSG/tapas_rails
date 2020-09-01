@@ -16,8 +16,7 @@ class InstitutionsController < ApplicationController
   def show
     @institution = Institution.find(params[:id])
     @page_title = @institution.name
-    count = ActiveFedora::SolrService.count("institutions_ssim:\"#{@institution.id}\"")
-    @communities = ActiveFedora::SolrService.query("institutions_ssim:\"#{@institution.id}\"", rows: count)
+    @communities = Community.where(institution: @institution)
   end
 
   def edit

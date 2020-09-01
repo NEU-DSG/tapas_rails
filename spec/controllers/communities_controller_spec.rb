@@ -32,7 +32,6 @@ describe CommunitiesController do
 
     describe 'POST #upsert' do
       before(:all) { Resque.inline = true }
-      after(:each) { ActiveFedora::Base.delete_all }
       after(:all) { Resque.inline = false }
       let(:community) { Community.find_by_did params[:did] }
 
@@ -106,15 +105,12 @@ describe CommunitiesController do
       @communityCreated.save!
       @did = @communityCreated.did
     }
-    after(:each) {
-
-      ActiveFedora::Base.delete_all }
 
     after(:all) {
 
       Resque.inline = false
       @user.destroy
-     }
+    }
 
     let(:community) {
 
@@ -206,7 +202,6 @@ describe CommunitiesController do
   end
 
   after(:all){
-    ActiveFedora::Base.delete_all
     User.destroy_all
   }
 end

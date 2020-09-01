@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'sass-rails'
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2'
 
@@ -115,8 +117,6 @@ group :development, :test do
   gem "rspec-rails", "~> 3"
 end
 
-gem 'active-fedora', "~> 11.0"
-gem 'active_fedora-datastreams'
 gem 'carrierwave', '~> 1.3.1'
 gem "cancancan"
 gem "devise"
@@ -127,7 +127,6 @@ gem "git"
 gem "haml-rails", "~> 2.0"
 gem "json", "~> 2.3"
 gem 'openseadragon'
-gem "rsolr"
 gem 'simple_form'
 gem 'simplecov', :require => false, :group => :test
 gem 'simplecov-json', :require => false, :group => :test

@@ -29,8 +29,6 @@ describe CollectionsController do
   # end
 
   describe 'POST upsert' do
-    after(:all) { ActiveFedora::Base.delete_all }
-
     it '403s for unauthorized requests' do
       set_auth_token('bupkes')
       post :upsert, :did => SecureRandom.uuid
@@ -112,7 +110,6 @@ describe CollectionsController do
     after(:all) {
 
       Resque.inline = false
-      ActiveFedora::Base.delete_all
       User.destroy_all
     }
 
@@ -246,7 +243,6 @@ describe CollectionsController do
   end
 
   after(:all){
-    ActiveFedora::Base.delete_all
     User.destroy_all
   }
 end

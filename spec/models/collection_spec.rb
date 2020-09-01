@@ -6,12 +6,6 @@ describe Collection do
   describe "Core File drupal access" do
     let(:coll) { FactoryBot.create(:collection) }
 
-    after(:each) {
-      ActiveFedora::Base.all.each do |c|
-        c.delete
-      end
-    }
-
     context "on a collection that has been made public" do
       it 'is set to public' do
         one, two = FactoryBot.create_list(:core_file, 2)
@@ -103,8 +97,6 @@ describe Collection do
   end
 
   describe "#as_json" do
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it 'returns a valueless hash with no data' do
       result = Collection.new.as_json
 
