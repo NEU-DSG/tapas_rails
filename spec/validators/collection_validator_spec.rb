@@ -8,8 +8,6 @@ describe CollectionValidator do
     @community = FactoryBot.create :community
   end
 
-  after(:all) { ActiveFedora::Base.delete_all }
-
   let(:params) do
     { title: "Sample Collection",
       did: SecureRandom.uuid,

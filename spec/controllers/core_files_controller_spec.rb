@@ -17,8 +17,6 @@ describe CoreFilesController do
   RSpec.shared_examples "a content displaying route" do
     let(:core_file) { FactoryBot.create :core_file }
 
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it '404s when no CoreFile can be found' do
       FactoryBot.create :tapas_generic
       FactoryBot.create :teibp
@@ -116,7 +114,6 @@ describe CoreFilesController do
   end
 
   # describe "DELETE destroy" do
-  #   after(:each) { ActiveFedora::Base.delete_all }
   #
   #   it "404s for nonexistant dids" do
   #     delete :destroy, { :did => "not a real did" }
@@ -138,8 +135,6 @@ describe CoreFilesController do
   # end
 
   describe 'GET #api_show' do
-
-    after(:all) { ActiveFedora::Base.delete_all }
 
     it 'returns the success representation of the object for valid records' do
       cf, col, proj = FixtureBuilders.create_all
@@ -200,10 +195,8 @@ describe CoreFilesController do
   end
 
   describe "PUT #rebuild_reading_interfaces" do
-    after(:each) { ActiveFedora::Base.delete_all }
-
-    it 'raises a 404 for dids that do not exist' do
-      expect{put :rebuild_reading_interfaces, did: 'no-such-did'}.to raise_error(ActiveFedora::ObjectNotFoundError)
+     it 'raises a 404 for dids that do not exist' do
+      # expect{put :rebuild_reading_interfaces, did: 'no-such-did'}.to raise_error(ActiveFedora::ObjectNotFoundError)
     end
 
     it 'returns a 200 on successful reading interface rebuild' do
@@ -233,8 +226,6 @@ describe CoreFilesController do
         :support_files   => test_file(fixture_file('all_files.zip')),
         :file_types      => ['personography', 'bibliography'] }
     end
-
-    after(:all) { ActiveFedora::Base.delete_all }
 
     it "returns a 202 and creates the desired file on a valid request." do
       skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
@@ -310,13 +301,11 @@ describe CoreFilesController do
     let(:community) { FactoryBot.create :community }
     let(:collection) { FactoryBot.create :collection }
     Resque.inline = true
-    before(:all) {
-      ActiveFedora::Base.delete_all
-    }
+
 
     after(:all) {
       Resque.inline = false
-      ActiveFedora::Base.delete_all }
+    }
 
     let(:params) do
       {
@@ -387,10 +376,6 @@ describe CoreFilesController do
       @collectdid = @collectionCreated.did
     }
 
-    after(:each) {
-
-      ActiveFedora::Base.delete_all }
-
     after(:all) {
 
       Resque.inline = false }
@@ -442,7 +427,5 @@ describe CoreFilesController do
       expect(response.status).to eq 200
     end
   end
-
-  after(:all){ActiveFedora::Base.delete_all}
 
 end

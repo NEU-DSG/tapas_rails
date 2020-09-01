@@ -4,7 +4,6 @@ describe Exist::StoreTei do
   include FileHelpers
   include FixtureBuilders
 
-  after(:all) { ActiveFedora::Base.delete_all }
 
   it 'returns a 201 for valid uploads' do
     skip("Test passes locally but not on Travis.") if ENV['TRAVIS']

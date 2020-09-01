@@ -17,8 +17,6 @@ describe CoreFile do
     it { should_not respond_to :collection }
     it { should_not respond_to :collection= }
 
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it "are manipulated as arrays" do
       c, d = FactoryBot.create_list(:collection, 2)
 
@@ -30,8 +28,6 @@ describe CoreFile do
   end
 
   describe '#as_json' do
-    before(:each) { ActiveFedora::Base.delete_all }
-
     context 'with a complete record' do
       it 'returns a populated hash when given values' do
         core_file, collections, project = FixtureBuilders.create_all
@@ -62,9 +58,6 @@ describe CoreFile do
   end
 
   describe "#project" do
-
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it "returns nil for CoreFiles that belong to no collections" do
       expect(core_file.project).to be nil
     end
@@ -90,8 +83,6 @@ describe CoreFile do
   describe "TFC relationship" do
     it { respond_to :tfc }
     it { respond_to :tfc= }
-
-    after(:each) { ActiveFedora::Base.delete_all }
 
     it "can be set on the CoreFile but is written to the TEIFile" do
       tei  = FactoryBot.create :tei_file
@@ -133,8 +124,6 @@ describe CoreFile do
     it { respond_to :placeography_for }
     it { respond_to :placeography_for= }
 
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it "are manipulated as arrays" do
       other_collection = FactoryBot.create :collection
 
@@ -152,8 +141,6 @@ describe CoreFile do
   describe "Page Image relationships" do
     it { respond_to :page_images }
     it { respond_to :page_images= }
-
-    after(:each) { ActiveFedora::Base.delete_all }
 
     it "can be set on the Core File object but are written to the IMF" do
       imf = FactoryBot.create :image_master_file
@@ -212,8 +199,6 @@ describe CoreFile do
   end
 
   describe "#file_type" do
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it 'returns :ography for files that have a specified ography type' do
       CoreFile.all_ography_read_methods.each do |ography|
         core_file.send(:"#{ography}=", [collection])
@@ -228,8 +213,6 @@ describe CoreFile do
   end
 
   describe "#clear_ographies!" do
-    after(:each) { ActiveFedora::Base.delete_all }
-
     it 'clears all set ographies' do
       core_file.personography_for << collection
       core_file.orgography_for << collection
@@ -249,8 +232,6 @@ describe CoreFile do
   end
 
   describe '#calculate_drupal_access' do
-    after(:all) { ActiveFedora::Base.delete_all }
-
     it 'saves the object as private if it has no collections' do
       core_file.save!
       expect(core_file.drupal_access).to eq 'private'

@@ -5,9 +5,7 @@ describe SupportFileMap do
   let(:collection) { FactoryBot.create :collection }
   let(:community) { FactoryBot.create :community }
 
-  after(:each) { ActiveFedora::Base.delete_all }
-
-  describe "#download_url" do
+    describe "#download_url" do
 
     it "creates a download url based on the given content file object" do
       x = SupportFileMap.new(nil)
@@ -19,9 +17,7 @@ describe SupportFileMap do
   end
 
   describe '.build_map' do
-    after(:all) { ActiveFedora::Base.delete_all }
-
-    def attach_ography(ography, type, collection)
+      def attach_ography(ography, type, collection)
       core_file = FactoryBot.create :core_file
 
       assignment = :"#{type}_for="

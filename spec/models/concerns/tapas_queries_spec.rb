@@ -7,8 +7,6 @@ describe 'TapasQueries' do
 
   describe '#all_ography_tei_files' do
 
-    after(:all) { ActiveFedora::Base.delete_all }
-
     def create_ography(collection, ography_assignment)
       core_file = FactoryBot.create(:core_file)
       core_file.send(ography_assignment, [collection])

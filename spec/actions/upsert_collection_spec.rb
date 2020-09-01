@@ -146,6 +146,5 @@ describe UpsertCollection do
   end
 
   def clean_up
-    ActiveFedora::Base.delete_all
   end
 end
