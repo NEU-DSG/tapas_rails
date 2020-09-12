@@ -117,6 +117,7 @@ group :development, :test do
   gem "rspec-rails", "~> 3"
 end
 
+gem 'bootstrap', '~> 4.2.1'
 gem 'carrierwave', '~> 1.3.1'
 gem "cancancan"
 gem "devise"

@@ -25,22 +25,24 @@
 <h2 class="page-header">
   <%= @core_file.title %>
 </h2>
-<div class="tabbable tabs-left vertical-tabs node">
-  <ul class="nav nav-tabs vertical-tabs-list">
-    <li class="vertical-tab-button active">
+
+<div class="row">
+  <ul class="nav nav-tabs" id="core-file-tabs" role="tablist">
+    <li class="nav-item">
       <%= link_to "Reader", '#reader' %>
     </li>
-    <li class="vertical-tab-button">
+    <li class="nav-item">
       <%= link_to "Metadata", '#metadata' %>
     </li>
-    <li class="vertical-tab-button">
+    <li class="nav-item">
       <%= link_to "Files", '#files' %>
     </li>
-    <li class="vertical-tab-button">
+    <li class="nav-item">
       <%= link_to "Project Details", '#project_details' %>
     </li>
   </ul>
-  <div class="tab-content vertical-tabs-panes">
+
+  <div class="tab-content">
     <div class="tab-pane active" id="reader">
       <% # FIXME: (charles) It's not clear why these partials are here. @view_packages is not defined. %>
       <% # = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages} %>
