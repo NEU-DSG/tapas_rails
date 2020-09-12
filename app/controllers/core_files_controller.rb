@@ -1,7 +1,6 @@
 class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
-  include ControllerHelper
   include TapasRails::ViewPackages
 
   # self.copy_blacklight_config_from(CatalogController)
@@ -13,7 +12,6 @@ class CoreFilesController < ApplicationController
   # TODO investigate this after ruby version upgrades complete
   # skip_before_action :load_asset, :load_datastream, :authorize_download!
 
-  # We can do better by using SOLR check instead of Fedora
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show
   # before_action :enforce_show_permissions, :only=>:show
