@@ -29,14 +29,16 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  def contributors
-    users.where(core_files_users: { user_type: "contributor" })
-  end
-
-  def contributors=(user_ids)
-    user_ids.reject(&:blank?).each do |user_id|
-      CoreFilesUser.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "contributor")
+  def canonical_object_content(style="tapas-generic")
+    raise "No canonical object" unless canonical_object.attached?
+    
+    xml = canonical_object.download.open do |f|
+      Nokogiri::XML(f)
     end
+
+    xslt = Rails.root.join("public", "view_packages", style)
+
+    xslt.transform(xml)
   end
 
   def collections=(collection_ids)
@@ -50,10 +52,23 @@ class CoreFile < ActiveRecord::Base
     collections.first.community
   end
 
+  def contributors
+    users.where(core_files_users: { user_type: "contributor" })
+  end
+
+  def contributors=(user_ids)
+    user_ids.reject(&:blank?).each do |user_id|
+      CoreFilesUser.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "contributor")
+    end
+  end
+
   def project
     # Just an alias for #community
     community
   end
+
+  # TBH, I'm not sure how many of the methods below here and before the private
+  # macro are necessary
 
   def clear_ographies!
     CoreFile.all_ography_read_methods.each do |ography_type|
