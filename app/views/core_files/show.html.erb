@@ -27,8 +27,8 @@
 </h2>
 
 <div class="row">
-  <ul class="nav nav-tabs" id="core-file-tabs" role="tablist">
-    <li class="nav-item">
+  <ul class="flex-column nav nav-tabs" id="core-file-tabs" role="tablist">
+    <li class="active nav-item">
       <%= link_to "Reader", '#reader' %>
     </li>
     <li class="nav-item">
@@ -42,11 +42,10 @@
     </li>
   </ul>
 
-  <div class="tab-content">
+  <div class="border tab-content">
     <div class="tab-pane active" id="reader">
-      <% # FIXME: (charles) It's not clear why these partials are here. @view_packages is not defined. %>
-      <% # = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages} %>
-      <% # = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages} %>
+      <%= render partial:'view_package_options', locals: { core_file: @core_file, view_packages: @view_packages } %>
+      <%= render partial:'reading_interface', locals: { core_file: @core_file, view_packages: @view_packages} %>
     </div>
     <div class="tab-pane" id="metadata">
       <%= @mods_html %>
