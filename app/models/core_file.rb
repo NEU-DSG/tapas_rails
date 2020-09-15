@@ -32,11 +32,9 @@ class CoreFile < ActiveRecord::Base
   def canonical_object_content(style="tapas-generic")
     raise "No canonical object" unless canonical_object.attached?
     
-    xml = canonical_object.download.open do |f|
-      Nokogiri::XML(f)
-    end
-
-    xslt = Rails.root.join("public", "view_packages", style)
+    xml = Nokogiri::XML(canonical_object.download)
+    xslt_file = Dir[Rails.root.join("public", "view_packages", style, "*.xslt")].first
+    xslt = Nokogiri::XSLT(File.read(xslt_file))
 
     xslt.transform(xml)
   end

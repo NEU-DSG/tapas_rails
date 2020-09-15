@@ -103,7 +103,7 @@ class CoreFilesController < ApplicationController
 
   def show
     @core_file = CoreFile.find(params[:id])
-    @view_packages = [["Styled TEI", :styled], ["Raw XML", :tei]]
+    @view_packages = [["Styled TEI", 'tapas-generic'], ["Raw XML", 'teibp']]
   end
 
   def api_show

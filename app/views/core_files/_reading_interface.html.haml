@@ -1,7 +1,7 @@
 %div.reading
   -@view_packages.each do |view|
     %div{class:"reader_#{view[1]}"}
-      -if view[1] == :tei
+      -if view[1] == 'teibp'
         %div.row
           %div.checkbox
             %label{for:"toggle_word_wrap"}
@@ -12,9 +12,9 @@
               ="Toggle Invisibles"
             =check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles'
         %pre#ace
-          = @core_file.canonical_object.content.content.force_encoding('utf-8')
+          = @core_file.canonical_object_content(view[1]).content.force_encoding('utf-8')
       -else
-        - reader_view = @core_file.send(view[1].to_sym)
+        - reader_view = @core_file.canonical_object_content(view[1])
         - if reader_view && reader_view.content.content
           = reader_view.content.content.html_safe.force_encoding('utf-8')
         - else
