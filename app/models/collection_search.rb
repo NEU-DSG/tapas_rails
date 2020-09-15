@@ -1,6 +1,5 @@
-class CommunitySearch < FortyFacets::FacetSearch
-  model 'Community'
-  scope :kept
+class CollectionSearch < FortyFacets::FacetSearch
+  model 'Collection'
 
   text :title
   text :description
