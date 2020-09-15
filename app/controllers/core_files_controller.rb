@@ -37,6 +37,7 @@ class CoreFilesController < ApplicationController
 
   def create
     file = CoreFile.create!(core_file_params.merge({ depositor_id: current_user.id }))
+    file.set_authors(params[:core_file][:author_ids])
 
     redirect_to file
   end
@@ -194,13 +195,13 @@ class CoreFilesController < ApplicationController
   def core_file_params
     params.require(:core_file).permit(
       :canonical_object,
-      :collections,
       :depositor,
       :description,
       :featured,
       :title,
-      :authors => [],
-      :contributors => [],
+      :author_ids => [],
+      :collection_ids => [],
+      :contributor_ids => [],
       :thumbnails => []
     )
   end

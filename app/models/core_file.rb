@@ -3,7 +3,11 @@ class CoreFile < ActiveRecord::Base
 
   belongs_to :depositor, class_name: "User"
 
-  has_and_belongs_to_many :users
+  has_many :core_files_users
+  has_many :authors, -> { where(user_type: 'author') }, through: :core_files_users, class_name: 'User', source: :user
+  has_many :contributors, -> { where(user_type: 'contributor') }, through: :core_files_users, class_name: 'User', source: :user
+  has_many :users, through: :core_files_users
+
   has_and_belongs_to_many :collections
 
   # ActiveStorage
@@ -19,19 +23,9 @@ class CoreFile < ActiveRecord::Base
     all_ography_types.map { |x| :"#{x}_for" }
   end
 
-  def authors
-    users.where(core_files_users: { user_type: "author" })
-  end
-
-  def authors=(user_ids)
-    user_ids.reject(&:blank?).each do |user_id|
-      CoreFilesUser.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "author")
-    end
-  end
-
   def canonical_object_content(style="tapas-generic")
     raise "No canonical object" unless canonical_object.attached?
-    
+
     xml = Nokogiri::XML(canonical_object.download)
     xslt_file = Dir[Rails.root.join("public", "view_packages", style, "*.xslt")].first
     xslt = Nokogiri::XSLT(File.read(xslt_file))
@@ -39,25 +33,9 @@ class CoreFile < ActiveRecord::Base
     xslt.transform(xml)
   end
 
-  def collections=(collection_ids)
-    collection_ids.reject(&:blank?).each do |collection_id|
-      collections << Collection.find(collection_id)
-    end
-  end
-
   def community
     # All collections that a CoreFile belongs to will belong to the same community
     collections.first.community
-  end
-
-  def contributors
-    users.where(core_files_users: { user_type: "contributor" })
-  end
-
-  def contributors=(user_ids)
-    user_ids.reject(&:blank?).each do |user_id|
-      CoreFilesUser.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "contributor")
-    end
   end
 
   def project
@@ -143,6 +121,10 @@ class CoreFile < ActiveRecord::Base
   def remove_thumbnail
     self.thumbnails = []
     self.save!
+  end
+
+  def set_authors(ids)
+    CoreFilesUser.where(user_id: ids).update_all(user_type: 'author')
   end
 
   private
