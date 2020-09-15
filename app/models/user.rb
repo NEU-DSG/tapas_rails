@@ -26,6 +26,8 @@ class User < ActiveRecord::Base
 
   has_many :community_members
   has_many :communities, through: :community_members
+  has_many :core_files_users
+  has_many :core_files, through: :core_files_users
 
   ACCOUNT_TYPES = %w[free teic teic_inst]
 
