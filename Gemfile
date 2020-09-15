@@ -21,6 +21,8 @@ group :development, :test do
   gem 'pry'
   gem 'rspec-its'
   gem 'rspec-rails', '~> 3'
+  gem 'rubocop'
+  gem 'solargraph'
 end
 
 gem 'aws-sdk-s3', require: false

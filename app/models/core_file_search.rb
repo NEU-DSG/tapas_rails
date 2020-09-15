@@ -1,7 +1,5 @@
-class CommunitySearch < FortyFacets::FacetSearch
-  model 'Community'
-  scope :kept
-
+class CoreFileSearch < FortyFacets::FacetSearch
+  model 'CoreFile'
   text :title
   text :description
   facet :depositor, name: 'Depositor'

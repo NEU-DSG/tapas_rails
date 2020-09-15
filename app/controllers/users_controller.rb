@@ -17,7 +17,7 @@ class UsersController < CatalogController
     @page_title = "My Projects"
     @user = current_user
     @search = CommunitySearch.new(params)
-    @results = @search.result
+    @results = @search.result.accessible_by(current_ability)
 
     render 'my_projects'
   end
@@ -25,14 +25,18 @@ class UsersController < CatalogController
   def my_collections
     @page_title = "My Collections"
     @user = current_user
-    @results = Collection.kept.accessible_by(current_ability)
+    @search = CollectionSearch.new(params)
+    @results = @search.result.accessible_by(current_ability)
+
     render 'my_collections'
   end
 
   def my_records
     @page_title = "My Records"
     @user = current_user
-    @results = CoreFile.kept.accessible_by(current_ability)
+    @search = CoreFileSearch.new(params)
+    @results = @search.result.accessible_by(current_ability)
+
     render 'my_records'
   end
 
