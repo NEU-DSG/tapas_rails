@@ -7,16 +7,6 @@ class CommunitiesController < ApplicationController
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
 
-  class CommunitySearch < FortyFacets::FacetSearch
-    model 'Community'
-    text :title
-    text :description
-    facet :depositor, name: 'Depositor'
-    orders 'title' => :title,
-           'time, newest first' => 'created_at desc',
-           'time, oldest first' => 'created_at asc'
-  end
-
   def upsert
     if params[:thumbnail]
       params[:thumbnail] = create_temp_file(params[:thumbnail])
@@ -27,7 +17,6 @@ class CommunitiesController < ApplicationController
     pretty_json(202) and return
   end
 
-  #This method displays all the communities/projects created in the database
   def index
     @page_title = "All Projects"
 
