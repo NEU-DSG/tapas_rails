@@ -4,8 +4,8 @@ class CoreFile < ActiveRecord::Base
   belongs_to :depositor, class_name: "User"
 
   has_many :core_files_users
-  has_many :authors, -> { where(user_type: 'author') }, through: :core_files_users, class_name: 'User', source: :user
-  has_many :contributors, -> { where(user_type: 'contributor') }, through: :core_files_users, class_name: 'User', source: :user
+  has_many :authors, -> { where(core_files_users: { user_type: 'author' }) }, through: :core_files_users, class_name: 'User', source: :user
+  has_many :contributors, -> { where(core_files_users: { user_type: 'contributor' }) }, through: :core_files_users, class_name: 'User', source: :user
   has_many :users, through: :core_files_users
 
   has_and_belongs_to_many :collections

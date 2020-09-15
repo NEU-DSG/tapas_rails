@@ -27,6 +27,22 @@ describe CoreFile do
     end
   end
 
+  describe "Users relationships" do
+    let(:author) { FactoryBot.create :user }
+    let(:contributor) { FactoryBot.create :user }
+    let(:depositor) { FactoryBot.create :user }
+    let(:file) { FactoryBot.create :core_file, depositor: depositor }
+
+
+    it "has authors and contributors" do
+      file.authors << author
+      file.contributors << contributor
+
+      expect(file.authors).to match_array [author]
+      expect(file.contributors).to match_array [contributor]
+    end
+  end
+
   describe '#as_json' do
     context 'with a complete record' do
       it 'returns a populated hash when given values' do
