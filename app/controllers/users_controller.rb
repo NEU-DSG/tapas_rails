@@ -16,7 +16,8 @@ class UsersController < CatalogController
   def my_projects
     @page_title = "My Projects"
     @user = current_user
-    @results = @user.communities
+    @search = CommunitySearch.new(params)
+    @results = @search.result
 
     render 'my_projects'
   end
