@@ -20,7 +20,9 @@ class CoreFilesController < ApplicationController
 
   def index
     @page_title = "All CoreFiles"
-    @results = CoreFile.order(updated_at: :desc)
+
+    @search = CoreFileSearch.new(params)
+    @results = @search.result
 
     respond_to do |format|
       format.html { render :template => 'shared/index' }
