@@ -1,0 +1,40 @@
+<div class="reading">
+  <% @view_packages.each do |view| %>
+    <div class="reader_<%= view[1] %>">
+      <% if view[1] == 'teibp' %>
+        <div class="row">
+          <div class="checkbox">
+            <label for="toggle_word_wrap">
+              <%= "Toggle Soft Wrap" %>
+            </label>
+            <%= check_box_tag :toggle_word_wrap,  id:'toggle_word_wrap', name:'toggle_word_wrap' %>
+          </div>
+          <div class="checkbox">
+            <label for="toggle_invisibles">
+              <%= "Toggle Invisibles" %>
+            </label>
+            <%= check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles' %>
+          </div>
+        </div>
+        <pre id="ace">
+        </pre>
+        <div id="reader-node">
+      <% else %>
+        <% reader_view = [] %>
+        <% # - if reader_view && reader_view.content.content %>
+        <% #   = reader_view.content.content.html_safe.force_encoding('utf-8') %>
+        <% # - else %>
+        <% #   = "This view package could not be rendered" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+<script src="/assets/saxon-js/SaxonJS2.js"></script>
+<script>
+  const doc = SaxonJS.transform({
+    sourceLocation: '<%= rails_blob_path(@core_file.canonical_object) %>',
+    stylesheetLocation: '/assets/tei2html.sef.json'
+  })
+
+  document.getElementById('reader-node').appendChild(doc.principalResult)
+</script>
