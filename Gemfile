@@ -25,6 +25,12 @@ group :development, :test do
   gem 'solargraph'
 end
 
+group :test do
+  gem 'simplecov-json', :require => false
+  gem 'simplecov-rcov', :require => false
+  gem 'simplecov', :require => false
+end
+
 gem 'aws-sdk-s3', require: false
 gem 'blacklight-gallery'
 gem 'blacklight'
@@ -61,9 +67,6 @@ gem 'rest-client'
 gem 'rubyzip'
 gem 'sass-rails'
 gem 'simple_form'
-gem 'simplecov-json', :require => false, :group => :test
-gem 'simplecov-rcov', :require => false, :group => :test
-gem 'simplecov', :require => false, :group => :test
 gem 'sprockets', '~> 3.7.2'
 gem 'therubyracer', platforms: :ruby
 gem 'turbolinks'

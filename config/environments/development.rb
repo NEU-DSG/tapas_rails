@@ -40,6 +40,7 @@ TapasRails::Application.configure do
   # number of complex assets.
   config.assets.debug = true
   config.assets.compress = false
+  config.serve_static_assets = true
 
   # Parse ~/.gitconfig in an attempt to load the email address of the currently
   # developing developer.  Return a nonsense default otherwise

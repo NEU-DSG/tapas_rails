@@ -23,16 +23,6 @@ class CoreFile < ActiveRecord::Base
     all_ography_types.map { |x| :"#{x}_for" }
   end
 
-  def canonical_object_content(style="tapas-generic")
-    raise "No canonical object" unless canonical_object.attached?
-
-    xml = Nokogiri::XML(canonical_object.download)
-    xslt_file = Dir[Rails.root.join("public", "view_packages", style, "*.xslt")].first
-    xslt = Nokogiri::XSLT(File.read(xslt_file))
-
-    xslt.transform(xml)
-  end
-
   def community
     # All collections that a CoreFile belongs to will belong to the same community
     collections.first.community
