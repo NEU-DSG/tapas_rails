@@ -106,6 +106,10 @@ Then follow these steps:
 4. cd to project directory && `bundle install`
 5. Run `rails s` to start the application
 
+To get TEI files to render properly, you'll need to use something like [`xslt3`](https://www.npmjs.com/package/xslt3)
+to compile them to a SEF JSON representation that can be used by the in-browser XSLT processor.
+(See [app/views/core_files/_reading_interface.html.erb](app/views/core_files/_reading_interface.html.erb).)
+
 #### Notes for OSX
 
  - installing nokogiri on OSX: `$ gem install nokogiri -- --with-xml2-include=/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/libxml2 --use-system-libraries`
