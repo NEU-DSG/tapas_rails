@@ -1,8 +1,0 @@
-[submodule "public/reading_interface/tapas-generic"]
-	path = public/reading_interface/tapas-generic
-	url = https://github.com/NEU-DSG/tapas-generic.git
-	branch = develop
-	fetchRecurseSubmodules = yes
-[submodule "public/view_packages"]
-	path = public/view_packages
-	url = https://github.com/NEU-DSG/tapas-view-packages
