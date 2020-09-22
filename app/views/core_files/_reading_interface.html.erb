@@ -31,10 +31,24 @@
 </div>
 <script src="/assets/saxon-js/SaxonJS2.js"></script>
 <script>
-  const doc = SaxonJS.transform({
-    sourceLocation: '<%= rails_blob_path(@core_file.canonical_object) %>',
-    stylesheetLocation: '/assets/tei2html.sef.json'
+
+
+  window.addEventListener('load', function readingEnvLoaded() {
+    const selectionEl = document.getElementById('reading_selector') || {}
+
+    function updateXml() {
+      const selectedOption = selectionEl.selectedOptions && selectionEl.selectedOptions[0] || {}
+      const selectedValue = selectedOption.value || 'tei2html';
+      const doc = SaxonJS.transform({
+        sourceLocation: '<%= rails_blob_path(@core_file.canonical_object) %>',
+        stylesheetLocation: `/assets/${selectedValue}.sef.json`
+      })
+
+      document.getElementById('reader-node').appendChild(doc.principalResult)
+    }
+
+    selectionEl.addEventListener('change', updateXml);
+    updateXml();
   })
 
-  document.getElementById('reader-node').appendChild(doc.principalResult)
 </script>
