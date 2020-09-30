@@ -31,20 +31,40 @@
 </div>
 <script src="/assets/saxon-js/SaxonJS2.js"></script>
 <script>
-
+  function updateReadingInterface(contents) {
+    const readerNode = document.getElementById('reader-node')
+    readerNode.replaceChild(contents, readerNode.firstChild);
+  }
 
   window.addEventListener('load', function readingEnvLoaded() {
+    let rawXml = ''
+    const canonicalObjectUrl = '<%= rails_blob_path(@core_file.canonical_object) %>'
+
     const selectionEl = document.getElementById('reading_selector') || {}
 
-    function updateXml() {
+    async function updateXml() {
       const selectedOption = selectionEl.selectedOptions && selectionEl.selectedOptions[0] || {}
-      const selectedValue = selectedOption.value || 'tei2html';
+      const selectedValue = selectedOption.value || 'tei2html'
+
+      if (selectedValue === 'teibp') {
+        if (rawXml === '') {
+          const resp = await fetch(canonicalObjectUrl)
+          const xml = await resp.text()
+
+          rawXml = xml
+        }
+
+        const pre = document.createElement('pre')
+        pre.innerText = rawXml
+        return updateReadingInterface(pre)
+      }
+
       const doc = SaxonJS.transform({
-        sourceLocation: '<%= rails_blob_path(@core_file.canonical_object) %>',
+        sourceLocation: canonicalObjectUrl,
         stylesheetLocation: `/assets/${selectedValue}.sef.json`
       })
 
-      document.getElementById('reader-node').appendChild(doc.principalResult)
+      updateReadingInterface(doc.principalResult)
     }
 
     selectionEl.addEventListener('change', updateXml);
