@@ -1,14 +1,16 @@
 class ApplicationController < ActionController::Base
+
+
   helper Openseadragon::OpenseadragonHelper
 
-  def forem_user
-    current_user
-  end
-  helper_method :forem_user
+  # def forem_user
+  #   current_user
+  # end
+  # helper_method :forem_user
 
   # Adds a few additional behaviors into the application controller
 
-  include Blacklight::Controller
+  # include Blacklight::Controller
   layout 'blacklight'
 
   # Prevent CSRF attacks by raising an exception.
