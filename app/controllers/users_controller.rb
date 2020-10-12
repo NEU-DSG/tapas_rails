@@ -146,7 +146,7 @@ class UsersController < CatalogController
   end
 
   def five_communities
-    @user.communities.kept.limit(5).order("RAND()")
+    @user.communities.kept.limit(5).order(Arel.sql("RAND()"))
   end
 
   def five_collections
@@ -154,7 +154,7 @@ class UsersController < CatalogController
       .kept
       .accessible_by(current_ability)
       .limit(5)
-      .order("RAND()")
+      .order(Arel.sql("RAND()"))
   end
 
   def five_records
@@ -162,7 +162,7 @@ class UsersController < CatalogController
       .kept
       .accessible_by(current_ability)
       .limit(5)
-      .order("RAND()")
+      .order(Arel.sql("RAND()"))
   end
 
   def check_for_logged_in_user
