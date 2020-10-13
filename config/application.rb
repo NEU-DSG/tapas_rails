@@ -31,6 +31,8 @@ module TapasRails
     #   config.autoload_paths << dir
     # end
 
+    config.assets.precompile += %w( core_files.js )
+
 
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
