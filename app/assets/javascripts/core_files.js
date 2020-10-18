@@ -12,6 +12,12 @@
       show_style(pane, style);
     });
 
+    $('.nav-tabs a').click(function (e) {
+      e.preventDefault();
+      console.log('clicked', this)
+      $(this).tab('show');
+    });
+
     // $("select[name='reading_selector']").on("change", function(e){
     //   e.preventDefault();
     //   var style = $(this).val()

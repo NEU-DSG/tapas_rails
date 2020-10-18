@@ -18,36 +18,37 @@
     <%= @core_file.title %>
   </li>
 </ul>
-<% if can? :manage, @core_file %>
-  <%= link_to "Edit", edit_core_file_path(@core_file), class: ['btn', 'btn-info'] %>
-  <%= link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger'], method: "delete", confirm: "Are you sure you want to delete this file?" %>
-<% end %>
-<h2 class="page-header">
-  <%= @core_file.title %>
-</h2>
 
-<div class="row">
-  <ul class="flex-column nav nav-tabs" id="core-file-tabs" role="tablist">
-    <li class="active nav-item">
-      <%= link_to "Reader", '#reader' %>
+<div class="container">
+  <h2 class="page-header">
+    <%= @core_file.title %>
+  </h2>
+  <% if can? :manage, @core_file %>
+    <%= link_to "Edit", edit_core_file_path(@core_file), class: ['btn', 'btn-info'] %>
+    <%= link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger'], method: "delete", confirm: "Are you sure you want to delete this file?" %>
+  <% end %>
+
+  <ul class="nav nav-tabs" id="core-file-tabs" role="tablist">
+    <li role="presentation">
+      <%= link_to "Reader", '#reader', { "aria-controls": "reader", role: "tab", "data-toggle": "tab" } %>
     </li>
-    <li class="nav-item">
-      <%= link_to "Metadata", '#metadata' %>
+    <li role="presentation">
+      <%= link_to "Metadata", '#metadata', { "aria-controls": "metadata", role: "tab", "data-toggle": "tab" } %>
     </li>
-    <li class="nav-item">
-      <%= link_to "Files", '#files' %>
+    <li role="presentation">
+      <%= link_to "Files", '#files', { "aria-controls": "files", role: "tab", "data-toggle": "tab" } %>
     </li>
-    <li class="nav-item">
-      <%= link_to "Project Details", '#project_details' %>
+    <li role="presentation">
+      <%= link_to "Project Details", '#project_details', { "aria-controls": "project_details", role: "tab", "data-toggle": "tab" } %>
     </li>
   </ul>
 
   <div class="border tab-content">
-    <div class="tab-pane active" id="reader">
+    <div class="tab-pane active" id="reader" role="tabpanel">
       <%= render partial: 'view_package_options', locals: { core_file: @core_file, view_packages: @view_packages } %>
       <%= render partial: 'reading_interface', locals: { core_file: @core_file, view_packages: @view_packages } %>
     </div>
-    <div class="tab-pane" id="metadata">
+    <div class="tab-pane" id="metadata" role="tabpanel">
       <%= @mods_html %>
       <% if @core_file.file_type != :tei_content %>
         <dt>File Type</dt>
@@ -62,7 +63,7 @@
         </dd>
       <% end %>
     </div>
-    <div class="tab-pane" id="files">
+    <div class="tab-pane" id="files" role="tabpanel">
       <% if @core_file.canonical_object.attached? %>
         <dt>TEI File:</dt>
         <dd>
@@ -74,7 +75,7 @@
       <% end %>
       <% # TODO add other auxilliary files %>
     </div>
-    <div class="tab-pane" id="project_details">
+    <div class="tab-pane" id="project_details" role="tabpanel">
       <% if @core_file.project %>
         <dt>Project:</dt>
         <dd>
@@ -113,11 +114,5 @@
     </div>
   </div>
 </div>
-<script>
- $('.nav-tabs a').click(function (e) {
-   e.preventDefault();
-   $(this).tab('show');
- });
-</script>
 <%= javascript_include_tag "core_files" %>
 <% # FIXME: =javascript_include_tag "ace/ace" %>
