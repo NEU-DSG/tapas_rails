@@ -7,12 +7,11 @@
         $(this).prepend("<link rel='stylesheet' type='text/css' id='reader_css_1' href=''></link><link rel='stylesheet' type='text/css' id='reader_css_2' href=''></link><link rel='stylesheet' type='text/css' id='reader_css_3' href=''></link>");
       }
       var style = $(this).parents(".node").find("select[name='reading_selector']").val();
-      console.log(style);
       var pane = $(this);
       show_style(pane, style);
     });
 
-    $('.nav-tabs a').click(function (e) {
+    $('.nav-tabs a').click(function(e) {
       e.preventDefault();
       console.log('clicked', this)
       $(this).tab('show');
