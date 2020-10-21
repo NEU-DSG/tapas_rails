@@ -106,6 +106,12 @@ class CoreFilesController < ApplicationController
 
   def show
     @core_file = CoreFile.find(params[:id])
+
+    if @core_file.collections.empty?
+      @core_file.discard
+      return render_404 "We could not find that file."
+    end
+
     @view_packages = [["Styled TEI", 'tei2html'], ["Raw XML", 'teibp']]
   end
 
