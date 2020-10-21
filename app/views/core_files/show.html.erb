@@ -29,7 +29,7 @@
     <%= link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger'], method: "delete", confirm: "Are you sure you want to delete this file?" %>
   <% end %>
 
-  <div class="py2">
+  <div class="py-4">
     <ul class="nav nav-tabs" id="core-file-tabs" role="tablist">
       <li class="active" role="presentation">
         <%= link_to "Reader", '#reader', { "aria-controls": "reader", role: "tab", "data-toggle": "tab" } %>
@@ -45,7 +45,7 @@
       </li>
     </ul>
 
-    <div class="border tab-content">
+    <div class="border p-5 tab-content">
       <div class="tab-pane active" id="reader" role="tabpanel">
         <%= render partial: 'view_package_options', locals: { core_file: @core_file, view_packages: @view_packages } %>
         <%= render partial: 'reading_interface', locals: { core_file: @core_file, view_packages: @view_packages } %>

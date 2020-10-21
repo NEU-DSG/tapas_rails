@@ -70,6 +70,6 @@ class ApplicationController < ActionController::Base
 
   def render_404(exception, path="")
     logger.error("Rendering 404 page for #{path if path != ""} due to exception: #{exception.inspect} - #{exception.backtrace if exception.respond_to? :backtrace}")
-    render 'public/404', :status => 404
+    render file: 'public/404', :status => 404
   end
 end
