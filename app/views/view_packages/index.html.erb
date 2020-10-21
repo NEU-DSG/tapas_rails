@@ -1,9 +1,9 @@
-<div class="row">
+<div class="container">
   <h1>
-    <%= "View Packages" %>
+    <%= t :view_packages %>
   </h1>
 </div>
-<div class="row">
+<div class="container row">
   <ul class="breadcrumb">
     <% if current_user && current_user.admin? %>
       <li>
@@ -11,24 +11,26 @@
       </li>
     <% end %>
     <li>
-      <%= "View Packages" %>
+      <%= t :view_packages %>
     </li>
   </ul>
 </div>
-<% if @view_packages.length > 0 %>
-  <% @view_packages.each do |view| %>
+<div class="container">
+  <% if @view_packages.length > 0 %>
+    <% @view_packages.each do |view| %>
+      <div class="row">
+        <h3>
+          <%= link_to(view.human_name, view_package_path(view.id)) %>
+        </h3>
+        <br>
+        <p>
+          <%= view.description %>
+        </p>
+      </div>
+    <% end %>
+  <% else %>
     <div class="row">
-      <h3>
-        <%= link_to(view.human_name, view_package_path(view.id)) %>
-      </h3>
-      <br>
-      <p>
-        <%= view.description %>
-      </p>
+      There are currently no view packages available
     </div>
   <% end %>
-<% else %>
-  <div class="row">
-    There are currently no view packages available
-  </div>
-<% end %>
+</div>
