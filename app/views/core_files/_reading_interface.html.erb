@@ -16,9 +16,11 @@
             <%= check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles' %>
           </div>
         </div>
-        <pre id="ace">
-        </pre>
         <div id="reader-node"></div>
+        <div class="spinner" id="reading-interface-loading-spinner">
+          <div class="cube1"></div>
+          <div class="cube2"></div>
+        </div>
       <% else %>
         <% reader_view = [] %>
         <% # - if reader_view && reader_view.content.content %>
@@ -30,49 +32,4 @@
   <% end %>
 </div>
 <script src="/assets/saxon-js/SaxonJS2.js"></script>
-<script>
-  function updateReadingInterface(contents) {
-    const readerNode = document.getElementById('reader-node')
-    readerNode.replaceChild(contents, readerNode.firstChild);
-  }
-
-  window.addEventListener('load', function readingEnvLoaded() {
-    let rawXml = ''
-    let styledTei = ''
-    const canonicalObjectUrl = '<%= rails_blob_path(@core_file.canonical_object) %>'
-
-    const selectionEl = document.getElementById('reading_selector') || {}
-
-    async function updateXml() {
-      const selectedOption = selectionEl.selectedOptions && selectionEl.selectedOptions[0] || {}
-      const selectedValue = selectedOption.value || 'tei2html'
-
-      if (selectedValue === 'teibp') {
-        if (rawXml === '') {
-          const resp = await fetch(canonicalObjectUrl)
-          const xml = await resp.text()
-
-          rawXml = xml
-        }
-
-        const pre = document.createElement('pre')
-        pre.innerText = rawXml
-        return updateReadingInterface(pre)
-      }
-
-      if (styledTei === '') {
-        const doc = await SaxonJS.transform({
-          sourceLocation: canonicalObjectUrl,
-          stylesheetLocation: `/assets/${selectedValue}.sef.json`
-        }, 'async')
-
-        styledTei = doc.principalResult
-      }
-
-      updateReadingInterface(styledTei)
-    }
-
-    selectionEl.addEventListener('change', updateXml);
-    updateXml();
-  })
-</script>
+<script id="core-file-url" data-url="<%= rails_blob_path(@core_file.canonical_object) %>"></script>
