@@ -57,6 +57,7 @@ class ReadingEnvironment {
         // TODO: (charles) Maybe don't hardcode as many of these locations?
         stylesheetLocation: '/view_packages/tapas-generic/tei2html.sef.json',
         stylesheetParams: {
+          // 'Q{}fullHTML': 'true',
           'Q{}assets-base': '/view_packages/tapas-generic/',
           tapasHome: window.location,
         }
