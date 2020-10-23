@@ -112,7 +112,9 @@ class CoreFilesController < ApplicationController
       return render_404 "We could not find that file."
     end
 
-    @view_packages = [["Styled TEI", 'tei2html'], ["Raw XML", 'teibp']]
+    # TODO: (charles) ['TEI', 'teibp'] currently hard codes asset locations. Add to @view_packages
+    # array once those locations have been parameterized
+    @view_packages = [["TAPAS", 'tei2html'], ["Raw XML", 'raw']]
   end
 
   def api_show
