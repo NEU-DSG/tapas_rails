@@ -1,35 +1,25 @@
 <div class="reading">
-  <% @view_packages.each do |view| %>
-    <div class="reader_<%= view[1] %>">
-      <% if view[1] == 'teibp' %>
-        <div class="row">
-          <div class="checkbox">
-            <label for="toggle_word_wrap">
-              <%= "Toggle Soft Wrap" %>
-            </label>
-            <%= check_box_tag :toggle_word_wrap,  id:'toggle_word_wrap', name:'toggle_word_wrap' %>
-          </div>
-          <div class="checkbox">
-            <label for="toggle_invisibles">
-              <%= "Toggle Invisibles" %>
-            </label>
-            <%= check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles' %>
-          </div>
-        </div>
-        <div id="reader-node"></div>
-        <div class="spinner" id="reading-interface-loading-spinner">
-          <div class="cube1"></div>
-          <div class="cube2"></div>
-        </div>
-      <% else %>
-        <% reader_view = [] %>
-        <% # - if reader_view && reader_view.content.content %>
-        <% #   = reader_view.content.content.html_safe.force_encoding('utf-8') %>
-        <% # - else %>
-        <% #   = "This view package could not be rendered" %>
-      <% end %>
+  <link rel="stylesheet" type="text/css" id="reader_css_1" href="/view_packages/tapas-generic/css/tapasGnormal.css">
+  <link rel="stylesheet" type="text/css" id="reader_css_2" href="/view_packages/tapas-generic/css/tapasGdiplo.css">
+  <div class="row">
+    <div class="checkbox">
+      <label for="toggle_word_wrap">
+        <%= "Toggle Soft Wrap" %>
+      </label>
+      <%= check_box_tag :toggle_word_wrap,  id:'toggle_word_wrap', name:'toggle_word_wrap' %>
     </div>
-  <% end %>
+    <div class="checkbox">
+      <label for="toggle_invisibles">
+        <%= "Toggle Invisibles" %>
+      </label>
+      <%= check_box_tag :toggle_invisibles, id:'toggle_invisibles', name: 'toggle_invisibles' %>
+    </div>
+  </div>
+  <div id="reader-node"></div>
+  <div class="spinner" id="reading-interface-loading-spinner">
+    <div class="cube1"></div>
+    <div class="cube2"></div>
+  </div>
 </div>
 <script src="/assets/saxon-js/SaxonJS2.js"></script>
 <script id="core-file-url" data-url="<%= rails_blob_path(@core_file.canonical_object) %>"></script>
