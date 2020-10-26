@@ -2,7 +2,6 @@ TapasRails::Application.routes.draw do
   # At some point we'll want all this, but I'm going to disable these routes
   # until we're ready to migrate to 100% Hydra-Head usage for tapas.
 
-
   root :to => "view_packages#index"
 
   # blacklight_for :catalog
@@ -23,7 +22,7 @@ TapasRails::Application.routes.draw do
   mount Resque::Server, at: "/resque"
   # end
 
-  get 'browse' => 'catalog#browse'
+  get 'browse' => 'catalog#index'
 
   # Communities
   resources :communities
@@ -31,7 +30,6 @@ TapasRails::Application.routes.draw do
   get 'communities/:did/edit' => 'communities#edit'
   post "communities/:did" => "communities#upsert"
   get 'communities' => 'communities#index'
-  #get '/catalog/:id' => 'communities#show'
   delete "communities/:did" => "communities#destroy"
 
   # Collections
@@ -67,6 +65,7 @@ TapasRails::Application.routes.draw do
     get 'collections/:did' => 'collections#api_show'
     get 'core_files/:did' => 'core_files#api_show'
   end
+
   resources :view_packages
   get 'admin/view_packages/update' => 'view_packages#run_job', as: 'update_view_packages'
   get 'api/view_packages' => 'view_packages#api_index'
