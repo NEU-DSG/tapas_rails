@@ -25,7 +25,7 @@
         <%= r.depositor.nil? ? "No depositor on file" : r.depositor.email %>
       </td>
       <td>
-        <%- if can? :manage, r %>
+        <%- if can?(:manage, r) && request.path != "/browse" %>
           <a class="btn btn-default btn-sm"
             href="<%= url_for(
                   only_path: true,

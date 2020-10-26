@@ -3,20 +3,12 @@ class CoreFilesController < ApplicationController
   include ModsDisplay::ControllerExtension
   include TapasRails::ViewPackages
 
-  # self.copy_blacklight_config_from(CatalogController)
-
   configure_mods_display do
     identifier { ignore! }
   end
 
-  # TODO investigate this after ruby version upgrades complete
-  # skip_before_action :load_asset, :load_datastream, :authorize_download!
-
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show
-  # before_action :enforce_show_permissions, :only=>:show
-
-  # self.search_params_logic += [:add_access_controls_to_solr_params]
 
   def index
     @page_title = "All CoreFiles"
@@ -61,7 +53,6 @@ class CoreFilesController < ApplicationController
     @page_title = "Edit #{@core_file.title}"
   end
 
-  #This method contains the logic for editing/submission of edit form
   def update
     cf = CoreFile.find(params[:id])
     cf.update(core_file_params)
