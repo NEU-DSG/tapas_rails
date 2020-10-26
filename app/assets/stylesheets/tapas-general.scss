@@ -10,7 +10,7 @@
 }
 
 .breadcrumb {
-  margin: 0 3em;
+  margin: 1em 0;
 }
 
 .filter {
@@ -258,8 +258,18 @@ dd {
   color: $gray-lighter;
 }
 
+#main-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 90%;
+}
+
 #main-container img {
   width: 100%;
+}
+
+p.loading {
+  padding: 3rem 0;
 }
 
 .carousel-caption {
