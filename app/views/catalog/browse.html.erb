@@ -1,25 +1,38 @@
-%h2.page-title= "Browse"
+<h2 class="page-title">
+  <%= "Browse" %>
+</h2>
+<%= render :partial=>'catalog/search_form' %>
+<br/>
+<ul class="nav nav-tabs browse-tabs">
+  <li class="active">
+    <a data-toggle="tab" data-type="communities" href="#projects">Projects</a>
+  </li>
+  <li>
+    <a data-toggle="tab" data-type="collections" href="#collections">Collections</a>
+  </li>
+  <li>
+    <a data-toggle="tab" data-type="core_files" href="#records">Records</a>
+  </li>
+</ul>
+<div class="tab-content">
+  <div class="tab-pane active" id="projects">
+    <p class="loading">
+      Loading...
+    </p>
+  </div>
+  <div class="tab-pane" id="collections">
+    <p class="loading">
+      Loading...
+    </p>
+  </div>
+  <div class="tab-pane" id="records">
+    <p class="loading">
+      Loading...
+    </p>
+  </div>
+</div>
+<script>
 
-= render :partial=>'catalog/search_form'
-%br
-
-%ul.nav.nav-tabs.browse-tabs
-  %li.active
-    %a{:href=>"#projects", "data-toggle"=>"tab", "data-type"=>"communities"} Projects
-  %li
-    %a{:href=>"#collections", "data-toggle"=>"tab", "data-type"=>"collections"} Collections
-  %li
-    %a{:href=>"#records", "data-toggle"=>"tab", "data-type"=>"core_files"} Records
-.tab-content
-  #projects.tab-pane.active
-    Loading...
-  #collections.tab-pane
-    Loading...
-  #records.tab-pane
-    Loading...
-
-
-:javascript
   $(document).ready(function(){
     $(".browse-tabs a").click(function(e){
       var data_type = $(this).data('type');
@@ -62,7 +75,7 @@
       }
 
       function get_script(href, type){
-        $(".tab-pane:not(#"+type+")").html("Loading...");
+        $(".tab-pane:not(#"+type+")").html("<p class='loading'>Loading...</p>");
         $.getScript(href, function(data){
           $("#"+type).html(data.responseText);
         }).done( function() {
@@ -77,3 +90,6 @@
     });
     $(".browse-tabs li.active a").click();
   });
+
+
+</script>
