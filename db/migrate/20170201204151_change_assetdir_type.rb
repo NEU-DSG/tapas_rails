@@ -1,4 +1,4 @@
-class ChangeAssetdirType < ActiveRecord::Migration
+class ChangeAssetdirType < ActiveRecord::Migration[5.2]
   def up
     change_table :view_packages do |t|
       t.change :css_dir, :text

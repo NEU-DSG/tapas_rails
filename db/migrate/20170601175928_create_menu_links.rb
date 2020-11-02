@@ -1,4 +1,4 @@
-class CreateMenuLinks < ActiveRecord::Migration
+class CreateMenuLinks < ActiveRecord::Migration[5.2]
   def change
     create_table :menu_links do |t|
       t.string :link_text, :null=>false
