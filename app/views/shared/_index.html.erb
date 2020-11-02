@@ -3,5 +3,16 @@
 </div>
 
 <div id="content" class="<%= main_content_classes %>">
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link <%= "active" if @model == "core_file" %>" href="?model=core_file">Records</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= "active" if @model == "collection" %>" href="?model=collection">Collections</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link <%= "active" if @model == "community" %>" href="?model=community">Projects</a>
+    </li>
+  </ul>
   <%= render 'catalog/search_results' %>
 </div>
