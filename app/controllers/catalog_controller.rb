@@ -6,8 +6,8 @@ class CatalogController < ApplicationController
 
   def index
     @page_title = "Catalog"
-    model = catalog_params[:model] || "core_file"
-    @search = case model.downcase
+    @model = catalog_params[:model] || "core_file"
+    @search = case @model.downcase
     when "core_file"
       CoreFileSearch.new(params)
     when "community"
