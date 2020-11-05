@@ -8,7 +8,6 @@ function hideLoadingSpinner() {
 
 function showLoadingSpinner() {
   if (!LOADING_SPINNER) return;
-
   LOADING_SPINNER.classList.remove('hidden')
 }
 
@@ -51,20 +50,20 @@ class ReadingEnvironment {
   }
 
   async handleTapas() {
-    if (!this.tapasGeneric) {
-      const doc = await SaxonJS.transform({
-        sourceLocation: this.url,
-        // TODO: (charles) Maybe don't hardcode as many of these locations?
-        stylesheetLocation: '/view_packages/tapas-generic/tei2html.sef.json',
-        stylesheetParams: {
-          // 'Q{}fullHTML': 'true',
-          'Q{}assets-base': '/view_packages/tapas-generic/',
-          tapasHome: window.location,
-        }
-      }, 'async')
+    // FIXME: (charles) This is a costly call,
+    // but caching the result doesn't work.
+    const doc = await SaxonJS.transform({
+      sourceLocation: this.url,
+      // TODO: (charles) Maybe don't hardcode as many of these locations?
+      stylesheetLocation: '/view_packages/tapas-generic/tei2html.sef.json',
+      stylesheetParams: {
+        // 'Q{}fullHTML': 'true',
+        'Q{}assets-base': '/view_packages/tapas-generic/',
+        tapasHome: window.location,
+      }
+    }, 'async')
 
-      this.tapasGeneric = doc.principalResult
-    }
+    this.tapasGeneric = doc.principalResult
 
     return this.tapasGeneric
   }
@@ -83,6 +82,10 @@ class ReadingEnvironment {
   }
 
   async updateXml() {
+    if (this.readerNode.firstChild) {
+      this.readerNode.removeChild(this.readerNode.firstChild)
+    }
+
     showLoadingSpinner()
 
     const selectedValue = (this.selectionEl.selectedOptions && this.selectionEl.selectedOptions[0] || {}).value
@@ -94,11 +97,7 @@ class ReadingEnvironment {
   }
 
   updateReadingInterface(contents) {
-    if (this.readerNode.firstChild) {
-      this.readerNode.replaceChild(contents, this.readerNode.firstChild)
-    } else {
-      this.readerNode.appendChild(contents)
-    }
+    this.readerNode.appendChild(contents)
   }
 }
 
