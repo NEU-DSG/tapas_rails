@@ -1,7 +1,5 @@
 class NewsItem < ActiveRecord::Base
   extend FriendlyId
-  include SolrHelpers
-
 
   attr_accessible :title, :content, :slug, :publish, :author, :tags if Rails::VERSION::MAJOR < 4
   validates_presence_of :title, :content, :slug
