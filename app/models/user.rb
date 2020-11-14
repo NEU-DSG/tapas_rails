@@ -11,6 +11,10 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
   validates_integrity_of :avatar
 
+  validates :username, presence: true
+
+  before_validation :ensure_unique_username
+
   if Blacklight::Utils.needs_attr_accessible?
     attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
   end
@@ -30,6 +34,22 @@ class User < ActiveRecord::Base
   has_many :core_files, through: :core_files_users
 
   ACCOUNT_TYPES = %w[free teic teic_inst]
+
+  def self.find_unique_username(username)
+    taken_usernames = User.where("username LIKE ?", "#{username}%").pluck(:username)
+
+    return username unless taken_usernames.include?(username)
+
+    count = 2
+
+    while true
+      new_username = "#{username}#{count}"
+
+      return new_username unless taken_usernames.include?(new_username)
+
+      count += 1
+    end
+  end
 
   def api_key=(api_key)
     @api_key = Digest::SHA512.hexdigest api_key
@@ -132,6 +152,16 @@ class User < ActiveRecord::Base
     #   logger.warn("no user found")
     #   return false
     # end
+  end
+
+  def ensure_unique_username
+    if username.nil?
+      self.username = User.find_unique_username(
+        (u.name || "anonymous").parameterize(separator: '', preserve_case: true)
+      )
+    else
+      self.username = User.find_unique_username(username)
+    end
   end
 
   private

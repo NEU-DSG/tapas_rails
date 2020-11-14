@@ -24,6 +24,8 @@ TapasRails::Application.routes.draw do
 
   get 'browse' => 'catalog#index'
 
+  mount Thredded::Engine => '/forum'
+
   # Communities
   resources :communities
   get 'communities/:did' => 'communities#show'
