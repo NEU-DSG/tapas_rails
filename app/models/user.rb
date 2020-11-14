@@ -76,6 +76,14 @@ class User < ActiveRecord::Base
     self.id.to_s
   end
 
+  def role
+    if admin?
+      "admin"
+    else
+      "user"
+    end
+  end
+
   def admin=(n)
     if n.to_i == 0
       update(admin_at: nil)
