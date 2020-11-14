@@ -19,7 +19,7 @@
 %dd= @user.role
 
 %div.row
-  - if @user.avatar
+  - if @user.avatar && @user.avatar.url
     %div.col-sm-4
       = image_tag(@user.avatar.url)
 
