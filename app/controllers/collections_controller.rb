@@ -1,8 +1,6 @@
 class CollectionsController < CatalogController
   include ApiAccessible
 
-  self.copy_blacklight_config_from(CatalogController)
-
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show
   # before_action :enforce_show_permissions, :only=>:show
