@@ -28,7 +28,7 @@
           = f.label :collection_ids, "Collection", class: "control-label col-md-2"
           .col-md-6
             %span.collection
-              = f.select :collection_ids, options_from_collection_for_select(@collections, 'id', 'title', @core_file.collections.map(&:id)), {}, {class: "form-control", multiple: true}
+              = f.select :collection_ids, options_from_collection_for_select(@collections, 'id', 'title', @core_file.collections.map(&:id)), {}, { class: "form-control", multiple: true, required: true }
 
         -# TODO: (charles) Figure out why we need Ography Type and reimplement it
         -# .form-group
@@ -46,7 +46,7 @@
         .form-group
           = f.label :canonical_object, "File", class: "control-label col-md-2"
           .col-md-6
-            = f.file_field :canonical_object, direct_upload: true
+            = f.file_field :canonical_object, direct_upload: true, required: true
             -if @core_file.canonical_object.attached?
               %p
                 ="Current File:"
