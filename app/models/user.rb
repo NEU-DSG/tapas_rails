@@ -3,10 +3,6 @@ class User < ActiveRecord::Base
 
   require "net/http"
   require "uri"
-  # Connects this user object to Hydra behaviors.
-  include Hydra::User
-  # Connects this user object to Blacklights Bookmarks.
-  include Blacklight::User
 
   mount_uploader :avatar, AvatarUploader
   validates_integrity_of :avatar
