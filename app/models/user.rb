@@ -165,7 +165,7 @@ class User < ActiveRecord::Base
   def ensure_unique_username
     if username.nil?
       self.username = User.find_unique_username(
-        (u.name || "anonymous").parameterize(separator: '', preserve_case: true)
+        (self.name || "anonymous").parameterize(separator: '', preserve_case: true)
       )
     else
       self.username = User.find_unique_username(username)
