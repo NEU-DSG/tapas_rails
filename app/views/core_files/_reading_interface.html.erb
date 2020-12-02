@@ -23,4 +23,6 @@
   </div>
 </div>
 <script src="/assets/saxon-js/SaxonJS2.js"></script>
-<script id="core-file-url" data-url="<%= rails_blob_path(@core_file.canonical_object) %>"></script>
+<% unless @core_file.canonical_object.nil? %>
+  <script id="core-file-url" data-url="<%= rails_blob_path(@core_file.canonical_object) %>"></script>
+<% end %>
