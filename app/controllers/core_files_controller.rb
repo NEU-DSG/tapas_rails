@@ -30,6 +30,9 @@ class CoreFilesController < ApplicationController
   end
 
   def create
+    # a user can't be both a contributor and an author; just assume that they're an author
+    params[:core_file][:contributor_ids] = params[:core_file][:contributor_ids] - params[:core_file][:author_ids]
+
     file = CoreFile.create!(core_file_params.merge({ depositor_id: current_user.id }))
     file.set_authors(params[:core_file][:author_ids])
 
