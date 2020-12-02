@@ -43,7 +43,7 @@ class CoreFilesController < ApplicationController
     file = CoreFile.find(params[:id])
     # FIXME: (charles) Should go to the collection where the user is, but the routes aren't set up RESTfully
     collection = file.collections.kept.first
-
+    puts collection.id
     file.destroy!
 
     redirect_to collection
