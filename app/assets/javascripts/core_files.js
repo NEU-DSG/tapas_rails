@@ -46,6 +46,8 @@ class ReadingEnvironment {
       return this.handleTapas()
     } else if (selection === 'teibp') {
       return this.handleTeiBoilerplate()
+    } else if (selection === 'hieractivity') {
+      return this.handleHieractivity()
     }
   }
 
@@ -79,6 +81,22 @@ class ReadingEnvironment {
     }
 
     return this.teiBp
+  }
+
+  async handleHieractivity() {
+    if (!this.hieractivity) {
+      const doc = await SaxonJS.transform({
+        sourceLocation: this.url,
+        stylesheetLocation: '/view_packages/hieractivity/hieractivity.sef.json',
+        stylesheetParams: {
+          'Q{}language': "English",
+        },
+      }, 'async')
+
+      this.hieractivity = doc.principalResult
+    }
+
+    return this.hieractivity
   }
 
   async updateXml() {
