@@ -108,7 +108,7 @@ class CoreFilesController < ApplicationController
 
     # TODO: (charles) ['TEI', 'teibp'] currently hard codes asset locations. Add to @view_packages
     # array once those locations have been parameterized
-    @view_packages = [["TAPAS", 'tei2html'], ["Raw XML", 'raw']]
+    @view_packages = [["TAPAS", 'tei2html'], ["TEI", 'teibp'], ["Hieractivity", 'hieractivity'], ["Raw XML", 'raw']]
   end
 
   def api_show
