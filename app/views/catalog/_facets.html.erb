@@ -1,16 +1,17 @@
 <% # main container for facets/limits menu -%>
 
 <div id="facets" class="facets sidenav">
-  <div class="top-panel-heading panel-heading">
-    <button type="button" class="facets-toggle" data-toggle="collapse" data-target="#facet-panel-collapse">
+  <div class="top-panel-heading panel-heading" style="display: flex; justify-content: flex-start; align-items: center;">
+    <h4 class='facets-heading'>
+  	  <%= t('blacklight.search.facets.title') %>
+    </h4>
+    <button type="button" class="facets-toggle" data-toggle="collapse" data-target="#facet-panel-collapse" style="border:none; outline:none; margin-left: 0.5rem;">
       <span class="sr-only">Toggle facets</span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
+      <span class="dropdown-toggle"></span>
     </button>
-    <h4 class='facets-heading'>
-  	  <%= t('blacklight.search.facets.title') %>
-    </h4>
   </div>
 
   <div id="facet-panel-collapse" class="collapse panel-body show">
@@ -64,7 +65,10 @@
           <% end %>
         </div>
       </div>
+      <br>
+      <%=  submit_tag 'Submit', class: 'btn btn-warning', role: 'button' %>
+      <%=  link_to 'Reset', '?', class: 'btn btn-default', role: 'button' %>
+
     <% end %>
-    <%=  link_to 'Reset', '?', class: 'btn btn-warning', role: 'button' %>
   </div>
 </div>
