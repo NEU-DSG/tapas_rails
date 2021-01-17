@@ -204,25 +204,25 @@ module TapasRails
 
     private
 
-      def if_mods_exists(&block)
-        verify_datastream_carefree('mods', CerberusCore::Datastreams::ModsDatastream, &block)
-      end
+      # def if_mods_exists(&block)
+      # verify_datastream_carefree('mods', CerberusCore::Datastreams::ModsDatastream, &block)
+      # end
 
-      def if_mods_exists_strict(&block)
-        verify_datastream_strict('mods', CerberusCore::Datastreams::ModsDatastream, &block)
-      end
+      # def if_mods_exists_strict(&block)
+      # verify_datastream_strict('mods', CerberusCore::Datastreams::ModsDatastream, &block)
+      # end
 
-      def if_DC_exists(&block)
-        verify_datastream_carefree('DC', CerberusCore::Datastreams::DublinCoreDatastream, &block)
-      end
+      # def if_DC_exists(&block)
+      #  verify_datastream_carefree('DC', CerberusCore::Datastreams::DublinCoreDatastream, &block)
+      # end
 
-      def if_DC_exists_strict(&block)
-        verify_datastream_strict('DC', CerberusCore::Datastreams::DublinCoreDatastream, &block)
-      end
+      # def if_DC_exists_strict(&block)
+      #  verify_datastream_strict('DC', CerberusCore::Datastreams::DublinCoreDatastream, &block)
+      # end
 
-      def if_properties_exists_strict(&block)
-        verify_datastream_carefree('properties', PropertiesDatastream, &block)
-      end
+      # def if_properties_exists_strict(&block)
+      # verify_datastream_carefree('properties', PropertiesDatastream, &block)
+      # end
 
       def verify_datastream_carefree(ds_name, ds_class, &action)
         if datastream_exists?(ds_name, ds_class)
