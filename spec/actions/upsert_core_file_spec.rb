@@ -21,7 +21,7 @@ describe UpsertCoreFile do
         @core_file.reload
       end
 
-      after(:all) { ActiveFedora::Base.delete_all }
+      # after(:all) { ActiveFedora::Base.delete_all }
 
       it 'updates the collections associated with the core_file' do
         dids = @core_file.collections.map { |collection| collection.did }
@@ -67,7 +67,7 @@ describe UpsertCoreFile do
         @core_file.reload
       end
 
-      after(:all) { ActiveFedora::Base.delete_all }
+      # after(:all) { ActiveFedora::Base.delete_all }
 
       it 'updates the collections associated with the core_file' do
         expect(@core_file.collections).to match_array @new_collections
@@ -110,7 +110,7 @@ describe UpsertCoreFile do
         @core_file.reload
       end
 
-      after(:all) { ActiveFedora::Base.delete_all }
+      # after(:all) { ActiveFedora::Base.delete_all }
 
       it 'does not clear the .collections relationship' do
         expect(@core_file.collections).to eq @old_collections

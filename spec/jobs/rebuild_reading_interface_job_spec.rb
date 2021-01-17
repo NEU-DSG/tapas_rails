@@ -4,7 +4,7 @@ describe RebuildReadingInterfaceJob do
   include FileHelpers
   include FixtureBuilders
 
-  after(:each) { ActiveFedora::Base.delete_all }
+  # after(:each) { ActiveFedora::Base.delete_all }
 
   let(:core) { FactoryBot.create :core_file }
   let(:tei) { FactoryBot.create :tei_file }
