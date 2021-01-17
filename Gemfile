@@ -29,6 +29,7 @@ group :test do
   gem 'simplecov-json', :require => false
   gem 'simplecov-rcov', :require => false
   gem 'simplecov', :require => false
+  gem 'database_cleaner-active_record'
 end
 
 gem 'aws-sdk-s3', require: false
