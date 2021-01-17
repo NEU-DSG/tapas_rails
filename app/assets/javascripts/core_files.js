@@ -89,7 +89,7 @@ class ReadingEnvironment {
         sourceLocation: this.url,
         stylesheetLocation: '/view_packages/hieractivity/hieractivity.sef.json',
         stylesheetParams: {
-          'Q{}language': "en",
+          '$Q{}language': "en",
         },
       }, 'async')
 
