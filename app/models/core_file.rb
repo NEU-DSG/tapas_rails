@@ -101,7 +101,7 @@ class CoreFile < ActiveRecord::Base
   def ography_type
     type = []
     CoreFile.all_ography_types.each do |o|
-      if !self.send("#{o}_for").blank?
+      unless self.send("#{o}_for").blank?
         type << o
       end
     end
@@ -109,8 +109,7 @@ class CoreFile < ActiveRecord::Base
   end
 
   def remove_thumbnail
-    self.thumbnails = []
-    self.save!
+    update(thumbnails: [])
   end
 
   def set_authors(ids)
