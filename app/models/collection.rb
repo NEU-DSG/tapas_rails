@@ -3,8 +3,7 @@ class Collection < ActiveRecord::Base
 
   belongs_to :community
   belongs_to :depositor, class_name: "User"
-  # TODO: (charles) Unclear if we need to implement this.
-  # Leaving it out for now.
+  # TODO: Follow up with Candace to double check about the Collections <> Collections relationships
   # has_and_belongs_to_many :collections,
   #                         join_table: "collection_collections",
   #                         association_foreign_key: "parent_collection_id"
