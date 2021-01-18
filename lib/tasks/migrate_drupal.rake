@@ -4,7 +4,7 @@ desc "Migrate the data from the production Drupal MySQL database to the Rails My
 namespace :drupal do
   task migrate: [:environment] do
     puts "Migrating drupal database to Rails"
-    client = Mysql2::Client.new(:host => "localhost", :username => "root", :database => "tapas_drupal", :password => "root")
+    client = Mysql2::Client.new(:host => "localhost", :username => ENV['DRUPAL_MYSQL_USER'], :database => ENV['DRUPAL_MYSQL_DB_NAME'], :password => ENV['DRUPAL_MYSQL_PASSWORD'])
 
     # Clear existing DB for migration
     puts " - Truncating any existing data in users, communities, collections, and core_files tables"
