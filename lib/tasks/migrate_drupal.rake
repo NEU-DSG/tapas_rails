@@ -1,3 +1,4 @@
+# Notes about the migration tables at https://docs.google.com/document/d/1KbB44saOBg7jFyDdMe_6gMT1XombFK6BDufTspZ2N0o/edit?usp=sharing
 
 desc "Migrate the data from the production Drupal MySQL database to the Rails MySQL database"
 namespace :drupal do
