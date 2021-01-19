@@ -202,7 +202,7 @@ namespace :drupal do
       # core_file.collections = Collection.first
 
 
-      # TODO: clarify with Candance how she wants the ography type stored in the data model
+      # TODO: clarify with Candace how she wants the ography type stored in the data model
       # ography type
       # set ography_type from field_data_field_tapas_record_ography_type.field_tapas_record_ography_type_value
       # ography_type_results = client.query("SELECT field_tapas_record_ography_type_value FROM field_data_field_tapas_record_ography_type WHERE entity_id = #{row['nid']}")
