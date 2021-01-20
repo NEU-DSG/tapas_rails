@@ -10,69 +10,67 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_11_14_171654) do
+ActiveRecord::Schema.define(version: 2021_01_19_234646) do
 
-  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name", null: false
-    t.string "record_type", null: false
+  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name", limit: 128, null: false
+    t.string "record_type", limit: 128, null: false
     t.bigint "record_id", null: false
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
-    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
-    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+    t.index ["blob_id"], name: "index_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "blob_id"], name: "index_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "key", null: false
-    t.string "filename", null: false
-    t.string "content_type"
+  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "key", limit: 128, null: false
+    t.string "filename", limit: 128, null: false
+    t.string "content_type", limit: 128
     t.text "metadata"
     t.bigint "byte_size", null: false
-    t.string "checksum", null: false
+    t.string "checksum", limit: 128, null: false
     t.datetime "created_at", null: false
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "bookmarks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "user_type"
     t.string "document_id"
     t.string "title"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string "document_type"
     t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
-  create_table "bootsy_image_galleries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "bootsy_image_galleries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "bootsy_resource_id"
     t.string "bootsy_resource_type"
-    t.bigint "bootsy_resource_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["bootsy_resource_type", "bootsy_resource_id"], name: "index_bootsy_image_galleries_on_bootsy_resource_type_and_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "bootsy_images", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "bootsy_images", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "image_file"
-    t.bigint "image_gallery_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["image_gallery_id"], name: "index_bootsy_images_on_image_gallery_id"
+    t.integer "image_gallery_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "captions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "captions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "active_storage_attachment_id"
     t.index ["active_storage_attachment_id"], name: "index_captions_on_active_storage_attachment_id"
   end
 
-  create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "collection_id"
     t.integer "parent_collection_id", null: false
     t.index ["collection_id", "parent_collection_id"], name: "index_collections_parent", unique: true
     t.index ["collection_id"], name: "index_collection_collections_on_collection_id"
   end
 
-  create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
@@ -85,7 +83,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["discarded_at"], name: "index_collections_on_discarded_at"
   end
 
-  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "core_file_id"
     t.bigint "collection_id"
     t.index ["collection_id", "core_file_id"], name: "index_collections_core_files_on_collection_id_and_core_file_id", unique: true
@@ -93,7 +91,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["core_file_id"], name: "index_collections_core_files_on_core_file_id"
   end
 
-  create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
@@ -105,14 +103,14 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["discarded_at"], name: "index_communities_on_discarded_at"
   end
 
-  create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "community_id", null: false
     t.bigint "institution_id", null: false
     t.index ["community_id", "institution_id"], name: "index_communities_instutitions", unique: true
     t.index ["institution_id", "community_id"], name: "index_institutions_communities", unique: true
   end
 
-  create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "collection_id"
     t.bigint "community_id"
     t.index ["collection_id", "community_id"], name: "index_community_collections_on_collection_id_and_community_id", unique: true
@@ -120,14 +118,14 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["community_id"], name: "index_community_collections_on_community_id"
   end
 
-  create_table "community_communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "community_communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "community_id"
     t.integer "parent_community_id", null: false
     t.index ["community_id", "parent_community_id"], name: "index_community_parent", unique: true
     t.index ["community_id"], name: "index_community_communities_on_community_id"
   end
 
-  create_table "community_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "community_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "community_id"
     t.bigint "user_id"
     t.string "member_type", limit: 6, default: "member"
@@ -136,7 +134,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["user_id"], name: "index_community_members_on_user_id"
   end
 
-  create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
@@ -145,18 +143,110 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.integer "depositor_id", null: false
     t.boolean "featured"
     t.datetime "discarded_at"
+    t.string "ography"
     t.index ["discarded_at"], name: "index_core_files_on_discarded_at"
   end
 
-  create_table "core_files_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "core_files_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "core_file_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "user_type", limit: 11, default: "contributor", null: false
     t.index ["core_file_id", "user_id"], name: "index_core_files_users_on_core_file_id_and_user_id", unique: true
     t.index ["user_id", "core_file_id"], name: "index_core_files_users_on_user_id_and_core_file_id", unique: true
   end
 
-  create_table "friendly_id_slugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "forem_categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "slug"
+    t.integer "position", default: 0
+    t.index ["slug"], name: "index_forem_categories_on_slug", unique: true
+  end
+
+  create_table "forem_forums", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.integer "category_id"
+    t.integer "views_count", default: 0
+    t.string "slug"
+    t.integer "position", default: 0
+    t.index ["slug"], name: "index_forem_forums_on_slug", unique: true
+  end
+
+  create_table "forem_groups", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.string "name"
+    t.index ["name"], name: "index_forem_groups_on_name"
+  end
+
+  create_table "forem_memberships", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "group_id"
+    t.integer "member_id"
+    t.index ["group_id"], name: "index_forem_memberships_on_group_id"
+  end
+
+  create_table "forem_moderator_groups", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "forum_id"
+    t.integer "group_id"
+    t.index ["forum_id"], name: "index_forem_moderator_groups_on_forum_id"
+  end
+
+  create_table "forem_posts", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "topic_id"
+    t.text "text"
+    t.integer "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "reply_to_id"
+    t.string "state", default: "pending_review"
+    t.boolean "notified", default: false
+    t.index ["reply_to_id"], name: "index_forem_posts_on_reply_to_id"
+    t.index ["state"], name: "index_forem_posts_on_state"
+    t.index ["topic_id"], name: "index_forem_posts_on_topic_id"
+    t.index ["user_id"], name: "index_forem_posts_on_user_id"
+  end
+
+  create_table "forem_subscriptions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "subscriber_id"
+    t.integer "topic_id"
+  end
+
+  create_table "forem_topics", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "forum_id"
+    t.integer "user_id"
+    t.string "subject"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.boolean "locked", default: false, null: false
+    t.boolean "pinned", default: false
+    t.boolean "hidden", default: false
+    t.datetime "last_post_at"
+    t.string "state", default: "pending_review"
+    t.integer "views_count", default: 0
+    t.string "slug"
+    t.index ["forum_id"], name: "index_forem_topics_on_forum_id"
+    t.index ["slug"], name: "index_forem_topics_on_slug", unique: true
+    t.index ["state"], name: "index_forem_topics_on_state"
+    t.index ["user_id"], name: "index_forem_topics_on_user_id"
+  end
+
+  create_table "forem_views", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "viewable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer "count", default: 0
+    t.string "viewable_type"
+    t.datetime "current_viewed_at"
+    t.datetime "past_viewed_at"
+    t.index ["updated_at"], name: "index_forem_views_on_updated_at"
+    t.index ["user_id"], name: "index_forem_views_on_user_id"
+    t.index ["viewable_id"], name: "index_forem_views_on_viewable_id"
+  end
+
+  create_table "friendly_id_slugs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
@@ -168,7 +258,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
-  create_table "institutions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "institutions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
     t.string "image"
@@ -176,48 +266,48 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.string "latitude"
     t.string "longitude"
     t.string "url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "menu_links", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "menu_links", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "link_text", null: false
     t.string "link_href", null: false
     t.string "classes"
     t.integer "link_order"
     t.integer "parent_link_id"
     t.string "menu_name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
-  create_table "news_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "news_items", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "author"
     t.string "publish"
     t.string "title", null: false
     t.string "slug", null: false
     t.text "content"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string "tags"
   end
 
-  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "pages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "title", null: false
     t.string "slug", null: false
     t.text "content"
     t.string "publish"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string "submenu"
   end
 
-  create_table "searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.text "query_params"
+  create_table "searches", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+    t.text "query_params", collation: "utf8_general_ci"
     t.integer "user_id"
-    t.string "user_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "user_type", collation: "utf8_general_ci"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.index ["user_id"], name: "index_searches_on_user_id"
   end
 
@@ -241,7 +331,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_messageboard_notifications_for_followed_topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.bigint "messageboard_id", null: false
     t.string "notifier_key", limit: 90, null: false
     t.boolean "enabled", default: true, null: false
@@ -274,14 +364,14 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_notifications_for_followed_topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.string "notifier_key", limit: 90, null: false
     t.boolean "enabled", default: true, null: false
     t.index ["user_id", "notifier_key"], name: "thredded_notifications_for_followed_topics_unique", unique: true
   end
 
   create_table "thredded_notifications_for_private_topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.string "notifier_key", limit: 90, null: false
     t.boolean "enabled", default: true, null: false
     t.index ["user_id", "notifier_key"], name: "thredded_notifications_for_private_topics_unique", unique: true
@@ -291,9 +381,9 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.bigint "post_id"
     t.bigint "messageboard_id"
     t.text "post_content"
-    t.bigint "post_user_id"
+    t.integer "post_user_id"
     t.text "post_user_name"
-    t.bigint "moderator_id"
+    t.integer "moderator_id"
     t.integer "moderation_state", null: false
     t.integer "previous_moderation_state", null: false
     t.timestamp "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -301,7 +391,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id"
+    t.integer "user_id"
     t.text "content"
     t.string "source", limit: 191, default: "web"
     t.bigint "postable_id", null: false
@@ -318,7 +408,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_private_posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id"
+    t.integer "user_id"
     t.text "content"
     t.bigint "postable_id", null: false
     t.datetime "created_at", null: false
@@ -327,8 +417,8 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_private_topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "last_user_id"
+    t.integer "user_id"
+    t.integer "last_user_id"
     t.text "title", null: false
     t.text "slug", null: false
     t.integer "posts_count", default: 0
@@ -343,7 +433,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
 
   create_table "thredded_private_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "private_topic_id"
-    t.bigint "user_id"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["private_topic_id"], name: "index_thredded_private_users_on_private_topic_id"
@@ -358,8 +448,8 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_topics", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "last_user_id"
+    t.integer "user_id"
+    t.integer "last_user_id"
     t.text "title", null: false
     t.text "slug", null: false
     t.bigint "messageboard_id", null: false
@@ -381,7 +471,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_user_details", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.datetime "latest_activity_at"
     t.integer "posts_count", default: 0
     t.integer "topics_count", default: 0
@@ -396,7 +486,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_user_messageboard_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.bigint "messageboard_id", null: false
     t.boolean "follow_topics_on_mention", default: true, null: false
     t.boolean "auto_follow_topics", default: false, null: false
@@ -406,7 +496,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_user_post_notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.bigint "post_id", null: false
     t.datetime "notified_at", null: false
     t.index ["post_id"], name: "index_thredded_user_post_notifications_on_post_id"
@@ -414,7 +504,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_user_preferences", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.boolean "follow_topics_on_mention", default: true, null: false
     t.boolean "auto_follow_topics", default: false, null: false
     t.datetime "created_at", null: false
@@ -423,7 +513,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_user_private_topic_read_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.bigint "postable_id", null: false
     t.integer "unread_posts_count", default: 0, null: false
     t.integer "read_posts_count", default: 0, null: false
@@ -433,7 +523,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
   end
 
   create_table "thredded_user_topic_follows", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.bigint "topic_id", null: false
     t.datetime "created_at", null: false
     t.integer "reason", limit: 1
@@ -442,7 +532,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
 
   create_table "thredded_user_topic_read_states", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "messageboard_id", null: false
-    t.bigint "user_id", null: false
+    t.integer "user_id", null: false
     t.bigint "postable_id", null: false
     t.integer "unread_posts_count", default: 0, null: false
     t.integer "read_posts_count", default: 0, null: false
@@ -453,7 +543,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["user_id", "postable_id"], name: "thredded_user_topic_read_states_user_postable", unique: true
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -464,12 +554,15 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.datetime "last_sign_in_at"
     t.string "current_sign_in_ip"
     t.string "last_sign_in_ip"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean "guest", default: false
     t.string "encrypted_api_key"
+    t.boolean "forem_admin", default: false
+    t.string "forem_state", default: "pending_review"
+    t.boolean "forem_auto_subscribe", default: false
     t.string "name"
-    t.bigint "institution_id"
+    t.integer "institution_id"
     t.string "avatar"
     t.text "bio"
     t.string "confirmation_token"
@@ -500,7 +593,7 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.index ["username"], name: "index_users_on_username"
   end
 
-  create_table "view_packages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "view_packages", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "human_name"
     t.string "machine_name"
     t.text "description"
@@ -509,8 +602,8 @@ ActiveRecord::Schema.define(version: 2020_11_14_171654) do
     t.text "js_files"
     t.text "parameters"
     t.text "run_process"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string "dir_name"
     t.datetime "git_timestamp"
     t.string "git_branch"
