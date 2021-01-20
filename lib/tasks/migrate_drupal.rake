@@ -202,15 +202,13 @@ namespace :drupal do
       # core_file.collections = Collection.first
 
 
-      # TODO: clarify with Candace how she wants the ography type stored in the data model
-      # ography type
       # set ography_type from field_data_field_tapas_record_ography_type.field_tapas_record_ography_type_value
-      # ography_type_results = client.query("SELECT field_tapas_record_ography_type_value FROM field_data_field_tapas_record_ography_type WHERE entity_id = #{row['nid']}")
-      # ography_type_results.each do |orgraphy_type_row|
-      #   if orgraphy_type_row['field_tapas_record_ography_type_value']
-      #     core_file.ography = orgraphy_type_row['field_tapas_record_ography_type_value']
-      #   end
-      # end
+      ography_type_results = client.query("SELECT field_tapas_record_ography_type_value FROM field_data_field_tapas_record_ography_type WHERE entity_id = #{row['nid']}")
+      ography_type_results.each do |ography_type_row|
+        if ography_type_row['field_tapas_record_ography_type_value']
+          core_file.ography = ography_type_row['field_tapas_record_ography_type_value']
+        end
+      end
 
 
       # TODO ask Candace in order to determine the method to migrate files and the preferred storage method
@@ -220,5 +218,11 @@ namespace :drupal do
       core_file.save
     end
 
+    puts "Completed Migration"
+    puts " - Migrated"
+    puts " - - #{User.count} Users"
+    puts " - - #{Community.count} Communities"
+    puts " - - #{Collection.count} Collections"
+    puts " - - #{CoreFile.count} CoreFiles"
   end
 end
