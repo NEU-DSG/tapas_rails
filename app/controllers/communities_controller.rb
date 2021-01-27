@@ -2,7 +2,7 @@ class CommunitiesController < ApplicationController
   include ApiAccessible
 
   before_action :can_edit?, only: [:edit, :update, :destroy]
-  before_action :can_read?, :only => :show
+  before_action :can_read?, only: :show
   # before_action :enforce_show_permissions, :only=>:index
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
@@ -24,8 +24,8 @@ class CommunitiesController < ApplicationController
     @results = @search.result
 
     respond_to do |format|
-      format.html { render :template => 'shared/index' }
-      format.js { render :template => 'shared/index', :layout => false }
+      format.html { render template: 'shared/index' }
+      format.js { render template: 'shared/index', layout: false }
     end
   end
 
@@ -63,7 +63,6 @@ class CommunitiesController < ApplicationController
     redirect_to @community
   end
 
-  #This method is used to edit a particular community
   def edit
     @community = Community.find(params[:id])
     @page_title = "Edit #{@community.title || ''}"
@@ -80,9 +79,7 @@ class CommunitiesController < ApplicationController
     add_institutions
     add_members
 
-    if params[:community][:remove_thumbnail].present?
-      @community.thumbnail.purge_later
-    end
+    @community.thumbnail.purge_later if params[:community][:remove_thumbnail].present?
 
     redirect_to @community
   end
@@ -92,13 +89,9 @@ class CommunitiesController < ApplicationController
   end
 
   def add_members
-    child_params[:project_members].reject(&:empty?).map { |uid| CommunityMember.create(community_id: @community.id, user_id: uid, member_type: 'member') }
+    child_params[:project_members].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'member') }
     child_params[:project_editors].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'editor') }
     child_params[:project_admins].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'admin') }
-
-    unless child_params[:project_admins].include?(current_user.id.to_s)
-      CommunityMember.create!(community_id: @community.id, user_id: current_user.id, member_type: 'admin')
-    end
   end
 
   def destroy
@@ -134,10 +127,10 @@ class CommunitiesController < ApplicationController
 
   def child_params
     params.require(:community).permit(
-      :institutions => [],
-      :project_admins => [],
-      :project_editors => [],
-      :project_members => []
+      institutions: [],
+      project_admins: [],
+      project_editors: [],
+      project_members: []
     )
   end
 end
