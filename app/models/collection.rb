@@ -33,7 +33,7 @@ class Collection < ActiveRecord::Base
   def update_core_file_publicity
     return if is_public.nil?
     return if is_public == is_public_was
-    puts id, is_public
+
     if is_public
       core_files.update_all(is_public: true)
     else
