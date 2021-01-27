@@ -3,129 +3,43 @@ require 'spec_helper'
 describe Collection do
   include FileHelpers
 
-  describe "Core File drupal access" do
+  describe 'Core File access' do
     let(:coll) { FactoryBot.create(:collection) }
 
-    context "on a collection that has been made public" do
+    context 'on a collection that has been made public' do
       it 'is set to public' do
         one, two = FactoryBot.create_list(:core_file, 2)
-        one.drupal_access = 'private' ; one.collections << coll ; one.save!
-        two.drupal_access = 'private' ; two.collections << coll ; two.save!
-        expect(one.reload.drupal_access).to eq 'private'
-        expect(two.reload.drupal_access).to eq 'private'
 
-        coll.drupal_access = 'public'
-        coll.save!
+        one.update(is_public: false, collections: [coll])
+        two.update(is_public: false, collections: [coll])
 
-        expect(one.reload.drupal_access).to eq 'public'
-        expect(two.reload.drupal_access).to eq 'public'
+        expect(one.reload.is_public).to be_falsy
+        expect(two.reload.is_public).to be_falsy
+
+        coll.update(is_public: true)
+
+        expect(one.reload.is_public).to be_truthy
+        expect(two.reload.is_public).to be_truthy
       end
     end
 
-    context "on a collection that has been made private" do
+    context 'on a collection that has been made private' do
       it 'is set to private unless the object has other public collections' do
         one, two = FactoryBot.create_list(:core_file, 2)
 
-        public_collection = FactoryBot.create(:collection)
-        public_collection.drupal_access = 'public'
-        public_collection.save!
+        coll.update(is_public: true)
 
+        public_collection = FactoryBot.create(:collection, is_public: true)
         private_collection = FactoryBot.create(:collection)
-        private_collection.drupal_access = 'private'
-        private_collection.save!
 
-        one.collections = [coll, public_collection]
-        one.drupal_access = 'public'
-        one.save!
+        one.update(collections: [coll, public_collection], is_public: true)
+        two.update(collections: [coll, private_collection], is_public: true)
 
-        two.collections = [coll, private_collection]
-        two.drupal_access = 'public'
-        two.save!
+        coll.reload.update(is_public: false)
 
-        coll.drupal_access = 'private'
-        coll.save!
-
-        expect(one.reload.drupal_access).to eq 'public'
-        expect(two.reload.drupal_access).to eq 'private'
+        expect(one.reload.is_public).to be_truthy
+        expect(two.reload.is_public).to be_falsy
       end
-    end
-  end
-
-  describe "phantom collection" do
-    let(:phantom) { Collection.phantom_collection }
-
-    before(:each) { Collection.delete_all }
-    after(:each) { Collection.delete_all }
-
-    it "is created when referenced before existence" do
-      phid = Rails.configuration.phantom_collection_pid
-      expect(Collection.exists? phid).to be false
-      phantom
-      expect(Collection.exists? phid).to be true
-    end
-
-    it "is looked up when it exists and not created anew" do
-      Collection.phantom_collection ; Collection.phantom_collection
-      expect(Collection.count).to eq 1
-    end
-  end
-
-  describe "Ography relationships" do
-    it { respond_to :personographies }
-    it { respond_to :orgographies }
-    it { respond_to :bibliographies }
-    it { respond_to :otherographies }
-    it { respond_to :odd_files }
-    it { respond_to :personographies= }
-    it { respond_to :orgographies= }
-    it { respond_to :bibliographies= }
-    it { respond_to :otherographies= }
-    it { respond_to :odd_files= }
-    it { respond_to :placeographies }
-    it { respond_to :placeographies= }
-
-    it "can be set on core files from the collection" do
-      collection = FactoryBot.create :collection
-      core_file = FactoryBot.create :core_file
-
-      collection.orgographies << core_file
-      collection.save!
-
-      expect(core_file.reload.orgography_for.first.pid).to eq collection.pid
-      expect(collection.reload.orgographies).to match_array [core_file]
-    end
-  end
-
-  describe "#as_json" do
-    it 'returns a valueless hash with no data' do
-      result = Collection.new.as_json
-
-      expect(result[:project_did]).to be_blank
-      expect(result[:depositor]).to be_blank
-      expect(result[:title]).to be_blank
-      expect(result[:access]).to be_blank
-      expect(result[:thumbnail]).to be_blank
-      expect(result[:description]).to be_blank
-    end
-
-    it 'returns the correct values where data exists' do
-      community = FactoryBot.create :community
-
-      collection = FactoryBot.create :collection
-      collection.mods.title = "The Most Dangerous Game"
-      collection.mods.abstract = "Spoopy"
-      collection.add_thumbnail(:filepath => fixture_file('image.jpg'))
-      collection.community = community
-      collection.drupal_access = 'private'
-
-      result = collection.as_json
-
-      expect(result[:project_did]).to eq community.did
-      expect(result[:depositor]).to eq community.depositor
-      expect(result[:title]).to eq 'The Most Dangerous Game'
-      expect(result[:description]).to eq 'Spoopy'
-      expect(result[:access]).to eq 'private'
-      expect(result[:thumbnail]).to eq 'image.jpg'
     end
   end
 

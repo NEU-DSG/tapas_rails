@@ -1,8 +1,10 @@
 FactoryBot.define do
 
   factory :collection do
-    depositor { "test_user" }
-    title { "Collection" }
-    did { unique_did }
+    depositor factory: :user
+    community
+    is_public { false }
+    sequence(:title) { |n| "Collection #{n}" }
+    sequence(:description) { |n| "Description #{n}" }
   end
 end
