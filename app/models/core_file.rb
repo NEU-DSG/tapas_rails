@@ -1,5 +1,6 @@
 class CoreFile < ActiveRecord::Base
   include Discard::Model
+  include TapasRails::ViewPackages
 
   belongs_to :depositor, class_name: "User"
 
@@ -14,6 +15,8 @@ class CoreFile < ActiveRecord::Base
   has_many_attached :thumbnails
   has_one_attached :canonical_object
 
+  before_update :set_privacy
+
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
      'placeography']
@@ -25,7 +28,7 @@ class CoreFile < ActiveRecord::Base
 
   def community
     # All collections that a CoreFile belongs to will belong to the same community
-    collections.first.community
+    collections.first.community rescue nil
   end
 
   def project
@@ -78,34 +81,48 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  def as_json
-    if upload_failed?
-      render_failure_json
-    elsif upload_complete?
-      render_success_json
-    elsif upload_in_progress?
-      render_inprogress_json
-    end
-  end
-
   def is_ography?
     CoreFile.all_ography_read_methods.any? do |ography_type|
-      begin
-        self.send(ography_type).any?
-      rescue
-        return nil
-      end
+      send(ography_type).any? rescue return nil
     end
   end
 
   def ography_type
-    type = []
-    CoreFile.all_ography_types.each do |o|
-      unless self.send("#{o}_for").blank?
-        type << o
+    CoreFile.all_ography_types.map do |o|
+      o unless send("#{o}_for").blank?
+    end.compact
+  end
+
+  def create_view_package_methods
+    array = available_view_packages_machine
+
+    array.each do |method_name|
+      string_name = method_name
+      method_name = method_name.to_sym
+      CoreFile.send :define_method, method_name do |arg = :models|
+        if arg.blank?
+          arg = :models
+        end
+
+        tg = self.content_objects(:raw).find do |x|
+          x["active_fedora_model_ssi"] == "HTMLFile" &&
+            x["html_type_ssi"] == string_name
+        end
+
+        load_specified_type(tg, arg)
       end
     end
-    return type
+  end
+
+  def self.remove_view_package_methods(view_packages)
+    view_packages.each do |r|
+      if !r.blank?
+        sym = r.to_sym
+        if CoreFile.method_defined? sym
+          CoreFile.send :remove_method, sym
+        end
+      end
+    end
   end
 
   def remove_thumbnail
@@ -116,49 +133,7 @@ class CoreFile < ActiveRecord::Base
     CoreFilesUser.where(user_id: ids).update_all(user_type: 'author')
   end
 
-  private
-
-  def render_failure_json
-    { :status => upload_status,
-      :errors_display => errors_display,
-      :errors_system => errors_system,
-      :stacktrace => stacktrace,
-      :since => upload_status_time
-    }
-  end
-
-  def render_inprogress_json
-    { :status => upload_status,
-      :since  => upload_status_time }
-  end
-
-
-  def render_success_json
-    tei_name = (canonical_object ? canonical_object.filename : '')
-
-    { :status => upload_status,
-      :since => upload_status_time,
-      :collection_dids => collections.map(&:did),
-      :tei => tei_name,
-      :support_files => page_images.map(&:filename),
-      :depositor => depositor,
-      :access => drupal_access
-    }
-  end
-
-  def calculate_drupal_access
-    if collections.any? { |collection| collection.drupal_access == 'public' }
-      self.drupal_access = 'public'
-    else
-      self.drupal_access = 'private'
-    end
-  end
-
-  def match_dc_to_mods
-    self.DC.title = self.mods.title.first
-    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
-    # self.mods.title = self.DC.title.first
-    # self.mods.abstract = self.DC.description.first
-    #  self.mods.thumbnail = self.DC.thumbnail.first
+  def set_privacy
+    self.is_public = false unless collections.any?(&:is_public)
   end
 end
