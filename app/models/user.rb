@@ -1,8 +1,8 @@
 class User < ActiveRecord::Base
   include Discard::Model
 
-  require "net/http"
-  require "uri"
+  require 'net/http'
+  require 'uri'
 
   mount_uploader :avatar, AvatarUploader
   validates_integrity_of :avatar
@@ -32,13 +32,13 @@ class User < ActiveRecord::Base
   ACCOUNT_TYPES = %w[free teic teic_inst]
 
   def self.find_unique_username(username)
-    taken_usernames = User.where("username LIKE ?", "#{username}%").pluck(:username)
+    taken_usernames = User.where('username LIKE ?', "#{username}%").pluck(:username)
 
     return username unless taken_usernames.include?(username)
 
     count = 2
 
-    while true
+    loop do
       new_username = "#{username}#{count}"
 
       return new_username unless taken_usernames.include?(new_username)
@@ -69,19 +69,19 @@ class User < ActiveRecord::Base
   end
 
   def user_key
-    self.id.to_s
+    id.to_s
   end
 
   def role
     if admin?
-      "admin"
+      'admin'
     else
-      "user"
+      'user'
     end
   end
 
-  def admin=(n)
-    if n.to_i == 0
+  def admin=(integer_bool)
+    if integer_bool.to_i.zero?
       update(admin_at: nil)
     else
       update(admin_at: Time.zone.now)
@@ -92,8 +92,8 @@ class User < ActiveRecord::Base
     !admin_at.nil?
   end
 
-  def paid=(n)
-    if n.to_i == 0
+  def paid=(integer_bool)
+    if integer_bool.to_i.zero?
       update(paid_at: nil)
     else
       update(paid_at: Time.zone.now)
@@ -109,7 +109,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_user_key(key)
-    send("find_by_nuid".to_sym, key)
+    send('find_by_nuid'.to_sym, key)
   end
 
   def forem_name
@@ -161,7 +161,7 @@ class User < ActiveRecord::Base
   def ensure_unique_username
     if username.nil?
       self.username = User.find_unique_username(
-        (self.name || "anonymous").parameterize(separator: '', preserve_case: true)
+        (self.name || 'anonymous').parameterize(separator: '', preserve_case: true)
       )
     else
       self.username = User.find_unique_username(username)
@@ -175,7 +175,7 @@ class User < ActiveRecord::Base
 
     @api_key = Digest::SHA512.hexdigest key
 
-    if User.where(:encrypted_api_key => @api_key)
+    if User.where(encrypted_api_key: @api_key)
       generate_api_key
     else
       self.encrypted_api_key = @api_key
