@@ -1,21 +1,8 @@
 class CommunitiesController < ApplicationController
   include ApiAccessible
 
-  before_action :can_edit?, only: [:edit, :update, :destroy]
-  before_action :can_read?, only: :show
-  # before_action :enforce_show_permissions, :only=>:index
-
-  # self.search_params_logic += [:add_access_controls_to_solr_params]
-
-  def upsert
-    if params[:thumbnail]
-      params[:thumbnail] = create_temp_file(params[:thumbnail])
-    end
-
-    TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
-    @response[:message] = "Community upsert in progress"
-    pretty_json(202) and return
-  end
+  before_action :authorize_edit!, only: %i[edit update destroy]
+  before_action :authorize_read!, only: :show
 
   def index
     @page_title = "All Projects"
@@ -31,7 +18,7 @@ class CommunitiesController < ApplicationController
 
   def show
     @community = Community.find(params[:id])
-    @page_title = @community.title || ""
+    @page_title = @community.title || ''
     @collections = @community.collections
   end
 
@@ -55,6 +42,8 @@ class CommunitiesController < ApplicationController
   # TODO: CoreFiles can belong to many collections (many-to-many), but will always point back to one project
 
   def create
+    authorize! :create, Community.new
+
     @community = Community.create!(community_params.merge({ depositor_id: current_user.id }))
 
     add_institutions
@@ -102,6 +91,14 @@ class CommunitiesController < ApplicationController
   end
 
   protected
+
+  def authorize_edit!
+    authorize! :manage, Community.find(params[:id])
+  end
+
+  def authorize_read!
+    authorize! :read, Community.find(params[:id])
+  end
 
   def can_edit?
     community = Community.find(params[:id])

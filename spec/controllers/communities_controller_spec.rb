@@ -1,207 +1,190 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe CommunitiesController do
-  include ValidAuthToken
-  include FileHelpers
+  include ControllerHelpers
 
-  # describe 'DELETE #destroy' do
-  #   after(:each) { ActiveFedora::Base.delete_all }
-  #
-  #   it '404s for dids that do not exist' do
-  #     delete :destroy, { :did => 'doesnt_exist' }
-  #     expect(response.status).to eq 404
-  #   end
-  #
-  #   it '404s for dids that do not belong to a Community' do
-  #     core_file = FactoryBot.create :core_file
-  #     delete :destroy, { :did => core_file.did }
-  #     expect(response.status).to eq 404
-  #     expect { core_file.reload }.not_to raise_error
-  #   end
-  #
-  #   it '200s for successful requests and deletes all descendent objects' do
-  #     community = Community.create(:did => '123575', :depositor => 'test')
-  #     collection = Collection.create(:did => '128654', :depositor => 'test')
-  #     collection.save! ; collection.community = community ; collection.save!
-  #     delete :destroy, { :did => community.did }
-  #     expect(response.status).to eq 200
-  #     expect(Community.find_by_did community.did).to be nil
-  #     expect(Collection.find_by_did collection.did).to be nil
-  #   end
-  # end
+  let(:institution) { FactoryBot.create(:institution) }
+  let(:user) { FactoryBot.create(:user, institution: institution) }
+  let(:editor) { FactoryBot.create(:user, institution: institution) }
+  let(:member) { FactoryBot.create(:user, institution: institution) }
 
-    describe 'POST #upsert' do
-      before(:all) { Resque.inline = true }
-      after(:all) { Resque.inline = false }
-      let(:community) { Community.find_by_did params[:did] }
+  def params
+    {
+      community: {
+        description: 'foo',
+        institutions: [institution],
+        project_admins: [user],
+        project_editors: [editor],
+        project_members: [member],
+        title: 'community title'
+      }
+    }
+  end
 
-      let(:params) do
-        { :title => 'Test Community',
-          :depositor => '000000000',
-          :description => 'This is a test community.',
-          :members => %w(1 2 3),
-          :access => 'public',
-          :did => '12',
-          :thumbnail => Rack::Test::UploadedFile.new(fixture_file('image.jpg')),
-        }
-      end
+  describe '#index' do
+    it 'renders the communities index' do
+      communities = FactoryBot.create_list(:community, 3, depositor: user, is_public: true)
 
-      it '422s for invalid requests' do
-        post :upsert, params.except(:depositor)
-        expect(response.status).to eq 422
-      end
+      get :index
 
-      it 'returns a 202 and creates community on requests with new dids.' do
-        post :upsert, params
+      expect(assigns(:results)).to eq(communities)
+      expect(response).to render_template('shared/index')
+    end
+  end
 
-        expect(response.status).to eq 202
-        expect(community.depositor).to eq params[:depositor]
-      end
+  describe '#show' do
+    it 'renders the specified community' do
+      community = FactoryBot.create(:community)
 
-      it 'returns a 202 and updates the requested community if it exists' do
-        community_old = Community.new
-        community_old.title = 'Test Community'
-        community_old.did = params[:did]
-        community_old.depositor = 'System'
-        community_old.project_members = ['303']
-        community_old.save!
+      get :show, params: { id: community.id }
 
-        post :upsert, params
-        expect(response.status).to eq 202
-        expect(community.depositor).to eq 'System'
-        expect(community.project_members).to eq ['1', '2', '3']
-      end
+      expect(assigns(:community)).to eq(community)
+      expect(response).to render_template('show')
     end
 
-    it_should_behave_like 'an API enabled controller'
+    it 'does not allow unauthorized access to a private community' do
+      community = FactoryBot.create(:community, is_public: false)
 
-  # Testing the new function defined in Community Controller
-  describe 'get #new' do
+      expect { get :show, params: { id: community.id } }.to raise_error(CanCan::AccessDenied)
+    end
 
-    # Purpose statement
-    it 'should create a community object' do
+    it 'allows authorized access to a private community' do
+      community = FactoryBot.create(:community, depositor: user, is_public: false)
 
-      # Calling create function
+      login_user(user)
+
+      get :show, params: { id: community.id }
+
+      expect(assigns(:community)).to eq(community)
+      expect(response).to render_template('show')
+    end
+  end
+
+  describe '#new' do
+    it 'does not allow non-logged-in users' do
       get :new
 
-      # Testing the object creation parameters
-      #binding.pry
+      expect(response).to redirect_to('/')
+    end
 
-      # Checking whether the new object is of class type Community
-      expect(assigns(:community)).to be_a_new(Community)
+    it 'allows a paid logged-in user' do
+      paid_user = FactoryBot.create(:user, paid_at: Time.now)
+
+      login_user(paid_user)
+
+      get :new
+
+      expect(response).to render_template('new')
     end
   end
 
-  # Testing the create function in the Community Controller
-  describe 'post #create' do
-
-    # Creation of community object used later for confirmation of working of create functionality
-    before(:all) {
-
-      Resque.inline = true
-      @user = FactoryBot.create(:user)
-      @communityCreated = Community.new(title:'New Community',depositor:@user.id.to_s,description:'This is a test community.',mass_permissions:'public')
-      @communityCreated.did = @communityCreated.pid
-      @communityCreated.save!
-      @did = @communityCreated.did
-    }
-
-    after(:all) {
-
-      Resque.inline = false
-      @user.destroy
-    }
-
-    let(:community) {
-
-      Community.find_by_did params[:did] }
-
-    # Creation of params object to pass it along with create function for Community object creation
-    let(:params) do
-      {
-          :community => {
-              :title => 'New Community',
-              :description => 'This is a test community.',
-              :mass_permissions => 'public',
-              :depositor => @user.id.to_s
-          }
-      }
-
+  describe '#create' do
+    it 'does not allow a non-logged-in user' do
+      expect { post :create, params: params }.to raise_error(CanCan::AccessDenied)
     end
 
-    # Purpose statement
-    it 'should create a community object and go to show page' do
+    it 'allows a logged-in user' do
+      paid_user = FactoryBot.create(:user, paid_at: Time.now)
 
-      # Calling the create function
-      sign_in @user
-      post :create, params
+      login_user(paid_user)
 
-      # Retrieving the first object created in Community class
-      community = Community.first
+      post :create, params: params
 
-      # Testing the object creation parameters
-      #binding.pry
-
-      # Expecting the post method to be successful and transfer the created community resource to the show page
-      expect(response.status).to eq 302
-
-      expect(community.title).to eq params[:community][:title]
-
-    end
-
-    # Purpose statement
-    it 'community title should be consistent' do
-
-      # Expecting the community created with same parameters as params to have identical title
-      expect(@communityCreated.title).to eq params[:community][:title]
-    end
-
-    # Purpose statement
-    it 'community depositor should be consistent' do
-
-      # Expecting the community created with same parameters as params to have identical depositor value
-      expect(@communityCreated.depositor).to eq @user.id.to_s
-    end
-
-    # Purpose statement
-    it 'community description should be consistent' do
-
-      # Expecting the community created with same parameters as params to have identical description
-      expect(@communityCreated.description).to eq params[:community][:description]
-    end
-
-    # Purpose statement
-    it 'community mass permission should be consistent' do
-
-      # Expecting the community created with same parameters as params to have identical mass permissions
-      expect(@communityCreated.mass_permissions).to eq params[:community][:mass_permissions]
+      expect(response).to redirect_to("/communities/#{assigns(:community).id}")
     end
   end
 
+  describe '#edit' do
+    let(:community) { FactoryBot.create(:community, depositor: user) }
 
-  describe 'post #update' do
-    Resque.inline = true
-    let(:community) { FactoryBot.create :community }
-    let(:user) { FactoryBot.create(:user) }
-
-    # Purpose statement
-    it '302s for valid requests' do
-      sign_in user
-      community.did = community.pid
-      community.depositor = user.id.to_s
-      community.save!
-      params = { :did=> community.did, :id=>community.pid, :community=>{:title=>'Updated community', :mass_permissions=>'public', :description=>'Updated description'}}
-
-      # Calling the update function
-      put :update, params
-
-      # Expecting the post method to be successful and transfer the updated community resource to the show page
-      expect(response.status).to eq 302
+    it 'does not allow a non-logged-in user' do
+      expect { get :edit, params: { id: community.id } }.to raise_error(CanCan::AccessDenied)
     end
-    Resque.inline = false
+
+    it 'does not allow a non-member' do
+      login_user
+
+      expect { get :edit, params: { id: community.id } }.to raise_error(CanCan::AccessDenied)
+    end
+
+    it 'allows a member' do
+      login_user(user)
+
+      get :edit, params: { id: community.id }
+
+      expect(assigns(:community)).to eq(community)
+      expect(response).to render_template('edit')
+    end
+
+    it 'allows an admin' do
+      login_admin
+
+      get :edit, params: { id: community.id }
+
+      expect(assigns(:community)).to eq(community)
+      expect(response).to render_template('edit')
+    end
   end
 
-  after(:all){
-    User.destroy_all
-  }
+  describe '#update' do
+    let(:community) { FactoryBot.create(:community, depositor: user) }
+
+    it 'does not allow a non-logged-in user' do
+      expect { post :update, params: params.merge(id: community.id) }.to raise_error(CanCan::AccessDenied)
+    end
+
+    it 'does not allow a non-editor/-admin' do
+      login_user
+
+      expect { post :update, params: params.merge(id: community.id) }.to raise_error(CanCan::AccessDenied)
+    end
+
+    it 'allows an editor' do
+      login_user(user)
+
+      post :update, params: params.merge(id: community.id)
+
+      expect(assigns(:community).title).to eq(params[:community][:title])
+      expect(response).to redirect_to("/communities/#{community.id}")
+    end
+
+    it 'allows an admin' do
+      login_admin
+
+      post :update, params: params.merge(id: community.id)
+
+      expect(assigns(:community).title).to eq(params[:community][:title])
+      expect(response).to redirect_to("/communities/#{community.id}")
+    end
+  end
+
+  describe '#destroy' do
+    let(:community) { FactoryBot.create(:community, depositor: user) }
+
+    it 'does not allow a non-logged-in user' do
+      expect { delete :destroy, params: { id: community.id } }.to raise_error(CanCan::AccessDenied)
+    end
+
+    it 'does not allow a non-member' do
+      login_user
+
+      expect { delete :destroy, params: { id: community.id } }.to raise_error(CanCan::AccessDenied)
+    end
+
+    it 'allows an editor' do
+      login_user(user)
+
+      delete :destroy, params: { id: community.id }
+
+      expect(response).to redirect_to('/my_tapas')
+    end
+
+    it 'allows an admin' do
+      login_admin
+
+      delete :destroy, params: { id: community.id }
+
+      expect(response).to redirect_to('/my_tapas')
+    end
+  end
 end
