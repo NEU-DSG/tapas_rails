@@ -2,7 +2,7 @@ class CoreFile < ActiveRecord::Base
   include Discard::Model
   include TapasRails::ViewPackages
 
-  belongs_to :depositor, class_name: "User"
+  belongs_to :depositor, class_name: 'User'
 
   has_many :core_files_users
   has_many :authors, -> { where(core_files_users: { user_type: 'author' }) }, through: :core_files_users, class_name: 'User', source: :user
@@ -18,8 +18,7 @@ class CoreFile < ActiveRecord::Base
   before_update :set_privacy
 
   def self.all_ography_types
-    ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
-     'placeography']
+    %w[personography orgography bibliography otherography odd_file placeography]
   end
 
   def self.all_ography_read_methods
@@ -105,8 +104,8 @@ class CoreFile < ActiveRecord::Base
         end
 
         tg = self.content_objects(:raw).find do |x|
-          x["active_fedora_model_ssi"] == "HTMLFile" &&
-            x["html_type_ssi"] == string_name
+          x['active_fedora_model_ssi'] == 'HTMLFile' &&
+            x['html_type_ssi'] == string_name
         end
 
         load_specified_type(tg, arg)
