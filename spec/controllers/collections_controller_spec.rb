@@ -25,6 +25,7 @@ describe CollectionsController do
 
         get :index
 
+        expect(response).to render_template('shared/index')
         expect(assigns(:results)).to eq(collections)
       end
     end
