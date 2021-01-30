@@ -32,16 +32,18 @@ class User < ActiveRecord::Base
   ACCOUNT_TYPES = %w[free teic teic_inst]
 
   def self.find_unique_username(username)
-    taken_usernames = User.where('username LIKE ?', "#{username}%").pluck(:username)
+    unless username.nil?
+      taken_usernames = User.select('username').where('username LIKE ?', "#{username}%")
 
-    return username unless taken_usernames.include?(username)
+      return username unless (taken_usernames || []).include?(username)
+    end
 
     count = 2
 
     loop do
       new_username = "#{username}#{count}"
 
-      return new_username unless taken_usernames.include?(new_username)
+      return new_username unless (taken_usernames || []).include?(new_username)
 
       count += 1
     end
@@ -161,7 +163,7 @@ class User < ActiveRecord::Base
   def ensure_unique_username
     if username.nil?
       self.username = User.find_unique_username(
-        (self.name || 'anonymous').parameterize(separator: '', preserve_case: true)
+        (name || 'anonymous').parameterize(separator: '', preserve_case: true)
       )
     else
       self.username = User.find_unique_username(username)

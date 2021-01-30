@@ -26,6 +26,17 @@ class Collection < ActiveRecord::Base
     nil
   end
 
+  # alias for ActiveStorage attach
+  def add_thumbnail(io: nil, filename: nil)
+    return if io.nil? || filename.nil?
+
+    thumbnails.attach(io: io, filename: filename)
+  end
+
+  def thumbnail
+    thumbnails.first
+  end
+
   def remove_thumbnail
     update(thumbnails: [])
   end
