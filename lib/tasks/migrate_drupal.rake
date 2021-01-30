@@ -70,6 +70,7 @@ namespace :drupal do
       institution = Institution.new
       institution.name = row["name"]
 
+      # TODO: address this development pattern for warning / throwing errors on incorrect results returned
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['tid']}")
       description_results.each do |description_row|
@@ -203,13 +204,6 @@ namespace :drupal do
       user_results.each do |user_row|
         user = User.find_by(username: user_row["name"])
       end
-
-      # TODO: #users Default to TAPAS user if user is not found as a workaround for making migration dev faster (not remigrating users every time)
-      # In the future, this should throw an error
-      if user == nil
-        user = User.find_by(email: "tapas_rails@tapas.neu.edu")
-      end
-
       community.depositor = user
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
@@ -248,17 +242,10 @@ namespace :drupal do
       collection.title = row["title"]
 
       # Find Drupal user by row uid and then correspond to Rails user by username
-      user = nil
       user_results = client.query("SELECT name FROM users WHERE uid = #{row['uid']}")
       user_results.each do |user_row|
-        user = User.find_by(username: user_row["name"])
+        collection.depositor = User.find_by(username: user_row["name"])
       end
-
-      # Default to TAPAS user if user is not found as a workaround for making migration dev faster (not remigrating users every time)
-      if user == nil
-        user = User.find_by(email: "tapas_rails@tapas.neu.edu")
-      end
-      collection.depositor = user
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['nid']}")
@@ -273,21 +260,21 @@ namespace :drupal do
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
       logger.info " --- rate-limited querying Solr for entity_id #{row['nid']}"
-      # sleep(10)
-      # uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      # response = Net::HTTP.get(uri)
-      # collection_solr_data = JSON.parse(response)
-      # collection_solr_data['response']['docs'].each do |doc|
-      #   if doc['sm_og_tapas_c_to_p']
-      #     doc['sm_og_tapas_c_to_p'].each do |id|
-      #       begin
-      #         collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-      #       rescue ActiveRecord::RecordNotFound => e
-      #         print e
-      #       end
-      #     end
-      #   end
-      # end
+      sleep(10)
+      uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+      response = Net::HTTP.get(uri)
+      collection_solr_data = JSON.parse(response)
+      collection_solr_data['response']['docs'].each do |doc|
+        if doc['sm_og_tapas_c_to_p']
+          doc['sm_og_tapas_c_to_p'].each do |id|
+            begin
+              collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+            rescue ActiveRecord::RecordNotFound => e
+              print e
+            end
+          end
+        end
+      end
 
       # TODO: remove this and throw error--this is currently in for debugging other parts of the application
       # If no community relationship was found, notify
@@ -300,6 +287,7 @@ namespace :drupal do
 
       collection.save
       collections_drupal_to_rails_ids[row["nid"]] = collection.id
+
     end
 
 
@@ -358,30 +346,30 @@ namespace :drupal do
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
       logger.info " --- rate-limited querying Solr for entity_id = #{row['nid']}"
-      # sleep(10)
-      # uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      # response = Net::HTTP.get(uri)
-      # core_file_solr_data = JSON.parse(response)
-      # core_file_solr_data['response']['docs'].each do |doc|
-      #   if doc['m_field_tapas_project']
-      #     doc['m_field_tapas_project'].each do |id|
-      #       begin
-      #         core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-      #       rescue ActiveRecord::RecordNotFound => e
-      #         print e
-      #       end
-      #     end
-      #   end
-      #   if doc['sm_og_tapas_r_to_c']
-      #     doc['sm_og_tapas_r_to_c'].each do |id|
-      #       begin
-      #         core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-      #       rescue ActiveRecord::RecordNotFound => e
-      #         print e
-      #       end
-      #     end
-      #   end
-      # end
+      sleep(10)
+      uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+      response = Net::HTTP.get(uri)
+      core_file_solr_data = JSON.parse(response)
+      core_file_solr_data['response']['docs'].each do |doc|
+        if doc['m_field_tapas_project']
+          doc['m_field_tapas_project'].each do |id|
+            begin
+              core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+            rescue ActiveRecord::RecordNotFound => e
+              print e
+            end
+          end
+        end
+        if doc['sm_og_tapas_r_to_c']
+          doc['sm_og_tapas_r_to_c'].each do |id|
+            begin
+              core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+            rescue ActiveRecord::RecordNotFound => e
+              print e
+            end
+          end
+        end
+      end
 
       core_file.save
       core_files_drupal_to_rails_ids[row["nid"]] = core_file.id
