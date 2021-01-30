@@ -2,7 +2,38 @@ require 'net/http'
 require 'json'
 require 'csv'
 
-# Notes about the migration tables at https://docs.google.com/document/d/1KbB44saOBg7jFyDdMe_6gMT1XombFK6BDufTspZ2N0o/edit?usp=sharing
+################################################################################
+#
+#  migrate_drupal.rake
+#  Migrate the TAPAS database from Drupal to Rails
+#
+#  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#  DISCLAIMER/WARNING: by default this task will drop the data from your local
+#    Rails database for several tables; ensure that you have backups and are
+#    prepared for this.
+#  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#
+#  - Usage:
+#      bin/rake drupal:migrate
+#
+#  - Setup:
+#      - To get setup to migrate from Drupal to Rails, first ensure your application.yml is
+#        is configured to connect to your database of choice for receiving the migrated
+#        content from Rails.
+#      - Next, ensure you have access to a copy of the Drupal database (read-only access is
+#        all that's necessary) and configure the DRUPAL_MYSQL_USER, DRUPAL_MYSQL_DB_NAME,
+#        and DRUPAL_MYSQL_PASSWORD environment variables for this
+#      - Finally, ensure that you're on the NEU VPN for access to the production Solr from
+#        the deprecated Drupal site
+#
+#  - Further notes about the migration tables are available at
+#    https://docs.google.com/document/d/1KbB44saOBg7jFyDdMe_6gMT1XombFK6BDufTspZ2N0o/edit?usp=sharing
+#    (can be transferred elsewhere in the future as necessary)
+#
+#
+################################################################################
 
 # Set Rails logger to log to std out while running migration
 Rails.logger = Logger.new(STDOUT)
@@ -242,17 +273,21 @@ namespace :drupal do
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
       logger.info " --- rate-limited querying Solr for entity_id #{row['nid']}"
-      sleep(10)
-      uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      response = Net::HTTP.get(uri)
-      collection_solr_data = JSON.parse(response)
-      collection_solr_data['response']['docs'].each do |doc|
-        if doc['sm_og_tapas_c_to_p']
-          doc['sm_og_tapas_c_to_p'].each do |id|
-            collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-          end
-        end
-      end
+      # sleep(10)
+      # uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+      # response = Net::HTTP.get(uri)
+      # collection_solr_data = JSON.parse(response)
+      # collection_solr_data['response']['docs'].each do |doc|
+      #   if doc['sm_og_tapas_c_to_p']
+      #     doc['sm_og_tapas_c_to_p'].each do |id|
+      #       begin
+      #         collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+      #       rescue ActiveRecord::RecordNotFound => e
+      #         print e
+      #       end
+      #     end
+      #   end
+      # end
 
       # TODO: remove this and throw error--this is currently in for debugging other parts of the application
       # If no community relationship was found, notify
@@ -323,22 +358,30 @@ namespace :drupal do
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
       logger.info " --- rate-limited querying Solr for entity_id = #{row['nid']}"
-      sleep(10)
-      uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      response = Net::HTTP.get(uri)
-      core_file_solr_data = JSON.parse(response)
-      core_file_solr_data['response']['docs'].each do |doc|
-        if doc['m_field_tapas_project']
-          doc['m_field_tapas_project'].each do |id|
-            core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-          end
-        end
-        if doc['sm_og_tapas_r_to_c']
-          doc['sm_og_tapas_r_to_c'].each do |id|
-            core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-          end
-        end
-      end
+      # sleep(10)
+      # uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+      # response = Net::HTTP.get(uri)
+      # core_file_solr_data = JSON.parse(response)
+      # core_file_solr_data['response']['docs'].each do |doc|
+      #   if doc['m_field_tapas_project']
+      #     doc['m_field_tapas_project'].each do |id|
+      #       begin
+      #         core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+      #       rescue ActiveRecord::RecordNotFound => e
+      #         print e
+      #       end
+      #     end
+      #   end
+      #   if doc['sm_og_tapas_r_to_c']
+      #     doc['sm_og_tapas_r_to_c'].each do |id|
+      #       begin
+      #         core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+      #       rescue ActiveRecord::RecordNotFound => e
+      #         print e
+      #       end
+      #     end
+      #   end
+      # end
 
       core_file.save
       core_files_drupal_to_rails_ids[row["nid"]] = core_file.id
