@@ -71,4 +71,7 @@ solr/development/data
 solr/default/data
 solr/pids
 
+# Ignore migration csv results
+*.csv
+
 spec/failures.txt
