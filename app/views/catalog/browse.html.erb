@@ -77,10 +77,6 @@
       function get_script(href, type){
         $(".tab-pane:not(#"+type+")").html("<p class='loading'>Loading...</p>");
         $.getScript(href, function(data){
-          console.log(data);
-          console.log(data);
-          console.log(data);
-          console.log(data);
           $("#"+type).html(data.responseText);
         }).done( function() {
           fixPagination();
