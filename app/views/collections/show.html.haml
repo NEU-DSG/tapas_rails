@@ -21,7 +21,7 @@
     - if !parent.institutions.blank?
       %dt Affiliated Institutions
       - parent.institutions.each do |i|
-        - int = Institution.find(i)
+        - int = Institution.find(i.id)
         %dd
           = link_to(int.name, institution_path(int))
         %br
