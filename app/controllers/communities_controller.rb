@@ -1,7 +1,8 @@
 class CommunitiesController < ApplicationController
   include ApiAccessible
 
-  before_action :authorize_edit!, only: %i[edit update destroy]
+  before_action :authorize_destroy!, only: :destroy
+  before_action :authorize_edit!, only: %i[edit update]
   before_action :authorize_read!, only: :show
 
   def index
@@ -92,8 +93,12 @@ class CommunitiesController < ApplicationController
 
   protected
 
+  def authorize_destroy!
+    authorize! :destroy, Community.find(params[:id])
+  end
+
   def authorize_edit!
-    authorize! :manage, Community.find(params[:id])
+    authorize! :update, Community.find(params[:id])
   end
 
   def authorize_read!
@@ -102,7 +107,7 @@ class CommunitiesController < ApplicationController
 
   def can_edit?
     community = Community.find(params[:id])
-    can? :manage, community
+    can? :update, community
   end
 
   def can_read?

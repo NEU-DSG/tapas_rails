@@ -15,7 +15,8 @@ class UsersController < CatalogController
     @page_title = "My Projects"
     @user = current_user
     @search = CommunitySearch.new(params)
-    @results = @search.result.accessible_by(current_ability)
+    @results = @search.result.joins(:community_members)
+      .where(community_members: { user_id: @user.id })
 
     render 'my_projects'
   end
@@ -24,7 +25,8 @@ class UsersController < CatalogController
     @page_title = "My Collections"
     @user = current_user
     @search = CollectionSearch.new(params)
-    @results = @search.result.accessible_by(current_ability)
+    @results = @search.result.joins(community: :community_members)
+      .where(community_members: { user_id: @user.id })
 
     render 'my_collections'
   end
@@ -33,7 +35,8 @@ class UsersController < CatalogController
     @page_title = "My Records"
     @user = current_user
     @search = CoreFileSearch.new(params)
-    @results = @search.result.accessible_by(current_ability)
+    @results = @search.result.joins(collections: { community: :community_members })
+      .where(community_members: { user_id: @user.id })
 
     render 'my_records'
   end
@@ -150,7 +153,7 @@ class UsersController < CatalogController
   def five_collections
     Collection
       .kept
-      .accessible_by(current_ability)
+      .joins(community: :community_members).where(community_members: { user_id: current_user.id })
       .limit(5)
       .order(Arel.sql("RAND()"))
   end
@@ -158,7 +161,7 @@ class UsersController < CatalogController
   def five_records
     CoreFile
       .kept
-      .accessible_by(current_ability)
+      .joins(collections: { community: :community_members }).where(community_members: { user_id: current_user.id })
       .limit(5)
       .order(Arel.sql("RAND()"))
   end
@@ -168,7 +171,7 @@ class UsersController < CatalogController
   end
 
   def verify_admin
-    redirect_to root_path unless current_user && current_user.admin?
+    redirect_to root_path unless current_user&.admin?
   end
 
 end

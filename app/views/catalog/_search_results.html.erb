@@ -16,17 +16,7 @@
   <%- @results.map do |r| %>
     <tr>
       <td>
-        <%- if params["model"] && params["model"] == "core_file" %>
-          <a href="/core_files/<%= r.id %>">
-        <%- elsif params["model"] && params["model"] == "collection" %>
-          <a href="/collections/<%= r.id %>">
-        <%- elsif params["model"] && params["model"] == "community" %>
-          <a href="/communities/<%= r.id %>">
-        <%- else %>
-          <a href="/core_files/<%= r.id %>">
-        <%- end %>
-          <%= r.title %>
-        </a>
+        <%= link_to r.title, r %>
       </td>
       <td>
         <%= r.description %>

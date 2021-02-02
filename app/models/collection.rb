@@ -8,7 +8,8 @@ class Collection < ActiveRecord::Base
   #                         join_table: "collection_collections",
   #                         association_foreign_key: "parent_collection_id"
 
-  has_and_belongs_to_many :core_files
+  has_many :collections_core_files
+  has_many :core_files, through: :collections_core_files
 
   has_many_attached :thumbnails
 
