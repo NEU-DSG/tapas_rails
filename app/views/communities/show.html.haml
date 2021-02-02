@@ -52,5 +52,5 @@
               - if collection.thumbnails.blank?
                 =image_tag "tapaslogo-opaque.png"
               -else
-                %img{src:collection.thumbnails.first}
+                %img{src: url_for(collection.thumbnails.first)}
               %h4= link_to collection.title, collection
