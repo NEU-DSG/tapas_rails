@@ -7,9 +7,10 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
   validates_integrity_of :avatar
 
-  validates :name, presence: true
-  validates :username, presence: true, uniqueness: true
+  # TODO: revisit the validates name issue preventing user signup and migration
+  # validates :name, presence: true
 
+  validates :username, presence: true, uniqueness: true
   before_validation :ensure_unique_username, on: :create
 
   if Blacklight::Utils.needs_attr_accessible?

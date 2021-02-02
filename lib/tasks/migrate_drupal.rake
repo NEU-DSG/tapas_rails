@@ -47,13 +47,14 @@ namespace :drupal do
     client = Mysql2::Client.new(:host => "localhost", :username => ENV['DRUPAL_MYSQL_USER'], :database => ENV['DRUPAL_MYSQL_DB_NAME'], :password => ENV['DRUPAL_MYSQL_PASSWORD'])
 
     # Clear existing DB for migration
-    logger.info " - Truncating any existing data in institutions, users, communities, collections, core_files, and pages tables"
+    logger.info " - Truncating any existing data in institutions, users, communities, collections, core_files, pages, and news_items tables"
     Institution.delete_all
     Community.delete_all
     Collection.delete_all
     CoreFile.delete_all
     User.delete_all
     Page.delete_all
+    NewsItem.delete_all
 
 
     # Migrate institutions
@@ -205,6 +206,10 @@ namespace :drupal do
         user = User.find_by(username: user_row["name"])
       end
       community.depositor = user
+      # Default to TAPAS user if user is not found as a workaround for making migration dev faster (not remigrating users every time)
+      unless user
+        user = User.find_by(email: "tapas_rails@tapas.neu.edu")
+      end
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['nid']}")
@@ -385,7 +390,7 @@ namespace :drupal do
       page.title = row["title"]
       page.slug = page.title.to_s.parameterize
 
-      # TODO: #pages Double check that the string type is what's wanted for this field: https://github.com/ArchimedesDigital/tapas_rails/blame/352f2ff4874395ab94d15c808158b745a84e792b/db/schema.rb#L156
+      # TODO: #publish Double check that the string type is what's wanted for this field: https://github.com/ArchimedesDigital/tapas_rails/blame/352f2ff4874395ab94d15c808158b745a84e792b/db/schema.rb#L156
       # In Drupal status = 1 indicates that the node has been published
       if row['status'] == 1
         page.publish = 'true'
@@ -400,6 +405,41 @@ namespace :drupal do
       end
 
       page.save
+    end
+
+    # Migrate news items
+    logger.info " - Migrating news items from the Drupal database to the Rails database"
+    results = client.query("SELECT * FROM node WHERE type = 'tapas_newsitem'")
+    results.each do |row|
+      logger.info " -- #{row["nid"]} #{row["title"]}"
+
+      news_item = NewsItem.new
+      news_item.title = row["title"]
+      news_item.slug = news_item.title.to_s.parameterize
+
+      # TODO: #publish Double check that the string type is what's wanted for this field: https://github.com/ArchimedesDigital/tapas_rails/blame/352f2ff4874395ab94d15c808158b745a84e792b/db/schema.rb#L156
+      # In Drupal status = 1 indicates that the node has been published
+      if row['status'] == 1
+        news_item.publish = 'true'
+      end
+
+      # set page content from field_data_body.body_value
+      content_results = client.query("SELECT body_value FROM field_data_body WHERE entity_id = #{row['nid']}")
+      content_results.each do |content_row|
+        if content_row['body_value']
+          news_item.content = content_row['body_value']
+        end
+      end
+
+      # Find Drupal user by row uid and then correspond to Rails user by username
+      user = nil
+      user_results = client.query("SELECT name FROM users WHERE uid = #{row['uid']}")
+      user_results.each do |user_row|
+        user = User.find_by(username: user_row["name"])
+      end
+      news_item.author = user
+
+      news_item.save
     end
 
 
@@ -417,6 +457,7 @@ namespace :drupal do
     logger.info " -- #{Collection.count} Collections"
     logger.info " -- #{CoreFile.count} CoreFiles"
     logger.info " -- #{Page.count} Pages"
+    logger.info " -- #{NewsItem.count} NewsItems"
 
   end
 end
