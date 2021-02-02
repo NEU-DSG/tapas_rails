@@ -16,7 +16,7 @@ class InstitutionsController < ApplicationController
   def show
     @institution = Institution.find(params[:id])
     @page_title = @institution.name
-    @communities = Community.where(institution: @institution)
+    @communities = Community.joins(:communities_institutions).where("communities_institutions.institution_id" => @institution.id)
   end
 
   def edit
