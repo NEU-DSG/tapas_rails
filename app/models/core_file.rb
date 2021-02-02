@@ -35,9 +35,6 @@ class CoreFile < ActiveRecord::Base
     community
   end
 
-  # TBH, I'm not sure how many of the methods below here and before the private
-  # macro are necessary
-
   def clear_ographies!
     CoreFile.all_ography_read_methods.each do |ography_type|
       begin
@@ -135,4 +132,38 @@ class CoreFile < ActiveRecord::Base
   def set_privacy
     self.is_public = false unless collections.any?(&:is_public)
   end
+
+  #############################################################################
+  #
+  # Notes on an ETL integration with eXist
+  #
+  # This area is meant to describe what a basic integration of eXist can look
+  # like using the ExistService at services/exist_service.rb so that the MySQL
+  # database is continually kept in sync with
+  #
+  # The general strategy will be to keep the MySQL data in sync with the eXist
+  # database, using MySQL as the single source of truth (SSOT) for the data
+  # while taking advantage of the extended capabilities of eXist. On the CoreFile
+  # data model, as long as this solution is scalable (i.e. the rate of files
+  # entered into TAPAS doesn't cause latency issues with eXist), the data will
+  # be kept in realtime sync with the eXist database.
+  #
+  # after_create_commit :etl_exist_create
+  # after_update_commit :etl_exist_update
+  # after_delete_commit :etl_exist_delete
+  #
+  # def etl_exist_create
+  #   # Sync creating eXist content
+  #   ExistService.post()
+  # end
+  # def etl_exist_update
+  #   # Sync updating eXist content
+  #   ExistService.post()
+  # end
+  # def etl_exist_delete
+  #   # Sync deleting eXist content
+  #   ExistService.delete()
+  # end
+  #
+  #############################################################################
 end
