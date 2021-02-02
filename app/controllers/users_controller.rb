@@ -59,15 +59,29 @@ class UsersController < CatalogController
     # then we should restore it --- thus we take the difference
     # `params[:destroy_user_ids] - params[:restore_user_ids]` when determining
     # which users to destroy
-    restore_users = User.where(id: params[:restore_user_ids])
-    destroy_users = User.where(id: params[:destroy_user_ids] - params[:restore_user_ids])
 
-    restore_users.each do |user|
-      user.undiscard
+    if params[:restore_user_ids]
+      restore_users = User.where(id: params[:restore_user_ids].values)
+      restore_users.each do |user|
+        user.undiscard
+      end
     end
 
-    destroy_users.each do |user|
-      user.discarded? ? user.delete : user.discard
+    if params[:restore_user_ids] && params[:destroy_user_ids]
+      params[:restore_user_ids].values.each do |restore_user_id|
+        params[:destroy_user_ids].values.each do |destroy_user_id|
+          if restore_user_id == destroy_user_id
+            params[:destroy_user_ids].delete(restore_user_id)
+          end
+        end
+      end
+    end
+
+    if params[:destroy_user_ids]
+      destroy_users = User.where(id: params[:destroy_user_ids].values)
+      destroy_users.each do |user|
+        user.discarded? ? user.delete : user.discard
+      end
     end
 
     redirect_to admin_users_path
