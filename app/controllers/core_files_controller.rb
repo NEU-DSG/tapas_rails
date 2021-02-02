@@ -7,7 +7,8 @@ class CoreFilesController < ApplicationController
     identifier { ignore! }
   end
 
-  before_action :authorize_edit!, only: %i[edit update destroy]
+  before_action :authorize_destroy!, only: :destroy
+  before_action :authorize_edit!, only: %i[edit update]
   before_action :authorize_read!, only: :show
 
   def index
@@ -28,12 +29,14 @@ class CoreFilesController < ApplicationController
     authorize! :new, @core_file
 
     @page_title = 'Create New Record'
-    @collections = Collection.accessible_by(current_ability)
+    @collections = Collection.accessible_by(current_ability, :update)
+      # .joins(community: :community_members)
+      # .where(community: { community_members: { user_id: current_user.id } })
     @users = User.order(:name)
   end
 
   def create
-    authorize! :manage, CoreFile
+    authorize! :create, CoreFile
 
     # a user can't be both a contributor and an author; just assume that they're an author
     params[:core_file][:contributor_ids] = params[:core_file][:contributor_ids] - params[:core_file][:author_ids]
@@ -55,7 +58,9 @@ class CoreFilesController < ApplicationController
 
   def edit
     @core_file = CoreFile.find(params[:id])
-    @collections = Collection.accessible_by(current_ability)
+    @collections = Collection
+      .joins(community: :community_members)
+      .where(community: { community_members: { user_id: current_user.id } })
     @users = User.order(:name)
     @page_title = "Edit #{@core_file.title}"
   end
@@ -192,8 +197,12 @@ class CoreFilesController < ApplicationController
 
   protected
 
+  def authorize_destroy!
+    authorize! :destroy, CoreFile.find(params[:id])
+  end
+
   def authorize_edit!
-    authorize! :manage, CoreFile.find(params[:id])
+    authorize! :update, CoreFile.find(params[:id])
   end
 
   def authorize_read!
@@ -201,7 +210,7 @@ class CoreFilesController < ApplicationController
   end
 
   def can_edit?
-    can? :manage, CoreFile.find(params[:id])
+    can? :update, CoreFile.find(params[:id])
   end
 
   def can_read?

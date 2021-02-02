@@ -39,6 +39,7 @@ TapasRails::Application.configure do
   config.active_support.deprecation = :stderr
 
   config.active_storage.service = :test
+  config.active_job.queue_adapter = :test
 
   config.middleware.use ExceptionNotification::Rack,
     :email => {

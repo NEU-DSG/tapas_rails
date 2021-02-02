@@ -16,8 +16,10 @@ describe User do
       let(:non_admin_community) { FactoryBot.create(:community) }
       let(:private_community) { FactoryBot.create(:community, is_public: false) }
 
-      it { is_expected.to be_able_to(:manage, community) }
-      it { is_expected.not_to be_able_to(:manage, non_admin_community) }
+      it { is_expected.to be_able_to(:update, community) }
+      it { is_expected.not_to be_able_to(:update, non_admin_community) }
+      it { is_expected.to be_able_to(:destroy, community) }
+      it { is_expected.not_to be_able_to(:destroy, non_admin_community) }
       it { is_expected.to be_able_to(:read, non_admin_community) }
       it { is_expected.not_to be_able_to(:read, private_community) }
 
@@ -26,8 +28,10 @@ describe User do
         let(:public_collection) { FactoryBot.create(:collection, is_public: true) }
         let(:private_collection) { FactoryBot.create(:collection, is_public: false) }
 
-        it { is_expected.to be_able_to(:manage, collection) }
-        it { is_expected.not_to be_able_to(:manage, public_collection) }
+        it { is_expected.to be_able_to(:update, collection) }
+        it { is_expected.not_to be_able_to(:update, public_collection) }
+        it { is_expected.to be_able_to(:destroy, collection) }
+        it { is_expected.not_to be_able_to(:destroy, public_collection) }
         it { is_expected.to be_able_to(:read, public_collection) }
         it { is_expected.not_to be_able_to(:read, private_collection) }
 
@@ -36,8 +40,10 @@ describe User do
           let(:public_core_file) { FactoryBot.create(:core_file, collections: [public_collection], is_public: true) }
           let(:private_core_file) { FactoryBot.create(:core_file, collections: [private_collection], is_public: false) }
 
-          it { is_expected.to be_able_to(:manage, core_file) }
-          it { is_expected.not_to be_able_to(:manage, public_core_file) }
+          it { is_expected.to be_able_to(:update, core_file) }
+          it { is_expected.not_to be_able_to(:update, public_core_file) }
+          it { is_expected.to be_able_to(:destroy, core_file) }
+          it { is_expected.not_to be_able_to(:destroy, public_core_file) }
           it { is_expected.to be_able_to(:read, public_core_file) }
           it { is_expected.not_to be_able_to(:read, private_core_file) }
         end

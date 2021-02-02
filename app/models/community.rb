@@ -5,9 +5,9 @@ class Community < ActiveRecord::Base
   has_many :children, through: :community_collections, source: :collection
   has_many :community_members
   has_many :users, through: :community_members
-  has_and_belongs_to_many :communities,
-                          join_table: 'community_communities',
-                          association_foreign_key: 'parent_community_id'
+  has_many :community_communities
+  has_many :communities, through: :community_communities, foreign_key: 'parent_community_id'
+  has_and_belongs_to_many :communities
 
   has_many :communities_institutions
   has_many :institutions, through: :communities_institutions
@@ -52,8 +52,8 @@ class Community < ActiveRecord::Base
   end
 
   def add_depositor_to_admins
-    if user = users.find_by(id: depositor.id)
-      CommunityMember.find_by(user: user, communitY_id: id).update(member_type: 'admin')
+    if (user = users.find_by(id: depositor.id))
+      CommunityMember.find_by(user: user, community_id: id).update(member_type: 'admin')
     else
       CommunityMember.create!(community_id: id, user_id: depositor.id, member_type: 'admin')
     end

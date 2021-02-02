@@ -7,9 +7,10 @@ class User < ActiveRecord::Base
   mount_uploader :avatar, AvatarUploader
   validates_integrity_of :avatar
 
-  validates :username, presence: true
+  validates :name, presence: true
+  validates :username, presence: true, uniqueness: true
 
-  before_validation :ensure_unique_username
+  before_validation :ensure_unique_username, on: :create
 
   if Blacklight::Utils.needs_attr_accessible?
     attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
@@ -30,24 +31,6 @@ class User < ActiveRecord::Base
   has_many :core_files, through: :core_files_users
 
   ACCOUNT_TYPES = %w[free teic teic_inst]
-
-  def self.find_unique_username(username)
-    unless username.nil?
-      taken_usernames = User.select('username').where('username LIKE ?', "#{username}%")
-
-      return username unless (taken_usernames || []).include?(username)
-    end
-
-    count = 2
-
-    loop do
-      new_username = "#{username}#{count}"
-
-      return new_username unless (taken_usernames || []).include?(new_username)
-
-      count += 1
-    end
-  end
 
   def api_key=(api_key)
     @api_key = Digest::SHA512.hexdigest api_key
@@ -161,12 +144,18 @@ class User < ActiveRecord::Base
   end
 
   def ensure_unique_username
-    if username.nil?
-      self.username = User.find_unique_username(
-        (name || 'anonymous').parameterize(separator: '', preserve_case: true)
-      )
-    else
-      self.username = User.find_unique_username(username)
+    base = username || (name || 'anonymous').parameterize(separator: '', preserve_case: true)
+    attempt = base
+    count = 1
+
+    loop do
+      if User.where(username: attempt).empty?
+        self.username = attempt
+        return
+      else
+        count += 1
+        attempt = "#{base}#{count}"
+      end
     end
   end
 

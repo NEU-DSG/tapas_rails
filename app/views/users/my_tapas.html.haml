@@ -11,6 +11,7 @@
         %h2.panel-title
           = "Projects"
       %div.panel-body
+        - puts current_user.paid_user?
         - if current_user && (current_user.paid_user? || current_user.admin?)
           %a{href:new_community_path, class: 'btn btn-success btn-sm'}
             %i.fa.fa-plus

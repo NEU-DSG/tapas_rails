@@ -1,12 +1,14 @@
 class CollectionsController < CatalogController
   include ApiAccessible
 
-  before_action :authorize_edit!, only: %i[destroy edit update]
+  before_action :authorize_destroy!, only: :destroy
+  before_action :authorize_edit!, only: %i[edit update]
   before_action :authorize_read!, only: :show
 
   def index
     @page_title = 'All Collections'
-    @results = Collection.order(updated_at: :desc)
+    @search = CollectionSearch.new(params)
+    @results = @search.result
 
     respond_to do |format|
       format.html { render template: 'shared/index' }
@@ -51,7 +53,8 @@ class CollectionsController < CatalogController
 
   def edit
     @collection = Collection.find(params[:id])
-    @communities = Community.accessible_by(current_ability)
+    @communities = Community.joins(:community_members)
+                            .where(community_members: { user_id: current_user.id, member_type: %w[editor admin] })
     @page_title = "Edit #{@collection.title}"
   end
 
@@ -64,9 +67,14 @@ class CollectionsController < CatalogController
 
   protected
 
+  def authorize_destroy!
+    collection = Collection.find(params[:id])
+    authorize! :destroy, collection
+  end
+
   def authorize_edit!
     collection = Collection.find(params[:id])
-    authorize! :manage, collection
+    authorize! :update, collection
   end
 
   def authorize_read!
@@ -76,7 +84,7 @@ class CollectionsController < CatalogController
 
   def can_edit?
     collection = Collection.find(params[:id])
-    can? :manage, collection
+    can? :update, collection
   end
 
   def can_read?
