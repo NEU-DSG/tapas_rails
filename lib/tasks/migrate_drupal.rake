@@ -34,6 +34,14 @@ require 'csv'
 #
 #
 ################################################################################
+################################################################################
+################################################################################
+# Dev notes
+#
+# TODO
+# - A future enhancement may be to move solr queries to end of file
+#
+################################################################################
 
 # Set Rails logger to log to std out while running migration
 Rails.logger = Logger.new(STDOUT)
@@ -71,7 +79,6 @@ namespace :drupal do
       institution = Institution.new
       institution.name = row["name"]
 
-      # TODO: address this development pattern for warning / throwing errors on incorrect results returned
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['tid']}")
       description_results.each do |description_row|
@@ -120,11 +127,19 @@ namespace :drupal do
         end
       end
 
+      # Set image for institution from field_data_field_institution_image when static file solution is completed
+      file_results = client.query("SELECT field_institution_image_fid FROM field_data_field_institution_image WHERE entity_id = #{row['tid']}")
+      file_results.each do |file_row|
+        if file_row['field_institution_image_fid']
+          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_institution_image_fid']}")
+          file_managed_results.each do |file_managed_row|
+            if file_managed_row['uri']
+              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
 
-      # TODO: #institutions - determine if the official flag needs to be migrated since it's not in the Rails data model for institutions
-      # | field_data_field_institution_official_flag      |
-
-      # TODO: #staticfiles Set image for institution from field_data_field_institution_image when static file solution is completed
+            end
+          end
+        end
+      end
 
       institution.save
       institutions_drupal_to_rails_ids[row["tid"]] = institution.id
@@ -178,8 +193,19 @@ namespace :drupal do
         end
       end
 
-      # TODO: #staticfiles - determine the method to migrate files and the preferred storage method
-      # set user avatar from field_data_field_profile_about.field_profile_avatar_fid and the corresponding drupal file
+      # set user avatar from field_data_field_profile_avatar.field_profile_avatar_fid and the corresponding drupal file
+      file_results = client.query("SELECT field_profile_avatar_fid FROM field_data_field_profile_avatar WHERE entity_id = #{row['uid']}")
+      file_results.each do |file_row|
+        if file_row['field_profile_avatar_fid']
+          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_profile_avatar_fid']}")
+          file_managed_results.each do |file_managed_row|
+            if file_managed_row['uri']
+              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+
+            end
+          end
+        end
+      end
 
       user.save
       users_drupal_to_rails_ids[row["uid"]] = user.id
@@ -224,8 +250,19 @@ namespace :drupal do
       # editors
       # admins
 
-      # TODO: #staticfiles - determine the method to migrate files and the preferred storage method
       # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
+      file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
+      file_results.each do |file_row|
+        if file_row['field_tapas_thumbnail_fid']
+          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_thumbnail_fid']}")
+          file_managed_results.each do |file_managed_row|
+            if file_managed_row['uri']
+              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+
+            end
+          end
+        end
+      end
 
       community.save
       communities_drupal_to_rails_ids[row["nid"]] = community.id
@@ -287,8 +324,19 @@ namespace :drupal do
         collection.community = Community.first
       end
 
-      # TODO: #staticfiles - determine the method to migrate files and the preferred storage method
       # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
+      file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
+      file_results.each do |file_row|
+        if file_row['field_tapas_thumbnail_fid']
+          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_thumbnail_fid']}")
+          file_managed_results.each do |file_managed_row|
+            if file_managed_row['uri']
+              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+
+            end
+          end
+        end
+      end
 
       collection.save
       collections_drupal_to_rails_ids[row["nid"]] = collection.id
@@ -331,9 +379,20 @@ namespace :drupal do
         end
       end
 
-      # TODO: #staticfiles - determine the method to migrate files and the preferred storage method
       # migrate core_file tei file
       # set canonical_object from field_data_field_tapas_tei_file.field_tapas_tei_file_fid and drupal files
+      file_results = client.query("SELECT field_tapas_tei_file_fid FROM field_data_field_tapas_tei_file WHERE entity_id = #{row['nid']}")
+      file_results.each do |file_row|
+        if file_row['field_tapas_tei_file_fid']
+          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_tei_file_fid']}")
+          file_managed_results.each do |file_managed_row|
+            if file_managed_row['uri']
+              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+
+            end
+          end
+        end
+      end
 
       # set ography_type from field_data_field_tapas_record_ography_type.field_tapas_record_ography_type_value
       ography_type_results = client.query("SELECT field_tapas_record_ography_type_value FROM field_data_field_tapas_record_ography_type WHERE entity_id = #{row['nid']}")
@@ -343,8 +402,19 @@ namespace :drupal do
         end
       end
 
-      # TODO: #staticfiles - determine the method to migrate files and the preferred storage method
       # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
+      file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
+      file_results.each do |file_row|
+        if file_row['field_tapas_thumbnail_fid']
+          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_thumbnail_fid']}")
+          file_managed_results.each do |file_managed_row|
+            if file_managed_row['uri']
+
+
+            end
+          end
+        end
+      end
 
       # CoreFile <> Community relationship = m_field_tapas_project
       # CoreFile <> Collection relationship = sm_og_tapas_r_to_c
@@ -390,10 +460,10 @@ namespace :drupal do
       page.title = row["title"]
       page.slug = page.title.to_s.parameterize
 
-      # TODO: #publish Double check that the string type is what's wanted for this field: https://github.com/ArchimedesDigital/tapas_rails/blame/352f2ff4874395ab94d15c808158b745a84e792b/db/schema.rb#L156
+      # TODO: #publish should be boolean
       # In Drupal status = 1 indicates that the node has been published
       if row['status'] == 1
-        page.publish = 'true'
+        page.publish = 1
       end
 
       # set page content from field_data_body.body_value
@@ -417,10 +487,9 @@ namespace :drupal do
       news_item.title = row["title"]
       news_item.slug = news_item.title.to_s.parameterize
 
-      # TODO: #publish Double check that the string type is what's wanted for this field: https://github.com/ArchimedesDigital/tapas_rails/blame/352f2ff4874395ab94d15c808158b745a84e792b/db/schema.rb#L156
       # In Drupal status = 1 indicates that the node has been published
       if row['status'] == 1
-        news_item.publish = 'true'
+        news_item.publish = 1
       end
 
       # set page content from field_data_body.body_value
@@ -443,6 +512,7 @@ namespace :drupal do
     end
 
 
+    # Add header to each file as drupal_id,rails_id
     CSV.open("institutions_drupal_to_rails_ids.csv", "wb") {|csv| institutions_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
     CSV.open("users_drupal_to_rails_ids.csv", "wb") {|csv| users_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
     CSV.open("communities_drupal_to_rails_ids.csv", "wb") {|csv| communities_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
