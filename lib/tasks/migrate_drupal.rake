@@ -127,20 +127,6 @@ namespace :drupal do
         end
       end
 
-      # Set image for institution from field_data_field_institution_image when static file solution is completed
-      file_results = client.query("SELECT field_institution_image_fid FROM field_data_field_institution_image WHERE entity_id = #{row['tid']}")
-      file_results.each do |file_row|
-        if file_row['field_institution_image_fid']
-          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_institution_image_fid']}")
-          file_managed_results.each do |file_managed_row|
-            if file_managed_row['uri']
-              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
-
-            end
-          end
-        end
-      end
-
       institution.save
       institutions_drupal_to_rails_ids[row["tid"]] = institution.id
     end
@@ -190,20 +176,6 @@ namespace :drupal do
           # double check this lookup by institution name since corresponding institution drupal ids haven't been migrated
           # possibly more institutions in old drupal database than the migrated rails database that we received
           user.institution = Institution.find_by(name: institution_name)
-        end
-      end
-
-      # set user avatar from field_data_field_profile_avatar.field_profile_avatar_fid and the corresponding drupal file
-      file_results = client.query("SELECT field_profile_avatar_fid FROM field_data_field_profile_avatar WHERE entity_id = #{row['uid']}")
-      file_results.each do |file_row|
-        if file_row['field_profile_avatar_fid']
-          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_profile_avatar_fid']}")
-          file_managed_results.each do |file_managed_row|
-            if file_managed_row['uri']
-              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
-
-            end
-          end
         end
       end
 
@@ -258,7 +230,8 @@ namespace :drupal do
           file_managed_results.each do |file_managed_row|
             if file_managed_row['uri']
               logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
-
+              fname = file_managed_row["uri"].sub! "public://", ""
+              community.thumbnail.attach(io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)), filename: fname, content_type: Rack::Mime.mime_type(File.extname(fname)))
             end
           end
         end
@@ -276,7 +249,7 @@ namespace :drupal do
     # Save Drupal <> Rails ids as hash for later lookup
     collections_drupal_to_rails_ids = {}
 
-    results = client.query("SELECT * FROM node WHERE type = 'tapas_collection'")
+    results = client.query("SELECT * FROM node WHERE type = 'tapas_collection' limit 10")
     results.each do |row|
       logger.info " -- #{row["nid"]} #{row["title"]}"
 
@@ -302,21 +275,21 @@ namespace :drupal do
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
       logger.info " --- rate-limited querying Solr for entity_id #{row['nid']}"
-      sleep(10)
-      uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      response = Net::HTTP.get(uri)
-      collection_solr_data = JSON.parse(response)
-      collection_solr_data['response']['docs'].each do |doc|
-        if doc['sm_og_tapas_c_to_p']
-          doc['sm_og_tapas_c_to_p'].each do |id|
-            begin
-              collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-            rescue ActiveRecord::RecordNotFound => e
-              print e
-            end
-          end
-        end
-      end
+      # sleep(10)
+      # uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+      # response = Net::HTTP.get(uri)
+      # collection_solr_data = JSON.parse(response)
+      # collection_solr_data['response']['docs'].each do |doc|
+      #   if doc['sm_og_tapas_c_to_p']
+      #     doc['sm_og_tapas_c_to_p'].each do |id|
+      #       begin
+      #         collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+      #       rescue ActiveRecord::RecordNotFound => e
+      #         print e
+      #       end
+      #     end
+      #   end
+      # end
 
       # TODO: remove this and throw error--this is currently in for debugging other parts of the application
       # If no community relationship was found, notify
@@ -332,6 +305,8 @@ namespace :drupal do
           file_managed_results.each do |file_managed_row|
             if file_managed_row['uri']
               logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+              fname = file_managed_row["uri"].sub! "public://", ""
+              collection.thumbnails.attach(io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)), filename: fname, content_type: Rack::Mime.mime_type(File.extname(fname)))
 
             end
           end
@@ -388,6 +363,8 @@ namespace :drupal do
           file_managed_results.each do |file_managed_row|
             if file_managed_row['uri']
               logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+              fname = file_managed_row["uri"].sub! "public://", ""
+              core_file.canonical_object.attach(io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)), filename: fname, content_type: Rack::Mime.mime_type(File.extname(fname)))
 
             end
           end
@@ -421,30 +398,30 @@ namespace :drupal do
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
       logger.info " --- rate-limited querying Solr for entity_id = #{row['nid']}"
-      sleep(10)
-      uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      response = Net::HTTP.get(uri)
-      core_file_solr_data = JSON.parse(response)
-      core_file_solr_data['response']['docs'].each do |doc|
-        if doc['m_field_tapas_project']
-          doc['m_field_tapas_project'].each do |id|
-            begin
-              core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-            rescue ActiveRecord::RecordNotFound => e
-              print e
-            end
-          end
-        end
-        if doc['sm_og_tapas_r_to_c']
-          doc['sm_og_tapas_r_to_c'].each do |id|
-            begin
-              core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-            rescue ActiveRecord::RecordNotFound => e
-              print e
-            end
-          end
-        end
-      end
+    #   sleep(10)
+    #   uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+    #   response = Net::HTTP.get(uri)
+    #   core_file_solr_data = JSON.parse(response)
+    #   core_file_solr_data['response']['docs'].each do |doc|
+    #     if doc['m_field_tapas_project']
+    #       doc['m_field_tapas_project'].each do |id|
+    #         begin
+    #           core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+    #         rescue ActiveRecord::RecordNotFound => e
+    #           print e
+    #         end
+    #       end
+    #     end
+    #     if doc['sm_og_tapas_r_to_c']
+    #       doc['sm_og_tapas_r_to_c'].each do |id|
+    #         begin
+    #           core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+    #         rescue ActiveRecord::RecordNotFound => e
+    #           print e
+    #         end
+    #       end
+    #     end
+    #   end
 
       core_file.save
       core_files_drupal_to_rails_ids[row["nid"]] = core_file.id
@@ -460,7 +437,6 @@ namespace :drupal do
       page.title = row["title"]
       page.slug = page.title.to_s.parameterize
 
-      # TODO: #publish should be boolean
       # In Drupal status = 1 indicates that the node has been published
       if row['status'] == 1
         page.publish = 1
