@@ -18,7 +18,11 @@ require 'optparse'
 #
 #  - Usage:
 #      bin/rake drupal:migrate
+#      bin/rake drupal:migrate -- --no-solr --with-user-data
 #
+#     - with options
+#       --no-solr: Skip migrating Solr data (for testing)
+#       --with-user-data: Include details about user accounts in your migration
 #
 #  - Setup:
 #      - To get setup to migrate from Drupal to Rails, first ensure your
@@ -352,12 +356,6 @@ namespace :drupal do
         end
       end
 
-      # TODO: remove this and throw error--this is currently in for debugging other parts of the application
-      # If no community relationship was found, notify
-      unless collection.community
-        collection.community = Community.first
-      end
-
       collection.save
       if collection.id
         # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
@@ -606,6 +604,5 @@ namespace :drupal do
     logger.info " -- #{CoreFile.count} CoreFiles"
     logger.info " -- #{Page.count} Pages"
     logger.info " -- #{NewsItem.count} NewsItems"
-
   end
 end
