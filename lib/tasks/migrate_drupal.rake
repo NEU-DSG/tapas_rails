@@ -1,6 +1,7 @@
 require 'net/http'
 require 'json'
 require 'csv'
+require 'optparse'
 
 ################################################################################
 #
@@ -18,15 +19,20 @@ require 'csv'
 #  - Usage:
 #      bin/rake drupal:migrate
 #
+#
 #  - Setup:
-#      - To get setup to migrate from Drupal to Rails, first ensure your application.yml is
-#        is configured to connect to your database of choice for receiving the migrated
-#        content from Rails.
-#      - Next, ensure you have access to a copy of the Drupal database (read-only access is
-#        all that's necessary) and configure the DRUPAL_MYSQL_USER, DRUPAL_MYSQL_DB_NAME,
-#        and DRUPAL_MYSQL_PASSWORD environment variables for this
-#      - Finally, ensure that you're on the NEU VPN for access to the production Solr from
-#        the deprecated Drupal site
+#      - To get setup to migrate from Drupal to Rails, first ensure your
+#        application.yml is configured to connect to your database of choice for
+#        receiving the migrated content from Rails.
+#      - Next, ensure you have access to a copy of the Drupal database (read-
+#        only access is all that's necessary) and configure the
+#        DRUPAL_MYSQL_USER, DRUPAL_MYSQL_DB_NAME, and DRUPAL_MYSQL_PASSWORD
+#        environment variables for this
+#      - Setup the static files from the Drupal application on your local
+#        filesystem to be migrated to the application, and set the
+#        DRUPAL_STATIC_FILES_PATH variable in your application.yml
+#      - Finally, ensure that you're on the NEU VPN for access to the production
+#        Solr from the deprecated Drupal site
 #
 #  - Further notes about the migration tables are available at
 #    https://docs.google.com/document/d/1KbB44saOBg7jFyDdMe_6gMT1XombFK6BDufTspZ2N0o/edit?usp=sharing
@@ -34,7 +40,7 @@ require 'csv'
 #
 #
 ################################################################################
-################################################################################
+
 ################################################################################
 # Dev notes
 #
@@ -48,9 +54,24 @@ Rails.logger = Logger.new(STDOUT)
 Rails.logger.level = Logger::DEBUG
 logger = Rails.logger
 
+
 desc "Migrate the data from the production Drupal MySQL database to the Rails MySQL database"
 namespace :drupal do
   task migrate: [:environment] do
+    options = {}
+    OptionParser.new do |opts|
+      opts.banner = "Usage: rake drupal:migrate [options]"
+      opts.on("--with-user-data", "Include details about user accounts in your migration") do
+        options[:with_user_data] = true
+      end
+      opts.on("--no-solr", "Skip migrating Solr data (for testing)") do
+        options[:no_solr] = true
+      end
+      args = opts.order!(ARGV) {}
+      opts.parse!(args)
+    end
+    logger.info options
+
     logger.info "Migrating drupal database to Rails"
     client = Mysql2::Client.new(:host => "localhost", :username => ENV['DRUPAL_MYSQL_USER'], :database => ENV['DRUPAL_MYSQL_DB_NAME'], :password => ENV['DRUPAL_MYSQL_PASSWORD'])
 
@@ -74,7 +95,7 @@ namespace :drupal do
     # Query all institutions saved as taxonomy terms in Drupal
     results = client.query("SELECT * FROM taxonomy_term_data WHERE vid = 2")
     results.each do |row|
-      logger.info " -- #{row["tid"]} #{row["name"]}"
+      logger.info " -- institution #{row["tid"]} #{row["name"]}"
 
       institution = Institution.new
       institution.name = row["name"]
@@ -140,7 +161,7 @@ namespace :drupal do
 
     results = client.query("SELECT * FROM users WHERE uid != 0")
     results.each do |row|
-      logger.info " -- #{row["uid"]} #{row["name"]}"
+      logger.info " -- user #{row["uid"]} #{row["name"]}"
       # create user with migration passwords
       user = User.new
 
@@ -152,30 +173,32 @@ namespace :drupal do
       # Don't send an email to the user on migration
       user.skip_confirmation!
 
-      # set user bio from field_data_field_profile_about.field_profile_about_value
-      bio_results = client.query("SELECT field_profile_about_value FROM field_data_field_profile_about WHERE entity_id = #{row['uid']}")
-      bio_results.each do |bio_row|
-        if bio_row['field_profile_about_value']
-          user.bio = bio_row['field_profile_about_value']
-        end
-      end
-
-      # set user institution from field_data_field_profile_institution.field_profile_institution_tid join
-      institution_results = client.query("SELECT field_profile_institution_tid FROM field_data_field_profile_institution WHERE entity_id = #{row['uid']}")
-      institution_results.each do |institution_row|
-        if institution_row['field_profile_institution_tid']
-          institution_data_results = client.query("SELECT name FROM taxonomy_term_data WHERE tid = #{institution_row['field_profile_institution_tid']}")
-
-          institution_name = ''
-          institution_data_results.each do |institution_data_row|
-            if institution_data_row['name']
-              institution_name = institution_data_row['name']
-            end
+      if options[:with_user_data]
+        # set user bio from field_data_field_profile_about.field_profile_about_value
+        bio_results = client.query("SELECT field_profile_about_value FROM field_data_field_profile_about WHERE entity_id = #{row['uid']}")
+        bio_results.each do |bio_row|
+          if bio_row['field_profile_about_value']
+            user.bio = bio_row['field_profile_about_value']
           end
+        end
 
-          # double check this lookup by institution name since corresponding institution drupal ids haven't been migrated
-          # possibly more institutions in old drupal database than the migrated rails database that we received
-          user.institution = Institution.find_by(name: institution_name)
+        # set user institution from field_data_field_profile_institution.field_profile_institution_tid join
+        institution_results = client.query("SELECT field_profile_institution_tid FROM field_data_field_profile_institution WHERE entity_id = #{row['uid']}")
+        institution_results.each do |institution_row|
+          if institution_row['field_profile_institution_tid']
+            institution_data_results = client.query("SELECT name FROM taxonomy_term_data WHERE tid = #{institution_row['field_profile_institution_tid']}")
+
+            institution_name = ''
+            institution_data_results.each do |institution_data_row|
+              if institution_data_row['name']
+                institution_name = institution_data_row['name']
+              end
+            end
+
+            # double check this lookup by institution name since corresponding institution drupal ids haven't been migrated
+            # possibly more institutions in old drupal database than the migrated rails database that we received
+            user.institution = Institution.find_by(name: institution_name)
+          end
         end
       end
 
@@ -192,7 +215,7 @@ namespace :drupal do
 
     results = client.query("SELECT * FROM node WHERE type = 'tapas_project'")
     results.each do |row|
-      logger.info " -- #{row["nid"]} #{row["title"]}"
+      logger.info " -- community #{row["nid"]} #{row["title"]}"
 
       community = Community.new
       community.title = row["title"]
@@ -204,10 +227,6 @@ namespace :drupal do
         user = User.find_by(username: user_row["name"])
       end
       community.depositor = user
-      # Default to TAPAS user if user is not found as a workaround for making migration dev faster (not remigrating users every time)
-      unless user
-        user = User.find_by(email: "tapas_rails@tapas.neu.edu")
-      end
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['nid']}")
@@ -217,10 +236,33 @@ namespace :drupal do
         end
       end
 
-      # TODO: #users - at the end, migrate the user role data from the Drupal og groups module
-      # members
-      # editors
-      # admins
+      # Set user roles from og_users_roles.rid
+      user_role_results = client.query("SELECT uid, rid FROM og_users_roles WHERE gid = #{row['nid']}")
+      user_role_results.each do |user_role_row|
+        if user_role_row['uid'] && user_role_row['rid']
+          community_member = CommunityMember.new
+          community_member.user = User.find(users_drupal_to_rails_ids[user_role_row["uid"]])
+          if user_role_row['rid'] == 9
+            # user is admin
+            community_member.member_type = 'admin'
+            community.community_members << community_member
+
+          elsif user_role_row['rid'] == 17
+            # user is editor
+            community_member.member_type = 'editor'
+            community.community_members << community_member
+
+          elsif user_role_row['rid'] == 8
+            # user is member
+            community_member.member_type = 'member'
+            community.community_members << community_member
+
+          else
+            logger.error " -- Error: user role unrecognized for Community user_id: #{user_role_row['uid']} role_id: #{user_role_row["rid"]}"
+          end
+
+        end
+      end
 
       # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
       file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
@@ -231,7 +273,24 @@ namespace :drupal do
             if file_managed_row['uri']
               logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
               fname = file_managed_row["uri"].sub! "public://", ""
-              community.thumbnail.attach(io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)), filename: fname, content_type: Rack::Mime.mime_type(File.extname(fname)))
+
+              if File.exist?(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname))
+                blob = ActiveStorage::Blob.create_after_upload!(
+                  io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)),
+                  filename: fname,
+                  content_type: Rack::Mime.mime_type(File.extname(fname))
+                )
+                blob.analyze
+                community.save
+                ActiveStorage::Attachment.create(
+                  name: 'thumbnail',
+                  record_type: 'Community',
+                  record_id: community.id,
+                  blob_id: blob.id
+                )
+              else
+                logger.error " -- Error: File does not exist in Drupal static files #{file_managed_row["uri"]} to s3"
+              end
             end
           end
         end
@@ -251,7 +310,7 @@ namespace :drupal do
 
     results = client.query("SELECT * FROM node WHERE type = 'tapas_collection' limit 10")
     results.each do |row|
-      logger.info " -- #{row["nid"]} #{row["title"]}"
+      logger.info " -- collection #{row["nid"]} #{row["title"]}"
 
       collection = Collection.new
       collection.title = row["title"]
@@ -274,22 +333,24 @@ namespace :drupal do
       # This relationship is described in Solr via the `sm_og_tapas_c_to_p` parameter
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
-      logger.info " --- rate-limited querying Solr for entity_id #{row['nid']}"
-      # sleep(10)
-      # uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-      # response = Net::HTTP.get(uri)
-      # collection_solr_data = JSON.parse(response)
-      # collection_solr_data['response']['docs'].each do |doc|
-      #   if doc['sm_og_tapas_c_to_p']
-      #     doc['sm_og_tapas_c_to_p'].each do |id|
-      #       begin
-      #         collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-      #       rescue ActiveRecord::RecordNotFound => e
-      #         print e
-      #       end
-      #     end
-      #   end
-      # end
+      unless options[:no_solr]
+        logger.info " -- -- rate-limited querying Solr for entity_id #{row['nid']}"
+        sleep(10)
+        uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+        response = Net::HTTP.get(uri)
+        collection_solr_data = JSON.parse(response)
+        collection_solr_data['response']['docs'].each do |doc|
+          if doc['sm_og_tapas_c_to_p']
+            doc['sm_og_tapas_c_to_p'].each do |id|
+              begin
+                collection.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+              rescue ActiveRecord::RecordNotFound => e
+                print e
+              end
+            end
+          end
+        end
+      end
 
       # TODO: remove this and throw error--this is currently in for debugging other parts of the application
       # If no community relationship was found, notify
@@ -297,17 +358,34 @@ namespace :drupal do
         collection.community = Community.first
       end
 
-      # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
-      file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
-      file_results.each do |file_row|
-        if file_row['field_tapas_thumbnail_fid']
-          file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_thumbnail_fid']}")
-          file_managed_results.each do |file_managed_row|
-            if file_managed_row['uri']
-              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
-              fname = file_managed_row["uri"].sub! "public://", ""
-              collection.thumbnails.attach(io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)), filename: fname, content_type: Rack::Mime.mime_type(File.extname(fname)))
-
+      collection.save
+      if collection.id
+        # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
+        file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
+        file_results.each do |file_row|
+          if file_row['field_tapas_thumbnail_fid']
+            file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_thumbnail_fid']}")
+            file_managed_results.each do |file_managed_row|
+              if file_managed_row['uri']
+                logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+                fname = file_managed_row["uri"].sub! "public://", ""
+                if File.exist?(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname))
+                  blob = ActiveStorage::Blob.create_after_upload!(
+                    io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)),
+                    filename: fname,
+                    content_type: Rack::Mime.mime_type(File.extname(fname))
+                  )
+                  blob.analyze
+                  ActiveStorage::Attachment.create(
+                    name: 'thumbnails',
+                    record_type: 'Collection',
+                    record_id: collection.id,
+                    blob_id: blob.id
+                  )
+                else
+                  logger.error " -- Error: File does not exist in Drupal static files #{file_managed_row["uri"]} to s3"
+                end
+              end
             end
           end
         end
@@ -315,7 +393,6 @@ namespace :drupal do
 
       collection.save
       collections_drupal_to_rails_ids[row["nid"]] = collection.id
-
     end
 
 
@@ -327,7 +404,7 @@ namespace :drupal do
 
     results = client.query("SELECT * FROM node WHERE type = 'tapas_record'")
     results.each do |row|
-      logger.info " -- #{row["nid"]} #{row["title"]}"
+      logger.info " -- core file #{row["nid"]} #{row["title"]}"
 
       core_file = CoreFile.new
       core_file.title = row["title"]
@@ -338,12 +415,6 @@ namespace :drupal do
       user_results.each do |user_row|
         user = User.find_by(username: user_row["name"])
       end
-
-      # Default to TAPAS user if user is not found as a workaround for making migration dev faster (not remigrating users every time)
-      if user == nil
-        user = User.find_by(email: "tapas_rails@tapas.neu.edu")
-      end
-
       core_file.depositor = user
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
@@ -364,8 +435,24 @@ namespace :drupal do
             if file_managed_row['uri']
               logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
               fname = file_managed_row["uri"].sub! "public://", ""
-              core_file.canonical_object.attach(io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)), filename: fname, content_type: Rack::Mime.mime_type(File.extname(fname)))
 
+              if File.exist?(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname))
+                blob = ActiveStorage::Blob.create_after_upload!(
+                  io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)),
+                  filename: fname,
+                  content_type: Rack::Mime.mime_type(File.extname(fname))
+                )
+                blob.analyze
+                core_file.save
+                ActiveStorage::Attachment.create(
+                  name: 'canonical_object',
+                  record_type: 'CoreFile',
+                  record_id: core_file.id,
+                  blob_id: blob.id
+                )
+              else
+                logger.error " -- Error: File does not exist in Drupal static files #{file_managed_row["uri"]} to s3"
+              end
             end
           end
         end
@@ -386,8 +473,21 @@ namespace :drupal do
           file_managed_results = client.query("SELECT uri FROM file_managed WHERE fid = #{file_row['field_tapas_thumbnail_fid']}")
           file_managed_results.each do |file_managed_row|
             if file_managed_row['uri']
+              logger.info " -- -- uploading #{file_managed_row["uri"]} to s3"
+              fname = file_managed_row["uri"].sub! "public://", ""
 
-
+              blob = ActiveStorage::Blob.create_after_upload!(
+                io: File.open(File.join(ENV['DRUPAL_STATIC_FILES_PATH'], fname)),
+                filename: fname,
+                content_type: Rack::Mime.mime_type(File.extname(fname))
+              )
+              blob.analyze
+              ActiveStorage::Attachment.create(
+                name: 'thumbnails',
+                record_type: 'CoreFile',
+                record_id: core_file.id,
+                blob_id: blob.id
+              )
             end
           end
         end
@@ -397,31 +497,33 @@ namespace :drupal do
       # CoreFile <> Collection relationship = sm_og_tapas_r_to_c
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
-      logger.info " --- rate-limited querying Solr for entity_id = #{row['nid']}"
-    #   sleep(10)
-    #   uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
-    #   response = Net::HTTP.get(uri)
-    #   core_file_solr_data = JSON.parse(response)
-    #   core_file_solr_data['response']['docs'].each do |doc|
-    #     if doc['m_field_tapas_project']
-    #       doc['m_field_tapas_project'].each do |id|
-    #         begin
-    #           core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-    #         rescue ActiveRecord::RecordNotFound => e
-    #           print e
-    #         end
-    #       end
-    #     end
-    #     if doc['sm_og_tapas_r_to_c']
-    #       doc['sm_og_tapas_r_to_c'].each do |id|
-    #         begin
-    #           core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
-    #         rescue ActiveRecord::RecordNotFound => e
-    #           print e
-    #         end
-    #       end
-    #     end
-    #   end
+      unless options[:no_solr]
+        logger.info " -- -- rate-limited querying Solr for entity_id = #{row['nid']}"
+        sleep(10)
+        uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
+        response = Net::HTTP.get(uri)
+        core_file_solr_data = JSON.parse(response)
+        core_file_solr_data['response']['docs'].each do |doc|
+          if doc['m_field_tapas_project']
+            doc['m_field_tapas_project'].each do |id|
+              begin
+                core_file.community = Community.find(communities_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+              rescue ActiveRecord::RecordNotFound => e
+                logger.error e
+              end
+            end
+          end
+          if doc['sm_og_tapas_r_to_c']
+            doc['sm_og_tapas_r_to_c'].each do |id|
+              begin
+                core_file.collections << Collection.find(collections_drupal_to_rails_ids[id.gsub('node:', '').to_i])
+              rescue ActiveRecord::RecordNotFound => e
+                logger.error e
+              end
+            end
+          end
+        end
+      end
 
       core_file.save
       core_files_drupal_to_rails_ids[row["nid"]] = core_file.id
@@ -431,7 +533,7 @@ namespace :drupal do
     logger.info " - Migrating pages from the Drupal database to the Rails database"
     results = client.query("SELECT * FROM node WHERE type = 'tapas_staticpage'")
     results.each do |row|
-      logger.info " -- #{row["nid"]} #{row["title"]}"
+      logger.info " -- page #{row["nid"]} #{row["title"]}"
 
       page = Page.new
       page.title = row["title"]
@@ -457,7 +559,7 @@ namespace :drupal do
     logger.info " - Migrating news items from the Drupal database to the Rails database"
     results = client.query("SELECT * FROM node WHERE type = 'tapas_newsitem'")
     results.each do |row|
-      logger.info " -- #{row["nid"]} #{row["title"]}"
+      logger.info " -- news item #{row["nid"]} #{row["title"]}"
 
       news_item = NewsItem.new
       news_item.title = row["title"]
