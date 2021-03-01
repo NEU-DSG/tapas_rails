@@ -80,7 +80,7 @@ namespace :drupal do
     client = Mysql2::Client.new(:host => "localhost", :username => ENV['DRUPAL_MYSQL_USER'], :database => ENV['DRUPAL_MYSQL_DB_NAME'], :password => ENV['DRUPAL_MYSQL_PASSWORD'])
 
     # Clear existing DB for migration
-    logger.info " - Truncating any existing data in institutions, users, communities, collections, core_files, pages, and news_items tables"
+    logger.info "Truncating any existing data in institutions, users, communities, collections, core_files, pages, and news_items tables"
     Institution.delete_all
     Community.delete_all
     Collection.delete_all
@@ -91,13 +91,14 @@ namespace :drupal do
 
 
     # Migrate institutions
-    logger.info " - Migrating institutions from the Drupal database to the Rails database"
+    logger.info "Migrating institutions from the Drupal database to the Rails database"
 
     # Save Drupal <> Rails ids as hash for later lookup
     institutions_drupal_to_rails_ids = {}
 
     # Query all institutions saved as taxonomy terms in Drupal
     results = client.query("SELECT * FROM taxonomy_term_data WHERE vid = 2")
+    institutions_drupal_count = results.count
     results.each do |row|
       logger.info " -- institution #{row["tid"]} #{row["name"]}"
 
@@ -152,25 +153,31 @@ namespace :drupal do
         end
       end
 
-      institution.save
+      institution.save!
       institutions_drupal_to_rails_ids[row["tid"]] = institution.id
     end
 
 
     # Migrate users
-    logger.info " - Migrating users from the Drupal database to the Rails database"
+    logger.info "Migrating users from the Drupal database to the Rails database"
 
     # Save Drupal <> Rails ids as hash for later lookup
     users_drupal_to_rails_ids = {}
 
     results = client.query("SELECT * FROM users WHERE uid != 0")
+    users_drupal_count = results.count
     results.each do |row|
       logger.info " -- user #{row["uid"]} #{row["name"]}"
       # create user with migration passwords
       user = User.new
 
       user.username = row["name"]
-      user.email = row["mail"]
+      if row["mail"] && row["mail"].strip.length != 0
+        user.email = row["mail"]
+      else
+        # Not all users from Drupal have an email
+        user.email = "update#{row["uid"]}@example.edu"
+      end
       user.password = "migration"
       user.password_confirmation = "migration"
 
@@ -206,31 +213,27 @@ namespace :drupal do
         end
       end
 
-      user.save
+      user.save!
       users_drupal_to_rails_ids[row["uid"]] = user.id
     end
 
 
     # Migrate communities
-    logger.info " - Migrating communities from the Drupal database to the Rails database"
+    logger.info "Migrating communities from the Drupal database to the Rails database"
 
     # Save Drupal <> Rails ids as hash for later lookup
     communities_drupal_to_rails_ids = {}
 
     results = client.query("SELECT * FROM node WHERE type = 'tapas_project'")
+    communities_drupal_count = results.count
     results.each do |row|
       logger.info " -- community #{row["nid"]} #{row["title"]}"
 
       community = Community.new
       community.title = row["title"]
 
-      # Find Drupal user by row uid and then correspond to Rails user by username
-      user = nil
-      user_results = client.query("SELECT name FROM users WHERE uid = #{row['uid']}")
-      user_results.each do |user_row|
-        user = User.find_by(username: user_row["name"])
-      end
-      community.depositor = user
+      # Find Drupal user by row uid
+      community.depositor = User.find(users_drupal_to_rails_ids[row['uid']])
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['nid']}")
@@ -242,27 +245,35 @@ namespace :drupal do
 
       # Set user roles from og_users_roles.rid
       user_role_results = client.query("SELECT uid, rid FROM og_users_roles WHERE gid = #{row['nid']}")
+      community_user_ids = []
       user_role_results.each do |user_role_row|
         if user_role_row['uid'] && user_role_row['rid']
           community_member = CommunityMember.new
           community_member.user = User.find(users_drupal_to_rails_ids[user_role_row["uid"]])
-          if user_role_row['rid'] == 9
-            # user is admin
-            community_member.member_type = 'admin'
-            community.community_members << community_member
 
-          elsif user_role_row['rid'] == 17
-            # user is editor
-            community_member.member_type = 'editor'
-            community.community_members << community_member
+          # enforce uniqueness for user per project
+          unless community_user_ids.include? users_drupal_to_rails_ids[user_role_row["uid"]]
 
-          elsif user_role_row['rid'] == 8
-            # user is member
-            community_member.member_type = 'member'
-            community.community_members << community_member
+            if user_role_row['rid'] == 9
+              # user is admin
+              community_member.member_type = 'admin'
+              community.community_members << community_member
 
-          else
-            logger.error " -- Error: user role unrecognized for Community user_id: #{user_role_row['uid']} role_id: #{user_role_row["rid"]}"
+            elsif user_role_row['rid'] == 17
+              # user is editor
+              community_member.member_type = 'editor'
+              community.community_members << community_member
+
+            elsif user_role_row['rid'] == 8
+              # user is member
+              community_member.member_type = 'member'
+              community.community_members << community_member
+
+            else
+              logger.fatal " -- Error: user role unrecognized for Community user_id: #{user_role_row['uid']} role_id: #{user_role_row["rid"]}"
+            end
+
+            community_user_ids.push(users_drupal_to_rails_ids[user_role_row["uid"]])
           end
 
         end
@@ -300,30 +311,28 @@ namespace :drupal do
         end
       end
 
-      community.save
+      community.save!
       communities_drupal_to_rails_ids[row["nid"]] = community.id
     end
 
 
 
     # Migrate collections
-    logger.info " - Migrating collections from the Drupal database to the Rails database"
+    logger.info "Migrating collections from the Drupal database to the Rails database"
 
     # Save Drupal <> Rails ids as hash for later lookup
     collections_drupal_to_rails_ids = {}
 
     results = client.query("SELECT * FROM node WHERE type = 'tapas_collection' limit 10")
+    collections_drupal_count = results.count
     results.each do |row|
       logger.info " -- collection #{row["nid"]} #{row["title"]}"
 
       collection = Collection.new
       collection.title = row["title"]
 
-      # Find Drupal user by row uid and then correspond to Rails user by username
-      user_results = client.query("SELECT name FROM users WHERE uid = #{row['uid']}")
-      user_results.each do |user_row|
-        collection.depositor = User.find_by(username: user_row["name"])
-      end
+      # Find Drupal user by row uid
+      collection.depositor = User.find(users_drupal_to_rails_ids[row['uid']])
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['nid']}")
@@ -333,11 +342,17 @@ namespace :drupal do
         end
       end
 
+      unless collection.description && collection.description.strip.length
+        collection.description = "Default description that should be updated."
+      end
+
       # Collection <> Community relationship is stored in Solr as defined by the Drupal Solr module
       # This relationship is described in Solr via the `sm_og_tapas_c_to_p` parameter
       # SOLR: query via entity_id:
       # http://155.33.22.96:8080/solr/drupal/select?q=entity_id:7&wt=json&indent=true&rows=20
-      unless options[:no_solr]
+      if  options[:no_solr]
+        collection.community = Community.first
+      else
         logger.info " -- -- rate-limited querying Solr for entity_id #{row['nid']}"
         sleep(10)
         uri = URI("http://155.33.22.96:8080/solr/drupal/select?q=entity_id:#{row['nid']}&wt=json&indent=true&rows=20")
@@ -356,7 +371,7 @@ namespace :drupal do
         end
       end
 
-      collection.save
+      collection.save!
       if collection.id
         # set thumbnail from field_data_field_tapas_thumbnail.field_tapas_thumbnail_fid and the corresponding drupal file
         file_results = client.query("SELECT field_tapas_thumbnail_fid FROM field_data_field_tapas_thumbnail WHERE entity_id = #{row['nid']}")
@@ -389,31 +404,27 @@ namespace :drupal do
         end
       end
 
-      collection.save
+      collection.save!
       collections_drupal_to_rails_ids[row["nid"]] = collection.id
     end
 
 
     # Migrate core files
-    logger.info " - Migrating core files from the Drupal database to the Rails database"
+    logger.info "Migrating core files from the Drupal database to the Rails database"
 
     # Save Drupal <> Rails ids as hash for later lookup
     core_files_drupal_to_rails_ids = {}
 
     results = client.query("SELECT * FROM node WHERE type = 'tapas_record'")
+    core_files_drupal_count = results.count
     results.each do |row|
       logger.info " -- core file #{row["nid"]} #{row["title"]}"
 
       core_file = CoreFile.new
       core_file.title = row["title"]
 
-      # Find Drupal user by row uid and then correspond to Rails user by username
-      user = nil
-      user_results = client.query("SELECT name FROM users WHERE uid = #{row['uid']}")
-      user_results.each do |user_row|
-        user = User.find_by(username: user_row["name"])
-      end
-      core_file.depositor = user
+      # Find Drupal user by row uid
+      core_file.depositor = User.find(users_drupal_to_rails_ids[row['uid']])
 
       # set description from field_data_field_tapas_description.field_tapas_description_value
       description_results = client.query("SELECT field_tapas_description_value FROM field_data_field_tapas_description WHERE entity_id = #{row['nid']}")
@@ -523,13 +534,18 @@ namespace :drupal do
         end
       end
 
-      core_file.save
+      core_file.save!
       core_files_drupal_to_rails_ids[row["nid"]] = core_file.id
     end
 
     # Migrate pages
-    logger.info " - Migrating pages from the Drupal database to the Rails database"
+    logger.info "Migrating pages from the Drupal database to the Rails database"
+
+    # Save Drupal <> Rails ids as hash for later lookup
+    pages_drupal_to_rails_ids = {}
+
     results = client.query("SELECT * FROM node WHERE type = 'tapas_staticpage'")
+    pages_drupal_count = results.count
     results.each do |row|
       logger.info " -- page #{row["nid"]} #{row["title"]}"
 
@@ -550,18 +566,33 @@ namespace :drupal do
         end
       end
 
-      page.save
+      unless page.content && page.content.strip.length
+        page.content = "Default content that should be updated."
+      end
+
+      page.save!
+      pages_drupal_to_rails_ids[row["nid"]] = page.id
     end
 
     # Migrate news items
-    logger.info " - Migrating news items from the Drupal database to the Rails database"
+    logger.info "Migrating news items from the Drupal database to the Rails database"
+
+    # Save Drupal <> Rails ids as hash for later lookup
+    news_items_drupal_to_rails_ids = {}
+
     results = client.query("SELECT * FROM node WHERE type = 'tapas_newsitem'")
+    news_items_drupal_count = results.count
     results.each do |row|
       logger.info " -- news item #{row["nid"]} #{row["title"]}"
 
       news_item = NewsItem.new
       news_item.title = row["title"]
       news_item.slug = news_item.title.to_s.parameterize
+
+      # some news items may have the same title, so check and verify slug is unique
+      if NewsItem.find_by(slug: news_item.slug)
+        news_item.slug = "#{news_item.title.to_s.parameterize}-#{row["nid"]}"
+      end
 
       # In Drupal status = 1 indicates that the node has been published
       if row['status'] == 1
@@ -576,15 +607,15 @@ namespace :drupal do
         end
       end
 
-      # Find Drupal user by row uid and then correspond to Rails user by username
-      user = nil
-      user_results = client.query("SELECT name FROM users WHERE uid = #{row['uid']}")
-      user_results.each do |user_row|
-        user = User.find_by(username: user_row["name"])
+      unless news_item.content && news_item.content.strip.length
+        news_item.content = "Default content that should be updated."
       end
-      news_item.author = user
 
-      news_item.save
+      # Find Drupal user by row uid
+      news_item.author = User.find(users_drupal_to_rails_ids[row['uid']])
+
+      news_item.save!
+      news_items_drupal_to_rails_ids[row["nid"]] = news_item.id
     end
 
 
@@ -594,15 +625,32 @@ namespace :drupal do
     CSV.open("communities_drupal_to_rails_ids.csv", "wb") {|csv| communities_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
     CSV.open("collections_drupal_to_rails_ids.csv", "wb") {|csv| collections_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
     CSV.open("core_files_drupal_to_rails_ids.csv", "wb") {|csv| core_files_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
+    CSV.open("pages_drupal_to_rails_ids.csv", "wb") {|csv| pages_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
+    CSV.open("news_items_drupal_to_rails_ids.csv", "wb") {|csv| news_items_drupal_to_rails_ids.to_a.each {|elem| csv << elem} }
 
-    logger.info "Completed Migration"
-    logger.info " - Migrated"
-    logger.info " -- #{Institution.count} Institutions"
-    logger.info " -- #{User.count} Users"
-    logger.info " -- #{Community.count} Communities"
-    logger.info " -- #{Collection.count} Collections"
-    logger.info " -- #{CoreFile.count} CoreFiles"
-    logger.info " -- #{Page.count} Pages"
-    logger.info " -- #{NewsItem.count} NewsItems"
+    logger.info "-" * 40
+    logger.info "Completed Migration:"
+    logger.info " -- Institutions"
+    logger.info " -- -- #{institutions_drupal_count} from Drupal"
+    logger.info " -- -- #{Institution.count} in Rails"
+    logger.info " -- Users"
+    logger.info " -- -- #{users_drupal_count} from Drupal"
+    logger.info " -- -- #{User.count} in Rails"
+    logger.info " -- Communities"
+    logger.info " -- -- #{communities_drupal_count} from Drupal"
+    logger.info " -- -- #{Community.count} in Rails"
+    logger.info " -- Collections"
+    logger.info " -- -- #{collections_drupal_count} from Drupal"
+    logger.info " -- -- #{Collection.count} in Rails"
+    logger.info " -- CoreFiles"
+    logger.info " -- -- #{core_files_drupal_count} from Drupal"
+    logger.info " -- -- #{CoreFile.count} in Rails"
+    logger.info " -- Pages"
+    logger.info " -- -- #{pages_drupal_count} from Drupal"
+    logger.info " -- -- #{Page.count} in Rails"
+    logger.info " -- NewsItems"
+    logger.info " -- -- #{news_items_drupal_count} from Drupal"
+    logger.info " -- -- #{NewsItem.count} in Rails"
+    logger.info "-" * 40
   end
 end
