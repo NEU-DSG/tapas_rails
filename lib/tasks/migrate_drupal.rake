@@ -323,7 +323,7 @@ namespace :drupal do
     # Save Drupal <> Rails ids as hash for later lookup
     collections_drupal_to_rails_ids = {}
 
-    results = client.query("SELECT * FROM node WHERE type = 'tapas_collection' limit 10")
+    results = client.query("SELECT * FROM node WHERE type = 'tapas_collection'")
     collections_drupal_count = results.count
     results.each do |row|
       logger.info " -- collection #{row["nid"]} #{row["title"]}"
