@@ -286,9 +286,11 @@ GEM
     mediashelf-loggable (0.4.10)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mimemagic (0.3.2)
+    mimemagic (0.4.3)
+      nokogiri (~> 1)
+      rake
     mini_magick (4.9.5)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.5.1)
     minitest (4.7.5)
     mods (2.0.3)
       iso-639
@@ -308,8 +310,9 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (4.2.0)
     netrc (0.11.0)
-    nokogiri (1.10.7)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.11.4)
+      mini_portile2 (~> 2.5.0)
+      racc (~> 1.4)
     nom-xml (0.5.4)
       activesupport (>= 3.2.18)
       i18n
@@ -332,6 +335,7 @@ GEM
       method_source (~> 0.8.1)
       slop (~> 3.4)
     public_suffix (4.0.1)
+    racc (1.5.2)
     rack (1.5.5)
     rack-protection (1.5.0)
       rack
