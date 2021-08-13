@@ -4,8 +4,10 @@ class TEIFile < CerberusCore::BaseModels::ContentFile
 
   core_file_relationship :core_file
 
-  has_and_belongs_to_many :tfc_for, :property => :is_tfc_for,
-    :class_name => "CoreFile"
+  # FIXME: (charles) :property keyword no longer exists and causes
+  # this to fail
+  # has_and_belongs_to_many :tfc_for, :property => :is_tfc_for,
+  #   :class_name => "CoreFile"
 
   def fedora_file_path
     config_path = Rails.application.config.fedora_home

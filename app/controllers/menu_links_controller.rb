@@ -1,6 +1,6 @@
 class MenuLinksController < ApplicationController
   extend ActiveSupport::Concern
-  before_filter :verify_admin, :except => :show
+  before :verify_admin, :except => :show
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)

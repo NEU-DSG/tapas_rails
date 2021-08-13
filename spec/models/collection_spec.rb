@@ -4,7 +4,7 @@ describe Collection do
   include FileHelpers
 
   describe "Core File drupal access" do
-    let(:coll) { FactoryGirl.create(:collection) }
+    let(:coll) { FactoryBot.create(:collection) }
 
     after(:each) {
       ActiveFedora::Base.all.each do |c|
@@ -14,7 +14,7 @@ describe Collection do
 
     context "on a collection that has been made public" do
       it 'is set to public' do
-        one, two = FactoryGirl.create_list(:core_file, 2)
+        one, two = FactoryBot.create_list(:core_file, 2)
         one.drupal_access = 'private' ; one.collections << coll ; one.save!
         two.drupal_access = 'private' ; two.collections << coll ; two.save!
         expect(one.reload.drupal_access).to eq 'private'
@@ -30,13 +30,13 @@ describe Collection do
 
     context "on a collection that has been made private" do
       it 'is set to private unless the object has other public collections' do
-        one, two = FactoryGirl.create_list(:core_file, 2)
+        one, two = FactoryBot.create_list(:core_file, 2)
 
-        public_collection = FactoryGirl.create(:collection)
+        public_collection = FactoryBot.create(:collection)
         public_collection.drupal_access = 'public'
         public_collection.save!
 
-        private_collection = FactoryGirl.create(:collection)
+        private_collection = FactoryBot.create(:collection)
         private_collection.drupal_access = 'private'
         private_collection.save!
 
@@ -91,8 +91,8 @@ describe Collection do
     it { respond_to :placeographies= }
 
     it "can be set on core files from the collection" do
-      collection = FactoryGirl.create :collection
-      core_file = FactoryGirl.create :core_file
+      collection = FactoryBot.create :collection
+      core_file = FactoryBot.create :core_file
 
       collection.orgographies << core_file
       collection.save!
@@ -117,9 +117,9 @@ describe Collection do
     end
 
     it 'returns the correct values where data exists' do
-      community = FactoryGirl.create :community
+      community = FactoryBot.create :community
 
-      collection = FactoryGirl.create :collection
+      collection = FactoryBot.create :collection
       collection.mods.title = "The Most Dangerous Game"
       collection.mods.abstract = "Spoopy"
       collection.add_thumbnail(:filepath => fixture_file('image.jpg'))

@@ -9,7 +9,9 @@ class CatalogController < ApplicationController
   # This applies appropriate access controls to all solr queries
   # CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
   # This filters out objects that you want to exclude from search results, like FileAssets
-  CatalogController.search_params_logic += [:exclude_unwanted_models]
+
+  ## TODO: Reinstate when application renders route
+  # CatalogController.search_params_logic += [:exclude_unwanted_models]
 
   configure_blacklight do |config|
     # config.connection_config = "#{::Rails.root}/config/solr.yml"
@@ -261,7 +263,8 @@ class CatalogController < ApplicationController
 
   def search_action_url(options = {})
     # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
-    catalog_index_path(options.except(:controller, :action))
+    # TODO: reinstate when application renders route
+    # catalog_index_path(options.except(:controller, :action))
   end
 
   def exclude_unwanted_models(solr_parameters, user_parameters)
