@@ -5,8 +5,8 @@ describe Exist::GetReadingInterface, :existdb => true do
 
   def valid_request_test(type)
     blob = File.read(fixture_file 'tei.xml')
-    FactoryGirl.create :tapas_generic
-    FactoryGirl.create :teibp
+    FactoryBot.create :tapas_generic
+    FactoryBot.create :teibp
     # core_file.create_view_package_methods
     response = Exist::GetReadingInterface.execute(blob, type)
     expect(response.code).to eq 200

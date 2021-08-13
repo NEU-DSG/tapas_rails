@@ -27,7 +27,7 @@ describe Community do
     end
 
     it 'populates values appropriately where they exist' do
-      community = FactoryGirl.create :community
+      community = FactoryBot.create :community
       community.mods.title = 'A Test Community'
       community.mods.abstract = 'Community created for testing #as_json'
       community.drupal_access = 'public'

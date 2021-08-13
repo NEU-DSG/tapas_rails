@@ -4,20 +4,20 @@ describe Exist::DeleteRecord do
   include FileHelpers
 
   before(:all) do
-    community = FactoryGirl.create :community
+    community = FactoryBot.create :community
     community.did = community.pid
     community.save!
-    collection = FactoryGirl.create :collection
+    collection = FactoryBot.create :collection
     collection.community = community
     collection.did = collection.pid
 
     collection.save!
 
-    @core_file = FactoryGirl.create :core_file
+    @core_file = FactoryBot.create :core_file
     @core_file.collections << collection
     @core_file.save!
 
-    @core_file_non_indexed = FactoryGirl.create :core_file
+    @core_file_non_indexed = FactoryBot.create :core_file
     @core_file_non_indexed.collections << collection
     @core_file_non_indexed.save!
   end

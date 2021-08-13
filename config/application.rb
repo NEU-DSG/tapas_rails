@@ -1,5 +1,6 @@
 require File.expand_path('../boot', __FILE__)
 
+require 'rake'
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -25,6 +26,12 @@ module TapasRails
     config.autoload_paths += Dir[Rails.root.join('app', 'actions', '**/')]
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
+    # Dir.glob("#{config.root}/lib/**/[^spec]**/").each do |dir|
+    #   puts dir
+    #   config.autoload_paths << dir
+    # end
+
+
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
     # Pid to use for the Collection that stores TEI files
@@ -38,7 +45,7 @@ module TapasRails
     config.encoding = "utf-8"
 
     # Enable pid generation on object instantiation
-    config.cerberus_core.auto_generate_pid = true
+    # config.cerberus_core.auto_generate_pid = true
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

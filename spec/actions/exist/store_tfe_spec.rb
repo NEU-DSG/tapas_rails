@@ -14,7 +14,7 @@ describe Exist::StoreTfe do
       @core_file.collections = @collections
       @core_file.save!
 
-      @core_file_unindexed = FactoryGirl.create :core_file
+      @core_file_unindexed = FactoryBot.create :core_file
       @core_file_unindexed.collections = @collections
       @core_file_unindexed.save!
 

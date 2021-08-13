@@ -6,7 +6,7 @@ describe CoreFilesController do
   include ValidAuthToken
   include TapasRails::ViewPackages
 
-  let(:core_file) { FactoryGirl.create :core_file }
+  let(:core_file) { FactoryBot.create :core_file }
 
   def test_file(fname)
     pth = Rails.root.join("spec", "fixtures", "files", fname)
@@ -15,13 +15,13 @@ describe CoreFilesController do
   end
 
   RSpec.shared_examples "a content displaying route" do
-    let(:core_file) { FactoryGirl.create :core_file }
+    let(:core_file) { FactoryBot.create :core_file }
 
     after(:each) { ActiveFedora::Base.delete_all }
 
     it '404s when no CoreFile can be found' do
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
+      FactoryBot.create :tapas_generic
+      FactoryBot.create :teibp
       @route = requested_content.to_sym
       # get @route, { :did => SecureRandom.uuid }
       if requested_content != "tei"
@@ -35,8 +35,8 @@ describe CoreFilesController do
     end
 
     it "404s when the CoreFile lacks the requested display type." do
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
+      FactoryBot.create :tapas_generic
+      FactoryBot.create :teibp
       core_file.create_view_package_methods
       @route = requested_content.to_sym
       if requested_content != "tei"
@@ -49,12 +49,12 @@ describe CoreFilesController do
     end
 
     it '200s and returns the content when it exists' do
-      FactoryGirl.create :tapas_generic
-      FactoryGirl.create :teibp
+      FactoryBot.create :tapas_generic
+      FactoryBot.create :teibp
       available_view_packages_machine
       core_file.create_view_package_methods
       @route = requested_content.to_sym
-      html = FactoryGirl.create :html_file
+      html = FactoryBot.create :html_file
       html.core_file = core_file
       html.html_for << core_file
 
@@ -101,7 +101,7 @@ describe CoreFilesController do
     # Given that we are mostly trusting display_mods to output the right thing,
     # this is a pretty light spec.
     it 'returns some content for nonempty metadata' do
-      core = FactoryGirl.create :core_file
+      core = FactoryBot.create :core_file
       did = core.did
       pid = core.pid
       core.mods.content = File.read(fixture_file('mods.xml'))
@@ -152,7 +152,7 @@ describe CoreFilesController do
     end
 
     it 'returns the in_progress representation of the object for processing records' do
-      cf = FactoryGirl.create :core_file
+      cf = FactoryBot.create :core_file
       cf.mark_upload_in_progress!
 
       get :api_show, did: cf.did
@@ -163,7 +163,7 @@ describe CoreFilesController do
     end
 
     it 'returns the failed representation of the object for failed records' do
-      cf = FactoryGirl.create :core_file
+      cf = FactoryBot.create :core_file
       cf.mark_upload_failed!
 
       get :api_show, did: cf.did
@@ -174,7 +174,7 @@ describe CoreFilesController do
     end
 
     it 'marks invalid tagless records as failed' do
-      cf = FactoryGirl.create :core_file # No associated collections, invalid
+      cf = FactoryBot.create :core_file # No associated collections, invalid
 
       get :api_show, did: cf.did
 
@@ -185,7 +185,7 @@ describe CoreFilesController do
     end
 
     it 'flags records that are stuck in progress as failed' do
-      cf = FactoryGirl.create :core_file
+      cf = FactoryBot.create :core_file
       cf.mark_upload_in_progress
       cf.upload_status_time = 20.minutes.ago.utc.iso8601
       cf.save!
@@ -210,7 +210,7 @@ describe CoreFilesController do
       skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
 
       core, collections, community = FixtureBuilders.create_all
-      tei = FactoryGirl.create :tei_file
+      tei = FactoryBot.create :tei_file
 
       tei.core_file = core
       tei.canonize
@@ -241,17 +241,17 @@ describe CoreFilesController do
       Resque.inline = true
 
       # Create a community for our collections to be attached to
-      community = FactoryGirl.create :community
+      community = FactoryBot.create :community
       community.did = community.pid
       community.save!
 
       # Create the relevant collections
-      collection_one = FactoryGirl.create :collection
+      collection_one = FactoryBot.create :collection
       collection_one.did = collection_one.pid
       collection_one.community = community
       collection_one.save!
 
-      collection_two = FactoryGirl.create :collection
+      collection_two = FactoryBot.create :collection
       collection_two.did = collection_two.pid
       collection_two.community = community
       collection_two.save!
@@ -307,8 +307,8 @@ describe CoreFilesController do
 
   # Testing the create function in the Core files Controller
   describe 'post #create' do
-    let(:community) { FactoryGirl.create :community }
-    let(:collection) { FactoryGirl.create :collection }
+    let(:community) { FactoryBot.create :community }
+    let(:collection) { FactoryBot.create :collection }
     Resque.inline = true
     before(:all) {
       ActiveFedora::Base.delete_all

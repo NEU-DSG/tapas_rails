@@ -72,38 +72,41 @@ class User < ActiveRecord::Base
   end
 
   def check_paid_status
-    api_key = ENV['WILD_APRICOT_API_KEY']
-    aid = 66796
-    Pluot.api_key = api_key
-    Pluot.account_id = aid
-    logger.warn("e-Mail eq #{self.email}")
-    begin
-      response = Pluot.contacts.filter("e-Mail eq #{self.email}")
-    rescue Faraday::ConnectionFailed => e
-      print e
-      return false
-    end
-    logger.warn(response)
-    if response.blank?
-      # probably an issue where we were unable to connect with wild apricot at all
-      return true
-    end
-    contact = response[:Contacts]
-    logger.warn(contact)
-    if !contact.blank?
-      contact = contact[0]
-      logger.warn(contact)
-      if contact[:Status] && contact[:Status] == "Active"
-        logger.warn("active")
-        return true
-      else
-        logger.warn("not active")
-        return false
-      end
-    else
-      logger.warn("no user found")
-      return false
-    end
+    # FIXME: we can't use pluot, as it's too out of date
+    # re-implement this with our own Wild Apricot REST wrapper?
+    return true
+    # api_key = ENV['WILD_APRICOT_API_KEY']
+    # aid = 66796
+    # # Pluot.api_key = api_key
+    # # Pluot.account_id = aid
+    # logger.warn("e-Mail eq #{self.email}")
+    # begin
+    #   response = Pluot.contacts.filter("e-Mail eq #{self.email}")
+    # rescue Faraday::ConnectionFailed => e
+    #   print e
+    #   return false
+    # end
+    # logger.warn(response)
+    # if response.blank?
+    #   # probably an issue where we were unable to connect with wild apricot at all
+    #   return true
+    # end
+    # contact = response[:Contacts]
+    # logger.warn(contact)
+    # if !contact.blank?
+    #   contact = contact[0]
+    #   logger.warn(contact)
+    #   if contact[:Status] && contact[:Status] == "Active"
+    #     logger.warn("active")
+    #     return true
+    #   else
+    #     logger.warn("not active")
+    #     return false
+    #   end
+    # else
+    #   logger.warn("no user found")
+    #   return false
+    # end
   end
 
 
