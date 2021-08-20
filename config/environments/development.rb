@@ -1,6 +1,6 @@
 TapasRails::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
-  Rails.application.routes.default_url_options[:host] = 'railsapi.localhost:8080'
+  Rails.application.routes.default_url_options[:host] = 'localhost:3000'
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
   # since you don't have to restart the web server when you make code changes.
@@ -22,7 +22,12 @@ TapasRails::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   # config.action_mailer.default_url_options = { :host => "localhost:3000" }
   # Rails.application.routes.default_url_options[:host] = 'localhost:3000'
-  config.action_mailer.default_url_options = { :host => "localhost"}
+  config.action_mailer.default_url_options = { host: "localhost:3000" }
+  config.action_mailer.delivery_method = :smtp
+
+  # Use mailcatcher (https://mailcatcher.me/) to test emails locally
+  # NOTE: Please do not put mailcatcher in the Gemfile, as it will cause conflicts
+  config.action_mailer.smtp_settings = { address: "localhost", port: 1025 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

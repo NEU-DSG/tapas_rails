@@ -4,9 +4,9 @@ class CollectionsController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
 
-  before_filter :can_edit?, only: [:edit, :update, :destroy]
-  before_filter :can_read?, :only => :show
-  # before_filter :enforce_show_permissions, :only=>:show
+  before_action :can_edit?, only: [:edit, :update, :destroy]
+  before_action :can_read?, :only => :show
+  # before_action :enforce_show_permissions, :only=>:show
 
   def upsert
     if params[:thumbnail]
@@ -21,9 +21,9 @@ class CollectionsController < CatalogController
   #This method displays all the collections present
   def index
     @page_title = "All Collections"
-    self.search_params_logic += [:collections_filter]
-    self.search_params_logic += [:add_access_controls_to_solr_params]
-    (@response, @document_list) = search_results(params, search_params_logic)
+    # self.search_params_logic += [:collections_filter]
+    # self.search_params_logic += [:add_access_controls_to_solr_params]
+    (@response, @document_list) = search_results(params) #, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }

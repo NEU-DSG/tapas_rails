@@ -22,7 +22,7 @@
         .form-group
           = f.label :content, "Content", class: "control-label col-md-2"
           .col-md-6
-            = f.bootsy_area :content, required: true, class: "form-control", placeholder: "HTML Content of news item", rows: 16, editor_options: {html: true}
+            = f.text_field :content, required: true, class: "form-control", placeholder: "HTML Content of news item", rows: 16, editor_options: {html: true}
 
     %hr
   .form-actions

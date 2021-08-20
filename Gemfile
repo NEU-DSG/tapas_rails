@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2'
 
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3', '~> 1.3.6'
-
 # Use rubyzip to handle Zipped content files from Drupal
 gem 'rubyzip'
 
@@ -25,7 +22,7 @@ gem 'bootstrap-sass', '3.3.4.1'
 gem 'uglifier', '>= 1.3.0'
 
 # Use CoffeeScript for .js.coffee assets and views
-# gem 'coffee-rails', '~> 4.0.0'
+gem 'coffee-rails', '~> 5.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
@@ -45,7 +42,7 @@ gem 'friendly_id', '~> 5.2.4' # Note: You MUST use 5.0.0 or greater for Rails 4.
 gem 'jbuilder', '2.10'
 
 # Use Figaro to manage sensitive application configuration
-# gem 'figaro'
+gem 'figaro'
 
 # Use Resque to handle background tasks
 gem 'resque', :require => 'resque/server'
@@ -63,7 +60,7 @@ gem 'nest'
 gem 'namae'
 
 # Bootstrap WYSIWYG Editor
-gem 'bootsy'
+# gem 'bootsy' NO LONGER MAINTAINED
 
 # Forem gem for Forums
 # gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
@@ -91,7 +88,9 @@ end
 gem "blacklight"
 gem 'hydra-head', '~> 10.0'
 gem 'hydra-derivatives'
-# gem 'blacklight-gallery'
+gem 'blacklight-gallery'
+
+gem 'sunspot_rails'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
@@ -114,6 +113,7 @@ group :development, :test do
   gem "pry"
   gem "rspec-rails", "~> 3"
   gem "rspec-its"
+  gem "sunspot_solr"
   gem "jettywrapper"
   gem "factory_bot_rails"
 end
@@ -135,3 +135,5 @@ gem 'active_fedora-datastreams'
 gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
+gem 'sprockets', '~> 3.7.2'
+gem 'carrierwave', '~> 1.3.1'
