@@ -87,6 +87,6 @@ class NewsItemsController < ApplicationController
     end
 
     def news_item_params
-      params.require(:news_item).permit(:content, :title, :slug, :bootsy_image_gallery_id, :publish)
+      params.require(:news_item).permit(:content, :title, :slug, :publish)
     end
 end
