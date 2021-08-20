@@ -1,6 +1,6 @@
 class InstitutionsController < ApplicationController
   extend ActiveSupport::Concern
-  before_filter :verify_admin, :except => [:show, :index]
+  before_action :verify_admin, :except => [:show, :index]
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
