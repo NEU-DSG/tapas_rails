@@ -36,9 +36,9 @@
       %i.fa.fa-search.fa-stack-1x
     %span.toolbar-title
       = "Search"
-  %section#search_tool.search.collapse
-    %div.search-content
-      = render :partial=>'catalog/search_form'
+  -# %section#search_tool.search.collapse
+  -#   %div.search-content
+  -#     = render :partial=>'catalog/search_form'
   - if current_user
     %a{:href => "/user/sign_out", :class => "toolbar-link"}
       %span.fa-stack.fa-lg
