@@ -1,9 +1,12 @@
 TapasRails::Application.routes.draw do
   # At some point we'll want all this, but I'm going to disable these routes
   # until we're ready to migrate to 100% Hydra-Head usage for tapas.
-  # root :to => "view_packages#index"
+
+
+  root :to => "view_packages#index"
+
   # blacklight_for :catalog
-  # devise_for :users
+  devise_for :users
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -84,8 +87,6 @@ TapasRails::Application.routes.draw do
   resources :users, :only => ['index', 'edit', 'create', 'update']
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
-
-  mount Bootsy::Engine => '/bootsy', as: 'bootsy'
 
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
 
