@@ -92,7 +92,7 @@ class PagesController < ApplicationController
     end
 
     def page_params
-      params.require(:page).permit(:content, :title, :slug, :bootsy_image_gallery_id, :publish, :submenu)
+      params.require(:page).permit(:content, :title, :slug, :publish, :submenu)
     end
 
     def get_submenu_options
