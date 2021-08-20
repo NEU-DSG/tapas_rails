@@ -10,19 +10,19 @@ class CoreFilesController < CatalogController
     identifier { ignore! }
   end
 
-  skip_before_filter :load_asset, :load_datastream, :authorize_download!
+  skip_before_action :load_asset, :load_datastream, :authorize_download!
   # We can do better by using SOLR check instead of Fedora
-  before_filter :can_edit?, only: [:edit, :update, :destroy]
-  before_filter :can_read?, :only => :show
-  # before_filter :enforce_show_permissions, :only=>:show
+  before_action :can_edit?, only: [:edit, :update, :destroy]
+  before_action :can_read?, :only => :show
+  # before_action :enforce_show_permissions, :only=>:show
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
 
   #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
-    self.search_params_logic += [:core_files_filter]
-    (@response, @document_list) = search_results(params, search_params_logic)
+    # self.search_params_logic += [:core_files_filter]
+    (@response, @document_list) = search_results(params) #, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }
