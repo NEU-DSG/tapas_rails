@@ -9,7 +9,7 @@ TapasRails::Application.configure do
   config.action_controller.perform_caching = true
   config.action_mailer.default_url_options = { :host => "tapasdev.neu.edu"}
 
-  config.assets.js_compressor = :uglifier
+  config.assets.js_compressor = Uglifier.new(harmony: true)
 
   config.assets.compile = true
 
