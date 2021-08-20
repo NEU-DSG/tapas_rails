@@ -10,7 +10,9 @@ class CoreFilesController < CatalogController
     identifier { ignore! }
   end
 
-  skip_before_action :load_asset, :load_datastream, :authorize_download!
+  # TODO investigate this after ruby version upgrades complete
+  # skip_before_action :load_asset, :load_datastream, :authorize_download!
+
   # We can do better by using SOLR check instead of Fedora
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show

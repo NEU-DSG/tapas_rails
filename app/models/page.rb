@@ -1,6 +1,5 @@
 class Page < ActiveRecord::Base
   extend FriendlyId
-  include Bootsy::Container
   include SolrHelpers
 
 
