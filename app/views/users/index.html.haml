@@ -18,7 +18,7 @@
         %td
           %h3
             = link_to(user.name, user_path(user.id))
-            - if current_user.admin?
+            - if current_user.try(:admin?)
               %a.btn.btn-default.btn-sm{:href=>edit_user_path(user.id)}
                 = "Edit"
         %td
