@@ -450,7 +450,7 @@ GEM
       rdf (~> 3.1)
     rdf-xsd (3.1.0)
       rdf (~> 3.1)
-    rdoc (6.2.1)
+    rdoc (6.3.2)
     redic (1.5.3)
       hiredis
     redis (4.1.4)
