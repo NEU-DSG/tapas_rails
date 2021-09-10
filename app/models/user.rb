@@ -23,6 +23,9 @@ class User < ActiveRecord::Base
 
   belongs_to :institution
 
+  has_many :community_members
+  has_many :communities, through: :community_members, source: :community
+
   ROLES = %w[admin paid_user unpaid_user]
 
   ACCOUNT_TYPES = %w[free teic teic_inst]
