@@ -101,32 +101,19 @@ class UsersController < CatalogController
   end
 
   def five_collections
-    # FIXME: (charles) There has to be a better way to get a user's collections
-    projects = five_communities
-    collections = projects.map do |p|
-      p.collections
-    end
-    collections.sample(5)
+    Collection
+      .limit(5)
+      .order("RAND()")
+      .joins(communities: [{ community_members: :user }])
+      .where("users.id": @user.id)
   end
 
   def five_records
-    model_type = RSolr.solr_escape "info:fedora/afmodel:CoreFile"
-    projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{@user.id.to_s}\" OR depositor_tesim:\"#{@user.id.to_s}\" OR project_admins_ssim:\"#{@user.id.to_s}\" OR project_editors_ssim:\"#{@user.id.to_s}\")")
-    col_query = projects.map do |p|
-      "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
-    end
-    if col_query.length < 1
-        return nil
-    end
-    collections = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Collection"}\" && (#{col_query.join(" OR ")})")
-    rec_query = collections.map do |y|
-      "collections_pids_ssim: \"#{RSolr.solr_escape(y['id'])}\""
-    end
-    if rec_query.length < 1
-      return nil
-    end
-
-    return ActiveFedora::SolrService.query("(#{rec_query.join(" OR ")}) AND has_model_ssim: \"#{model_type}\"")
+    CoreFile
+      .limit(5)
+      .order("RAND()")
+      .joins(collections: [{ communities: { community_members: :user } } ])
+      .where("users.id": @user.id)
   end
 
   def my_communities_filter(solr_parameters, user_parameters)
@@ -145,7 +132,7 @@ class UsersController < CatalogController
     end
     solr_parameters[:fq] ||= []
     solr_parameters[:fq] << col_query.join(" OR ")
-      solr_parameters[:fq] << "has_model_ssim: \"#{model_type}\""
+    solr_parameters[:fq] << "has_model_ssim: \"#{model_type}\""
   end
 
   def my_records_filter(solr_parameters, user_parameters)
@@ -153,14 +140,14 @@ class UsersController < CatalogController
     projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{@user.id.to_s}\" OR depositor_tesim:\"#{@user.id.to_s}\" OR project_admins_ssim:\"#{@user.id.to_s}\" OR project_editors_ssim:\"#{@user.id.to_s}\")")
     col_query = projects.map do |p|
       "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
-      end
+    end
     collections = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Collection"}\" && (#{col_query.join(" OR ")})")
-      rec_query = collections.map do |y|
-        "collections_pids_ssim: \"#{RSolr.solr_escape(y['id'])}\""
-      end
-      solr_parameters[:fq] ||= []
-      solr_parameters[:fq] << rec_query.join(" OR ")
-      solr_parameters[:fq] << "has_model_ssim: \"#{model_type}\""
+    rec_query = collections.map do |y|
+      "collections_pids_ssim: \"#{RSolr.solr_escape(y['id'])}\""
+    end
+    solr_parameters[:fq] ||= []
+    solr_parameters[:fq] << rec_query.join(" OR ")
+    solr_parameters[:fq] << "has_model_ssim: \"#{model_type}\""
   end
 
   def check_for_logged_in_user
