@@ -61,7 +61,7 @@ class CommunitiesController < CatalogController
   def new
     if current_user && (current_user.paid_user? || current_user.admin?)
       @page_title = "Create New Community"
-      @community = Community.new(:mass_permissions=>"public")
+      @community = Community.new
       i_s = Institution.all()
       @institutions = []
       i_s.each do |i|
