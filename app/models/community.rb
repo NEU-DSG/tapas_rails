@@ -35,6 +35,9 @@ class Community < ActiveRecord::Base
   has_many :members, through: :community_members, source: :user
   has_and_belongs_to_many :communities, join_table: "community_communities", association_foreign_key: "parent_community_id"
 
+  has_many :institutions
+  has_many :thumbnails, as: :owner
+
   validates_presence_of :title
 
  # Look up or create the root community of the graph
