@@ -5,17 +5,17 @@
         .form-group
           = f.label :title, "Title", class: "control-label col-md-2"
           .col-md-6
-            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title][]', class: "form-control", placeholder: "University Libraries"
+            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title]', class: "form-control", placeholder: "University Libraries"
         .form-group
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'community[description][]', class: "form-control", placeholder: "Brief description of the community"
+            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'community[description]', class: "form-control", placeholder: "Brief description of the community"
             %p.small.help-block="This field accepts plain text"
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           = f.check_box :is_public, { checked: true }
         .form-group
-          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          = f.label :thumbnail, "Thumbnail", name: 'thumbnail', class: "control-label col-md-2"
           .col-md-6
             - if !@community.thumbnails.blank?
               =image_tag @community.download_path('thumbnail_1')
@@ -32,13 +32,8 @@
             %span.institution
               = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
           - else
-            - @community.institutions.each_with_index do |id, i|
-              %span.institution{:class=> i != 0 ? "to-remove" : ""}
-                = f.select :institutions, options_for_select(@institutions, id), {}, {name: "community[institutions][]", class: "form-control"}
-                -if i != 0
-                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove institution", type: "button"}
-                    %i.fa.fa-remove
-                %br
+            %span.institution
+              = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
           %button#add_another_institution.btn.btn-success{:type => "button"}
             %i.fa-plus-sign.fa
             Add Institution
