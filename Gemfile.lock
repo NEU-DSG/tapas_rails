@@ -341,7 +341,7 @@ GEM
     mimemagic (0.3.5)
     mini_magick (4.10.1)
     mini_mime (1.0.2)
-    mini_portile2 (2.4.0)
+    mini_portile2 (2.6.1)
     minitest (5.14.0)
     mods (2.4.1)
       edtf
@@ -365,8 +365,9 @@ GEM
     net-ssh (6.0.2)
     netrc (0.11.0)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
-      mini_portile2 (~> 2.4.0)
+    nokogiri (1.12.5)
+      mini_portile2 (~> 2.6.1)
+      racc (~> 1.4)
     nom-xml (1.1.0)
       activesupport (>= 3.2.18)
       i18n
@@ -389,6 +390,7 @@ GEM
       method_source (~> 1.0)
     public_suffix (4.0.4)
     raabro (1.1.6)
+    racc (1.5.2)
     rack (2.2.2)
     rack-protection (2.0.8.1)
       rack
