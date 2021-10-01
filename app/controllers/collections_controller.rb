@@ -112,7 +112,7 @@ class CollectionsController < CatalogController
     # @core_files = CoreFile.find_by_did(params[:id])
     if params[:collection][:remove_thumbnail] == "1"
       params[:collection].delete :thumbnail
-      @collection.thumbnail_list = []
+      @collection.thumbnails = []
       @collection.save!
     end
     params[:collection].delete :remove_thumbnail

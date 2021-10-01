@@ -3,10 +3,10 @@ module CerberusCore::SolrDocumentBehavior
   include CerberusCore::Concerns::Traversals
 
   module ClassMethods
-    def find_by_pid(pid) 
+    def find_by_pid(pid)
       r = ActiveFedora::SolrService.query("id:\"#{pid}\"")
       if r.first
-        SolrDocument.new(r.first) 
+        SolrDocument.new(r.first)
       else
         msg = "Item with id #{pid} not found in Solr"
         raise CerberusCore::PidNotFoundInSolrError, msg
@@ -19,15 +19,15 @@ module CerberusCore::SolrDocumentBehavior
   #---------------
 
   def klass
-    unique_read "active_fedora_model_ssi" 
+    unique_read "active_fedora_model_ssi"
   end
 
-  def pid 
-    unique_read "id" 
+  def pid
+    unique_read "id"
   end
 
   #-----------------------
-  # Mods Datastream Stuff 
+  # Mods Datastream Stuff
   #-----------------------
 
   def title
@@ -42,12 +42,12 @@ module CerberusCore::SolrDocumentBehavior
     unique_read "title_info_non_sort_tesim"
   end
 
-  def authorized_keywords 
-    Array(self["subject_sim"]) 
+  def authorized_keywords
+    Array(self["subject_sim"])
   end
 
-  def keywords 
-    Array(self["subject_topic_tesim"]) 
+  def keywords
+    Array(self["subject_topic_tesim"])
   end
 
   def creators
@@ -59,23 +59,23 @@ module CerberusCore::SolrDocumentBehavior
   #-----------------------------
 
   def depositor
-    unique_read "depositor_tesim" 
+    unique_read "depositor_tesim"
   end
 
   def in_progress?
-    unique_read("in_progress_tesim") == "true" 
+    unique_read("in_progress_tesim") == "true"
   end
 
-  def canonical? 
-    unique_read("canonical_tesim") == "yes" 
+  def canonical?
+    unique_read("canonical_tesim") == "yes"
   end
 
-  def thumbnail_list 
-    Array(self["thumbnail_list_tesim"]) 
+  def thumbnails
+    Array(self["thumbnails_tesim"])
   end
 
-  def parent_id 
-    unique_read "parent_id_tesim" 
+  def parent_id
+    unique_read "parent_id_tesim"
   end
 
   #-------------------
@@ -111,7 +111,7 @@ module CerberusCore::SolrDocumentBehavior
   #---------
 
   def unique_read(field_name, default = '')
-    val = Array(self[field_name]).first 
+    val = Array(self[field_name]).first
     val.present? ? val : default
   end
 end
