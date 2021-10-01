@@ -36,7 +36,8 @@ class Community < ActiveRecord::Base
   has_many :users, through: :community_members
   has_and_belongs_to_many :communities, join_table: "community_communities", association_foreign_key: "parent_community_id"
 
-  has_many :institutions
+  has_many :communities_institutions
+  has_many :institutions, through: :communities_institutions
   has_many :thumbnails, as: :owner
 
   belongs_to :depositor, class_name: "User"
