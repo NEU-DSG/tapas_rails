@@ -174,7 +174,7 @@ class CoreFile < ActiveRecord::Base
   end
 
   def remove_thumbnail
-    self.thumbnail_list = []
+    self.thumbnails = []
     self.save!
   end
 

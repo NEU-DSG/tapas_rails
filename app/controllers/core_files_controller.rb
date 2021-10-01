@@ -209,7 +209,7 @@ class CoreFilesController < CatalogController
     params[:did] = cf.did
     if params[:core_file][:remove_thumbnail] == "1"
       params[:core_file].delete :thumbnail
-      cf.thumbnail_list = []
+      cf.thumbnails = []
       cf.save!
     end
     params[:core_file].delete :remove_thumbnail

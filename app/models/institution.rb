@@ -3,5 +3,6 @@ class Institution < ActiveRecord::Base
   validates_presence_of :name
 
   has_many :users
-  belongs_to :community
+  has_many :communities_institutions
+  has_many :communities, through: :communities_institutions
 end
