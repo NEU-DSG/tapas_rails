@@ -108,7 +108,7 @@ class CommunitiesController < CatalogController
     puts @community
     if params[:community][:remove_thumbnail] == "1"
       params[:community].delete :thumbnail
-      @community.thumbnail_list = []
+      @community.thumbnails = []
       @community.save!
     end
     params[:community].delete :remove_thumbnail

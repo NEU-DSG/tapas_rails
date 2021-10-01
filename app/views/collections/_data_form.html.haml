@@ -23,7 +23,7 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@collection.thumbnail_list.blank?
+            - if !@collection.thumbnails.blank?
               =image_tag @collection.download_path('thumbnail_1')
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", {:checked => false}

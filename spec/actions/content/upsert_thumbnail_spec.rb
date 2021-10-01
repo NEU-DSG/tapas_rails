@@ -17,7 +17,7 @@ describe Content::UpsertThumbnail do
       thumb = core_file.thumbnail
       expect(thumb.thumbnail_1.label).to eq 'image.jpg'
       dl_path = thumb.download_path('thumbnail_1')
-      expect(core_file.thumbnail_list).to eq [dl_path]
+      expect(core_file.thumbnails).to eq [dl_path]
     end
   end
 
