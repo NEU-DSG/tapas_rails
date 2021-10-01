@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_05_22_182632) do
+ActiveRecord::Schema.define(version: 2020_06_08_184246) do
 
   create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -65,6 +65,15 @@ ActiveRecord::Schema.define(version: 2020_05_22_182632) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_public", default: true
+    t.integer "depositor_id", null: false
+    t.index ["depositor_id"], name: "index_communities_on_depositor_id"
+  end
+
+  create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "community_id", null: false
+    t.bigint "institution_id", null: false
+    t.index ["community_id", "institution_id"], name: "index_communities_instutitions", unique: true
+    t.index ["institution_id", "community_id"], name: "index_institutions_communities", unique: true
   end
 
   create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -209,8 +218,6 @@ ActiveRecord::Schema.define(version: 2020_05_22_182632) do
     t.string "url"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.bigint "community_id"
-    t.index ["community_id"], name: "fk_rails_32cf34ec38"
   end
 
   create_table "menu_links", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -313,5 +320,4 @@ ActiveRecord::Schema.define(version: 2020_05_22_182632) do
     t.string "git_branch"
   end
 
-  add_foreign_key "institutions", "communities"
 end

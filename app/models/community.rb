@@ -30,13 +30,17 @@ class Community < ActiveRecord::Base
   # has_attributes :description, datastream: "DC"
 
   has_many :community_collections
-  has_many :collections, through: :community_collections, source: :collection
+  has_many :collections, through: :community_collections
+  has_many :children, through: :community_collections, source: :collection
   has_many :community_members
-  has_many :members, through: :community_members, source: :user
+  has_many :users, through: :community_members
   has_and_belongs_to_many :communities, join_table: "community_communities", association_foreign_key: "parent_community_id"
 
-  has_many :institutions
+  has_many :communities_institutions
+  has_many :institutions, through: :communities_institutions
   has_many :thumbnails, as: :owner
+
+  belongs_to :depositor, class_name: "User"
 
   validates_presence_of :title
 
@@ -54,15 +58,15 @@ class Community < ActiveRecord::Base
   end
 
   def project_members
-    members
+    users
   end
 
   def project_editors
-    members.where(member_type: ["editor", "admin"])
+    users.where(community_members: { member_type: ["editor", "admin"] })
   end
 
   def project_admins
-    members.where(member_type: "admin")
+    users.where(community_members: { member_type: "admin" })
   end
 
   def as_json
@@ -76,6 +80,10 @@ class Community < ActiveRecord::Base
       :title => mods.title.first,
       :description => mods.abstract.first
     }
+  end
+
+  def can_read?(user)
+    community_members.where(user_id: user.id).any?
   end
 
   def match_dc_to_mods
@@ -146,7 +154,7 @@ class Community < ActiveRecord::Base
   end
 
   def remove_thumbnail
-    self.thumbnail_list = []
+    self.thumbnails = []
     self.save!
   end
 
