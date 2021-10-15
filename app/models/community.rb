@@ -34,7 +34,9 @@ class Community < ActiveRecord::Base
   has_many :children, through: :community_collections, source: :collection
   has_many :community_members
   has_many :users, through: :community_members
-  has_and_belongs_to_many :communities, join_table: "community_communities", association_foreign_key: "parent_community_id"
+  has_and_belongs_to_many :communities,
+                          join_table: "community_communities",
+                          association_foreign_key: "parent_community_id"
 
   has_many :communities_institutions
   has_many :institutions, through: :communities_institutions

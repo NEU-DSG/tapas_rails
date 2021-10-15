@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_14_224800) do
+ActiveRecord::Schema.define(version: 2020_06_15_143746) do
 
   create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -50,6 +50,7 @@ ActiveRecord::Schema.define(version: 2020_06_14_224800) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "community_id", null: false
+    t.boolean "is_public"
   end
 
   create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
