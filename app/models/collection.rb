@@ -41,6 +41,7 @@ class Collection < ActiveRecord::Base
   # Return the collection where we store TEI files that reference
   # non-existant collections.  If it doesn't exist create it.
 
+  belongs_to :community
   has_many :community_collections
   has_many :communities, through: :community_collections
   has_and_belongs_to_many :collections,
