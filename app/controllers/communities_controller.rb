@@ -76,13 +76,27 @@ class CommunitiesController < CatalogController
   def create
     @community = Community.new(community_params)
     @community.depositor = current_user
+    @community.save!
+
+    CommunityMember.create!(community: @community, user: current_user, member_type: 'admin')
+
+    params[:community][:project_admins].each do |a|
+      CommunityMember.create!(community: @community, user_id: a, member_type: 'admin')
+    end
+
+    params[:community][:project_editors].each do |e|
+      CommunityMember.create!(community: @community, user_id: e, member_type: 'editor')
+    end
+
+    params[:community][:project_members].each do |m|
+      CommunityMember.create!(community: @community, user_id: m, member_type: 'member')
+    end
 
     if (thumbnail_params[:thumbnail])
       # TODO: (pletcher) Create Thumbnail by uploading (to S3?) and saving URL
       # Thumbnail.create!(url: url, owner: @community)
     end
 
-    @community.save!
     redirect_to @community and return
   end
 
