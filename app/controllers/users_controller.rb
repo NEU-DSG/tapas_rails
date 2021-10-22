@@ -39,7 +39,13 @@ class UsersController < CatalogController
 
   def index
     @page_title = "Users"
-    @users = User.all
+    @users = User.order(:name, :email)
+    @users = @users.where("name like ? or email like ?", "%#{params[:term]}%", "%#{params[:term]}%") if params[:term]
+
+    respond_to do |format|
+      format.html  # index.html.erb
+      format.json  { render json: @users.map(&:email) }
+    end
   end
 
   def admin_show
