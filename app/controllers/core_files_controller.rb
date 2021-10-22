@@ -36,6 +36,7 @@ class CoreFilesController < CatalogController
     # projects = Community.where(depositor: current_user).or(Community.where(community_members: { user_id: current_user.id }))
     @collections = Collection.joins(communities: { community_members: :user }).where(community_members: { user_id: current_user.id })
     @core_file = CoreFile.new(is_public: true)
+    @users = User.order(:name)
 
     # FIXME: (charles) What is this supposed to do?
     @file_types = [['TEI Record',""]]
