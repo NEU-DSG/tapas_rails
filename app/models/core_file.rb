@@ -46,6 +46,7 @@ class CoreFile < ActiveRecord::Base
   # delegate :authors, to: "mods"
   # delegate :contributors, to: "mods"
 
+  has_and_belongs_to_many :users
   has_and_belongs_to_many :collections
 
   def self.all_ography_types
@@ -55,6 +56,14 @@ class CoreFile < ActiveRecord::Base
 
   def self.all_ography_read_methods
     all_ography_types.map { |x| :"#{x}_for" }
+  end
+
+  def authors
+    users.where(user_type: "author")
+  end
+
+  def contributors
+    users.where(user_type: "contributor")
   end
 
   def clear_ographies!

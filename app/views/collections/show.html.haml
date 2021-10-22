@@ -40,7 +40,7 @@
       %div.panel-heading
         %h3.panel-title
           = "Records"
-          - if current_user_can? :edit, @collection
+          - if can? :manage, @collection
             %small
               %a{href:new_core_file_path, class: 'pull-right'}
                 %i.fa.fa-plus
@@ -49,7 +49,7 @@
         - records.each do |record|
           %div.col-lg-3
             .record.tile
-              - if current_user_can? :edit, record
+              - if can? :manage, record
                 %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}
                   %i.fa.fa-pencil
                   = "Edit"
