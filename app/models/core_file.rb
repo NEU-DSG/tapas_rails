@@ -45,9 +45,11 @@ class CoreFile < ActiveRecord::Base
   # has_attributes :featured, :datastream => :properties, :multiple => false
   # delegate :authors, to: "mods"
   # delegate :contributors, to: "mods"
+  belongs_to :depositor, class_name: "User"
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :collections
+  has_one :thumbnail, as: :owner
 
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',

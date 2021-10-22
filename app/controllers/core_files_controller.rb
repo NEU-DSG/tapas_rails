@@ -31,22 +31,13 @@ class CoreFilesController < CatalogController
     end
   end
 
-  #This method is the helper method for index. It basically gets the core files
-  # using solr queries
-  def core_files_filter(solr_parameters, user_parameters)
-    model_type = RSolr.solr_escape "info:fedora/afmodel:CoreFile"
-    query = "has_model_ssim:\"#{model_type}\""
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << query
-  end
-
-  #This method is used to create a new core file
   def new
     @page_title = "Create New Record"
     # projects = Community.where(depositor: current_user).or(Community.where(community_members: { user_id: current_user.id }))
-    @collections = Collection.where(community: { community_members: { user_id: current_user.id } })
+    @collections = Collection.joins(communities: { community_members: :user }).where(community_members: { user_id: current_user.id })
     @core_file = CoreFile.new(is_public: true)
 
+    # FIXME: (charles) What is this supposed to do?
     @file_types = [['TEI Record',""]]
     @sel_file_types = []
     CoreFile.all_ography_types.each do |o|
@@ -54,7 +45,6 @@ class CoreFilesController < CatalogController
     end
   end
 
-  #This method contains the actual logic for creating a new core file
   def create
     begin
       params[:collection_dids] = params[:collections] ?  params[:collections] : nil
@@ -331,6 +321,12 @@ class CoreFilesController < CatalogController
       logger.error e
       raise e
     end
+  end
+
+  protected
+
+  def core_file_params
+    params.require(:core_file).permit(:authors, :collections, :contributors, :depositor, :description, :title)
   end
 
   private
