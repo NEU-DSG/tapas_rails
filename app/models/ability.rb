@@ -11,6 +11,8 @@ class Ability
       can :manage, Community, depositor_id: user.id
       can :manage, Community, community_members: { member_type: ["editor", "admin"], user_id: user.id }
       can :manage, Collection, community: { community_members: { member_type: ["editor", "admin"], user_id: user.id } }
+      can :manage, CoreFile, depositor_id: user.id
+      can :manage, CoreFile, collections: { community: { community_members: { member_type: ["editor", "admin"], user_id: user.id } } }
     end
   end
 end
