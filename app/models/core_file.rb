@@ -80,51 +80,27 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
+  def community
+    # All collections that a CoreFile belongs to will belong to the same community
+    collections.first.community
+  end
+
+  def project
+    # Just an alias for #community
+    community
+  end
+
+  # TODO: (charles) Implement canonical objects once thumbnails are being uploaded
+  def canonical_object
+    nil
+  end
+
   def clear_ographies!
     CoreFile.all_ography_read_methods.each do |ography_type|
-      self.send(:"#{ography_type}=", [])
-    end
-  end
-
-  def to_solr(solr_doc = Hash.new())
-    solr_doc["active_fedora_model_ssi"] = self.class
-    solr_doc['all_text_timv'] = self.canonical_object.content.content if self.canonical_object
-    solr_doc['type_sim'] = self.is_ography? ? self.ography_type : "Record"
-    solr_doc['collections_ssim'] = self.collections.map{|c| c.title} if !self.collections.blank?
-    solr_doc['collections_pids_ssim'] = self.collections.map{|c| c.pid} if !self.collections.blank?
-    solr_doc['project_ssi'] = self.project.title if !self.project.blank?
-    solr_doc['project_pid_ssi'] = self.project.pid if !self.project.blank?
-    super(solr_doc)
-    return solr_doc
-  end
-
-  def create_view_package_methods
-    array = available_view_packages_machine
-
-    array.each do |method_name|
-      string_name = method_name
-      method_name = method_name.to_sym
-      CoreFile.send :define_method, method_name do |arg = :models|
-        if arg.blank?
-          arg = :models
-        end
-        tg = self.content_objects(:raw).find do |x|
-          x["active_fedora_model_ssi"] == "HTMLFile" &&
-            x["html_type_ssi"] == string_name
-        end
-
-        load_specified_type(tg, arg)
-      end
-    end
-  end
-
-  def self.remove_view_package_methods(view_packages)
-    view_packages.each do |r|
-      if !r.blank?
-        sym = r.to_sym
-        if CoreFile.method_defined? sym
-          CoreFile.send :remove_method, sym
-        end
+      begin
+        self.send(:"#{ography_type}=", [])
+      rescue
+        return nil
       end
     end
   end
@@ -151,15 +127,6 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  # Return the project that this CoreFile belongs to.  Necessary for easily
-  # finding all of the project level ographies that exist.
-  def project
-    return nil if collections.blank?
-    collection = collections.first
-    return nil if collection.community.blank?
-    return collection.community
-  end
-
   # Check to see if this is an ography-type upload or a tei file type
   # upload
   def file_type
@@ -182,7 +149,11 @@ class CoreFile < ActiveRecord::Base
 
   def is_ography?
     CoreFile.all_ography_read_methods.any? do |ography_type|
-      self.send(ography_type).any?
+      begin
+        self.send(ography_type).any?
+      rescue
+        return nil
+      end
     end
   end
 
