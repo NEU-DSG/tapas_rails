@@ -38,6 +38,8 @@ TapasRails::Application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
+  config.active_storage.service = :test
+
   config.middleware.use ExceptionNotification::Rack,
     :email => {
       :email_prefix => "[Tapas Rails Notifier TEST]",
