@@ -16,13 +16,13 @@
           = f.label :authors, "Authors", class: "control-label col-md-2"
           .col-md-6
             %span.author
-              = f.select :authors, options_for_select(@users), {}, {class: "form-control", multiple: true}
+              = f.select :authors, options_from_collection_for_select(@users, 'id', 'email'), {}, {class: "form-control", multiple: true}
 
         .form-group.contributors
           = f.label :contributors, "Contributors", class: "control-label col-md-2"
           .col-md-6
             %span.contributor
-              = f.select :contributors, options_for_select(@users), {}, { class: "form-control", multiple: true }
+              = f.select :contributors, options_from_collection_for_select(@users, 'id', 'email'), {}, { class: "form-control", multiple: true }
 
         .form-group
           = f.label :collections, "Collection", class: "control-label col-md-2"
