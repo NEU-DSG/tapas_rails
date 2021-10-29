@@ -38,8 +38,6 @@ class Collection < ActiveRecord::Base
   # has_many :placeographies, :property => :is_placeography_for,
   #   :class_name => 'CoreFile'
 
-  # Return the collection where we store TEI files that reference
-  # non-existant collections.  If it doesn't exist create it.
 
   belongs_to :community
   belongs_to :depositor, class_name: "User"
