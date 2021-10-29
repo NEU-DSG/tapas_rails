@@ -51,7 +51,7 @@ class CoreFilesController < CatalogController
     file = CoreFile.new(core_file_params.merge({ depositor_id: current_user.id }))
 
     params[:core_file][:collections].each do |c|
-      file.collections. << Collection.find(c) unless c.blank?
+      file.collections << Collection.find(c) unless c.blank?
     end
 
     file.save!
@@ -233,7 +233,16 @@ class CoreFilesController < CatalogController
   end
 
   def core_file_params
-    params.require(:core_file).permit(:authors, :collections, :contributors, :depositor, :description, :title)
+    params.require(:core_file).permit(
+      :authors,
+      :canonical_object,
+      :collections,
+      :contributors,
+      :depositor,
+      :description,
+      :thumbnails,
+      :title
+    )
   end
 
   private

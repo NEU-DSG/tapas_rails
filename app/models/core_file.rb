@@ -49,7 +49,10 @@ class CoreFile < ActiveRecord::Base
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :collections
-  has_one :thumbnail, as: :owner
+
+  # ActiveStorage
+  has_one_attached :thumbnail
+  has_one_attached :canonical_object
 
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
@@ -88,11 +91,6 @@ class CoreFile < ActiveRecord::Base
   def project
     # Just an alias for #community
     community
-  end
-
-  # TODO: (charles) Implement canonical objects once thumbnails are being uploaded
-  def canonical_object
-    nil
   end
 
   def clear_ographies!
