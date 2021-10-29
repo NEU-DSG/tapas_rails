@@ -41,11 +41,11 @@ class Collection < ActiveRecord::Base
 
   belongs_to :community
   belongs_to :depositor, class_name: "User"
-  has_many :community_collections
-  has_many :communities, through: :community_collections
-  has_and_belongs_to_many :collections,
-                          join_table: "collection_collections",
-                          association_foreign_key: "parent_collection_id"
+  # TODO: (charles) Unclear if we need to implement this.
+  # Leaving it out for now.
+  # has_and_belongs_to_many :collections,
+  #                         join_table: "collection_collections",
+  #                         association_foreign_key: "parent_collection_id"
   has_many :thumbnails, as: :owner
 
   validates :depositor, :description, :title, presence: true

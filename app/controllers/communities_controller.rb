@@ -34,11 +34,9 @@ class CommunitiesController < CatalogController
   end
 
   def show
-    # authorize! :show, params[:id]
     @community = Community.find(params[:id])
     @page_title = @community.title || ""
     @collections = @community.collections
-    # TODO: Communities can have_many other communities
   end
 
   def new
@@ -61,15 +59,16 @@ class CommunitiesController < CatalogController
     end
   end
 
+  # TODO: Projects have many collections; each collection belongs to one project
+  # TODO: CoreFiles can belong to many collections (many-to-many), but will always point back to one project
+
   def create
     @community = Community.new(community_params)
     @community.depositor = current_user
     @community.save!
 
-    CommunityMember.create!(community: @community, user: current_user, member_type: 'admin')
-
     params[:community][:project_admins].each do |a|
-      CommunityMember.create!(community: @community, user_id: a, member_type: 'admin')
+      CommunityMember.find_or_create_by(community: @community, user_id: a, member_type: 'admin')
     end
 
     params[:community][:project_editors].each do |e|
