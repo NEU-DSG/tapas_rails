@@ -47,7 +47,7 @@ class CoreFilesController < CatalogController
   end
 
   def create
-    file = CoreFile.create!(core_file_params)
+    file = CoreFile.create!(core_file_params.merge({ depositor_id: current_user.id }))
 
     redirect_to file
   end
