@@ -1,38 +1,7 @@
 class Community < ActiveRecord::Base
-  # include Did
-  # include OGReference
-  # include DrupalAccess
-  # include TapasQueries
-  # include InlineThumbnail
-  # include StatusTracking
-  # include SolrHelpers
-  # include TapasRails::MetadataAssignment
+  include Discard::Model
 
-  # before_save :ensure_unique_did
-  # before_save :match_dc_to_mods
-  # before_save :update_permissions
-  # after_create :set_depositor_as_admin
-
-  # has_collection_types ["Collection"]
-  # has_community_types  ["Community"]
-
-  # parent_community_relationship :community
-
-  # has_metadata :name => "mods", :type => ModsDatastream
-  # has_metadata :name => "properties", :type => PropertiesDatastream
-
-  # has_attributes :project_members, datastream: "properties", multiple: true
-  # has_attributes :project_editors, datastream: "properties", multiple: true
-  # has_attributes :project_admins, datastream: "properties", multiple: true
-  # has_attributes :institutions, datastream: "properties", multiple: true
-  # has_attributes :og_reference, datastream:"properties"
-  # has_attributes :title, datastream: "DC"
-  # has_attributes :description, datastream: "DC"
-
-  # TODO: (charles) Unclear whether a collection can be shared among multiple communities.
-  # What's the best way to find out?
-  # has_many :community_collections
-  has_many :collections #, through: :community_collections
+  has_many :collections
   has_many :children, through: :community_collections, source: :collection
   has_many :community_members
   has_many :users, through: :community_members
@@ -118,7 +87,7 @@ class Community < ActiveRecord::Base
   end
 
   def can_read?(user)
-    community_members.where(user_id: user.id).any?
+    can? :read
   end
 
   def remove_thumbnail

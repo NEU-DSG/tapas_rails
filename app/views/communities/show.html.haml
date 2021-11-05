@@ -26,7 +26,6 @@
     %dt= "Project Members"
     - @community.community_members.each do |pm|
       %dd
-        - puts pm.to_json
         = link_to(pm.user.name, user_path(pm.user_id))
         - if pm.member_type != "member"
           = "(#{pm.member_type})"

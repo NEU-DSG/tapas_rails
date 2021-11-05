@@ -65,43 +65,14 @@ class CollectionsController < CatalogController
   end
 
   def edit
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Community"
-    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\"", fl: 'id, title_info_title_ssi', rows: count)
-    @communities =[]
-    results.each do |res|
-      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
-        @communities << [res['title_info_title_ssi'],res['id']]
-      end
-    end
     @collection = Collection.find(params[:id])
+    @communities = Community.accessible_by(current_ability)
     @page_title = "Edit #{@collection.title}"
   end
 
   def update
-    community = Community.find(params[:community]) if params[:community]
-    params[:collection].delete("community")
     @collection = Collection.find(params[:id])
-    # @core_files = CoreFile.find_by_did(params[:id])
-    if params[:collection][:remove_thumbnail] == "1"
-      params[:collection].delete :thumbnail
-      @collection.thumbnails = []
-      @collection.save!
-    end
-    params[:collection].delete :remove_thumbnail
-    @collection.update_attributes(params[:collection])
-    @collection.mass_permissions = params[:mass_permissions]
-    @collection.save!
-    @collection.community = community if community
-    @collection.save!
-
-    if (params[:thumbnail])
-      params[:thumbnail] = create_temp_file(params[:thumbnail])
-      @collection.add_thumbnail(:filepath => params[:thumbnail])
-      @collection.save!
-    end
-    # can this be used instead of individually spelling out the methods?
-    # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
+    @collection.update(collection_params)
 
     redirect_to @collection and return
   end
