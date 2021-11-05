@@ -50,15 +50,15 @@ class User < ActiveRecord::Base
   end
 
   def admin?
-    return self.role.eql?('admin')
+    !admin_at.nil?
   end
 
   def paid_user?
-    return self.role.eql?('paid_user')
+    !paid_at.nil?
   end
 
   def unpaid_user?
-    return self.role.eql?('unpaid_user')
+    paid_at.nil?
   end
 
   def self.find_by_user_key(key)
