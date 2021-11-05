@@ -25,10 +25,10 @@
         %dd
           = link_to(int.name, institution_path(int))
         %br
-    - if @collection.thumbnails.blank?
-      =image_tag "tapaslogo-opaque.png"
+    - if !@collection.thumbnails.attached?
+      = image_tag "tapaslogo-opaque.png"
     -else
-      %img{src:@collection.thumbnails.first}
+      = image_tag url_for(@collection.thumbnails.first)
     - if !@collection.description.blank?
       %dt= "Description"
       %dd= @collection.description
