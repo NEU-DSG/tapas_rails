@@ -24,84 +24,39 @@
             = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
 
 
-    .row
-      .form-group.institutions
-        = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
-        .col-md-6
-          - if @community.institutions.any?
-            %span.institution
-              = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
-          - else
-            %span.institution
-              = f.select :institutions, options_for_select(@institutions), {}, {name: "community[institutions][]", class: "form-control"}
-          %button#add_another_institution.btn.btn-success{:type => "button"}
-            %i.fa-plus-sign.fa
-            Add Institution
+    .row.form-group.institutions
+      = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
+      .col-md-6
+        %span.institution
+          = f.select :institutions, options_for_select(@institutions, @community.institutions.pluck(:id)), {}, {name: "community[institutions][]", class: "form-control pb1", multiple: true}
 
       -# TODO - add content date
       -# TODO - add keywords/subjects
-    .row
-      .form-group.project_members
-        = f.label :project_members, "Project Members", class: "control-label col-md-2"
-        .col-md-6
-          - if @community.project_members.blank?
-            %span.project_member
-              = f.select :project_members, options_for_select(@users), {}, { name: 'community[project_members][]', class: "form-control"}
-          - else
-            - @community.project_members.each_with_index do |id, i|
-              %span.project_member{:class=> i != 0 ? "to-remove" : ""}
-                = f.select :project_members, options_for_select(@users, id), {}, {name: "community[project_members][]", class: "form-control input-block-level" }
-                -if i != 0
-                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project member", type: "button"}
-                    %i.fa.fa-remove
-                %br
-          %button#add_another_project_member.btn.btn-success{:type => "button"}
-            %i.fa-plus-sign.fa
-            Add Member
-    .row
-      .form-group.project_editors
-        = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
-        .col-md-6
-          - if @community.project_editors.blank?
-            %span.project_editor
-              = f.select :project_editors, options_for_select(@users), {}, { name: 'community[project_editors][]', class: "form-control" }
-          - else
-            - @community.project_editors.each_with_index do |id, i|
-              %span.project_editor{:class=> i != 0 ? "to-remove" : ""}
-                = f.select :project_editors, options_for_select(@users, id), {}, { name: "community[project_editors][]", class: "form-control input-block-level" }
-                -if i != 0
-                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project editor", type: "button"}
-                    %i.fa.fa-remove
-                %br
-          %button#add_another_project_editor.btn.btn-success{:type => "button"}
-            %i.fa-plus-sign.fa
-            Add Editor
-    .row
-      .form-group.project_admins
-        = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
-        .col-md-6
-          - if @community.project_admins.blank?
-            %span.project_admin
-              = f.select :project_admins, options_for_select(@users), {}, { name: 'community[project_admins][]', class: "form-control" }
-          - else
-            - @community.project_admins.each_with_index do |id, i|
-              %span.project_admin{:class=> i != 0 ? "to-remove" : ""}
-                = f.select :project_admins, options_for_select(@users, id), {}, { name: "community[project_admins][]", class: "form-control input-block-level" }
-                -if i != 0
-                  %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove project admin", type: "button"}
-                    %i.fa.fa-remove
-                %br
-          %button#add_another_project_admin.btn.btn-success{:type => "button"}
-            %i.fa-plus-sign.fa
-            Add Admin
+    .row.form-group.project_members
+      = f.label :project_members,"Project Members", class: "control-label col-md-2"
+      .col-md-6
+        %span.project_member
+          = f.select :project_members, options_for_select(@users, @community.project_members.pluck(:id)), {}, {name: "community[project_members][]", class: "form-control", multiple: true}
 
-      -# .row
-      -#   .col-md-2
-      -#     = f.label :og_reference, "External links"
-      -#   .col-md-6
-      -#     = f.text_area :og_reference, name: 'community[og_reference][]', class: "form-control", rows: 5
-      -#     -# TODO
+    .row.form-group.project_editors
+      = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
+      .col-md-6
+        %span.project_editor
+          = f.select :project_editors, options_for_select(@users, @community.project_editors.pluck(:id)), {}, { name: 'community[project_editors][]', class: "form-control", multiple: true}
 
-    %hr
+    .row.form-group.project_admins
+      = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
+      .col-md-6
+        %span.project_admin
+          = f.select :project_admins, options_for_select(@users, @community.project_admins.pluck(:id)), {}, { name: 'community[project_admins][]', class: "form-control", multiple: true}
+
+  -# .row
+  -#   .col-md-2
+  -#     = f.label :og_reference, "External links"
+  -#   .col-md-6
+  -#     = f.text_area :og_reference, name: 'community[og_reference][]', class: "form-control", rows: 5
+  -#     -# TODO
+
+  %hr
   .form-actions
     = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'
