@@ -14,7 +14,7 @@
 
 - if can? :manage, @core_file
   = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
-  = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete"
+  = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this file?"
 
 %h2.page-header= @core_file.title
 

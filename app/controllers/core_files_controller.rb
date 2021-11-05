@@ -70,18 +70,8 @@ class CoreFilesController < CatalogController
 
   def edit
     @core_file = CoreFile.find(params[:id])
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    community = "info:fedora/"+@core_file.project.pid
-    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"", fl: 'id, title_info_title_ssi', rows: count)
-    logger.info results
 
-    @collections =[]
-    results.each do |res|
-      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
-        @collections << [res['title_info_title_ssi'],res['id']]
-      end
-    end
+    @collections = @core_file.collections
 
     @file_types = [['TEI Record',""]]
     @sel_file_types = []

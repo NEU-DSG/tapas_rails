@@ -42,9 +42,10 @@ class Community < ActiveRecord::Base
 
   has_many :communities_institutions
   has_many :institutions, through: :communities_institutions
-  has_many :thumbnails, as: :owner
 
   belongs_to :depositor, class_name: "User"
+
+  has_many_attached :thumbnails
 
   validates_presence_of :title
 
