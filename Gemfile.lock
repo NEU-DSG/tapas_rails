@@ -383,7 +383,6 @@ GEM
     passenger (6.0.4)
       rack
       rake (>= 0.8.1)
-    pr_geohash (1.0.0)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -552,12 +551,6 @@ GEM
       activesupport
       mods (~> 2.2)
     stomp (1.4.9)
-    sunspot (2.5.0)
-      pr_geohash (~> 1.0)
-      rsolr (>= 1.1.1, < 3)
-    sunspot_rails (2.5.0)
-      rails (>= 3)
-      sunspot (= 2.5.0)
     sunspot_solr (2.5.0)
     sxp (1.1.0)
       rdf (~> 3.1)
@@ -575,7 +568,7 @@ GEM
       actionpack (>= 3.1)
       jquery-rails
       railties (>= 3.1)
-    tzinfo (1.2.7)
+    tzinfo (1.2.10)
       thread_safe (~> 0.1)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
@@ -646,7 +639,6 @@ DEPENDENCIES
   simplecov-json
   simplecov-rcov
   sprockets (~> 3.7.2)
-  sunspot_rails
   sunspot_solr
   therubyracer
   turbolinks
