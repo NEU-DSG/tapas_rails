@@ -16,6 +16,12 @@ describe Community do
     expect(community.depositor).to be(user)
   end
 
+  describe '.create' do
+    it 'sets members' do
+      c = Community.create!(title: "Title", depositor: user, institutions: [institution])
+    end
+  end
+
   # FIXME: (charles) Rewrite these tests without ActiveFedora
 
   # include FileHelpers

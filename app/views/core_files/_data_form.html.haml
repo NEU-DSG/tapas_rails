@@ -5,73 +5,38 @@
         .form-group
           = f.label :title, "Title", class: "control-label col-md-2"
           .col-md-6
-            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'title', class: "form-control", placeholder: "Record Title"
+            = f.text_field :title, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Record Title"
         .form-group
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :description, pattern: ".*\\S.*", name: 'description', class: "form-control", placeholder: "Brief description of the record"
+            = f.text_area :description, pattern: ".*\\S.*", class: "form-control", placeholder: "Brief description of the record"
             %p.small.help-block="This field accepts plain text"
 
         .form-group.authors
           = f.label :authors, "Authors", class: "control-label col-md-2"
           .col-md-6
-            - if @core_file.authors.blank?
-              %span.author
-                = f.text_field :authors, pattern: ".*\\S.*", name: 'display_authors[]', class: "form-control", placeholder: "Name(s) of persons responsible for the creation of document", value: ""
-            - else
-              - @core_file.authors.each_with_index do |name, i|
-                %span.author{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.text_field :authors, pattern: ".*\\S.*", value: name, name: 'display_authors[]', class: "form-control input-block-level"
-                  - if i != 0
-                    %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove author", type: "button"}
-                      %i.fa.fa-remove
-                  %br
-            %button#add_another_author.btn.btn-success{:type => "button"}
-              %i.fa-plus-sign.fa
-              Add Author
+            %span.author
+              = f.select :authors, options_from_collection_for_select(@users, 'id', 'email'), {}, {class: "form-control", multiple: true}
 
         .form-group.contributors
           = f.label :contributors, "Contributors", class: "control-label col-md-2"
           .col-md-6
-            - if @core_file.contributors.blank?
-              %span.contributor
-                = f.text_field :contributors, pattern: ".*\\S.*", name: 'display_contributors[]', class: "form-control", placeholder: "Name(s) of contributors responsible for the creation of this TAPAS record", value: ""
-            - else
-              - @core_file.contributors.each_with_index do |name, i|
-                %span.contributor{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.text_field :contributors, pattern: ".*\\S.*", value: name, name: 'display_contributors[]', class: "form-control input-block-level"
-                  - if i != 0
-                    %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove contributor", type: "button"}
-                      %i.fa.fa-remove
-                  %br
-            %button#add_another_contributor.btn.btn-success{:type => "button"}
-              %i.fa-plus-sign.fa
-              Add Contributor
+            %span.contributor
+              = f.select :contributors, options_from_collection_for_select(@users, 'id', 'email'), {}, { class: "form-control", multiple: true }
 
         .form-group
           = f.label :collections, "Collection", class: "control-label col-md-2"
           .col-md-6
-            - if @core_file.collections.blank?
-              %span.collection
-                = f.select :collections, options_for_select(@collections), {}, {name: "collections[]", class: "form-control"}
-            - else
-              - @core_file.collections.each_with_index do |col, i|
-                %span.collection{:class=>i != 0 ? ".to-remove" : ""}
-                  = f.select :collections, options_for_select(@collections, col.id), {}, {name: "collections[]", class: "form-control input-block-level"}
-                  - if i != 0
-                    %button.btn.btn-small.btn-danger{"data-delete" => "", "data-target" => ".to-remove", title: "Remove collection", type: "button"}
-                      %i.fa.fa-remove
-                  %br
-            %button#add_another_collection.btn.btn-success{:type => "button"}
-              %i.fa-plus-sign.fa
-              Add Collection
+            %span.collection
+              = f.select :collections, options_from_collection_for_select(@collections, 'id', 'title'), {}, {class: "form-control", multiple: true}
 
-        .form-group
-          = f.label "Ography Type", class: "control-label col-md-2"
-          .col-md-6
-            = f.select :file_type, options_for_select(@file_types, @sel_file_types), {}, {name: "file_types[]", class: "form-control", multiple: true}
-            %p.help-block
-              = "Select multiple values by holding CTRL"
+        -# TODO: (charles) Figure out why we need Ography Type and reimplement it
+        -# .form-group
+        -#   = f.label "Ography Type", class: "control-label col-md-2"
+        -#   .col-md-6
+        -#     = f.select :file_type, options_for_select(@file_types, @sel_file_types), {}, {name: "file_types[]", class: "form-control", multiple: true}
+        -#     %p.help-block
+        -#       = "Select multiple values by holding CTRL"
 
         - if current_user.admin?
           .form-group
@@ -79,29 +44,28 @@
             .col-md-6
               .checkbox
                 = f.check_box :featured, {}, "true"
-
         .form-group
-          = f.label :tei, "File", class: "control-label col-md-2"
+          = f.label :canonical_object, "File", class: "control-label col-md-2"
           .col-md-6
-            = f.file_field 'tei', name: "tei"
-            -if @core_file.canonical_object
+            = f.file_field :canonical_object, direct_upload: true
+            -if @core_file.canonical_object.attached?
               %p
                 ="Current File:"
-                %a{href: @core_file.canonical_object.download_path}
+                %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
                   %span.fa.fa-file-code-o
-                  = @core_file.canonical_object.filename
+                    = @core_file.canonical_object.filename
         .form-group
-          = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
+          = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
-            = f.select :mass_permissions, options_for_select(['public', 'private'], @core_file.mass_permissions), {}, {class: "form-control", name: "mass_permissions"}
+            = f.check_box :is_public, { checked: true }
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@core_file.thumbnail.blank?
-              =image_tag @core_file.thumbnail.download_path('thumbnail_1')
+            - if @core_file.thumbnail.attached?
+              =image_tag url_for(@core_file.thumbnail)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", {:checked => false}
-            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png"
+            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", direct_upload: true
 
     -# TODO add support_files?
 

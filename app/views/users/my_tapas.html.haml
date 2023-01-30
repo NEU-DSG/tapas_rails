@@ -30,7 +30,7 @@
                   %h4
                     = link_to(p['title_info_title_ssi'], community_path(p['id']))
                 %td
-                  - if current_user && ((p['edit_access_person_ssim'] && (p['edit_access_person_ssim'].include? current_user.id)) || current_user.admin?)
+                  - if can? :manage, p
                     %a{href:edit_community_path(p['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"
@@ -57,7 +57,7 @@
                   %h4
                     = link_to(c['title_info_title_ssi'], collection_path(c['id']))
                 %td
-                  - if current_user && ((c['edit_access_person_ssim'].include? current_user.id) || current_user.admin?)
+                  - if can? :manage, c
                     %a{href:edit_collection_path(c['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"
@@ -84,7 +84,7 @@
                   %h4
                     = link_to(r['title_info_title_ssi'], core_file_path(r['id']))
                 %td
-                  - if current_user && ((r['edit_access_person_ssim'].include? current_user.id) || current_user.admin?)
+                  - if can? :manage, r
                     %a{href:edit_core_file_path(r['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"

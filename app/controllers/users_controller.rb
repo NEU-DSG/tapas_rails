@@ -16,8 +16,8 @@ class UsersController < CatalogController
   def my_projects
     @page_title = "My Projects"
     @user = current_user
-    # self.search_params_logic += [:my_communities_filter]
-    (@projects, @document_list) = search_results(params) #, search_params_logic)
+    @projects = @user.communities
+
     render 'my_projects'
   end
 
@@ -39,7 +39,13 @@ class UsersController < CatalogController
 
   def index
     @page_title = "Users"
-    @users = User.all
+    @users = User.order(:name, :email)
+    @users = @users.where("name like ? or email like ?", "%#{params[:term]}%", "%#{params[:term]}%") if params[:term]
+
+    respond_to do |format|
+      format.html  # index.html.erb
+      format.json  { render json: @users.map(&:email) }
+    end
   end
 
   def admin_show
@@ -102,18 +108,19 @@ class UsersController < CatalogController
 
   def five_collections
     Collection
+      .joins(community: :community_members)
+      .where(community: { community_members: { user_id: @user.id } })
       .limit(5)
       .order("RAND()")
-      .joins(communities: [{ community_members: :user }])
-      .where("users.id": @user.id)
+
   end
 
   def five_records
     CoreFile
+      .joins(collections: { community: :community_members })
+      .where(collections: { community: { community_members: { user_id: @user.id } } })
       .limit(5)
       .order("RAND()")
-      .joins(collections: [{ communities: { community_members: :user } } ])
-      .where("users.id": @user.id)
   end
 
   def my_communities_filter(solr_parameters, user_parameters)

@@ -16,14 +16,12 @@
 //= require jquery-ui/widgets/resizable
 
 //
-// Required by Blacklight
-//= require blacklight/blacklight
 //= require bootstrap/button
 //= require bootstrap/tooltip
 //= require bootstrap/popover
 //= require bootstrap/tab
 //= require bootstrap/carousel
+//= require activestorage
 //= require plugins
 //= require tapasApp
-//= require forem
 //= require jquery.nestable

@@ -20,7 +20,6 @@ class CoreFilesController < CatalogController
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
 
-  #This method displays all the core files created in the database
   def index
     @page_title = "All CoreFiles"
     # self.search_params_logic += [:core_files_filter]
@@ -31,35 +30,15 @@ class CoreFilesController < CatalogController
     end
   end
 
-  #This method is the helper method for index. It basically gets the core files
-  # using solr queries
-  def core_files_filter(solr_parameters, user_parameters)
-    model_type = RSolr.solr_escape "info:fedora/afmodel:CoreFile"
-    query = "has_model_ssim:\"#{model_type}\""
-    solr_parameters[:fq] ||= []
-    solr_parameters[:fq] << query
-  end
-
-  #This method is used to create a new core file
   def new
     @page_title = "Create New Record"
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{current_user.id.to_s}\" OR depositor_tesim:\"#{current_user.id.to_s}\" OR project_admins_ssim:\"#{current_user.id.to_s}\" OR project_editors_ssim:\"#{current_user.id.to_s}\")")
-    col_query = projects.map do |p|
-      "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
-    end
-    query = "has_model_ssim: \"#{model_type}\" && (#{col_query.join(" OR ")})"
-    count = ActiveFedora::SolrService.count(query)
-    results = ActiveFedora::SolrService.query(query, fl: 'id, title_info_title_ssi', rows: count)
+    @collections = Collection
+                     .joins(community: :community_members)
+                     .where(community: { community_members: { user_id: current_user.id } })
+    @core_file = CoreFile.new(is_public: true)
+    @users = User.order(:name)
 
-    @collections =[]
-    results.each do |res|
-      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
-        @collections << [res['title_info_title_ssi'],res['id']]
-      end
-    end
-    @core_file = CoreFile.new(:mass_permissions=>"public")
-
+    # FIXME: (charles) What is this supposed to do?
     @file_types = [['TEI Record',""]]
     @sel_file_types = []
     CoreFile.all_ography_types.each do |o|
@@ -67,126 +46,32 @@ class CoreFilesController < CatalogController
     end
   end
 
-  #This method contains the actual logic for creating a new core file
   def create
-    begin
-      params[:collection_dids] = params[:collections] ?  params[:collections] : nil
-      params[:depositor] = current_user.id.to_s #temp setting this until users integrated
+    file = CoreFile.new(core_file_params.merge({ depositor_id: current_user.id }))
 
-      # Step 1: Find or create the CoreFile Object -
-      # we do this here so that we have a stub record to
-      # attach error messages & status tracking to.
-      if params[:did].blank? && !params[:id].blank?
-        params[:did] = params[:id]
-      end
-      if params[:did] && CoreFile.exists_by_did?(params[:did]) &&
-        core_file = CoreFile.find_by_did(params[:did])
-      elsif params[:id] && CoreFile.exists?(params[:id])
-        logger.info("using existing cf at #{params[:id]}")
-        core_file = CoreFile.find(params[:id])
-      else
-        logger.info("time to create a new CF")
-        core_file = CoreFile.create(did: params[:did],
-                                    depositor: params[:depositor])
-        core_file.permissions({person: "#{current_user.id}"}, "edit")
-        core_file.mark_upload_in_progress!
-      end
-      logger.info(core_file.id)
-      if params[:id].blank?
-        params[:id] = core_file.id
-      end
-      if params[:did].blank?
-        params[:did] = core_file.id
-      end
-
-      # Step 1: Extract uploaded files to temporary locations if they exist
-      if params[:tei]
-        params[:tei] = create_temp_file params[:tei]
-      else
-        params[:tei] = create_temp_file_from_existing(core_file.canonical_object.fedora_file_path, core_file.canonical_object.filename)
-      end
-
-      if params[:support_files]
-        params[:support_files] = create_temp_file params[:support_files]
-      end
-      if params[:core_file] && params[:core_file][:thumbnail]
-        params[:thumbnail] = params[:core_file][:thumbnail]
-      end
-      if params[:thumbnail]
-        thumbnail = create_temp_file params[:thumbnail]
-        Content::UpsertThumbnail.execute(core_file, thumbnail)
-      end
-
-      if params[:mass_permissions]
-        core_file.mass_permissions = params[:mass_permissions]
-      end
-
-      if params[:featured]
-        core_file.featured = True
-      end
-
-      # Step 2: If TEI was provided, generate a MODS record that can be sent back
-      # to Drupal to populate the validate metadata page provided after initial
-      # file upload
-      if params[:tei]
-        opts = {
-          :authors => params[:authors],
-          :contributors => params[:contributors],
-          :"timeline-date" => params[:display_date],
-          :title => params[:title]
-        }
-
-        @mods = Exist::GetMods.execute(params[:tei], opts)
-      end
-      logger.info "passing params to job"
-
-      # Step 3: Kick off an upsert job
-      job = TapasObjectUpsertJob.new params
-      # TapasRails::Application::Queue.push job #swap this for the line below when you're ready to push it to the queue instead of running it directly
-      job.run
-
-      # Step 4: Respond with MODS if it is available, otherwise send a generic
-      # success message
-      if @mods
-        logger.info("mods is present - the redirect may be where it's failing")
-      #   render :xml => @mods, :status => 202
-        flash[:notice] = "Your file has been updated."
-        if params[:action] != "update"
-          # redirect_to "/core_files/#{core_file.id}"
-          redirect_to request.referer
-        end
-      else
-        flash[:notice] = "Your file is being created. Check back soon."
-        if params[:action] != "update"
-          redirect_to :back
-        end
-      #   @response[:message] = "Job processing"
-      #   pretty_json(202) and return
-      end
-
-    rescue => e
-      # core_file.set_default_display_error
-      # core_file.set_stacktrace_message(e)
-      # core_file.mark_upload_failed!
-      raise e
+    params[:core_file][:collections].each do |c|
+      file.collections << Collection.find(c) unless c.blank?
     end
+
+    file.save!
+
+    redirect_to file
   end
 
-  #This method is used to load the edit partial
+  def destroy
+    file = CoreFile.find(params[:id])
+    # FIXME: (charles) Should go to the collection where the user is, but the routes aren't set up RESTfully
+    collection = file.collections.first
+
+    file.destroy!
+
+    redirect_to collection
+  end
+
   def edit
     @core_file = CoreFile.find(params[:id])
-    model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
-    community = "info:fedora/"+@core_file.project.pid
-    count = ActiveFedora::SolrService.count("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"")
-    results = ActiveFedora::SolrService.query("has_model_ssim:\"#{model_type}\" && is_member_of_ssim:\"#{community}\"", fl: 'id, title_info_title_ssi', rows: count)
-    logger.info results
 
-    @collections =[]
-    results.each do |res|
-      if !res['title_info_title_ssi'].blank? && !res['id'].blank?
-        @collections << [res['title_info_title_ssi'],res['id']]
-      end
-    end
+    @collections = @core_file.collections
 
     @file_types = [['TEI Record',""]]
     @sel_file_types = []
@@ -258,17 +143,6 @@ class CoreFilesController < CatalogController
 
   def show #inherited from catalog controller
     @core_file = CoreFile.find(params[:id])
-    @mods_html = render_mods_display(@core_file).to_html.html_safe
-    avail_views = available_view_packages
-    @core_file.create_view_package_methods
-    @view_packages = {}
-    avail_views.each do |v|
-      @view_packages[v[1]] = v[0]
-    end
-    @view_packages["XML View"] = :tei
-    # get the default_view_package TODO - store this on collection, core_file like in drupal
-    e = "Could not find TEI associated with this file.  Please retry in a "\
-      "few minutes and contact an administrator if the problem persists."
   end
 
   def api_show
@@ -344,6 +218,29 @@ class CoreFilesController < CatalogController
       logger.error e
       raise e
     end
+  end
+
+  protected
+
+  def can_edit?
+    can? :manage, CoreFile.find(params[:id])
+  end
+
+  def can_read?
+    can? :read, CoreFile.find(params[:id])
+  end
+
+  def core_file_params
+    params.require(:core_file).permit(
+      :authors,
+      :canonical_object,
+      :collections,
+      :contributors,
+      :depositor,
+      :description,
+      :thumbnails,
+      :title
+    )
   end
 
   private

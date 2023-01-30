@@ -1,6 +1,6 @@
-- if current_user_can? :edit, @community
+- if can? :manage, @community
   = link_to "Edit", edit_community_path(@community), class:['btn', 'btn-info', 'btn-large']
-- collections = @community.children || []
+  = link_to "Delete", community_path(@community), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this community?"
 
 %h2.page-header= @community.title
 
@@ -15,21 +15,20 @@
     -# external links TODO
     - if !@community.institutions.blank?
       %dt Affiliated Institutions
-      - @community.institutions.each do |i|
-        - int = Institution.find(i)
+      - @community.institutions.each do |int|
         %dd
           = link_to(int.name, institution_path(int))
         %br
     %dt= "Collection Count"
-    %dd= collections.count
+    %dd= @collections.count
     %dt= "Record Count"
     %dd= @rec_count
     %dt= "Project Members"
-    - @community.members_with_roles.each do |pm|
+    - @community.community_members.each do |pm|
       %dd
-        = link_to(pm[:user].name, user_path(pm[:user].id))
-        - if pm[:roles][0] != "member"
-          = "(#{pm[:roles][0]})"
+        = link_to(pm.user.name, user_path(pm.user_id))
+        - if pm.member_type != "member"
+          = "(#{pm.member_type})"
 
 
   %div.col-md-9
@@ -37,16 +36,16 @@
       %div.panel-heading
         %h3.panel-title
           = "Collections"
-          - if current_user_can? :edit, @community
+          - if can? :manage, @community
             %small
               %a{href:new_collection_path(:community => @community), class: 'pull-right'}
                 %i.fa.fa-plus
                 = "Add New"
       %div.panel-body
-        - collections.each do |collection|
+        - @collections.each do |collection|
           %div.col-lg-3
             .collection.tile
-              - if current_user_can? :edit, collection
+              - if can? :manage, collection
                 %a{href:edit_collection_path(collection), class: ['btn','btn-xs','btn-default','pull-right']}
                   %i.fa.fa-pencil
                   = "Edit"
