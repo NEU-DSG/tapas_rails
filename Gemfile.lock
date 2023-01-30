@@ -80,6 +80,22 @@ GEM
     arel (9.0.0)
     autoprefixer-rails (9.7.6)
       execjs
+    aws-eventstream (1.1.0)
+    aws-partitions (1.341.0)
+    aws-sdk-core (3.103.0)
+      aws-eventstream (~> 1, >= 1.0.2)
+      aws-partitions (~> 1, >= 1.239.0)
+      aws-sigv4 (~> 1.1)
+      jmespath (~> 1.0)
+    aws-sdk-kms (1.36.0)
+      aws-sdk-core (~> 3, >= 3.99.0)
+      aws-sigv4 (~> 1.1)
+    aws-sdk-s3 (1.74.0)
+      aws-sdk-core (~> 3, >= 3.102.1)
+      aws-sdk-kms (~> 1)
+      aws-sigv4 (~> 1.1)
+    aws-sigv4 (1.2.1)
+      aws-eventstream (~> 1, >= 1.0.2)
     bcrypt (3.1.13)
     blacklight (6.23.0)
       bootstrap-sass (~> 3.2)
@@ -157,6 +173,8 @@ GEM
     devise-guests (0.7.0)
       devise
     diff-lcs (1.3)
+    discard (1.2.0)
+      activerecord (>= 4.2, < 7)
     docile (1.3.2)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
@@ -287,6 +305,7 @@ GEM
       i18n
       logger
       rubyzip
+    jmespath (1.4.0)
     jquery-rails (4.4.0)
       rails-dom-testing (>= 1, < 3)
       railties (>= 4.2.0)
@@ -383,7 +402,6 @@ GEM
     passenger (6.0.4)
       rack
       rake (>= 0.8.1)
-    pr_geohash (1.0.0)
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -552,12 +570,6 @@ GEM
       activesupport
       mods (~> 2.2)
     stomp (1.4.9)
-    sunspot (2.5.0)
-      pr_geohash (~> 1.0)
-      rsolr (>= 1.1.1, < 3)
-    sunspot_rails (2.5.0)
-      rails (>= 3)
-      sunspot (= 2.5.0)
     sunspot_solr (2.5.0)
     sxp (1.1.0)
       rdf (~> 3.1)
@@ -597,6 +609,7 @@ PLATFORMS
 DEPENDENCIES
   active-fedora (~> 11.0)
   active_fedora-datastreams
+  aws-sdk-s3
   blacklight
   blacklight-gallery
   bootstrap-sass (= 3.3.4.1)
@@ -611,6 +624,7 @@ DEPENDENCIES
   coffee-rails (~> 5.0.0)
   devise
   devise-guests (~> 0.3)
+  discard (~> 1.2)
   exception_notification
   factory_bot_rails
   figaro
@@ -646,7 +660,6 @@ DEPENDENCIES
   simplecov-json
   simplecov-rcov
   sprockets (~> 3.7.2)
-  sunspot_rails
   sunspot_solr
   therubyracer
   turbolinks

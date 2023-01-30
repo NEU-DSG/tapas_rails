@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_08_184246) do
+ActiveRecord::Schema.define(version: 2020_07_25_165611) do
+
+  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.bigint "byte_size", null: false
+    t.string "checksum", null: false
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
 
   create_table "bookmarks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "user_id", null: false
@@ -37,6 +58,11 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.datetime "updated_at"
   end
 
+  create_table "captions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "active_storage_attachment_id"
+    t.index ["active_storage_attachment_id"], name: "index_captions_on_active_storage_attachment_id"
+  end
+
   create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.bigint "collection_id"
     t.integer "parent_collection_id", null: false
@@ -49,6 +75,12 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "community_id", null: false
+    t.boolean "is_public"
+    t.integer "depositor_id", null: false
+    t.datetime "discarded_at"
+    t.index ["depositor_id"], name: "index_collections_on_depositor_id"
+    t.index ["discarded_at"], name: "index_collections_on_discarded_at"
   end
 
   create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -66,7 +98,9 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.datetime "updated_at", null: false
     t.boolean "is_public", default: true
     t.integer "depositor_id", null: false
+    t.datetime "discarded_at"
     t.index ["depositor_id"], name: "index_communities_on_depositor_id"
+    t.index ["discarded_at"], name: "index_communities_on_discarded_at"
   end
 
   create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -105,6 +139,16 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_public", default: true
+    t.integer "depositor_id", null: false
+  end
+
+  create_table "core_files_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "core_file_id", null: false
+    t.string "user_type", limit: 11, default: "contributor", null: false
+    t.index ["core_file_id", "user_id"], name: "index_core_files_users_on_core_file_id_and_user_id", unique: true
+    t.index ["user_id", "core_file_id"], name: "index_core_files_users_on_user_id_and_core_file_id", unique: true
   end
 
   create_table "forem_categories", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -261,16 +305,6 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.index ["user_id"], name: "index_searches_on_user_id"
   end
 
-  create_table "thumbnails", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
-    t.string "url", null: false
-    t.text "caption"
-    t.string "owner_type"
-    t.bigint "owner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["owner_type", "owner_id"], name: "index_thumbnails_on_owner_type_and_owner_id"
-  end
-
   create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -286,7 +320,6 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.datetime "updated_at"
     t.boolean "guest", default: false
     t.string "encrypted_api_key"
-    t.string "role"
     t.boolean "forem_admin", default: false
     t.string "forem_state", default: "pending_review"
     t.boolean "forem_auto_subscribe", default: false
@@ -298,6 +331,8 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.text "account_type"
+    t.datetime "admin_at"
+    t.datetime "paid_at"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["institution_id"], name: "index_users_on_institution_id"
@@ -320,4 +355,5 @@ ActiveRecord::Schema.define(version: 2020_06_08_184246) do
     t.string "git_branch"
   end
 
+  add_foreign_key "captions", "active_storage_attachments"
 end

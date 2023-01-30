@@ -5,29 +5,28 @@
         .form-group
           = f.label :title, "Title", class: "control-label col-md-2"
           .col-md-6
-            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'collection[title][]', class: "form-control", placeholder: "University Libraries"
+            = f.text_field :title, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "University Libraries"
         .form-group
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'collection[description][]', class: "form-control", placeholder: "Brief description of the collection"
+            = f.text_area :description, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Brief description of the collection"
             %p.small.help-block="This field accepts plain text"
         .form-group
-          = f.label :community, "Project", class: "control-label col-md-2"
+          = f.label :community_id, "Project", class: "control-label col-md-2"
           .col-md-6
-            - parent = !@collection.community.blank? ? @collection.community.pid : params[:community]
-            = f.select :community, options_for_select(@communities, parent), {}, {name: "community", class: "form-control"}
+            = f.select :community_id, options_from_collection_for_select(@communities, 'id', 'title', @collection.community), {}, { class: "form-control" }
         .form-group
-          = f.label :mass_permissions, "Visibility", class: "control-label col-md-2"
+          = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
-            = f.select :mass_permissions, options_for_select(['public', 'private'], @collection.mass_permissions), {}, {:class => "form-control", :name=> "mass_permissions"}
+            = f.check_box :is_public, { checked: true }
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@collection.thumbnails.blank?
-              =image_tag @collection.download_path('thumbnail_1')
+            - if @collection.thumbnails.attached?
+              =image_tag url_for(@collection.thumbnails.first)
               = f.label :remove_thumbnail, "Remove Thumbnail"
-              = f.check_box "remove_thumbnail", {:checked => false}
-            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
+              = f.check_box "remove_thumbnail", { :checked => false }
+            = f.file_field :thumbnails, accept: ".jpeg, .jpeg, .png", multiple: true, direct_upload: true
 
 
     %hr
