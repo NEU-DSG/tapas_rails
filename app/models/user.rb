@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+  include Discard::Model
+
   require "net/http"
   require "uri"
   # Connects this user object to Hydra behaviors.
@@ -24,8 +26,6 @@ class User < ActiveRecord::Base
 
   has_many :community_members
   has_many :communities, through: :community_members
-
-  ROLES = %w[admin paid_user unpaid_user]
 
   ACCOUNT_TYPES = %w[free teic teic_inst]
 
@@ -62,15 +62,15 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_user_key(key)
-    self.send("find_by_nuid".to_sym, key)
+    send("find_by_nuid".to_sym, key)
   end
 
   def forem_name
-    self.name
+    name
   end
 
   def forem_email
-    self.email
+    email
   end
 
   def check_paid_status
@@ -124,15 +124,15 @@ class User < ActiveRecord::Base
 
   private
 
-    def generate_api_key
-      key = Devise.friendly_token
+  def generate_api_key
+    key = Devise.friendly_token
 
-      @api_key = Digest::SHA512.hexdigest key
+    @api_key = Digest::SHA512.hexdigest key
 
-      if User.where(:encrypted_api_key => @api_key)
-        generate_api_key
-      else
-        self.encrypted_api_key = @api_key
-      end
+    if User.where(:encrypted_api_key => @api_key)
+      generate_api_key
+    else
+      self.encrypted_api_key = @api_key
     end
+  end
 end

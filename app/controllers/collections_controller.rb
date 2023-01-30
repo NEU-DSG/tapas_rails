@@ -44,14 +44,6 @@ class CollectionsController < CatalogController
     @collection.depositor = current_user
     @collection.save!
 
-    # if (params[:thumbnail])
-    #   params[:thumbnail] = create_temp_file(params[:thumbnail])
-    #   @collection.add_thumbnail(:filepath => params[:thumbnail])
-    #   @collection.save!
-    # end
-    # can this be used instead of individually spelling out the methods?
-    # TapasRails::Application::Queue.push TapasObjectUpsertJob.new params
-
     redirect_to @collection and return
   end
 
