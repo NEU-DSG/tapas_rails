@@ -16,19 +16,19 @@
           = f.label :authors, "Authors", class: "control-label col-md-2"
           .col-md-6
             %span.author
-              = f.select :authors, options_from_collection_for_select(@users, 'id', 'email'), {}, {class: "form-control", multiple: true}
+              = f.select :authors, options_from_collection_for_select(@users, 'id', 'email', @core_file.authors.map(&:id)), {}, {class: "form-control", multiple: true} |
 
         .form-group.contributors
           = f.label :contributors, "Contributors", class: "control-label col-md-2"
           .col-md-6
             %span.contributor
-              = f.select :contributors, options_from_collection_for_select(@users, 'id', 'email'), {}, { class: "form-control", multiple: true }
+              = f.select :contributors, options_from_collection_for_select(@users, 'id', 'email', @core_file.contributors.map(&:id)), {}, { class: "form-control", multiple: true }
 
         .form-group
           = f.label :collections, "Collection", class: "control-label col-md-2"
           .col-md-6
             %span.collection
-              = f.select :collections, options_from_collection_for_select(@collections, 'id', 'title'), {}, {class: "form-control", multiple: true}
+              = f.select :collections, options_from_collection_for_select(@collections, 'id', 'title', @core_file.collections.map(&:id)), {}, {class: "form-control", multiple: true}
 
         -# TODO: (charles) Figure out why we need Ography Type and reimplement it
         -# .form-group
@@ -40,10 +40,9 @@
 
         - if current_user.admin?
           .form-group
-            = f.label :featured, class: "control-label col-md-2"
+            = f.label :featured, "Featured?", class: "control-label col-md-2"
             .col-md-6
-              .checkbox
-                = f.check_box :featured, {}, "true"
+              = f.check_box :featured, {}, true
         .form-group
           = f.label :canonical_object, "File", class: "control-label col-md-2"
           .col-md-6
@@ -59,13 +58,14 @@
           .col-md-6
             = f.check_box :is_public, { checked: true }
         .form-group
-          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          = f.label :thumbnails, "Thumbnails", class: "control-label col-md-2"
           .col-md-6
-            - if @core_file.thumbnail.attached?
-              =image_tag url_for(@core_file.thumbnail)
+            - if @core_file.thumbnails.attached?
+              - @core_file.thumbnails.each do |t|
+                =image_tag url_for(t)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", {:checked => false}
-            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", direct_upload: true
+            = f.file_field :thumbnails, accept: ".jpeg, .jpeg, .png", direct_upload: true, multiple: true
 
     -# TODO add support_files?
 

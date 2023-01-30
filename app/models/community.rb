@@ -14,59 +14,16 @@ class Community < ActiveRecord::Base
 
   belongs_to :depositor, class_name: "User"
 
-  has_many_attached :thumbnails
+  has_one_attached :thumbnail
 
   validates_presence_of :title
 
-  # Look up or create the root community of the graph
-  # FIXME: (charles) I'm not sure why communities are related in a graph here -- is this used anywhere, or can we drop it?
-  # def self.root_community
-  #   if Community.exists?(Rails.configuration.tap_root)
-  #     Community.find(Rails.configuration.tap_root)
-  #   else
-  #     community = Community.new(:pid => Rails.configuration.tap_root, :title => "Root community")
-  #     community.depositor = "000000000"
-  #     community.mass_permissions = "private"
-  #     community.save!
-  #     return community
-  #   end
-  # end
-
-  def create_members(user_ids = [], member_type = 'member')
-    # NOTE: (charles) This means that the order in which CommunityMembers are created matters: the last
-    # (community_id, user_id, member_type) will prevail for that community_id + user_id. In other words,
-    # selecting the same user in multiple roles is undefined behavior.
-
-    user_ids.reject(&:empty?).each do |uid|
-      CommunityMember.find_or_create_by(community_id: id, user_id: uid, member_type: member_type)
-    end
-  end
-
-  def institutions=(institution_ids)
-    puts "creating institutions"
-    institution_ids.reject(&:empty?).each do |iid|
-      CommunitiesInstitution.find_or_create_by(community_id: id, institution_id: iid)
-    end
-  end
-
-  def project_members=(user_ids)
-    create_members(user_ids)
-  end
-
   def project_members
-    users
-  end
-
-  def project_editors=(user_ids)
-    create_members(user_ids, 'editor')
+    users.where(community_members: { member_type: "member" })
   end
 
   def project_editors
-    users.where(community_members: { member_type: ["editor", "admin"] })
-  end
-
-  def project_admins=(user_ids)
-    create_members(user_ids, 'admin')
+    users.where(community_members: { member_type: "editor" })
   end
 
   def project_admins
