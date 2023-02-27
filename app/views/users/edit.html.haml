@@ -15,20 +15,24 @@
           .col-md-6
             = f.text_field :email, required: true, class: "form-control", placeholder: "Email"
         .form-group
-          = f.label :institution, "Institution", class: "control-label col-md-2"
+          = f.label :institution_id, "Institution", class: "control-label col-md-2"
           .col-md-6
-            = f.collection_select(:institution_id, Institution.all, :id, :name, :prompt => 'Please select institution')
+            = f.select :institution_id, options_for_select(@institutions.map { |i| [i.name, i.id] }, @user.institution_id), required: true, include_blank: true
         .form-group
           = f.label :account_type, "Account Type", class: "control-label col-md-2"
           .col-md-6
             = f.select :account_type, options_for_select([['Free Account', 'free'], ['TEI-C Member Account', 'teic'], ['TEI-C Member via my institution', 'teic_inst']], @user.account_type), {}
         - if current_user.admin?
           .form-group
-            = f.label :role, "Admin", class: "control-label col-md-2"
+            = f.label :admin, "Admin?", class: "control-label col-md-2"
             .col-md-6
               .checkbox
-                = f.select :role, options_for_select([['Admin', 'admin'], ['Unpaid User', 'unpaid_user'], ['Paid User', 'paid_user']], @user.role), {}
-
+                = f.check_box :admin, {:checked => !@user.admin_at.nil?}
+          .form-group
+            = f.label :paid, "Paid?", class: "control-label col-md-2"
+            .col-md-6
+              .checkbox
+                = f.check_box :paid, {:checked => !@user.paid_at.nil?}
     %hr
   .form-actions
     = f.submit class: ['btn', 'btn-primary', 'btn-large'], value: 'Submit'

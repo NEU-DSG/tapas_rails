@@ -1,7 +1,5 @@
-class CommunitiesController < CatalogController
+class CommunitiesController < ApplicationController
   include ApiAccessible
-
-  self.copy_blacklight_config_from(CatalogController)
 
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show
@@ -23,7 +21,7 @@ class CommunitiesController < CatalogController
   def index
     @page_title = "All Projects"
 
-    (@response, @document_list) = search_results(params)
+    @results = Community.all
 
     respond_to do |format|
       format.html { render :template => 'shared/index' }
