@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
 
   delegate :can?, :cannot?, :to => :ability
@@ -49,8 +49,24 @@ class User < ActiveRecord::Base
     self.id.to_s
   end
 
+  def admin=(n)
+    if n.to_i == 0
+      update(admin_at: nil)
+    else
+      update(admin_at: Time.zone.now)
+    end
+  end
+
   def admin?
     !admin_at.nil?
+  end
+
+  def paid=(n)
+    if n.to_i == 0
+      update(paid_at: nil)
+    else
+      update(paid_at: Time.zone.now)
+    end
   end
 
   def paid_user?

@@ -5,6 +5,49 @@
 <%= render 'catalog/search_header' %>
 
 <h2 class="sr-only"><%= t('blacklight.search.search_results') %></h2>
-<%- if @response.empty? %>
-  <%= render "zero_results" %>
-<%- end %>
+
+<table class="table table-striped">
+  <tr>
+    <th>Title</th>
+    <th>Description</th>
+    <th>Depositor</th>
+    <th>Actions</th>
+  </tr>
+  <%- @results.map do |r| %>
+    <tr>
+      <td>
+        <%= r.title %>
+      </td>
+      <td>
+        <%= r.description %>
+      </td>
+      <td>
+        <%= r.depositor.nil? ? "No depositor on file" : r.depositor.email %>
+      </td>
+      <td>
+        <%- if can? :manage, r %>
+          <a class="btn btn-default btn-sm"
+            href="<%= url_for(
+                  only_path: true,
+                  controller: request.path
+                  .sub('my_', '')
+                  .sub('records', 'core_files')
+                  .sub('projects', 'communities'),
+                  action: 'edit',
+                  id: r.id) %>">Edit</a>
+          <a class="btn btn-danger btn-sm"
+            href="<%= url_for(
+                  only_path: true,
+                  controller: request.path
+                  .sub('my_', '')
+                  .sub('records', 'core_files')
+                  .sub('projects', 'communities'),
+                  action: 'destroy',
+                  id: r.id) %>"
+            data-method="delete"
+            data-confirm="Are you sure you want to delete this <%= r.class.to_s %>?">Delete</a>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
