@@ -1,4 +1,4 @@
-class UsersCoreFile < ActiveRecord::Base
+class CoreFilesUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :core_file
 

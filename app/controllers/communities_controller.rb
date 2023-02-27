@@ -23,10 +23,8 @@ class CommunitiesController < CatalogController
   def index
     @page_title = "All Projects"
 
-    logger.debug repository.inspect
-    logger.debug repository.connection
+    (@response, @document_list) = search_results(params)
 
-    (@response, @document_list) = search_results(params) #, search_params_logic)
     respond_to do |format|
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }
@@ -59,14 +57,10 @@ class CommunitiesController < CatalogController
   # TODO: CoreFiles can belong to many collections (many-to-many), but will always point back to one project
 
   def create
-    @community = Community.new(community_params)
-    @community.depositor = current_user
-    @community.save!
+    @community = Community.create!(community_params.merge({ depositor_id: current_user.id }))
 
-    if (thumbnail_params[:thumbnail])
-      # TODO: (pletcher) Create Thumbnail by uploading (to S3?) and saving URL
-      # Thumbnail.create!(url: url, owner: @community)
-    end
+    add_institutions
+    add_members
 
     redirect_to @community
   end
@@ -82,10 +76,31 @@ class CommunitiesController < CatalogController
   def update
     @community = Community.find(params[:id])
     @community.community_members.destroy_all
-    @community.communities_institutions.destroy_all
+    @community.institutions.destroy_all
     @community.update(community_params)
 
+    add_institutions
+    add_members
+
+    if params[:community][:remove_thumbnail].present?
+      @community.thumbnail.purge_later
+    end
+
     redirect_to @community
+  end
+
+  def add_institutions
+    child_params[:institutions].reject(&:empty?).map { |iid| CommunitiesInstitution.create!(community_id: @community.id, institution_id: iid) }
+  end
+
+  def add_members
+    child_params[:project_members].reject(&:empty?).map { |uid| CommunityMember.create(community_id: @community.id, user_id: uid, member_type: 'member') }
+    child_params[:project_editors].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'editor') }
+    child_params[:project_admins].reject(&:empty?).map { |uid| CommunityMember.create!(community_id: @community.id, user_id: uid, member_type: 'admin') }
+
+    unless child_params[:project_admins].include?(current_user.id.to_s)
+      CommunityMember.create!(community_id: @community.id, user_id: current_user.id, member_type: 'admin')
+    end
   end
 
   def destroy
@@ -115,15 +130,16 @@ class CommunitiesController < CatalogController
       .permit(
         :description,
         :thumbnail,
-        :title,
-        :institutions => [],
-        :project_admins => [],
-        :project_editors => [],
-        :project_members => []
+        :title
       )
   end
 
-  def thumbnail_params
-    params.permit(:thumbnail)
+  def child_params
+    params.require(:community).permit(
+      :institutions => [],
+      :project_admins => [],
+      :project_editors => [],
+      :project_members => []
+    )
   end
 end

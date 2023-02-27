@@ -2,7 +2,7 @@ class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
   before_action :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
-  # before_action :verify_admin, :only => [:index, :show, :create]
+  before_action :verify_admin, :only => [:index, :show, :create, :delete]
 
   def my_tapas
     @page_title = "My TAPAS"
@@ -78,6 +78,18 @@ class UsersController < CatalogController
     redirect_to @user
   end
 
+  def destroy
+    user = User.find(params[:id])
+
+    if user.discarded?
+      user.delete
+    else
+      user.discard
+    end
+
+    redirect_to users_path
+  end
+
   def search_action_url(options = {})
     # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
     # catalog_index_path(options.except(:controller, :action))
@@ -103,22 +115,21 @@ class UsersController < CatalogController
   private
 
   def five_communities
-    @user.communities.limit(5).order("RAND()")
+    @user.communities.kept.limit(5).order("RAND()")
   end
 
   def five_collections
     Collection
-      .joins(community: :community_members)
-      .where(community: { community_members: { user_id: @user.id } })
+      .kept
+      .accessible_by(current_ability)
       .limit(5)
       .order("RAND()")
-
   end
 
   def five_records
     CoreFile
-      .joins(collections: { community: :community_members })
-      .where(collections: { community: { community_members: { user_id: @user.id } } })
+      .kept
+      .accessible_by(current_ability)
       .limit(5)
       .order("RAND()")
   end

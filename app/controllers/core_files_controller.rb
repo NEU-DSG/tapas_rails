@@ -32,28 +32,13 @@ class CoreFilesController < CatalogController
 
   def new
     @page_title = "Create New Record"
-    @collections = Collection
-                     .joins(community: :community_members)
-                     .where(community: { community_members: { user_id: current_user.id } })
+    @collections = Collection.accessible_by(current_ability)
     @core_file = CoreFile.new(is_public: true)
     @users = User.order(:name)
-
-    # FIXME: (charles) What is this supposed to do?
-    @file_types = [['TEI Record',""]]
-    @sel_file_types = []
-    CoreFile.all_ography_types.each do |o|
-      @file_types << [o.titleize,o]
-    end
   end
 
   def create
-    file = CoreFile.new(core_file_params.merge({ depositor_id: current_user.id }))
-
-    params[:core_file][:collections].each do |c|
-      file.collections << Collection.find(c) unless c.blank?
-    end
-
-    file.save!
+    file = CoreFile.create!(core_file_params.merge({ depositor_id: current_user.id }))
 
     redirect_to file
   end
@@ -61,7 +46,7 @@ class CoreFilesController < CatalogController
   def destroy
     file = CoreFile.find(params[:id])
     # FIXME: (charles) Should go to the collection where the user is, but the routes aren't set up RESTfully
-    collection = file.collections.first
+    collection = file.collections.kept.first
 
     file.destroy!
 
@@ -70,40 +55,17 @@ class CoreFilesController < CatalogController
 
   def edit
     @core_file = CoreFile.find(params[:id])
-
-    @collections = @core_file.collections
-
-    @file_types = [['TEI Record',""]]
-    @sel_file_types = []
-    CoreFile.all_ography_types.each do |o|
-      @file_types << [o.titleize,o]
-    end
-    @core_file.ography_type.each do |o|
-      @sel_file_types << o
-    end
-    if @sel_file_types.blank?
-      @sel_file_types << ""
-    end
-
+    @collections = Collection.accessible_by(current_ability)
+    @users = User.order(:name)
     @page_title = "Edit #{@core_file.title}"
   end
 
   #This method contains the logic for editing/submission of edit form
   def update
     cf = CoreFile.find(params[:id])
-    params[:did] = cf.did
-    if params[:core_file][:remove_thumbnail] == "1"
-      params[:core_file].delete :thumbnail
-      cf.thumbnails = []
-      cf.save!
-    end
-    params[:core_file].delete :remove_thumbnail
-    params[:file_types].reject! { |c| c.blank? }
-    logger.warn("we are about to edit #{params[:did]}")
-    logger.warn params
+    cf.update(core_file_params)
 
-    create
-    redirect_to cf and return
+    redirect_to cf
   end
 
   def view_package_html
@@ -141,7 +103,7 @@ class CoreFilesController < CatalogController
     pretty_json(200) and return
   end
 
-  def show #inherited from catalog controller
+  def show
     @core_file = CoreFile.find(params[:id])
   end
 
@@ -232,14 +194,15 @@ class CoreFilesController < CatalogController
 
   def core_file_params
     params.require(:core_file).permit(
-      :authors,
       :canonical_object,
       :collections,
-      :contributors,
       :depositor,
       :description,
-      :thumbnails,
-      :title
+      :featured,
+      :title,
+      :authors => [],
+      :contributors => [],
+      :thumbnails => []
     )
   end
 
