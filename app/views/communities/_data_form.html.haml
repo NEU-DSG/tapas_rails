@@ -15,13 +15,13 @@
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           = f.check_box :is_public, { checked: true }
         .form-group
-          = f.label :thumbnail, "Thumbnail", name: 'thumbnail', class: "control-label col-md-2"
+          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if !@community.thumbnails.blank?
-              =image_tag @community.download_path('thumbnail_1')
+            - if @community.thumbnail.attached?
+              =image_tag url_for(@community.thumbnail)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", {:checked => false}
-            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", name: "thumbnail"
+            = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", direct_upload: true
 
 
     .row.form-group.institutions
