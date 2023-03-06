@@ -6,7 +6,7 @@ TapasRails::Application.routes.draw do
   root :to => "view_packages#index"
 
   # blacklight_for :catalog
-  devise_for :users
+  devise_for :users, controllers: { invitations: 'users/invitations' }
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
@@ -80,7 +80,9 @@ TapasRails::Application.routes.draw do
   get 'my_projects' => 'users#my_projects'
   get 'my_collections' => 'users#my_collections'
   get 'my_records' => 'users#my_records'
+  get 'admin/users/new' => 'users#admin_new', as: 'admin_new_user'
   get 'admin/users/:id' => 'users#admin_show'
+  post 'admin/users' => 'users#admin_create', as: 'admin_create_user'
   get 'users/:id' => 'users#profile'
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'

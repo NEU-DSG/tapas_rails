@@ -22,8 +22,8 @@ class CoreFilesController < CatalogController
 
   def index
     @page_title = "All CoreFiles"
-    # self.search_params_logic += [:core_files_filter]
-    (@response, @document_list) = search_results(params) #, search_params_logic)
+    @results = CoreFile.order(updated_at: :desc)
+
     respond_to do |format|
       format.html { render :template => 'shared/index' }
       format.js { render :template => 'shared/index', :layout => false }
