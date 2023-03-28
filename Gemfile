@@ -90,8 +90,6 @@ group :doc do
 end
 
 gem "blacklight"
-gem 'hydra-head', '~> 10.0'
-gem 'hydra-derivatives'
 gem 'blacklight-gallery'
 
 # Use ActiveModel has_secure_password
@@ -134,8 +132,6 @@ gem "git"
 
 gem "json", "~> 2.3"
 gem 'simple_form'
-gem 'active-fedora', "~> 11.0"
-gem 'active_fedora-datastreams'
 gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
