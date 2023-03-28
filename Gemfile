@@ -140,4 +140,4 @@ gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
 gem 'sprockets', '~> 3.7.2'
-gem 'carrierwave', '~> 1.3.1'
+gem 'carrierwave', '~> 1.3.2'
