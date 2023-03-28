@@ -47,9 +47,6 @@ GEM
       activesupport (>= 3.0.0)
       rdf (>= 2.0.2, < 4.0)
       rdf-vocab (>= 2.0, < 4.0)
-    active_encode (0.7.0)
-      rails
-      sprockets (< 4)
     active_fedora-datastreams (0.2.0)
       active-fedora (>= 11.0.0.pre, < 13)
       nom-xml (>= 0.5.1)
@@ -73,8 +70,6 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
-    addressable (2.7.0)
-      public_suffix (>= 2.0.2, < 5.0)
     airbrussh (1.4.0)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (9.0.0)
@@ -107,10 +102,6 @@ GEM
       rails (>= 4.2, < 6)
       rsolr (>= 1.0.6, < 3)
       twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
-    blacklight-access_controls (0.6.2)
-      blacklight (~> 6.0)
-      cancancan (~> 1.8)
-      deprecation (~> 1.0)
     blacklight-gallery (0.12.0)
       blacklight (~> 6.3)
       bootstrap-sass (~> 3.0)
@@ -276,28 +267,6 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     http_logger (0.6.0)
-    hydra-access-controls (10.7.0)
-      active-fedora (>= 10.0.0)
-      activesupport (>= 4, < 6)
-      blacklight (>= 5.16)
-      blacklight-access_controls (~> 0.6.0)
-      cancancan (~> 1.8)
-      deprecation (~> 1.0)
-    hydra-core (10.7.0)
-      hydra-access-controls (= 10.7.0)
-      railties (>= 4.0.0, < 6)
-    hydra-derivatives (3.5.0)
-      active-fedora (>= 11.3.1, < 14)
-      active_encode (~> 0.1)
-      activesupport (>= 4.0, < 6)
-      addressable (~> 2.5)
-      deprecation
-      mime-types (> 2.0, < 4.0)
-      mini_magick (>= 3.2, < 5)
-    hydra-head (10.7.0)
-      hydra-access-controls (= 10.7.0)
-      hydra-core (= 10.7.0)
-      rails (>= 3.2.6)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     iso-639 (0.3.5)
@@ -363,7 +332,6 @@ GEM
     mime-types (3.3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2020.0425)
-    mini_magick (4.10.1)
     mini_mime (1.1.2)
     mini_portile2 (2.8.1)
     minitest (5.18.0)
@@ -420,7 +388,6 @@ GEM
     pry (0.13.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
-    public_suffix (4.0.4)
     raabro (1.1.6)
     racc (1.6.2)
     rack (2.2.6.4)
@@ -624,7 +591,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  active-fedora (~> 11.0)
   active_fedora-datastreams
   aws-sdk-s3
   blacklight
@@ -649,8 +615,6 @@ DEPENDENCIES
   friendly_id (~> 5.2.4)
   git
   haml-rails (~> 2.0)
-  hydra-derivatives
-  hydra-head (~> 10.0)
   jbuilder (= 2.10)
   jettywrapper
   jquery-rails
