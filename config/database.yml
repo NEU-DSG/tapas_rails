@@ -1,26 +1,14 @@
 default: &default
   adapter: mysql2
-  encoding: utf8
-  username: <%= ENV['MYSQL_USER'] %>
-  password: <%= ENV['MYSQL_PASSWORD'] %>
-  pool: 5
-  timeout: 5000
+  encoding: utf8mb4
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= ENV['MYSQL_DEV_USER'] %>
+  password: <%= ENV['MYSQL_DEV_PASSWORD'] %>
+  socket: /tmp/mysql.sock
 
 development:
   <<: *default
-  database: tapas
-
-staging:
-  <<: *default
-  host: <%= ENV['MYSQL_HOST'] %>
-  port: <%= ENV['MYSQL_PORT'] %>
-  database: tapas_rails_staging
-
-production:
-  <<: *default
-  host: <%= ENV['MYSQL_HOST'] %>
-  port: <%= ENV['MYSQL_PORT'] %>
-  database: tapas_rails_production
+  database: tapas_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -28,3 +16,43 @@ production:
 test:
   <<: *default
   database: tapas_test
+
+production:
+  <<: *default
+  database: tapas_production
+  username: <%= ENV['MYSQL_USER'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
+
+
+
+#default: &default
+#  adapter: mysql2
+#  encoding: utf8
+#  pool: 5
+#  timeout: 5000
+
+#development:
+#  <<: *default
+#  username: <%#= ENV['MYSQL_DEV_USER'] %>
+#  password: <%#= ENV['MYSQL_DEV_PASSWORD'] %>
+#  socket: /tmp/mysql.sock
+#  database: tapas_development
+
+#staging:
+#  <<: *default
+#  host: <%#= ENV['MYSQL_HOST'] %>
+#  port: <%#= ENV['MYSQL_PORT'] %>
+#  database: tapas_rails_staging
+
+#production:
+#  <<: *default
+#  host: <%#= ENV['MYSQL_HOST'] %>
+#  port: <%#= ENV['MYSQL_PORT'] %>
+#  database: tapas_rails_production
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+#test:
+#  <<: *default
+#  database: tapas_test

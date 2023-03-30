@@ -24,7 +24,7 @@ class RebuildCommunityReadingInterfaceJob
 
         all_verbs = all_verbs.join(" OR ")
         # logger.info all_verbs
-        descendent_ographies = ActiveFedora::SolrService.query(all_verbs)
+        descendent_ographies = SolrService.query(all_verbs)
         # logger.info descendent_ographies
         descendent_ographies.each do |file|
           if CoreFile.exists?(file['id'])

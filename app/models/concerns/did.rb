@@ -7,7 +7,7 @@ module Did
 
       query = "did_ssim:#{did} && -id:#{pid}"
 
-      if ActiveFedora::SolrService.query(query).any?
+      if SolrService.query(query).any?
         msg = "Attempted to reuse Drupal ID #{did}"
         raise Exceptions::DuplicateDidError.new msg
       end
@@ -15,7 +15,7 @@ module Did
   end
 
   def exists_by_did?(nid)
-    return ActiveFedora::Base.exists?("did_ssim" => nid)
+    return ActiveRecord::Base.exists?("did_ssim" => nid)
   end
 
   module_function :exists_by_did?

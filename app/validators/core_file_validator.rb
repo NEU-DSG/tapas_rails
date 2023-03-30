@@ -28,7 +28,7 @@ class CoreFileValidator
     # Retrieve solr documents for every collection did passed in.
     qs = collection_dids.map { |x| "did_ssim:#{RSolr.solr_escape(x)}" }
     qs = "(#{qs.join(' OR ')})" + ' AND active_fedora_model_ssi:Collection'
-    collections = ActiveFedora::SolrService.query(qs)
+    collections = SolrService.query(qs)
 
     # Raise an error if there are fewer collections than collection_dids
     unless collection_dids.length == collections.length 

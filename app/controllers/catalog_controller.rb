@@ -2,7 +2,7 @@ require 'blacklight/catalog'
 
 class CatalogController < ApplicationController
   include Blacklight::Catalog
-  include Hydra::Controller::ControllerBehavior
+  # include Hydra::Controller::ControllerBehavior
   # include Rails.application.routes.url_helpers
   # These before_actions apply the hydra access controls
   # before_action :enforce_show_permissions, :only=>:show
