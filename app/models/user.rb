@@ -1,15 +1,14 @@
 class User < ActiveRecord::Base
-  include Discard::Model
-
   require "net/http"
   require "uri"
   # Connects this user object to Hydra behaviors.
-  include Hydra::User
+  # include Hydra::User
   # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
 
-  mount_uploader :avatar, AvatarUploader
-  validates_integrity_of :avatar
+  # cch: commenting this out to allow for time to upgrade carrierwave
+  # mount_uploader :avatar, AvatarUploader
+  # validates_integrity_of :avatar
 
   if Blacklight::Utils.needs_attr_accessible?
     attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
@@ -17,7 +16,7 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :invitable, :database_authenticatable, :registerable,
+  devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, :confirmable
 
   delegate :can?, :cannot?, :to => :ability
@@ -26,6 +25,8 @@ class User < ActiveRecord::Base
 
   has_many :community_members
   has_many :communities, through: :community_members
+
+  ROLES = %w[admin paid_user unpaid_user]
 
   ACCOUNT_TYPES = %w[free teic teic_inst]
 
@@ -49,44 +50,28 @@ class User < ActiveRecord::Base
     self.id.to_s
   end
 
-  def admin=(n)
-    if n.to_i == 0
-      update(admin_at: nil)
-    else
-      update(admin_at: Time.zone.now)
-    end
-  end
-
   def admin?
-    !admin_at.nil?
-  end
-
-  def paid=(n)
-    if n.to_i == 0
-      update(paid_at: nil)
-    else
-      update(paid_at: Time.zone.now)
-    end
+    return self.role.eql?('admin')
   end
 
   def paid_user?
-    !paid_at.nil?
+    return self.role.eql?('paid_user')
   end
 
   def unpaid_user?
-    paid_at.nil?
+    return self.role.eql?('unpaid_user')
   end
 
   def self.find_by_user_key(key)
-    send("find_by_nuid".to_sym, key)
+    self.send("find_by_nuid".to_sym, key)
   end
 
   def forem_name
-    name
+    self.name
   end
 
   def forem_email
-    email
+    self.email
   end
 
   def check_paid_status
@@ -140,15 +125,15 @@ class User < ActiveRecord::Base
 
   private
 
-  def generate_api_key
-    key = Devise.friendly_token
+    def generate_api_key
+      key = Devise.friendly_token
 
-    @api_key = Digest::SHA512.hexdigest key
+      @api_key = Digest::SHA512.hexdigest key
 
-    if User.where(:encrypted_api_key => @api_key)
-      generate_api_key
-    else
-      self.encrypted_api_key = @api_key
+      if User.where(:encrypted_api_key => @api_key)
+        generate_api_key
+      else
+        self.encrypted_api_key = @api_key
+      end
     end
-  end
 end

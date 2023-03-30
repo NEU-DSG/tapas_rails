@@ -5,7 +5,7 @@ class SolrDocument
   include Blacklight::Gallery::OpenseadragonSolrDocument
 
   # include Blacklight::Document
-  include CerberusCore::SolrDocumentBehavior
+  # include CerberusCore::SolrDocumentBehavior
   include TapasRails::SolrDocumentBehavior
   include TapasQueries
 
@@ -39,8 +39,12 @@ class SolrDocument
      pids = pids.map { |x| "id:#{RSolr.solr_escape(x[12..-1])}" }
      query = pids.join ' OR '
 
-     ActiveFedora::SolrService.query(query).any? do |collection|
+     SolrService.query(query).any? do |collection|
        collection['drupal_access_ssim'] == ['public']
      end
+
+     # ActiveFedora::SolrService.query(query).any? do |collection|
+     #   collection['drupal_access_ssim'] == ['public']
+     # end
   end
 end

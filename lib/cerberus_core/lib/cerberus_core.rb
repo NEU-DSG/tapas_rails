@@ -1,6 +1,6 @@
-require 'active-fedora'
-require 'hydra/head'
-require 'hydra/derivatives'
+# require 'active-fedora'
+# require 'hydra/head'
+# require 'hydra/derivatives'
 
 module CerberusCore
   mattr_accessor :app_root

@@ -12,17 +12,11 @@ gem 'passenger', '6.0.4'
 # Use mysql2 for the staging environment
 gem 'mysql2', '0.5.3'
 
-# gem 'minitest', '4.7.5'
-
-# Use SCSS for stylesheets
 # gem 'sass-rails', '~> 4.0.2'
 gem 'bootstrap-sass', '3.3.4.1'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 5.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
@@ -30,6 +24,9 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'dotenv-rails', groups: [:development, :test]
+# loads environment variables from .env into ENV in development
+# https://github.com/bkeepers/dotenv/
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -50,8 +47,6 @@ gem 'resque', :require => 'resque/server'
 # Use Nest because some inherited config uses Nest
 gem 'nest'
 
-gem 'aws-sdk-s3', require: false
-
 gem 'discard', '~> 1.2'
 
 # Use thor for command line tasks
@@ -62,12 +57,6 @@ gem 'discard', '~> 1.2'
 
 # Use Namae to try to parse arbitrary names
 gem 'namae'
-
-# Bootstrap WYSIWYG Editor
-# gem 'bootsy' NO LONGER MAINTAINED
-
-# Forem gem for Forums
-# gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
 
 # Configure email alerts on exception
 gem 'exception_notification'
@@ -113,8 +102,6 @@ group :development, :test do
   gem "pry"
   gem "rspec-rails", "~> 3"
   gem "rspec-its"
-  gem "sunspot_solr"
-  gem "jettywrapper"
   gem "factory_bot_rails"
 end
 

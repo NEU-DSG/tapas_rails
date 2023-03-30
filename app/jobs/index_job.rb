@@ -17,10 +17,10 @@ class IndexJob
     progress_logger = Logger.new("#{Rails.root}/log/#{job_id}/resolrize-job.log")
     failed_pids_log = Logger.new("#{Rails.root}/log/#{job_id}/resolrize-job-failed-pids.log")
 
-    rsolr_conn = ActiveFedora::SolrService.instance.conn
+    rsolr_conn = SolrService.instance.conn
 
     begin
-      obj = ActiveFedora::Base.find(pid, :cast=>true)
+      obj = Base.find(pid, :cast=>true)
 
       if ![Community, Collection, Compilation, Employee].include? obj.class
 
@@ -33,7 +33,7 @@ class IndexJob
         end
 
         # Delete it's old solr record
-        ActiveFedora::SolrService.instance.conn.delete_by_id("#{pid}", params: {'softCommit' => true})
+        SolrService.instance.conn.delete_by_id("#{pid}", params: {'softCommit' => true})
 
         # Remake the solr document
         rsolr_conn.add(obj.to_solr)
