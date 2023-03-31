@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120616193447)
-class AddForemState < ActiveRecord::Migration
+class AddForemState < ActiveRecord::Migration[5.2]
   def change
     unless column_exists?(user_class, :forem_state)
       add_column user_class, :forem_state, :string, :default => 'pending_review'
