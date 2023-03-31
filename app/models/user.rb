@@ -66,13 +66,13 @@ class User < ActiveRecord::Base
     self.send("find_by_nuid".to_sym, key)
   end
 
-  def forem_name
-    self.name
-  end
-
-  def forem_email
-    self.email
-  end
+  # def forem_name
+  #   self.name
+  # end
+  #
+  # def forem_email
+  #   self.email
+  # end
 
   def check_paid_status
     # FIXME: we can't use pluot, as it's too out of date

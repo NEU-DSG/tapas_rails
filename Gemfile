@@ -33,7 +33,6 @@ gem 'turbolinks'
 
 # for handling slugs in URLS instead of IDs
 gem 'friendly_id', '~> 5.2.4' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
-# hand to downgrade from 5.1.0 to 5.0.0 for forem to work
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '2.10'

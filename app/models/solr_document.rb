@@ -42,9 +42,5 @@ class SolrDocument
      SolrService.query(query).any? do |collection|
        collection['drupal_access_ssim'] == ['public']
      end
-
-     # ActiveFedora::SolrService.query(query).any? do |collection|
-     #   collection['drupal_access_ssim'] == ['public']
-     # end
   end
 end
