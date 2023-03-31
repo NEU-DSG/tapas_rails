@@ -6,6 +6,8 @@ gem 'rails', '5.2.6'
 # Use rubyzip to handle Zipped content files from Drupal
 gem 'rubyzip'
 
+gem 'sprockets-rails', :require => 'sprockets/railtie'
+
 # Use passenger as the application server
 gem 'passenger', '6.0.4'
 
@@ -47,12 +49,6 @@ gem 'resque', :require => 'resque/server'
 gem 'nest'
 
 gem 'discard', '~> 1.2'
-
-# Use thor for command line tasks
-# gem 'thor', '1.0.1'
-
-# Install thor-rails to write thor tasks that are rails env aware
-# gem 'thor-rails'
 
 # Use Namae to try to parse arbitrary names
 gem 'namae'
@@ -121,5 +117,6 @@ gem 'simple_form'
 gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
-gem 'sprockets', '~> 3.7.2'
 gem 'carrierwave', '~> 1.3.1'
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 5.0.0'

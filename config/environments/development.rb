@@ -14,7 +14,7 @@ TapasRails::Application.configure do
 
   config.log_level = :debug
 
-  config.fedora_home = "#{Rails.root.to_s}/jetty/fedora/default/data/datastreamStore/"
+  # config.fedora_home = "#{Rails.root.to_s}/jetty/fedora/default/data/datastreamStore/"
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
@@ -35,12 +35,12 @@ TapasRails::Application.configure do
   # Raise an error on page load if there are pending migrations
   config.active_record.migration_error = :page_load
 
-  config.active_storage.service = :amazon
+  # config.active_storage.service = :amazon
 
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
-  config.assets.debug = true
+  # config.assets.debug = true
   config.assets.compress = false
 
   # Parse ~/.gitconfig in an attempt to load the email address of the currently
