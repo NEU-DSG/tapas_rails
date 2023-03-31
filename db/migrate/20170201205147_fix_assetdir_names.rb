@@ -1,4 +1,4 @@
-class FixAssetdirNames < ActiveRecord::Migration
+class FixAssetdirNames < ActiveRecord::Migration[5.2]
   def up
     rename_column :view_packages, :css_dir, :css_files
     rename_column :view_packages, :js_dir, :js_files

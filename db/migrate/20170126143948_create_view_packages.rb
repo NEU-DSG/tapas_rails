@@ -1,4 +1,4 @@
-class CreateViewPackages < ActiveRecord::Migration
+class CreateViewPackages < ActiveRecord::Migration[5.2]
   def change
     create_table :view_packages do |t|
       t.string :human_name

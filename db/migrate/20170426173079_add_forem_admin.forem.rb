@@ -1,5 +1,5 @@
 # This migration comes from forem (originally 20120616193446)
-class AddForemAdmin < ActiveRecord::Migration
+class AddForemAdmin < ActiveRecord::Migration[5.2]
   def change
     unless column_exists?(user_class, :forem_admin)
       add_column user_class, :forem_admin, :boolean, :default => false

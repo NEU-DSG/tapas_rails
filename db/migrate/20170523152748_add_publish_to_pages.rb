@@ -1,4 +1,4 @@
-class AddPublishToPages < ActiveRecord::Migration
+class AddPublishToPages < ActiveRecord::Migration[5.2]
   def up
     add_column :pages, :publish, :string
   end
