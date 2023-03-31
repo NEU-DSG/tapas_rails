@@ -13,7 +13,7 @@ TapasRails::Application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
-  config.fedora_home = "/opt/fedora/data/datastreamStore/"
+  # config.fedora_home = "/opt/fedora/data/datastreamStore/"
 
   # Full error reports are disabled and caching is turned on.
   config.consider_all_requests_local       = false
