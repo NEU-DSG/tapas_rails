@@ -40,9 +40,6 @@ en:
         text: "Community"
         url: "/community"
         submenu:
-          forums:
-            text: "Forums"
-            url: "/forums"
           news:
             text: "News"
             url: "/news"
