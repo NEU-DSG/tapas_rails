@@ -437,6 +437,8 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
+    sqlite3 (1.6.2)
+      mini_portile2 (~> 2.8.0)
     sshkit (1.21.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
@@ -526,6 +528,7 @@ DEPENDENCIES
   simplecov-json
   simplecov-rcov
   sprockets-rails
+  sqlite3
   therubyracer
   turbolinks
   uglifier (>= 1.3.0)

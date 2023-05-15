@@ -21,8 +21,6 @@ class User < ActiveRecord::Base
 
   delegate :can?, :cannot?, :to => :ability
 
-  belongs_to :institution
-
   has_many :community_members
   has_many :communities, through: :community_members
 

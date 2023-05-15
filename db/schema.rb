@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2020_07_27_210248) do
 
-  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
     t.bigint "record_id", null: false
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "active_storage_blobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "key", null: false
     t.string "filename", null: false
     t.string "content_type"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "bookmarks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "bookmarks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "user_type"
     t.string "document_id"
@@ -44,19 +44,19 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["user_id"], name: "index_bookmarks_on_user_id"
   end
 
-  create_table "captions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "captions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "active_storage_attachment_id"
     t.index ["active_storage_attachment_id"], name: "index_captions_on_active_storage_attachment_id"
   end
 
-  create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "collection_id"
     t.integer "parent_collection_id", null: false
     t.index ["collection_id", "parent_collection_id"], name: "index_collections_parent", unique: true
     t.index ["collection_id"], name: "index_collection_collections_on_collection_id"
   end
 
-  create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["discarded_at"], name: "index_collections_on_discarded_at"
   end
 
-  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "core_file_id"
     t.bigint "collection_id"
     t.index ["collection_id", "core_file_id"], name: "index_collections_core_files_on_collection_id_and_core_file_id", unique: true
@@ -77,7 +77,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["core_file_id"], name: "index_collections_core_files_on_core_file_id"
   end
 
-  create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
@@ -89,14 +89,14 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["discarded_at"], name: "index_communities_on_discarded_at"
   end
 
-  create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "community_id", null: false
     t.bigint "institution_id", null: false
     t.index ["community_id", "institution_id"], name: "index_communities_instutitions", unique: true
     t.index ["institution_id", "community_id"], name: "index_institutions_communities", unique: true
   end
 
-  create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "collection_id"
     t.bigint "community_id"
     t.index ["collection_id", "community_id"], name: "index_community_collections_on_collection_id_and_community_id", unique: true
@@ -104,14 +104,14 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["community_id"], name: "index_community_collections_on_community_id"
   end
 
-  create_table "community_communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "community_communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "community_id"
     t.integer "parent_community_id", null: false
     t.index ["community_id", "parent_community_id"], name: "index_community_parent", unique: true
     t.index ["community_id"], name: "index_community_communities_on_community_id"
   end
 
-  create_table "community_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "community_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "community_id"
     t.bigint "user_id"
     t.string "member_type", limit: 6, default: "member"
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["user_id"], name: "index_community_members_on_user_id"
   end
 
-  create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
@@ -132,7 +132,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["discarded_at"], name: "index_core_files_on_discarded_at"
   end
 
-  create_table "core_files_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "core_files_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "core_file_id", null: false
     t.string "user_type", limit: 11, default: "contributor", null: false
@@ -140,7 +140,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["user_id", "core_file_id"], name: "index_core_files_users_on_user_id_and_core_file_id", unique: true
   end
 
-  create_table "friendly_id_slugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "friendly_id_slugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "slug", null: false
     t.integer "sluggable_id", null: false
     t.string "sluggable_type", limit: 50
@@ -152,7 +152,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
-  create_table "institutions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "institutions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "name", null: false
     t.text "description"
     t.string "image"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "menu_links", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "menu_links", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "link_text", null: false
     t.string "link_href", null: false
     t.string "classes"
@@ -175,7 +175,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "news_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "news_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "author"
     t.string "publish"
     t.string "title", null: false
@@ -186,7 +186,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.string "tags"
   end
 
-  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "pages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "title", null: false
     t.string "slug", null: false
     t.text "content"
@@ -196,7 +196,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.string "submenu"
   end
 
-  create_table "searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.text "query_params"
     t.integer "user_id"
     t.string "user_type"
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["user_id"], name: "index_searches_on_user_id"
   end
 
-  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -250,7 +250,7 @@ ActiveRecord::Schema.define(version: 2020_07_27_210248) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  create_table "view_packages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "view_packages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb3", force: :cascade do |t|
     t.string "human_name"
     t.string "machine_name"
     t.text "description"

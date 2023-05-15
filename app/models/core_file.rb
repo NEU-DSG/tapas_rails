@@ -150,6 +150,7 @@ class CoreFile < ActiveRecord::Base
 
 
   def render_success_json
+    # TO DO: this should be a controller action that renders a view, no longer need to return JSON to the client
     tei_name = (canonical_object ? canonical_object.filename : '')
 
     { :status => upload_status,
@@ -171,6 +172,7 @@ class CoreFile < ActiveRecord::Base
   end
 
   def match_dc_to_mods
+    # captured mods metadata in Dublin Core format for Fedora
     self.DC.title = self.mods.title.first
     self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
     # self.mods.title = self.DC.title.first

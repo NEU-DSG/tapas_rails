@@ -1,19 +1,23 @@
 class Collection < ActiveRecord::Base
   include Discard::Model
 
+  # associations
   belongs_to :community
-  belongs_to :depositor, class_name: "User"
-  # TODO: (charles) Unclear if we need to implement this.
-  # Leaving it out for now.
-  # has_and_belongs_to_many :collections,
-  #                         join_table: "collection_collections",
-  #                         association_foreign_key: "parent_collection_id"
-
+  belongs_to :depositor, class_name: "User", foreign_key: "depositor_id"
   has_and_belongs_to_many :core_files
-
   has_many_attached :thumbnails
 
-  validates :depositor, :description, :title, presence: true
+  # validations
+  validates :depositor_id, :description, :title, presence: true
+  validates :community_id, presence: true, unless: :phantom?
+
+  # callbacks
+  after_create :set_collection_access
+
+  def set_collection_access
+    self.is_public = self.community.is_public
+    self.save!
+  end
 
   def self.phantom_collection
     pid = Rails.configuration.phantom_collection_pid
@@ -30,17 +34,6 @@ class Collection < ActiveRecord::Base
     end
   end
 
-  def drupal_access=(level)
-    # Because we override the methods provided by the DrupalAccess module here,
-    # we need to manually ensure that the multiple: false flag is enforced on
-    # set.
-    error = 'Drupal access cannot have multiple values'
-    raise error if level.instance_of? Array
-
-    properties.drupal_access = level
-    @drupal_access_changed = true
-  end
-
   def as_json
     fname = (thumbnail_1.label == "File Datastream" ? '' : thumbnail_1.label)
 
@@ -53,60 +46,19 @@ class Collection < ActiveRecord::Base
     }
   end
 
-  def project
-    # TODO: (charles) This makes it look like a collection belongs_to a single community,
-    # but elsewhere it seems like collections can be shared. Which way should we go?
-    if !self.community_id.blank?
-      if Community.exists?(self.community_id)
-        return Community.find(community_id)
-      else
-        return nil
-      end
-    else
-      return nil
-    end
+  def community
+    # from Solr drupal-core worksheet notes: "sm_field_tapas_project: string; For collections and core files, this is the machine-readable name of their containing project. In practice there is only ever one string in the array;"
+    # also: "Drupal SQL table "og_membership", field "gid": The Drupal node ID of the project that the collection or core file belongs to."
+   self.community_id.blank? ? nil : Community.find(self.community_id)
+  end
+
+  def depositor
+    self.depositor_id.blank? ? nil : User.find(self.depositor_id)
   end
 
   def remove_thumbnail
     self.thumbnails = []
     self.save!
-  end
-
-  def update_permissions
-    if self.project
-      logger.info("updating permissions")
-      proj_prop = self.project.properties
-      if !proj_prop.project_members.blank? && (self.mass_permissions != "public" || self.project.mass_permissions != "public")
-        proj_prop.project_members.each do |p|
-          self.rightsMetadata.permissions({person: p}, 'read')
-        end
-      end
-      if self.mass_permissions == "public" && self.project.mass_permissions == "public"
-        self.project.read_users.each do |p|
-          # if its public don't put the project_members as read users
-          self.rightsMetadata.permissions({person: p}, 'none')
-        end
-      end
-      if !proj_prop.project_admins.blank?
-        proj_prop.project_admins.each do |p|
-          self.rightsMetadata.permissions({person: p}, 'edit')
-        end
-      end
-      if !proj_prop.project_editors.blank?
-        proj_prop.project_editors.each do |p|
-          self.rightsMetadata.permissions({person: p}, 'edit')
-        end
-      end
-      # if diff between project_admins + project_editors and edit_users then remove the diff
-      edits = (proj_prop.project_admins + proj_prop.project_editors).uniq
-      diff = self.project.clean_edit_users - edits
-      diff.each do |d|
-        self.rightsMetadata.permissions({person: d}, 'none')
-      end
-      logger.info(self.rightsMetadata.content)
-    else
-      logger.info("permissions will be updated soon")
-    end
   end
 
   private
@@ -139,14 +91,42 @@ class Collection < ActiveRecord::Base
       end
     end
   end
-
-
-
-  def match_dc_to_mods
-    # self.DC.title = self.mods.title.first
-    # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
-    self.mods.title = self.DC.title.first
-    self.mods.abstract = self.DC.description.first
-    #  self.mods.thumbnail = self.DC.thumbnail.first
-  end
 end
+
+# def update_permissions
+#   # TO DO: verify what this actually does and where these updated permissions are stored;
+#   if self.community
+#     logger.info("updating permissions")
+#     com_prop = self.community.properties
+#     if !com_prop.project_members.blank? && (self.mass_permissions != "public" || self.project.mass_permissions != "public")
+#       com_prop.project_members.each do |p|
+#         self.rightsMetadata.permissions({person: p}, 'read')
+#       end
+#     end
+#     if self.mass_permissions == "public" && self.project.mass_permissions == "public"
+#       self.project.read_users.each do |p|
+#         # if its public don't put the project_members as read users
+#         self.rightsMetadata.permissions({person: p}, 'none')
+#       end
+#     end
+#     if !com_prop.project_admins.blank?
+#       com_prop.project_admins.each do |p|
+#         self.rightsMetadata.permissions({person: p}, 'edit')
+#       end
+#     end
+#     if !com_prop.project_editors.blank?
+#       com_prop.project_editors.each do |p|
+#         self.rightsMetadata.permissions({person: p}, 'edit')
+#       end
+#     end
+#     # if diff between project_admins + project_editors and edit_users then remove the diff
+#     edits = (com_prop.project_admins + com_prop.project_editors).uniq
+#     diff = self.project.clean_edit_users - edits
+#     diff.each do |d|
+#       self.rightsMetadata.permissions({person: d}, 'none')
+#     end
+#     logger.info(self.rightsMetadata.content)
+#   else
+#     logger.info("permissions will be updated soon")
+#   end
+# end

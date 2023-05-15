@@ -14,6 +14,8 @@ gem 'passenger', '6.0.4'
 # Use mysql2 for the staging environment
 gem 'mysql2', '0.5.3'
 
+gem 'sqlite3'
+
 # gem 'sass-rails', '~> 4.0.2'
 gem 'bootstrap-sass', '3.3.4.1'
 

@@ -7,11 +7,12 @@ describe Collection do
     let(:coll) { FactoryBot.create(:collection) }
 
     after(:each) {
-      ActiveFedora::Base.all.each do |c|
+      ActiveRecord::Base.all.each do |c|
         c.delete
       end
     }
 
+    # note: cch - drupal access is distinct from access set by the user;
     context "on a collection that has been made public" do
       it 'is set to public' do
         one, two = FactoryBot.create_list(:core_file, 2)
@@ -56,6 +57,11 @@ describe Collection do
       end
     end
   end
+
+  # describe "core_file user access"
+  # describe "core_file community access"
+  # describe "thumbnails and thumbnail removal"
+  # describe "various user types and their access"
 
   describe "phantom collection" do
     let(:phantom) { Collection.phantom_collection }
@@ -103,7 +109,7 @@ describe Collection do
   end
 
   describe "#as_json" do
-    after(:each) { ActiveFedora::Base.delete_all }
+    after(:each) { ActiveRecord::Base.delete_all }
 
     it 'returns a valueless hash with no data' do
       result = Collection.new.as_json
