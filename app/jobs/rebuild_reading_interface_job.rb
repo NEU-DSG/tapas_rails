@@ -37,7 +37,7 @@ class RebuildReadingInterfaceJob
       end
       this_log = Logger.new("#{Rails.root}/log/rebuild_job.log")
       this_log.error e
-      raise ActiveFedora::ObjectNotFoundError
+      raise ActiveRecord::RecordNotFound
     ensure
       tmpfile.close if tmpfile
       tmpfile.unlink if tmpfile

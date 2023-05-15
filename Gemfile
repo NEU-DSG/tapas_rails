@@ -1,10 +1,12 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.2'
+gem 'rails', '5.2.6'
 
 # Use rubyzip to handle Zipped content files from Drupal
 gem 'rubyzip'
+
+gem 'sprockets-rails', :require => 'sprockets/railtie'
 
 # Use passenger as the application server
 gem 'passenger', '6.0.4'
@@ -12,17 +14,11 @@ gem 'passenger', '6.0.4'
 # Use mysql2 for the staging environment
 gem 'mysql2', '0.5.3'
 
-# gem 'minitest', '4.7.5'
-
-# Use SCSS for stylesheets
 # gem 'sass-rails', '~> 4.0.2'
 gem 'bootstrap-sass', '3.3.4.1'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 5.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyracer', platforms: :ruby
@@ -30,13 +26,15 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+gem 'dotenv-rails', groups: [:development, :test]
+# loads environment variables from .env into ENV in development
+# https://github.com/bkeepers/dotenv/
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
 # for handling slugs in URLS instead of IDs
 gem 'friendly_id', '~> 5.2.4' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
-# hand to downgrade from 5.1.0 to 5.0.0 for forem to work
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '2.10'
@@ -50,24 +48,10 @@ gem 'resque', :require => 'resque/server'
 # Use Nest because some inherited config uses Nest
 gem 'nest'
 
-gem 'aws-sdk-s3', require: false
-
 gem 'discard', '~> 1.2'
-
-# Use thor for command line tasks
-# gem 'thor', '1.0.1'
-
-# Install thor-rails to write thor tasks that are rails env aware
-# gem 'thor-rails'
 
 # Use Namae to try to parse arbitrary names
 gem 'namae'
-
-# Bootstrap WYSIWYG Editor
-# gem 'bootsy' NO LONGER MAINTAINED
-
-# Forem gem for Forums
-# gem 'forem', git: "https://github.com/radar/forem.git", :branch => "rails4"
 
 # Configure email alerts on exception
 gem 'exception_notification'
@@ -90,8 +74,6 @@ group :doc do
 end
 
 gem "blacklight"
-gem 'hydra-head', '~> 10.0'
-gem 'hydra-derivatives'
 gem 'blacklight-gallery'
 
 # Use ActiveModel has_secure_password
@@ -115,8 +97,6 @@ group :development, :test do
   gem "pry"
   gem "rspec-rails", "~> 3"
   gem "rspec-its"
-  gem "sunspot_solr"
-  gem "jettywrapper"
   gem "factory_bot_rails"
 end
 
@@ -134,10 +114,9 @@ gem "git"
 
 gem "json", "~> 2.3"
 gem 'simple_form'
-gem 'active-fedora', "~> 11.0"
-gem 'active_fedora-datastreams'
 gem 'openseadragon'
 
 gem "haml-rails", "~> 2.0"
-gem 'sprockets', '~> 3.7.2'
 gem 'carrierwave', '~> 1.3.1'
+# Use CoffeeScript for .js.coffee assets and views
+gem 'coffee-rails', '~> 5.0.0'

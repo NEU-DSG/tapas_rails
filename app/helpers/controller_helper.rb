@@ -3,9 +3,9 @@ module ControllerHelper
   # returned by a typical resource request.
   def can_read?
     begin
-      record = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{params[:id]}\"").first)
+      record = SolrDocument.new(SolrService.query("id:\"#{params[:id]}\"").first)
     rescue NoMethodError
-      render_404(ActiveFedora::ObjectNotFoundError.new, request.fullpath) and return
+      render_404(Exception.new, request.fullpath) and return
     end
 
     if current_user.nil?
@@ -19,9 +19,9 @@ module ControllerHelper
 
   def can_edit?
     begin
-      record = SolrDocument.new(ActiveFedora::SolrService.query("id:\"#{params[:id]}\"").first)
+      record = SolrDocument.new(SolrService.query("id:\"#{params[:id]}\"").first)
     rescue NoMethodError
-      render_404(ActiveFedora::ObjectNotFoundError.new, request.fullpath) and return
+      render_404(Exception.new, request.fullpath) and return
     end
 
     if current_user.nil?

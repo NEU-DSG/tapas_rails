@@ -1,11 +1,6 @@
 class ApplicationController < ActionController::Base
   helper Openseadragon::OpenseadragonHelper
 
-  def forem_user
-    current_user
-  end
-  helper_method :forem_user
-
   # Adds a few additional behaviors into the application controller
 
   include Blacklight::Controller
@@ -25,7 +20,7 @@ class ApplicationController < ActionController::Base
     FileUtils.mkdir_p(tmpdir)
     tmpfile = Rails.root.join(tmpdir, fname)
     FileUtils.mv(fpath, tmpfile)
-    return tmpfile.to_s
+    tmpfile.to_s
   end
 
   def create_temp_file_from_existing(fedora_file, original_file)
@@ -36,7 +31,7 @@ class ApplicationController < ActionController::Base
     FileUtils.mkdir_p(tmpdir)
     tmpfile = Rails.root.join(tmpdir, fname)
     FileUtils.cp(fpath, tmpfile)
-    return tmpfile.to_s
+    tmpfile.to_s
   end
 
   def pretty_json(status)
