@@ -84,3 +84,4 @@ solr/default/data
 solr/pids
 all-db_04102023.sql
 db/prod_rails_actual.sql
+db/tapas_dev_01022021/copy.sql
