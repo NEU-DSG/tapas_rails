@@ -82,3 +82,4 @@ solr/test/data
 solr/development/data
 solr/default/data
 solr/pids
+all-db_04102023.sql
