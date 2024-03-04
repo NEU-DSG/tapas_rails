@@ -1,5 +1,5 @@
 module ControllerHelper
-  # Checks if the current user can read the fedora record
+  # Checks if the current user can read the record
   # returned by a typical resource request.
   def can_read?
     begin

@@ -1,10 +1,10 @@
 load_defaults: 7.19.2
 development:
   adapter: solr
-  url: <%= ENV['DEV_SOLR_URL'] || "http://127.0.0.1:8983/solr/tapas-blacklight-core" %>
+  url: <%= ENV['DEV_SOLR_URL'] || "http://127.0.0.1:8983/solr/tapas-core" %>
 test: &test
   adapter: solr
-  url: <%= ENV['TEST_SOLR_URL'] || "http://127.0.0.1:8983/solr/tapas-blacklight-core" %>
+  url: <%= ENV['TEST_SOLR_URL'] || "http://127.0.0.1:8983/solr/tapas-core" %>
 production:
   adapter: solr
-  url: <%= ENV['PROD_SOLR_URL'] || "http://127.0.0.1:8983/solr/tapas-blacklight-core" %>
+  url: <%= ENV['PROD_SOLR_URL'] || "http://127.0.0.1:8983/solr/tapas-core" %>

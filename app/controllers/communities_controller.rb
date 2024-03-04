@@ -1,6 +1,9 @@
 class CommunitiesController < ApplicationController
   include ApiAccessible
 
+  #TODO: figure out why this controller doesn't inherit from CatalogController the way
+  # CollectionsController and CoreFilesController do
+
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show
   # before_action :enforce_show_permissions, :only=>:index
