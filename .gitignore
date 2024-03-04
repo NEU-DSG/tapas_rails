@@ -4,7 +4,6 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
-.idea
 bundlelist-03282023.txt
 gemlist-03282023.txt
 mysql-init
@@ -17,6 +16,7 @@ notes.txt
 # Ignore bundler config.
 /.bundle
 
+cch_admin_test_record.xml
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
@@ -83,3 +83,5 @@ solr/development/data
 solr/default/data
 solr/pids
 all-db_04102023.sql
+huh.html
+test-file-json.json

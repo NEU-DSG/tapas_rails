@@ -84,10 +84,18 @@ gem 'blacklight-gallery'
 
 # Use Capistrano for deployment
 gem 'capistrano', '~> 3.1', group: :development
+
 gem 'capistrano-rails', '~> 1.1'
+# https://github.com/capistrano/rails
+
 gem 'capistrano-rvm'
+
 gem 'capistrano-resque', '~> 0.2.2', :require => false
+# https://www.ruby-toolbox.com/projects/capistrano-resque
+# repo is archived as of 11/2021; has lots of open issues
+
 gem 'capistrano-passenger'
+
 gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
 
 # Use debugger

@@ -86,6 +86,7 @@ module TapasQueries
   private
 
   def expected_class?(class_constant)
+    #TODO: refactor this to read the class's to_solr hash;
     matches_class = false
 
     # if self.is_a? ActiveFedora::Base

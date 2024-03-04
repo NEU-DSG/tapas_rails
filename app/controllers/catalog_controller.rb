@@ -6,11 +6,11 @@ class CatalogController < ApplicationController
   # include Rails.application.routes.url_helpers
   # These before_actions apply the hydra access controls
   # before_action :enforce_show_permissions, :only=>:show
+
   # This applies appropriate access controls to all solr queries
   # CatalogController.search_params_logic += [:add_access_controls_to_solr_params]
-  # This filters out objects that you want to exclude from search results, like FileAssets
 
-  ## TODO: Reinstate when application renders route
+  # This filters out objects that you want to exclude from search results, like FileAssets
   # CatalogController.search_params_logic += [:exclude_unwanted_models]
 
   configure_blacklight do |config|
@@ -60,6 +60,7 @@ class CatalogController < ApplicationController
 
     # solr field configuration for search results/index views
     config.index.title_field = 'title_info_title_ssi'
+    # TODO: Rename this field referenced throughout to replace active_fedora_model with active_record
     config.index.display_type_field = 'active_fedora_model_ssi'
 
     # solr field configuration for document/show views
@@ -267,6 +268,8 @@ class CatalogController < ApplicationController
     # catalog_index_path(options.except(:controller, :action))
   end
 
+  # TODO: figure out how to implement this behavior, as there are objects that should not appear in search results; also determine what those
+  # are specifically and how to exclude them
   def exclude_unwanted_models(solr_parameters, user_parameters)
     solr_parameters[:fq] ||= []
     # solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:CoreFile\""
