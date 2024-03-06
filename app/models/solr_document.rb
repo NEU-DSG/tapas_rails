@@ -2,7 +2,7 @@
 class SolrDocument
   # include Rails.application.routes.url_helpers
   include Blacklight::Solr::Document
-  include Blacklight::Gallery::OpenseadragonSolrDocument
+  # include Blacklight::Gallery::OpenseadragonSolrDocument
 
   # include Blacklight::Document
   # include CerberusCore::SolrDocumentBehavior

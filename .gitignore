@@ -85,3 +85,6 @@ solr/pids
 all-db_04102023.sql
 huh.html
 test-file-json.json
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
