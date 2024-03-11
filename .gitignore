@@ -8,8 +8,6 @@ bundlelist-03282023.txt
 gemlist-03282023.txt
 mysql-init
 saxon-js-compilation.md
-rails-about.txt
-notes.txt
 .env
 # Ruby Mine stuff
 .idea/
@@ -83,8 +81,7 @@ solr/development/data
 solr/default/data
 solr/pids
 all-db_04102023.sql
-huh.html
-test-file-json.json
+
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key

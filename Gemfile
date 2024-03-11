@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+gem 'dotenv', require: 'dotenv/load'
+# loads environment variables from .env into ENV in development
+# https://github.com/bkeepers/dotenv/
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2.6'
 
@@ -26,9 +30,6 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'dotenv-rails', groups: [:development, :test]
-# loads environment variables from .env into ENV in development
-# https://github.com/bkeepers/dotenv/
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'

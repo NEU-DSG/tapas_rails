@@ -1,8 +1,11 @@
 default: &default
   adapter: mysql2
   encoding: utf8mb4
+  host: localhost
+  port: 3306
   pool: 5
   timeout: 5000
+  database: tapas
   username: <%= ENV['MYSQL_USER'] %>
   password: <%= ENV['MYSQL_PASSWORD'] %>
   socket: /tmp/mysql.sock
@@ -17,4 +20,4 @@ test:
 
 production:
   <<: *default
-  database: tapas_production
+  database: tapas
