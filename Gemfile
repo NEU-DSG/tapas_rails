@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+gem 'dotenv', require: 'dotenv/load'
+# loads environment variables from .env into ENV in development
+# https://github.com/bkeepers/dotenv/
+
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '5.2.6'
 
@@ -8,8 +12,8 @@ gem 'rubyzip'
 
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 
-# Use passenger as the application server
-gem 'passenger', '6.0.4'
+# # Use passenger as the application server
+# gem 'passenger', '6.0.4'
 
 # Use mysql2 for the staging environment
 gem 'mysql2', '0.5.3'
@@ -26,9 +30,6 @@ gem 'therubyracer', platforms: :ruby
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'dotenv-rails', groups: [:development, :test]
-# loads environment variables from .env into ENV in development
-# https://github.com/bkeepers/dotenv/
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -65,6 +66,8 @@ gem 'rest-client'
 # Use rails_config gem for less crappy custom config
 gem 'rails_config'
 
+gem 'puma', '~> 3.12', '>= 3.12.6'
+
 # Use mods_display to generate html from mods
 gem 'mods_display', '~> 0.3'
 
@@ -82,24 +85,26 @@ gem 'blacklight-gallery'
 # Use unicorn as the app server
 # gem 'unicorn'
 
-# Use Capistrano for deployment
-gem 'capistrano', '~> 3.1', group: :development
+# # Use Capistrano for deployment
+# gem 'capistrano', '~> 3.1', group: :development
 
-gem 'capistrano-rails', '~> 1.1'
-# https://github.com/capistrano/rails
+# gem 'capistrano-rails', '~> 1.1'
+# # https://github.com/capistrano/rails
 
-gem 'capistrano-rvm'
+# gem 'capistrano-rvm'
 
-gem 'capistrano-resque', '~> 0.2.2', :require => false
-# https://www.ruby-toolbox.com/projects/capistrano-resque
-# repo is archived as of 11/2021; has lots of open issues
+# gem 'capistrano-resque', '~> 0.2.2', :require => false
+# # https://www.ruby-toolbox.com/projects/capistrano-resque
+# # repo is archived as of 11/2021; has lots of open issues
 
-gem 'capistrano-passenger'
+# gem 'capistrano-passenger'
 
-gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
+# gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]
+
+gem "mini_magick"
 
 group :development, :test do
   gem "pry"

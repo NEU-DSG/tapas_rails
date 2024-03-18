@@ -61,7 +61,7 @@ class CatalogController < ApplicationController
     # solr field configuration for search results/index views
     config.index.title_field = 'title_info_title_ssi'
     # TODO: Rename this field referenced throughout to replace active_fedora_model with active_record
-    config.index.display_type_field = 'active_fedora_model_ssi'
+    # config.index.display_type_field = 'active_fedora_model_ssi'
 
     # solr field configuration for document/show views
     #config.show.title_field = 'title_display'

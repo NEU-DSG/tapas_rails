@@ -1,18 +1,18 @@
 %div.navbar-right
-  -if has_user_authentication_provider?
-    %ul.nav.navbar-nav
-      - if current_user
+  -# -if has_user_authentication_provider?
+  %ul.nav.navbar-nav
+
+    - if current_user.nil?
+      %li
+        = link_to t('nav.sign_up'), new_user_registration_path
+      %li
+        = link_to t("nav.log_in"), new_user_session_path
+    - else
+      %li
+        = link_to "My Tapas", "/my_tapas"
+        = link_to current_user.name, defined?(edit_user_registration_path) ? edit_user_registration_path : main_app.edit_user_registration_path
+      %li
+        = link_to t('blacklight.header_links.logout'), defined?(destroy_user_session_path) ? destroy_user_session_path : main_app.destroy_user_session_path
+      - if current_user.admin?
         %li
-          = link_to t('blacklight.header_links.logout'), defined?(destroy_user_session_path) ? destroy_user_session_path : main_app.destroy_user_session_path
-        - if current_user.admin?
-          %li
-            = link_to "Admin", defined?(admin_path) ? admin_path : main_app.admin_path
-      - unless current_user.to_s.blank?
-        %li
-          = link_to "My Tapas", "/my_tapas"
-          -# = link_to current_user.name, defined?(edit_user_registration_path) ? edit_user_registration_path : main_app.edit_user_registration_path
-      - else
-        %li
-          = link_to t('nav.sign_up'), new_user_registration_path
-        %li
-          = link_to t("nav.log_in"), new_user_session_path
+          = link_to "Admin", defined?(admin_path) ? admin_path : main_app.admin_path
