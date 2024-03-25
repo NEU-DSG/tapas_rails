@@ -1,18 +1,11 @@
 %div.navbar-right
-  -# -if has_user_authentication_provider?
-  %ul.nav.navbar-nav
-
-    - if current_user.nil?
-      %li
-        = link_to t('nav.sign_up'), new_user_registration_path
-      %li
-        = link_to t("nav.log_in"), new_user_session_path
-    - else
-      %li
-        = link_to "My Tapas", "/my_tapas"
-        = link_to current_user.name, defined?(edit_user_registration_path) ? edit_user_registration_path : main_app.edit_user_registration_path
-      %li
-        = link_to t('blacklight.header_links.logout'), defined?(destroy_user_session_path) ? destroy_user_session_path : main_app.destroy_user_session_path
-      - if current_user.admin?
-        %li
-          = link_to "Admin", defined?(admin_path) ? admin_path : main_app.admin_path
+  .nav.navbar-nav
+  - if current_user.nil?
+    %button.btn.btn-primary.btn-sm.app-header-nav-buttons{href: '/users/sign_up', type: 'nav'}= t('nav.sign_up')
+    %button.btn.btn-primary.btn-sm.app-header-nav-buttons{href: '/users/sign_in', type: 'nav'}= t("nav.log_in")
+  - elsif current_user
+    %button.btn.btn-primary.btn-sm.app-header-nav-buttons{href: '/my_tapas', type: 'nav'} My Tapas
+    %button.btn.btn-primary.btn-sm.app-header-nav-buttons{href: '/users/edit', type: 'nav'}= current_user.name
+    %button.btn.btn-primary.btn-sm.app-header-nav-buttons{href: '/users/sign_out', type: 'nav'}= t('blacklight.header_links.logout')
+    - if current_user.admin?
+      %button.btn.btn-primary.btn-sm.app-header-nav-buttons{href: '/admin', type: 'nav'} Admin

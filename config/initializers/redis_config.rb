@@ -1,23 +1,17 @@
-if defined?(PhusionPassenger)
-  PhusionPassenger.on_event(:starting_worker_process) do |forked|
-    # We're in smart spawning mode.
-    if forked
-      # Re-establish redis connection
-      require 'redis'
-      config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
+config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
+$redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
 
-      # The important two lines
-      $redis.client.disconnect if $redis
-      $redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
-      $redis.client.reconnect
-      # Resque.redis.client.reconnect if Resque.redis
-    end
+if $redis
+  begin
+    Rails.logger.info "Redis connection status: #{$redis.ping}"
+  rescue Redis::CannotConnectError
+    Rails.logger.error "Cannot connect to Redis"
   end
 else
-  config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
-  $redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
+  Rails.logger.error "Redis is not configured"
 end
 
+# $redis.client.reconnect
 
 # Code borrowed from Obie's Redis patterns talk at RailsConf'12
 Nest.class_eval do

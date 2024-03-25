@@ -11,6 +11,7 @@ saxon-js-compilation.md
 .env
 # Ruby Mine stuff
 .idea/
+.vscode/
 # Ignore bundler config.
 /.bundle
 
