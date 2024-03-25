@@ -1,29 +1,29 @@
 // Light button for grey
 @import 'bootstrap/mixins';
 
-//.btn-light {
-//  @include button-variant($btn-light-color, $btn-light-bg, $btn-light-border);
-//}
-//.btn-tapas-blue {
-//  @include button-variant($btn-default-color, $tapas-blue, rgba(255,255,255, 0));
-//}
-//.btn-tapas-red {
-//  @include button-variant($btn-default-color, $tapas-red, rgba(255,255,255, 0));
-//}
-//.btn-tapas-green {
-//  @include button-variant($btn-default-color, $tapas-green, rgba(255,255,255, 0));
-//}
-//.btn-tapas-orange {
-//  @include button-variant($btn-default-color, $tapas-orange, rgba(255,255,255, 0));
-//}
+.btn-light {
+  @include button-variant($btn-light-color, $btn-light-bg, $btn-light-border);
+}
+.btn-tapas-blue {
+  @include button-variant($btn-default-color, $tapas-blue, rgba(255,255,255, 0));
+}
+.btn-tapas-red {
+  @include button-variant($btn-default-color, $tapas-red, rgba(255,255,255, 0));
+}
+.btn-tapas-green {
+  @include button-variant($btn-default-color, $tapas-green, rgba(255,255,255, 0));
+}
+.btn-tapas-orange {
+  @include button-variant($btn-default-color, $tapas-orange, rgba(255,255,255, 0));
+}
 // Rounded corners
 .img-rounded {
   border-radius: 50%;
 }
-//.btn-xlg {
-//  // line-height: ensure even-numbered height of button next to large input
-//  @include button-size($padding-large-vertical*2, $padding-large-horizontal*2, $font-size-h3, $line-height-large, $border-radius-large);
-//}
+.btn-xlg {
+  // line-height: ensure even-numbered height of button next to large input
+  @include button-size($padding-large-vertical*2, $padding-large-horizontal*2, $font-size-h3, $line-height-large, $border-radius-large);
+}
 hr.inverse {
   margin:0;
 }

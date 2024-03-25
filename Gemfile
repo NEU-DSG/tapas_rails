@@ -12,8 +12,11 @@ gem 'rubyzip'
 
 gem 'sprockets-rails', :require => 'sprockets/railtie'
 
+# # Use passenger as the application server
+# gem 'passenger', '6.0.4'
+
 # Use mysql2 for the staging environment
-gem 'mysql2'
+gem 'mysql2', '0.5.3'
 
 # gem 'sass-rails', '~> 4.0.2'
 gem 'bootstrap-sass', '3.3.4.1'
@@ -78,6 +81,25 @@ gem 'blacklight-gallery'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+
+# Use unicorn as the app server
+# gem 'unicorn'
+
+# # Use Capistrano for deployment
+# gem 'capistrano', '~> 3.1', group: :development
+
+# gem 'capistrano-rails', '~> 1.1'
+# # https://github.com/capistrano/rails
+
+# gem 'capistrano-rvm'
+
+# gem 'capistrano-resque', '~> 0.2.2', :require => false
+# # https://www.ruby-toolbox.com/projects/capistrano-resque
+# # repo is archived as of 11/2021; has lots of open issues
+
+# gem 'capistrano-passenger'
+
+# gem 'capistrano-git-submodule-strategy', '~> 0.1', :git => 'https://github.com/ekho/capistrano-git-submodule-strategy.git'
 
 # Use debugger
 # gem 'debugger', group: [:development, :test]

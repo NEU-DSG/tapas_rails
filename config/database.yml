@@ -12,7 +12,7 @@ default: &default
 
 development:
   <<: *default
-  database: tapas
+  database: tapas_development
 
 test:
   <<: *default
