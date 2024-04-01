@@ -162,13 +162,13 @@ class CoreFile < ActiveRecord::Base
     }
   end
 
-  def calculate_drupal_access
-    if collections.any? { |collection| collection.drupal_access == 'public' }
-      self.drupal_access = 'public'
-    else
-      self.drupal_access = 'private'
-    end
-  end
+  # def calculate_drupal_access
+  #   if collections.any? { |collection| collection.drupal_access == 'public' }
+  #     self.drupal_access = 'public'
+  #   else
+  #     self.drupal_access = 'private'
+  #   end
+  # end
 
   def match_dc_to_mods
     self.DC.title = self.mods.title.first

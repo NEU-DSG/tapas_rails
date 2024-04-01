@@ -1,4 +1,6 @@
-default: &default
+# &default alias removed to resolve psych gem error
+
+development:
   adapter: mysql2
   encoding: utf8mb4
   host: localhost
@@ -10,14 +12,26 @@ default: &default
   password: <%= ENV['MYSQL_PASSWORD'] %>
   socket: /tmp/mysql.sock
 
-development:
-  <<: *default
-  database: tapas_development
-
 test:
-  <<: *default
-  database: tapas_test
+  adapter: mysql2
+  encoding: utf8mb4
+  host: localhost
+  port: 3306
+  pool: 5
+  timeout: 5000
+  database: tapas
+  username: <%= ENV['MYSQL_USER'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
+  socket: /tmp/mysql.sock
 
 production:
-  <<: *default
+  adapter: mysql2
+  encoding: utf8mb4
+  host: localhost
+  port: 3306
+  pool: 5
+  timeout: 5000
   database: tapas
+  username: <%= ENV['MYSQL_USER'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
+  socket: /tmp/mysql.sock

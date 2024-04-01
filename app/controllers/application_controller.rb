@@ -1,7 +1,7 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   helper Openseadragon::OpenseadragonHelper
-
-  # Adds a few additional behaviors into the application controller
 
   include Blacklight::Controller
   layout 'blacklight'
@@ -10,7 +10,11 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  before_action :configure_permitted_parameters, if: :devise_controller?
   before_action :create_response_object
+
+  helper_method :current_user_can?
+
 
   def create_temp_file(file)
     fpath = file.path
@@ -42,7 +46,22 @@ class ApplicationController < ActionController::Base
     @response ||= {}
   end
 
-  helper_method :current_user_can?
+  protected
+
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: [
+      :username,
+      :email,
+      :password,
+      :name,
+      :institution_id,
+      :avatar,
+      :bio,
+      :account_type
+    ])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:username, :email, :password, :password_confirmation, :current_password, :name, :institution_id, :avatar, :remove_avatar, :bio, :account_type])
+  end
 
   def current_user_can?(perm_level, record)
     if record.respond_to? :project
