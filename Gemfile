@@ -4,7 +4,6 @@ gem 'dotenv', require: 'dotenv/load'
 # loads environment variables from .env into ENV in development
 # https://github.com/bkeepers/dotenv/
 
-
 gem 'psych', '<= 4'
 
 gem 'rails', '5.2.6'
@@ -91,6 +90,7 @@ group :development, :test do
   gem "rspec-rails", "~> 3"
   gem "rspec-its"
   gem "factory_bot_rails"
+  gem 'faker'
 end
 
 gem "devise"

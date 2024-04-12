@@ -1,5 +1,6 @@
 class RebuildReadingInterfaceJob
-# This class handles rebuilding html when view package has been updated. Refactor will include removing reference to the drupal id, in favor of the core file id.
+# This class handles rebuilding the view package html when it has been updated. Refactor will include removing
+# reference to the drupal id, in favor of the core file id.
 
   @queue = 'tapas_rails_maintenance'
   def self.perform(did)

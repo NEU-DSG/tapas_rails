@@ -162,6 +162,7 @@ class CoreFilesController < CatalogController
       end
 
       # Step 4: Kick off an upsert job
+      # This job will handle the actual upsert of the CoreFile object to xml db, baseX
       job = TapasObjectUpsertJob.new params
       TapasRails::Application::Queue.push job
 

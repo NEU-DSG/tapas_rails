@@ -5,10 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # before_action :configure_account_update_params, only: [:update]
 
   def new
-    @user = User.new(user_params)
-    @user.save
-
-    redirect_to root_path
+    super
   end
 
   def edit
