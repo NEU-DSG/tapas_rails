@@ -14,18 +14,11 @@ class InstitutionsController < ApplicationController
   end
 
   # cch: commenting out as ActiveFedora has been removed
-  # def show
-  #   @institution = Institution.find(params[:id])
-  #   @page_title = @institution.name
-  #   count = ActiveFedora::SolrService.count("institutions_ssim:\"#{@institution.id}\"")
-  #   @communities = ActiveFedora::SolrService.query("institutions_ssim:\"#{@institution.id}\"", rows: count)
-  # end
-
   def show
     @institution = Institution.find(params[:id])
     @page_title = @institution.name
-    count = SolrService.count("institutions_ssim:\"#{@institution.id}\"")
-    @communities = SolrService.query("institutions_ssim:\"#{@institution.id}\"", rows: count)
+    # count = SolrService.count("institutions_ssim:\"#{@institution.id}\"")
+    # @communities = SolrService.query("institutions_ssim:\"#{@institution.id}\"", rows: count)
   end
 
   def edit

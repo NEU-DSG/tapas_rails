@@ -26,7 +26,7 @@
     %dt= "Project Members"
     - @community.community_members.each do |pm|
       %dd
-        = link_to(pm.user.name, user_path(pm.user_id))
+        = link_to(pm.user.name, "/users/#{pm.user_id}")
         - if pm.member_type != "member"
           = "(#{pm.member_type})"
 

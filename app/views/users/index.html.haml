@@ -31,10 +31,8 @@
         %td
           - if !user.admin_at.nil?
             = "Admin"
-          - elsif !user.paid_at.nil?
-            = "Paid user"
           - else
-            = "Unpaid user"
+            = "Non-admin user"
         %td
           - unless user.discarded_at.nil?
             = user.discarded_at

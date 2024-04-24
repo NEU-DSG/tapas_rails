@@ -56,16 +56,8 @@ class User < ActiveRecord::Base
   end
 
   def admin?
-    return self.role.eql?('admin')
+    admin_at.nil? ? false : true
   end
-
-  # def paid_user?
-  #   return self.role.eql?('paid_user')
-  # end
-
-  # def unpaid_user?
-  #   return self.role.eql?('unpaid_user')
-  # end
 
   def self.find_by_user_key(key)
     self.send("find_by_nuid".to_sym, key)
@@ -118,16 +110,6 @@ class User < ActiveRecord::Base
   #   # end
   # end
 
-
-  def after_database_authentication
-    if !self.admin?
-      if self.check_paid_status
-        self.role = 'paid_user'
-      else
-        self.role = 'unpaid_user'
-      end
-    end
-  end
 
   private
 

@@ -1,5 +1,5 @@
 class UpsertCollection
-  include Concerns::Upserter
+  include Upserter
 
   def execute
     begin

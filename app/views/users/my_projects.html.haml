@@ -1,6 +1,6 @@
 %h2= "My Projects"
 %hr
-- if current_user && (current_user.paid_user? || current_user.admin?)
+- if current_user
   %div.row
     %div.col-sm-6
       %a{href:new_community_path, class: 'btn btn-success btn-sm'}

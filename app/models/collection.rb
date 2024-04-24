@@ -1,7 +1,8 @@
 class Collection < ActiveRecord::Base
   include Discard::Model
+  include SolrHelpers
 
-  belongs_to :community
+  has_and_belongs_to_many :communities
   belongs_to :depositor, class_name: "User"
   # TODO: (charles) Unclear if we need to implement this.
   # Leaving it out for now.
@@ -10,13 +11,17 @@ class Collection < ActiveRecord::Base
   #                         association_foreign_key: "parent_collection_id"
 
   has_and_belongs_to_many :core_files
+  # has_many_attached :thumbnails
 
-  has_many_attached :thumbnails
+  after_create :add_to_solr_index
+  after_update :update_solr_index
+  around_destroy :delete_from_solr_index
 
   validates :depositor, :description, :title, presence: true
 
   def self.phantom_collection
     pid = Rails.configuration.phantom_collection_pid
+
     if Collection.exists?(pid)
       return Collection.find(pid)
     else
@@ -53,7 +58,40 @@ class Collection < ActiveRecord::Base
     }
   end
 
-  def project
+  def match_dc_to_mods
+    # self.DC.title = self.mods.title.first
+    # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    self.mods.title = self.DC.title.first
+    self.mods.abstract = self.DC.description.first
+    #  self.mods.thumbnail = self.DC.thumbnail.first
+  end
+
+  def add_to_solr_index
+    index_record if locate_record['numFound'] == 0
+  end
+
+  def update_solr_index
+    update_record if locate_record['numFound'] > 0
+  end
+
+  def delete_from_solr_index
+    delete_record if locate_record['numFound'] > 0
+  end
+
+  def to_solr(solr_doc = Hash.new())
+    solr_doc["active_record_model_ssi"] = self.class.to_s
+    solr_doc['depositor_tesim'] = depositor.id
+    solr_doc['edit_access_person_ssim'] = community&.project_admins.map(&:id)
+    solr_doc['title_info_title_ssi'] = title
+    solr_doc['table_id_ssi'] = id
+    solr_doc['id'] = "#{self.class.to_s}_#{id}"
+    solr_doc['access_ssim'] = is_public ? "public" : "private"
+    solr_doc['thumbnail_list_tesim'] = 'public/assets/logo_no_text.png'
+
+    solr_doc
+  end
+
+  def community
     # TODO: (charles) This makes it look like a collection belongs_to a single community,
     # but elsewhere it seems like collections can be shared. Which way should we go?
     if !self.community_id.blank?
@@ -67,10 +105,10 @@ class Collection < ActiveRecord::Base
     end
   end
 
-  def remove_thumbnail
-    self.thumbnails = []
-    self.save!
-  end
+  # def remove_thumbnail
+  #   self.thumbnails = []
+  #   self.save!
+  # end
 
   def update_permissions
     if self.project
@@ -138,15 +176,5 @@ class Collection < ActiveRecord::Base
         end
       end
     end
-  end
-
-
-
-  def match_dc_to_mods
-    # self.DC.title = self.mods.title.first
-    # self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
-    self.mods.title = self.DC.title.first
-    self.mods.abstract = self.DC.description.first
-    #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 end

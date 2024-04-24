@@ -1,14 +1,21 @@
 class CoreFile < ActiveRecord::Base
   include Discard::Model
+  include SolrHelpers
 
+  # Associations
   belongs_to :depositor, class_name: "User"
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :collections
-
-  # ActiveStorage
   has_many_attached :thumbnails
+
   has_one_attached :canonical_object
+
+  # Callbacks
+  after_create :add_to_solr_index
+  after_update :update_solr_index
+  around_destroy :delete_from_solr_index
+
 
   def self.all_ography_types
     ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
@@ -107,6 +114,48 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
+  def match_dc_to_mods
+    self.DC.title = self.mods.title.first
+    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    # self.mods.title = self.DC.title.first
+    # self.mods.abstract = self.DC.description.first
+    #  self.mods.thumbnail = self.DC.thumbnail.first
+  end
+
+  def add_to_solr_index
+    index_record if locate_record['numFound'] == 0
+  end
+
+  def update_solr_index
+    update_record if locate_record['numFound'] > 0
+  end
+
+  def delete_from_solr_index
+    delete_record if locate_record['numFound'] > 0
+  end
+
+  def to_solr
+    {
+      'active_record_model_ssi' => self.class.to_s,
+      'edit_access_person_ssim' => project.project_admins.map(&:id),
+      'title_info_title_ssi' => title,
+      'table_id_ssi' => id,
+      'id' => "#{self.class.to_s}_#{id}",
+      # find out what these refer to specifically; setting to nil for now to ensure they're included in solr as fields:
+      'upload_status_ssi' => nil,
+      'upload_status_time_dtsi' => nil,
+      'is_member_of_ssim' => nil,
+      'personal_creators_tesim' => nil,
+      'creator_tesim' => nil,
+      'is_personography_for_ssim' => nil,
+      'is_placeography_for_ssim' => nil,
+      'is_otherography_for_ssim' => nil,
+      'is_bibliography_for_ssim' => nil,
+      'is_orgography_for_ssim' => nil,
+      'is_odd_file_for_ssim' => nil
+    }
+  end
+
   def is_ography?
     CoreFile.all_ography_read_methods.any? do |ography_type|
       begin
@@ -127,10 +176,10 @@ class CoreFile < ActiveRecord::Base
     return type
   end
 
-  def remove_thumbnail
-    self.thumbnails = []
-    self.save!
-  end
+  # def remove_thumbnail
+  #   self.thumbnails = []
+  #   self.save!
+  # end
 
   private
 
@@ -147,7 +196,6 @@ class CoreFile < ActiveRecord::Base
     { :status => upload_status,
       :since  => upload_status_time }
   end
-
 
   def render_success_json
     tei_name = (canonical_object ? canonical_object.filename : '')
@@ -169,12 +217,4 @@ class CoreFile < ActiveRecord::Base
   #     self.drupal_access = 'private'
   #   end
   # end
-
-  def match_dc_to_mods
-    self.DC.title = self.mods.title.first
-    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
-    # self.mods.title = self.DC.title.first
-    # self.mods.abstract = self.DC.description.first
-    #  self.mods.thumbnail = self.DC.thumbnail.first
-  end
 end

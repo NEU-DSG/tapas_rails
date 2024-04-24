@@ -1,7 +1,7 @@
 require "zip"
 
 class UpsertCoreFile
-  include Concerns::Upserter
+  include Upserter
   attr_accessor :core_file, :update_type, :file_type
 
   def initialize(params)

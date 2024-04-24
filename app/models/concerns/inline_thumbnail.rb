@@ -1,5 +1,5 @@
-# module InlineThumbnail
-#   extend ActiveSupport::Concern
+module InlineThumbnail
+  extend ActiveSupport::Concern
 #
 #   included do
 #     include DownloadPath
@@ -32,4 +32,4 @@
 #     self.thumbnails = [download_path('thumbnail_1')]
 #     # self.save!
 #   end
-# end
+end

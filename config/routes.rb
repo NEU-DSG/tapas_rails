@@ -1,10 +1,11 @@
 TapasRails::Application.routes.draw do
-  # At some point we'll want all this, but I'm going to disable these routes
-  # until we're ready to migrate to 100% Hydra-Head usage for tapas.
+  root :to => "catalog#browse"
 
-  root :to => "view_packages#index"
-
-  # blacklight_for :catalog
+  resources :catalog, controller: 'catalog', only: [:index, :show] do
+    collection do
+      get 'browse'
+    end
+  end
 
   devise_for :users, :controllers => {
     :registrations => "users/registrations",
@@ -24,13 +25,7 @@ TapasRails::Application.routes.draw do
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'
 
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Show resque admin in development environment
+# Show resque admin in development environment
   resque_web_constraint = lambda do |request|
     Rails.env == "development"
   end

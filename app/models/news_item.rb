@@ -9,11 +9,12 @@ class NewsItem < ActiveRecord::Base
   friendly_id :slug, use: :slugged
 
   after_save :index_record
-  before_destroy :remove_from_index
+  # deletes the record from the solr index
+  before_destroy :delete_record
 
   def to_solr
     obj =
-    {'id' => self.id,
+    {'id' => "#{self.class.to_s}_#{id}",
      'title_info_title_ssi' => self.title,
      'all_text_timv' => self.content,
      'type_sim' => 'News Item',
