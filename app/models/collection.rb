@@ -86,7 +86,11 @@ class Collection < ActiveRecord::Base
     solr_doc['table_id_ssi'] = id
     solr_doc['id'] = "#{self.class.to_s}_#{id}"
     solr_doc['access_ssim'] = is_public ? "public" : "private"
-    solr_doc['thumbnail_list_tesim'] = 'public/assets/logo_no_text.png'
+    solr_doc['thumbnail_list_tesim'] = 'public/assets/logo_no_text.png' # this string will be replaced with S3 storage
+    # bucket url
+    # TODO: drop the db, recreate, run migrations, then run the rake task to generate new dummy records and update solr
+    solr_doc['is_member_of_ssim'] = community_id # this will have to be updated to return an array with 1 or more
+    # communities to which the collection belongs; TODO: review the community/collection association and refactor to ensure habtm is properly implemented
 
     solr_doc
   end

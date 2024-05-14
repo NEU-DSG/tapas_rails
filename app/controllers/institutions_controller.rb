@@ -13,7 +13,7 @@ class InstitutionsController < ApplicationController
     end
   end
 
-  # cch: commenting out as ActiveFedora has been removed
+  # cch: commenting out as institutions aren't indexed,...not sure if they should be
   def show
     @institution = Institution.find(params[:id])
     @page_title = @institution.name

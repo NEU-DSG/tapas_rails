@@ -17,9 +17,13 @@ class CoreFile < ActiveRecord::Base
   around_destroy :delete_from_solr_index
 
 
+  # these strings refer to the role of the file in collection(s);
+  # if the user doesn't select an ography type, the file is not a support file but is still a tei file that
+  # will need to be parsed for urls and have a map generated with the urls for the file;
+  # this should be done by initializing SupportFileMap with the core_file object itself as a parameter, then passing
+  # the support_file_map instance to SupportFileMap.build_map
   def self.all_ography_types
-    ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
-     'placeography']
+    %w[personography orgography bibliography otherography odd_file placeography]
   end
 
   def self.all_ography_read_methods
@@ -137,43 +141,31 @@ class CoreFile < ActiveRecord::Base
   def to_solr
     {
       'active_record_model_ssi' => self.class.to_s,
-      'edit_access_person_ssim' => project.project_admins.map(&:id),
-      'title_info_title_ssi' => title,
+      'depositor_tesim' => self.depositor_id,
       'table_id_ssi' => id,
       'id' => "#{self.class.to_s}_#{id}",
-      # find out what these refer to specifically; setting to nil for now to ensure they're included in solr as fields:
-      'upload_status_ssi' => nil,
-      'upload_status_time_dtsi' => nil,
-      'is_member_of_ssim' => nil,
-      'personal_creators_tesim' => nil,
-      'creator_tesim' => nil,
-      'is_personography_for_ssim' => nil,
-      'is_placeography_for_ssim' => nil,
-      'is_otherography_for_ssim' => nil,
-      'is_bibliography_for_ssim' => nil,
-      'is_orgography_for_ssim' => nil,
-      'is_odd_file_for_ssim' => nil
+      'edit_access_person_ssim' => project.project_admins.map(&:id),
+      # these two replace the is_member_of_ssim field
+      'collections_ssim' => self.collections.map(&:id),
+      'communities_ssim' => self.collections.map(&:community_id),
+      'title_info_title_ssi' => title,
+      'creator_tesim' => nil, # name of person who uploaded file
+      'personal_creators_tesim' => nil, # name of person who uploaded file
+      'all_text_timv' => nil, #TODO: review the pre-Archimedes conception of canonical object and determine if it is still useful for revamp; self.canonical_object.content.content if self.canonical_object
+      # 'ography' refer to this support file's "ography role" in the collection as one of the types of ography files; it should have an array of the ids of the collections to which it serves as that type of file:
+      'type_ssim' => self.is_ography? ? self.ography_type : 'TEI Record',
+      'is_ography_for_ssim' => is_ography_for,
+      # odd is an acronym, 'one file does it all', it refers to a file that serves to expand on how to create the xml schema; not currently supported but will be in a future update
+      # 'is_odd_file_for_ssim' => nil
     }
   end
 
   def is_ography?
-    CoreFile.all_ography_read_methods.any? do |ography_type|
-      begin
-        self.send(ography_type).any?
-      rescue
-        return nil
-      end
-    end
+    self.ography_type
   end
 
-  def ography_type
-    type = []
-    CoreFile.all_ography_types.each do |o|
-      if !self.send("#{o}_for").blank?
-        type << o
-      end
-    end
-    return type
+  def is_ography_for
+    is_ography?.nil? ? [] : collection_ids
   end
 
   # def remove_thumbnail
