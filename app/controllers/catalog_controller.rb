@@ -60,8 +60,7 @@ class CatalogController < ApplicationController
 
     # solr field configuration for search results/index views
     config.index.title_field = 'title_info_title_ssi'
-    # TODO: Rename this field referenced throughout to replace active_fedora_model with active_record
-    # config.index.display_type_field = 'active_fedora_model_ssi'
+    config.index.display_type_field = 'active_record_model_ssi'
 
     # solr field configuration for document/show views
     #config.show.title_field = 'title_display'
@@ -125,8 +124,8 @@ class CatalogController < ApplicationController
     # config.add_index_field 'title_vern_display', :label => 'Title'
     # config.add_index_field 'author_display', :label => 'Author'
     # config.add_index_field 'author_vern_display', :label => 'Author'
-    config.add_index_field 'active_fedora_model_ssi', :label => 'Type'
-    config.add_index_field 'drupal_og_reference_ssim', :label => 'External Links'
+    config.add_index_field 'active_record_model_ssi', :label => 'Type'
+    # config.add_index_field 'drupal_og_reference_ssim', :label => 'External Links'
     # config.add_index_field 'language_facet', :label => 'Language'
     # config.add_index_field 'published_display', :label => 'Published'
     # config.add_index_field 'published_vern_display', :label => 'Published'
@@ -136,7 +135,7 @@ class CatalogController < ApplicationController
     #   The ordering of the field names is the order of the display
     config.add_show_field 'title_info_title_ssi', :label => 'Title'
     config.add_show_field 'abstract_tesim', :label => 'Description'
-    config.add_show_field 'drupal_og_reference_ssim', :label => 'External links'
+    # config.add_show_field 'drupal_og_reference_ssim', :label => 'External links'
     config.add_show_field 'project_members_ssim', :label => 'Members'
     config.add_show_field 'authors_ssim', :label => 'Authors'
     config.add_show_field 'contributors_ssim', :label => 'Contributors'
@@ -147,7 +146,7 @@ class CatalogController < ApplicationController
     # config.add_show_field 'subtitle_vern_display', :label => 'Subtitle'
     # config.add_show_field 'author_display', :label => 'Author'
     # config.add_show_field 'author_vern_display', :label => 'Author'
-    config.add_show_field 'active_fedora_model_ssi', :label => 'Type'
+    config.add_show_field 'active_record_model_ssi', :label => 'Type'
 
     # config.add_show_field 'url_fulltext_display', :label => 'URL'
     # config.add_show_field 'url_suppl_display', :label => 'More Information'
@@ -265,19 +264,17 @@ class CatalogController < ApplicationController
   def search_action_url(options = {})
     # Rails 4.2 deprecated url helpers accepting string keys for 'controller' or 'action'
     # TODO: reinstate when application renders route
-    # catalog_index_path(options.except(:controller, :action))
+    catalog_index_path(options.except(:controller, :action))
   end
 
-  # TODO: figure out how to implement this behavior, as there are objects that should not appear in search results; also determine what those
-  # are specifically and how to exclude them
-  def exclude_unwanted_models(solr_parameters, user_parameters)
-    solr_parameters[:fq] ||= []
-    # solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:CoreFile\""
-    solr_parameters[:fq] << "-#{Solrizer.solr_name("is_supplemental_material_for", :symbol)}:[* TO *]"
-  end
+  # TODO: figure out how to implement this behavior, as there are objects that should not appear in search results; also determine what those are specifically and how to exclude them
+  # def exclude_unwanted_models(solr_parameters, user_parameters)
+  #   solr_parameters[:fq] ||= []
+  #   # solr_parameters[:fq] << "#{Solrizer.solr_name("has_model", :symbol)}:\"info:fedora/afmodel:CoreFile\""
+  #   solr_parameters[:fq] << "-#{Solrizer.solr_name("is_supplemental_material_for", :symbol)}:[* TO *]"
+  # end
 
   def browse
     render 'browse'
   end
-
 end

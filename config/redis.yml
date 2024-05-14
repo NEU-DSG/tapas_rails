@@ -1,8 +1,11 @@
-development: &defaults
+# &default alias removed to resolve psych gem error
+
+development:
   host: localhost
   port: 6379
 test:
-  <<: *defaults
+  host: localhost
+  port: 6379
 staging:
   host: 127.0.0.1
   port: 6379

@@ -1,4 +1,4 @@
-module Concerns::Upserter
+module Upserter
   extend ActiveSupport::Concern 
 
   included do 

@@ -11,8 +11,10 @@ saxon-js-compilation.md
 .env
 # Ruby Mine stuff
 .idea/
+.vscode/
 # Ignore bundler config.
 /.bundle
+lib/app_navigator.rb
 
 cch_admin_test_record.xml
 # Ignore the default SQLite database.

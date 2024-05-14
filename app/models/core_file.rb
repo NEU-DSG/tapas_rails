@@ -1,18 +1,29 @@
 class CoreFile < ActiveRecord::Base
   include Discard::Model
+  include SolrHelpers
 
+  # Associations
   belongs_to :depositor, class_name: "User"
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :collections
-
-  # ActiveStorage
   has_many_attached :thumbnails
+
   has_one_attached :canonical_object
 
+  # Callbacks
+  after_create :add_to_solr_index
+  after_update :update_solr_index
+  around_destroy :delete_from_solr_index
+
+
+  # these strings refer to the role of the file in collection(s);
+  # if the user doesn't select an ography type, the file is not a support file but is still a tei file that
+  # will need to be parsed for urls and have a map generated with the urls for the file;
+  # this should be done by initializing SupportFileMap with the core_file object itself as a parameter, then passing
+  # the support_file_map instance to SupportFileMap.build_map
   def self.all_ography_types
-    ['personography', 'orgography', 'bibliography', 'otherography', 'odd_file',
-     'placeography']
+    %w[personography orgography bibliography otherography odd_file placeography]
   end
 
   def self.all_ography_read_methods
@@ -107,30 +118,60 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
+  def match_dc_to_mods
+    self.DC.title = self.mods.title.first
+    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
+    # self.mods.title = self.DC.title.first
+    # self.mods.abstract = self.DC.description.first
+    #  self.mods.thumbnail = self.DC.thumbnail.first
+  end
+
+  def add_to_solr_index
+    index_record if locate_record['numFound'] == 0
+  end
+
+  def update_solr_index
+    update_record if locate_record['numFound'] > 0
+  end
+
+  def delete_from_solr_index
+    delete_record if locate_record['numFound'] > 0
+  end
+
+  def to_solr
+    {
+      'active_record_model_ssi' => self.class.to_s,
+      'depositor_tesim' => self.depositor_id,
+      'table_id_ssi' => id,
+      'id' => "#{self.class.to_s}_#{id}",
+      'edit_access_person_ssim' => project.project_admins.map(&:id),
+      # these two replace the is_member_of_ssim field
+      'collections_ssim' => self.collections.map(&:id),
+      'communities_ssim' => self.collections.map(&:community_id),
+      'title_info_title_ssi' => title,
+      'creator_tesim' => nil, # name of person who uploaded file
+      'personal_creators_tesim' => nil, # name of person who uploaded file
+      'all_text_timv' => nil, #TODO: review the pre-Archimedes conception of canonical object and determine if it is still useful for revamp; self.canonical_object.content.content if self.canonical_object
+      # 'ography' refer to this support file's "ography role" in the collection as one of the types of ography files; it should have an array of the ids of the collections to which it serves as that type of file:
+      'type_ssim' => self.is_ography? ? self.ography_type : 'TEI Record',
+      'is_ography_for_ssim' => is_ography_for,
+      # odd is an acronym, 'one file does it all', it refers to a file that serves to expand on how to create the xml schema; not currently supported but will be in a future update
+      # 'is_odd_file_for_ssim' => nil
+    }
+  end
+
   def is_ography?
-    CoreFile.all_ography_read_methods.any? do |ography_type|
-      begin
-        self.send(ography_type).any?
-      rescue
-        return nil
-      end
-    end
+    self.ography_type
   end
 
-  def ography_type
-    type = []
-    CoreFile.all_ography_types.each do |o|
-      if !self.send("#{o}_for").blank?
-        type << o
-      end
-    end
-    return type
+  def is_ography_for
+    is_ography?.nil? ? [] : collection_ids
   end
 
-  def remove_thumbnail
-    self.thumbnails = []
-    self.save!
-  end
+  # def remove_thumbnail
+  #   self.thumbnails = []
+  #   self.save!
+  # end
 
   private
 
@@ -148,7 +189,6 @@ class CoreFile < ActiveRecord::Base
       :since  => upload_status_time }
   end
 
-
   def render_success_json
     tei_name = (canonical_object ? canonical_object.filename : '')
 
@@ -162,19 +202,11 @@ class CoreFile < ActiveRecord::Base
     }
   end
 
-  def calculate_drupal_access
-    if collections.any? { |collection| collection.drupal_access == 'public' }
-      self.drupal_access = 'public'
-    else
-      self.drupal_access = 'private'
-    end
-  end
-
-  def match_dc_to_mods
-    self.DC.title = self.mods.title.first
-    self.DC.description = self.mods.abstract.first if !self.mods.abstract.blank?
-    # self.mods.title = self.DC.title.first
-    # self.mods.abstract = self.DC.description.first
-    #  self.mods.thumbnail = self.DC.thumbnail.first
-  end
+  # def calculate_drupal_access
+  #   if collections.any? { |collection| collection.drupal_access == 'public' }
+  #     self.drupal_access = 'public'
+  #   else
+  #     self.drupal_access = 'private'
+  #   end
+  # end
 end

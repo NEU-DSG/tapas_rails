@@ -3,29 +3,29 @@ require 'thor/rails'
 class TapasRails < Thor
   include Thor::Rails
 
-  desc "create_api_user", <<-eos
-    Creates the user that the Tapas Drupal site expects
-    to be able to connect as.
+  # desc "create_api_user", <<-eos
+  #   Creates the user that the Tapas Drupal site expects
+  #   to be able to connect as.
 
-    Loads email/api_key from the file config/tapas_api.yml
-  eos
+  #   Loads email/api_key from the file config/tapas_api.yml
+  # eos
 
-  def create_api_user
-    processed  = ERB.new(File.read("#{::Rails.root}/config/tapas_api.yml")).result
-    api_config = YAML.load(processed)
+  # def create_api_user
+  #   processed  = ERB.new(File.read("#{::Rails.root}/config/tapas_api.yml")).result
+  #   api_config = YAML.load(processed)
 
-    u = User.new
-    u.email    = api_config[::Rails.env]["email"]
-    u.api_key  = api_config[::Rails.env]["api_key"]
-    u.password = api_config[::Rails.env]["password"]
+  #   u = User.new
+  #   u.email    = api_config[::Rails.env]["email"]
+  #   u.api_key  = api_config[::Rails.env]["api_key"]
+  #   u.password = api_config[::Rails.env]["password"]
 
-    if User.exists?(:email => u.email)
-      say "User #{u.email} already exists, nothing to do...", :yellow
-    else
-      u.save!
-      say "User #{u.email} created successfully!", :blue
-    end
-  end
+  #   if User.exists?(:email => u.email)
+  #     say "User #{u.email} already exists, nothing to do...", :yellow
+  #   else
+  #     u.save!
+  #     say "User #{u.email} created successfully!", :blue
+  #   end
+  # end
 
   desc 'rebuild_reading_interfaces', <<-eos
     Rebuilds the reading interfaces for every TEI File uploaded to the repo.
@@ -40,7 +40,7 @@ class TapasRails < Thor
 
     say "Requesting #{rows} IDS from solr for rebuid", :blue
 
-    all_dids = ActiveFedora::SolrService.query(q, fl: 'id', rows: rows).map do |doc|
+    all_dids = SolrService.query(q, fl: 'id', rows: rows).map do |doc|
       doc['id']
     end
 

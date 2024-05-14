@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class UsersController < CatalogController
 
   self.copy_blacklight_config_from(CatalogController)
   before_action :check_for_logged_in_user, :only => [:my_tapas, :my_projects]
-  before_action :verify_admin, :only => [:index, :show, :create, :delete, :admin_show]
+  before_action :verify_admin, :only => [:index, :admin_show]
 
   def my_tapas
     @page_title = "My TAPAS"
@@ -48,37 +50,12 @@ class UsersController < CatalogController
 
   def admin_show
     @user = User.find(params[:id])
-    render 'show'
+    render 'admin/index'
   end
 
   def profile
     @user = User.find(params[:id])
     render 'profile'
-  end
-
-  def edit
-    @user = User.find(params[:id])
-    @institutions = Institution.select(:name, :id)
-  end
-
-  def update
-    @user = User.find(params[:id])
-    @user.update(user_params)
-    flash[:notice] = "#{@user.email} was updated"
-
-    redirect_to edit_user_path(@user)
-  end
-
-  def destroy
-    user = User.find(params[:id])
-
-    if user.discarded?
-      user.delete
-    else
-      user.discard
-    end
-
-    redirect_to users_path
   end
 
   def search_action_url(options = {})
@@ -101,17 +78,6 @@ class UsersController < CatalogController
     else
       render "mail_all_users"
     end
-  end
-
-  def user_params
-    params.require(:user).permit(
-      :name,
-      :email,
-      :institution_id,
-      :account_type,
-      :admin,
-      :paid
-    )
   end
 
   def five_communities
@@ -141,5 +107,4 @@ class UsersController < CatalogController
   def verify_admin
     redirect_to root_path unless current_user && current_user.admin?
   end
-
 end

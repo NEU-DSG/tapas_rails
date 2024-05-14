@@ -31,6 +31,30 @@ class CoreFilesController < CatalogController
   end
 
   def new
+    # original iteration of the New action; it includes logic to populate the list of file types and return them to the view for the user to select when creating a new core file
+    #     @page_title = "Create New Record"
+    #     model_type = RSolr.solr_escape "info:fedora/afmodel:Collection"
+    #     projects = ActiveFedora::SolrService.query("has_model_ssim:\"#{RSolr.solr_escape "info:fedora/afmodel:Community"}\" && (project_members_ssim:\"#{current_user.id.to_s}\" OR depositor_tesim:\"#{current_user.id.to_s}\" OR project_admins_ssim:\"#{current_user.id.to_s}\" OR project_editors_ssim:\"#{current_user.id.to_s}\")")
+    #     col_query = projects.map do |p|
+    #       "project_pid_ssi: #{RSolr.solr_escape(p['id'])}"
+    #     end
+    #     query = "has_model_ssim: \"#{model_type}\" && (#{col_query.join(" OR ")})"
+    #     count = ActiveFedora::SolrService.count(query)
+    #     results = ActiveFedora::SolrService.query(query, fl: 'id, title_info_title_ssi', rows: count)
+    #
+    #     @collections =[]
+    #     results.each do |res|
+    #       if !res['title_info_title_ssi'].blank? && !res['id'].blank?
+    #         @collections << [res['title_info_title_ssi'],res['id']]
+    #       end
+    #     end
+    #     @core_file = CoreFile.new(:mass_permissions=>"public")
+    #
+    #     @file_types = [['TEI Record',""]]
+    #     @sel_file_types = []
+    #     CoreFile.all_ography_types.each do |o|
+    #       @file_types << [o.titleize,o]
+    #     end
     @page_title = "Create New Record"
     @collections = Collection.accessible_by(current_ability)
     @core_file = CoreFile.new(is_public: true)
@@ -162,6 +186,7 @@ class CoreFilesController < CatalogController
       end
 
       # Step 4: Kick off an upsert job
+      # This job will handle the actual upsert of the CoreFile object to xml db, baseX
       job = TapasObjectUpsertJob.new params
       TapasRails::Application::Queue.push job
 

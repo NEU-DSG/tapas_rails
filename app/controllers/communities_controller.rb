@@ -43,14 +43,11 @@ class CommunitiesController < ApplicationController
   end
 
   def new
-    if current_user && (current_user.paid_user? || current_user.admin?)
+    if current_user
       @page_title = "Create New Community"
       @community = Community.new
       @institutions = Institution.pluck(:name, :id)
       @users = format_users_for_form
-    else
-      flash[:notice] = "In order to create a project, you must be a member of the TEI. <a href="">Join now!</a>"
-      redirect_to root_path
     end
   end
 

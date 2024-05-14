@@ -1,5 +1,5 @@
 class UpsertCommunity
-  include Concerns::Upserter
+  include Upserter
 
   def execute
     begin

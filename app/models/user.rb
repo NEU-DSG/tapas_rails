@@ -7,17 +7,22 @@ class User < ActiveRecord::Base
   include Blacklight::User
 
   # cch: commenting this out to allow for time to upgrade carrierwave
-  # mount_uploader :avatar, AvatarUploader
-  # validates_integrity_of :avatar
+  mount_uploader :avatar, AvatarUploader
+  validates_integrity_of :avatar
 
-  if Blacklight::Utils.needs_attr_accessible?
-    attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
-  end
+  # if Blacklight::Utils.needs_attr_accessible?
+  #   attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
+  # end
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, :confirmable
+  devise :invitable, :database_authenticatable,
+         :registerable,
+         :recoverable,
+         :rememberable,
+         :trackable,
+         :validatable,
+         :confirmable
 
   delegate :can?, :cannot?, :to => :ability
 
@@ -51,15 +56,7 @@ class User < ActiveRecord::Base
   end
 
   def admin?
-    return self.role.eql?('admin')
-  end
-
-  def paid_user?
-    return self.role.eql?('paid_user')
-  end
-
-  def unpaid_user?
-    return self.role.eql?('unpaid_user')
+    admin_at.nil? ? false : true
   end
 
   def self.find_by_user_key(key)
@@ -69,59 +66,50 @@ class User < ActiveRecord::Base
   # def forem_name
   #   self.name
   # end
-  #
+  #ß
   # def forem_email
   #   self.email
   # end
 
-  def check_paid_status
-    # FIXME: we can't use pluot, as it's too out of date
-    # re-implement this with our own Wild Apricot REST wrapper?
-    return true
-    # api_key = ENV['WILD_APRICOT_API_KEY']
-    # aid = 66796
-    # # Pluot.api_key = api_key
-    # # Pluot.account_id = aid
-    # logger.warn("e-Mail eq #{self.email}")
-    # begin
-    #   response = Pluot.contacts.filter("e-Mail eq #{self.email}")
-    # rescue Faraday::ConnectionFailed => e
-    #   print e
-    #   return false
-    # end
-    # logger.warn(response)
-    # if response.blank?
-    #   # probably an issue where we were unable to connect with wild apricot at all
-    #   return true
-    # end
-    # contact = response[:Contacts]
-    # logger.warn(contact)
-    # if !contact.blank?
-    #   contact = contact[0]
-    #   logger.warn(contact)
-    #   if contact[:Status] && contact[:Status] == "Active"
-    #     logger.warn("active")
-    #     return true
-    #   else
-    #     logger.warn("not active")
-    #     return false
-    #   end
-    # else
-    #   logger.warn("no user found")
-    #   return false
-    # end
-  end
+  # paid accounts are deprecated
+  # def check_paid_status
+  #   # FIXME: we can't use pluot, as it's too out of date
+  #   # re-implement this with our own Wild Apricot REST wrapper?
+  #   return true
+  #   # api_key = ENV['WILD_APRICOT_API_KEY']
+  #   # aid = 66796
+  #   # # Pluot.api_key = api_key
+  #   # # Pluot.account_id = aid
+  #   # logger.warn("e-Mail eq #{self.email}")
+  #   # begin
+  #   #   response = Pluot.contacts.filter("e-Mail eq #{self.email}")
+  #   # rescue Faraday::ConnectionFailed => e
+  #   #   print e
+  #   #   return false
+  #   # end
+  #   # logger.warn(response)
+  #   # if response.blank?
+  #   #   # probably an issue where we were unable to connect with wild apricot at all
+  #   #   return true
+  #   # end
+  #   # contact = response[:Contacts]
+  #   # logger.warn(contact)
+  #   # if !contact.blank?
+  #   #   contact = contact[0]
+  #   #   logger.warn(contact)
+  #   #   if contact[:Status] && contact[:Status] == "Active"
+  #   #     logger.warn("active")
+  #   #     return true
+  #   #   else
+  #   #     logger.warn("not active")
+  #   #     return false
+  #   #   end
+  #   # else
+  #   #   logger.warn("no user found")
+  #   #   return false
+  #   # end
+  # end
 
-
-  def after_database_authentication
-    if !self.admin?
-      if self.check_paid_status
-        self.role = 'paid_user'
-      else
-        self.role = 'unpaid_user'
-      end
-    end
-  end
 
   private
 

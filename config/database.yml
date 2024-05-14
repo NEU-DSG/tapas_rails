@@ -1,23 +1,47 @@
-default: &default
+# &default alias removed to resolve psych gem error, allegedly upgrading rails resolves this issue,
+# but such an upgrade is out of scope currently
+
+default:
+  adapter: mysql2
+  encoding: utf8
+  pool: 5
+  username: <%= ENV.fetch('MYSQL_USER') %>
+  password: <%= ENV.fetch('MYSQL_PASSWORD') %>
+  host: localhost
+  database: tapas_rails
+
+development:
   adapter: mysql2
   encoding: utf8mb4
   host: localhost
   port: 3306
   pool: 5
   timeout: 5000
-  database: tapas
-  username: <%= ENV['MYSQL_USER'] %>
-  password: <%= ENV['MYSQL_PASSWORD'] %>
+  database: tapas_rails_development
+  username: <%= ENV.fetch('MYSQL_USER') %>
+  password: <%= ENV.fetch('MYSQL_PASSWORD') %>
   socket: /tmp/mysql.sock
 
-development:
-  <<: *default
-  database: tapas_development
-
 test:
-  <<: *default
-  database: tapas_test
+  adapter: mysql2
+  encoding: utf8mb4
+  host: localhost
+  port: 3306
+  pool: 5
+  timeout: 5000
+  database: tapas_rails_test
+  username: <%= ENV.fetch('MYSQL_USER') %>
+  password: <%= ENV.fetch('MYSQL_PASSWORD') %>
+  socket: /tmp/mysql.sock
 
 production:
-  <<: *default
-  database: tapas
+  adapter: mysql2
+  encoding: utf8mb4
+  host: localhost
+  port: 3306
+  pool: 5
+  timeout: 5000
+  database: tapas_rails_production
+  username: <%= ENV.fetch('MYSQL_USER') %>
+  password: <%= ENV.fetch('MYSQL_PASSWORD') %>
+  socket: /tmp/mysql.sock
