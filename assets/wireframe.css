@@ -1,0 +1,10 @@
+/*
+    CSS for TAPAS wireframing
+    
+    Not for publication!
+ */
+
+html[data-tapas-auth='true'] *[data-tapas-registered-user='false'],
+html[data-tapas-auth='false'] *[data-tapas-registered-user='true'] {
+  display: none;
+}

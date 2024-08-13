@@ -1,0 +1,220 @@
+/*
+  TAPAS styles
+  
+  Refactored from the TAPAS themes for Drupal.
+ */
+
+//*  VARIABLES
+
+  :root {
+    --tapas-block-main: white;
+    --tapas-block-dark: #26333F;
+    --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
+    
+    --tapas-accent-orig: #DF691A;
+    --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
+    
+    --tapas-text-light: #EBEBEB;
+    
+    --tapas-transparency: rgba(0,0,0,0);
+  }
+
+
+//*  MIXINS
+  
+
+
+//*  STYLES
+
+body {
+  background-color: var(--tapas-block-dark);
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+
+h1, .h1 {
+  margin: 2rem 0 1rem;
+}
+
+a,
+.nav-link {
+  text-decoration: none;
+  
+  &:hover, &:focus {
+    text-decoration: underline;
+  }
+} // end a
+
+
+/* 
+ * HEADER
+ */
+
+#skip-link a {
+  border: thin solid var(--tapas-accent-orig);
+  color: var(--tapas-accent-mid);
+  display: block;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
+} // end #skip-link a
+
+#header {
+  background-color: var(--tapas-block-mid);
+  font-size: 1.125em;
+  
+  > .container-fluid {
+    align-items: baseline;
+  }
+  
+  a, .nav-link {
+    border: thin solid var(--tapas-transparency);
+    color: var(--tapas-text-light);
+    
+    &:focus {
+      background-color: var(--tapas-block-dark);
+      border-color: var(--tapas-accent-mid);
+    }
+  } // end #header a, #header .nav-link
+  
+  a.logo {
+    align-items: baseline;
+    display: flex;
+    flex: 0 1 auto;
+    
+    img {
+      align-self: center;
+      max-width: 50px;
+      margin-right: 0.5em;
+    }
+    
+    .navbar-brand {
+      color: inherit;
+      font-size: 1.5em;
+    }
+  } // end #navbar .logo
+  
+  .navbar-toggler {
+    background-color: var(--tapas-block-main);
+  }
+  
+  #header-nav {
+    justify-content: space-between;
+    
+    .navbar-nav {
+      gap: 0.5em;
+    }
+  } // end #navbar #header-nav
+  
+  .dropdown-menu {
+    
+    a {
+      color: unset;
+      
+      &:focus {
+        background-color: var(--tapas-transparency);
+      }
+    } // end #navbar .dropdown-menu a
+  } // end #navbar .dropdown-menu
+} // end #navbar
+
+
+/*
+ * FOOTER
+ */
+
+.footer {
+  color: var(--tapas-text-light);
+  padding: 2rem 2rem 1em;
+  
+  a {
+    color: var(--tapas-accent-mid);
+    
+    &:hover, &:focus {
+      color: var(--tapas-accent-mid);
+    }
+    
+    &.logo {
+      display: inline-block;
+      padding: 0.25em;
+    }
+  } // end .footer a
+  
+  .nav {
+    margin-bottom: 1rem;
+    
+    a {
+      border: thin solid var(--tapas-transparency);
+      
+      &:focus {
+        background-color: var(--bs-body-color); /* rgb(33, 37, 41) */
+        border-color: var(--tapas-accent-mid);
+      }
+    } // end .footer .navbar a
+  } // end .footer .navbar
+  
+  #footer-about > .row {
+    align-items: baseline;
+  }
+} // end .footer
+
+
+/*
+ * MAIN CONTENT
+ */
+
+.main-container {
+  background-color: var(--tapas-block-main);
+  margin: 0;
+  min-height: 2rem;
+  padding: 2rem 1rem;
+  
+  @media (min-width: 992px) {
+    padding: 2rem 10vw;
+  }
+  
+  /* Breadcrumbs */
+  nav.breadcrumbs {
+    border-radius: 0.25rem;
+    border: thin solid #DDD;
+    background-color: #EBEBEB;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    padding: 0.25rem 0.75rem;
+    
+    .breadcrumb {
+      margin-bottom: 0;
+    }
+  } // end .main-container nav.breadcrumbs
+  
+} // end .main-container
+
+
+/*
+ * TEI READER
+ */
+
+.reader-container {
+  
+  .nav {
+    padding-left: 1rem;
+    
+    .nav-link.vpkg-chooser {
+      
+      // Reset the color of the "Reader" nav link because it is a dropdown and still actionable
+      &.active {
+        color: var(--bs-nav-link-color);
+      }
+    } // end .reader-container .nav .nav-link.vpkg-chooser
+  } // end .reader-container .nav
+  
+  .reader {
+    padding: 2rem;
+    border: thin solid var(--bs-border-color); // #dee2e6
+    border-top: none;
+    
+    /* Reset all CSS to browser defaults within the reader. */
+    > * {
+      all: initial !important;
+    }
+  } // end .reader-container .reader
+} // end .reader-container

@@ -1,0 +1,167 @@
+/*
+  TAPAS styles
+  
+  Refactored from the TAPAS themes for Drupal.
+ */
+:root {
+  --tapas-block-main: white;
+  --tapas-block-dark: #26333F;
+  --tapas-block-mid: #3F5A74;
+  /* originally #4E5D6C */
+  --tapas-accent-orig: #DF691A;
+  --tapas-accent-mid: #FF8A3D;
+  /* stands out well against block-dark (5.50 contrast ratio) */
+  --tapas-text-light: #EBEBEB;
+  --tapas-transparency: rgba(0, 0, 0, 0);
+}
+body {
+  background-color: var(--tapas-block-dark);
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+h1,
+.h1 {
+  margin: 2rem 0 1rem;
+}
+a,
+.nav-link {
+  text-decoration: none;
+}
+a:hover,
+.nav-link:hover,
+a:focus,
+.nav-link:focus {
+  text-decoration: underline;
+}
+/* 
+ * HEADER
+ */
+#skip-link a {
+  border: thin solid var(--tapas-accent-orig);
+  color: var(--tapas-accent-mid);
+  display: block;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
+}
+#header {
+  background-color: var(--tapas-block-mid);
+  font-size: 1.125em;
+}
+#header > .container-fluid {
+  align-items: baseline;
+}
+#header a,
+#header .nav-link {
+  border: thin solid var(--tapas-transparency);
+  color: var(--tapas-text-light);
+}
+#header a:focus,
+#header .nav-link:focus {
+  background-color: var(--tapas-block-dark);
+  border-color: var(--tapas-accent-mid);
+}
+#header a.logo {
+  align-items: baseline;
+  display: flex;
+  flex: 0 1 auto;
+}
+#header a.logo img {
+  align-self: center;
+  max-width: 50px;
+  margin-right: 0.5em;
+}
+#header a.logo .navbar-brand {
+  color: inherit;
+  font-size: 1.5em;
+}
+#header .navbar-toggler {
+  background-color: var(--tapas-block-main);
+}
+#header #header-nav {
+  justify-content: space-between;
+}
+#header #header-nav .navbar-nav {
+  gap: 0.5em;
+}
+#header .dropdown-menu a {
+  color: unset;
+}
+#header .dropdown-menu a:focus {
+  background-color: var(--tapas-transparency);
+}
+/*
+ * FOOTER
+ */
+.footer {
+  color: var(--tapas-text-light);
+  padding: 2rem 2rem 1em;
+}
+.footer a {
+  color: var(--tapas-accent-mid);
+}
+.footer a:hover,
+.footer a:focus {
+  color: var(--tapas-accent-mid);
+}
+.footer a.logo {
+  display: inline-block;
+  padding: 0.25em;
+}
+.footer .nav {
+  margin-bottom: 1rem;
+}
+.footer .nav a {
+  border: thin solid var(--tapas-transparency);
+}
+.footer .nav a:focus {
+  background-color: var(--bs-body-color);
+  /* rgb(33, 37, 41) */
+  border-color: var(--tapas-accent-mid);
+}
+.footer #footer-about > .row {
+  align-items: baseline;
+}
+/*
+ * MAIN CONTENT
+ */
+.main-container {
+  background-color: var(--tapas-block-main);
+  margin: 0;
+  min-height: 2rem;
+  padding: 2rem 1rem;
+  /* Breadcrumbs */
+}
+@media (min-width: 992px) {
+  .main-container {
+    padding: 2rem 10vw;
+  }
+}
+.main-container nav.breadcrumbs {
+  border-radius: 0.25rem;
+  border: thin solid #DDD;
+  background-color: #EBEBEB;
+  font-weight: 400;
+  margin-bottom: 1.5rem;
+  padding: 0.25rem 0.75rem;
+}
+.main-container nav.breadcrumbs .breadcrumb {
+  margin-bottom: 0;
+}
+/*
+ * TEI READER
+ */
+.reader-container .nav {
+  padding-left: 1rem;
+}
+.reader-container .nav .nav-link.vpkg-chooser.active {
+  color: var(--bs-nav-link-color);
+}
+.reader-container .reader {
+  padding: 2rem;
+  border: thin solid var(--bs-border-color);
+  border-top: none;
+  /* Reset all CSS to browser defaults within the reader. */
+}
+.reader-container .reader > * {
+  all: initial !important;
+}
