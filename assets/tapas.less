@@ -33,7 +33,7 @@ body {
 }
 
 h1, .h1 {
-  margin: 2rem 0 1rem;
+  margin: 1.25rem 0 1rem;
 }
 
 a,
@@ -176,7 +176,7 @@ a,
   nav.breadcrumbs {
     border-radius: 0.25rem;
     border: thin solid #DDD;
-    background-color: #EBEBEB;
+    //background-color: #EBEBEB;
     font-weight: 400;
     margin-bottom: 1.5rem;
     padding: 0.25rem 0.75rem;
@@ -195,17 +195,26 @@ a,
 
 .reader-container {
   
-  .nav {
-    padding-left: 1rem;
+  .reader-header {
+    align-items: end;
+    border-bottom: thin solid var(--bs-border-color);
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
     
-    .nav-link.vpkg-chooser {
+    .nav {
+      border-bottom: none;
       
-      // Reset the color of the "Reader" nav link because it is a dropdown and still actionable
-      &.active {
-        color: var(--bs-nav-link-color);
-      }
-    } // end .reader-container .nav .nav-link.vpkg-chooser
-  } // end .reader-container .nav
+      .nav-link.vpkg-chooser {
+        
+        // Reset the color of the "Reader" nav link because it is a dropdown and still actionable
+        &.active {
+          color: var(--bs-nav-link-color);
+        }
+      } // end .reader-container .reader-header .nav .nav-link.vpkg-chooser
+    } // end .reader-container .reader-header .nav
+  } // end .reader-container .reader-header
   
   .reader {
     padding: 2rem;

@@ -21,7 +21,7 @@ body {
 }
 h1,
 .h1 {
-  margin: 2rem 0 1rem;
+  margin: 1.25rem 0 1rem;
 }
 a,
 .nav-link {
@@ -139,7 +139,6 @@ a:focus,
 .main-container nav.breadcrumbs {
   border-radius: 0.25rem;
   border: thin solid #DDD;
-  background-color: #EBEBEB;
   font-weight: 400;
   margin-bottom: 1.5rem;
   padding: 0.25rem 0.75rem;
@@ -150,10 +149,18 @@ a:focus,
 /*
  * TEI READER
  */
-.reader-container .nav {
-  padding-left: 1rem;
+.reader-container .reader-header {
+  align-items: end;
+  border-bottom: thin solid var(--bs-border-color);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
-.reader-container .nav .nav-link.vpkg-chooser.active {
+.reader-container .reader-header .nav {
+  border-bottom: none;
+}
+.reader-container .reader-header .nav .nav-link.vpkg-chooser.active {
   color: var(--bs-nav-link-color);
 }
 .reader-container .reader {
