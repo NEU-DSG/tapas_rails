@@ -123,6 +123,11 @@ a:focus,
 }
 /*
  * MAIN CONTENT
+ *
+ * Note: The `.main-container` is a sibling of the page header and footer, and may 
+ *  contain additional navigation such as breadcrumbs. The `#main-content` is the 
+ *  part of the `.main-container` with the <h1> heading, where the skip link will 
+ *  take keyboard users.
  */
 .main-container {
   background-color: var(--tapas-block-main);
@@ -146,6 +151,9 @@ a:focus,
 .main-container nav.breadcrumbs .breadcrumb {
   margin-bottom: 0;
 }
+.main-container #main-content {
+  margin-top: 2rem;
+}
 /*
  * TEI READER
  */
@@ -157,6 +165,9 @@ a:focus,
   flex-wrap: wrap;
   justify-content: space-between;
 }
+.reader-container .reader-header h1 {
+  margin-top: 0;
+}
 .reader-container .reader-header .nav {
   border-bottom: none;
 }
@@ -167,8 +178,8 @@ a:focus,
   padding: 2rem;
   border: thin solid var(--bs-border-color);
   border-top: none;
-  /* Reset all CSS to browser defaults within the reader. */
+  /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */
 }
-.reader-container .reader > * {
-  all: initial !important;
+.reader-container .reader > .reader-view {
+  all: initial;
 }
