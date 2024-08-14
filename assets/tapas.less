@@ -160,6 +160,11 @@ a,
 
 /*
  * MAIN CONTENT
+ *
+ * Note: The `.main-container` is a sibling of the page header and footer, and may 
+ *  contain additional navigation such as breadcrumbs. The `#main-content` is the 
+ *  part of the `.main-container` with the <h1> heading, where the skip link will 
+ *  take keyboard users.
  */
 
 .main-container {
@@ -186,6 +191,10 @@ a,
     }
   } // end .main-container nav.breadcrumbs
   
+  
+  #main-content {
+    margin-top: 2rem;
+  } // end .main-container #main-content
 } // end .main-container
 
 
@@ -202,6 +211,11 @@ a,
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+    
+    // Remove top margin on <h1> so the spacing is the same as on other pages
+    h1 {
+      margin-top: 0;
+    }
     
     .nav {
       border-bottom: none;
@@ -221,9 +235,9 @@ a,
     border: thin solid var(--bs-border-color); // #dee2e6
     border-top: none;
     
-    /* Reset all CSS to browser defaults within the reader. */
-    > * {
-      all: initial !important;
+    /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */
+    > .reader-view {
+      all: initial; // Removed `!important`
     }
   } // end .reader-container .reader
 } // end .reader-container
