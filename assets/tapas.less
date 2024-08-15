@@ -14,9 +14,14 @@
     --tapas-accent-orig: #DF691A;
     --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
     
+    --tapas-accent-bg: #C1F20F; /* modified green from the TAPAS icon */
+    
     --tapas-text-light: #EBEBEB;
     
     --tapas-transparency: rgba(0,0,0,0);
+    
+    /* Reset Bootstrap defaults: */
+    --bs-border-color: #888;
   }
 
 
@@ -205,7 +210,8 @@ a,
 .reader-container {
   
   .reader-header {
-    align-items: end;
+    align-items: baseline;
+    background-color: var(--tapas-block-main);
     border-bottom: thin solid var(--bs-border-color);
     display: flex;
     flex-direction: row;
@@ -214,23 +220,31 @@ a,
     
     // Remove top margin on <h1> so the spacing is the same as on other pages
     h1 {
-      margin-top: 0;
+      margin: 0.5rem 0 0.25rem;
     }
     
     .nav {
       border-bottom: none;
       
-      .nav-link.vpkg-chooser {
+      .vpkg-chooser {
         
-        // Reset the color of the "Reader" nav link because it is a dropdown and still actionable
-        &.active {
+        /*&.active {
           color: var(--bs-nav-link-color);
-        }
+        }*/
+        
+        .dropdown-toggle {
+          
+          &.active {
+            background-color: var(--tapas-block-mid);
+            border-bottom-color: var(--tapas-block-mid);
+            color: var(--tapas-text-light);
+          }
+        } // end reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle
       } // end .reader-container .reader-header .nav .nav-link.vpkg-chooser
     } // end .reader-container .reader-header .nav
   } // end .reader-container .reader-header
   
-  .reader {
+  #reader {
     padding: 2rem;
     border: thin solid var(--bs-border-color); // #dee2e6
     border-top: none;
@@ -239,5 +253,5 @@ a,
     > .reader-view {
       all: initial; // Removed `!important`
     }
-  } // end .reader-container .reader
+  } // end .reader-container #reader
 } // end .reader-container
