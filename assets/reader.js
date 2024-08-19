@@ -23,8 +23,8 @@ tapas.reader = {};
   let setScrollButtonVisibility = function (entries, observer) {
     entries.forEach( entry => {
       let scrollDiv = document.getElementById('jump-to-top').closest('div');
-      /* If the target entry (the header) is inside the viewport, make sure the button only appears in 
-        document order. Also, add the `.is-sticking` class to the entry element. */
+      /* If the target entry (the reader header) isn't fully inside the viewport, make sure the button 
+        only appears in document order. Also, add the `.is-sticking` class to the entry element. */
       if ( entry.intersectionRatio < 1 ) {
         entry.target.classList.add('is-sticking');
         scrollDiv.classList.add('jump-sticky');
@@ -46,7 +46,9 @@ tapas.reader = {};
     Set up an Intersection Observer which will add the `.jump-sticky` class to the "Return to top" 
     container when `.header` scrolls out of view. This solution owes a great deal to "How to Make an 
     Unobtrusive Scroll-to-Top Button" by Marcel Rojas 
-    (https://css-tricks.com/how-to-make-an-unobtrusive-scroll-to-top-button/).
+    (https://css-tricks.com/how-to-make-an-unobtrusive-scroll-to-top-button/) and "How to Detect When a 
+    Sticky Element Gets Pinned" by Chris Coyier 
+    (https://css-tricks.com/how-to-detect-when-a-sticky-element-gets-pinned/).
    */
   this.setUpScrollButton = function () {
     /* We're only interested in tracking when the `.reader-header` intersection ratio changes to or from 
