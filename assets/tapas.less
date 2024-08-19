@@ -254,4 +254,22 @@ a,
       all: initial; // Removed `!important`
     }
   } // end .reader-container #reader
+    
+  .jump-container {
+    display: flex;
+    justify-content: end;
+    margin: 1rem 0 0.5rem;
+      
+    &.jump-sticky {
+      bottom: 1rem;
+      position: sticky;
+      z-index: 200;
+    }
+    
+    #jump-to-top {
+      background-color: var(--tapas-block-main);
+      border: 2px solid var(--tapas-accent-orig);
+      padding: 0.5rem;
+    }
+  } // end  .reader-container .jump-container
 } // end .reader-container
