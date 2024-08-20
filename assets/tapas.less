@@ -247,6 +247,17 @@ a,
         } // end reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle
       } // end .reader-container .reader-header .nav .nav-link.vpkg-chooser
     } // end .reader-container .reader-header .nav
+    
+    // Overriding styles for when the Reader header is sticking.
+    &.is-sticking {
+      
+      /* Truncate long document titles to a single line */
+      h1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    } // end .reader-container .reader-header.is-sticking
   } // end .reader-container .reader-header
   
   #reader {

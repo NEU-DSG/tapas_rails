@@ -190,6 +190,14 @@ a:focus,
   border-bottom-color: var(--tapas-block-mid);
   color: var(--tapas-text-light);
 }
+.reader-container .reader-header.is-sticking {
+  /* Truncate long document titles to a single line */
+}
+.reader-container .reader-header.is-sticking h1 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .reader-container #reader {
   padding: 2rem;
   border: thin solid var(--bs-border-color);
