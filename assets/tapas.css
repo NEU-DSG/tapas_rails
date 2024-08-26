@@ -168,18 +168,18 @@ a:focus,
   display: grid;
   gap: 0.75rem;
   grid-template-areas: "doctitle" "docdesc" "docnav";
-  grid-template-columns: auto max-content;
   justify-content: space-between;
   /* `top` will only kick in when the header is sticky. By having a single pixel out of the viewport, 
       we can figure out if the header is sticking by testing if the `intersectingRatio` is < 1. */
   top: -1px;
-  /* In larger screen sizes, the title and description should appear on the left of the tab 
+  /* In larger screen sizes, the doc description should appear on the left of the tab 
       navigation bar. */
   /* Overriding styles for when the Reader header is sticking to the top of the viewport. */
 }
 @media (min-width: 992px) {
   .reader-container .reader-header {
-    grid-template-areas: "doctitle docnav" "docdesc docnav";
+    grid-template-areas: "doctitle doctitle" "docdesc docnav";
+    grid-template-columns: auto minmax(30%, max-content);
   }
 }
 .reader-container .reader-header h1 {
@@ -195,11 +195,6 @@ a:focus,
 }
 .reader-container .reader-header .nav {
   border-bottom: none;
-}
-.reader-container .reader-header .nav .vpkg-chooser {
-  /*&.active {
-          color: var(--bs-nav-link-color);
-        }*/
 }
 .reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle.active {
   background-color: var(--tapas-block-mid);
@@ -219,6 +214,7 @@ a:focus,
   padding: 2rem;
   border: thin solid var(--bs-border-color);
   border-top: none;
+  overflow: auto;
   /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */
 }
 .reader-container #reader > .reader-view {

@@ -219,18 +219,18 @@ a,
       "doctitle"
       "docdesc"
       "docnav";
-    grid-template-columns: auto max-content;
     justify-content: space-between;
     /* `top` will only kick in when the header is sticky. By having a single pixel out of the viewport, 
       we can figure out if the header is sticking by testing if the `intersectingRatio` is < 1. */
     top: -1px;
     
-    /* In larger screen sizes, the title and description should appear on the left of the tab 
+    /* In larger screen sizes, the doc description should appear on the left of the tab 
       navigation bar. */
     @media (min-width: 992px) {
       grid-template-areas: 
-        "doctitle docnav"
+        "doctitle doctitle"
         "docdesc docnav";
+      grid-template-columns: auto minmax(30%,max-content);
     }
     
     // Remove top margin on <h1> so the spacing is the same as on other pages
@@ -241,7 +241,7 @@ a,
     
     .reader-desc {
       grid-area: docdesc;
-    }
+    } // end .reader-container .reader-header .reader-desc
     
     .reader-nav {
       grid-area: docnav;
@@ -253,10 +253,6 @@ a,
       
       .vpkg-chooser {
         
-        /*&.active {
-          color: var(--bs-nav-link-color);
-        }*/
-        
         .dropdown-toggle {
           
           &.active {
@@ -264,7 +260,7 @@ a,
             border-bottom-color: var(--tapas-block-mid);
             color: var(--tapas-text-light);
           }
-        } // end reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle
+        } // end .reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle
       } // end .reader-container .reader-header .nav .nav-link.vpkg-chooser
     } // end .reader-container .reader-header .nav
     
@@ -289,6 +285,7 @@ a,
     padding: 2rem;
     border: thin solid var(--bs-border-color); // #dee2e6
     border-top: none;
+    overflow: auto;
     
     /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */
     > .reader-view {
