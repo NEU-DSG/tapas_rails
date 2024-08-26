@@ -210,22 +210,42 @@ a,
 .reader-container {
   
   .reader-header {
-    //align-items: baseline;
     align-items: end;
     background-color: var(--tapas-block-main);
     border-bottom: thin solid var(--bs-border-color);
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
+    display: grid;
     gap: 0.75rem;
+    grid-template-areas: 
+      "doctitle"
+      "docdesc"
+      "docnav";
+    grid-template-columns: auto max-content;
     justify-content: space-between;
     /* `top` will only kick in when the header is sticky. By having a single pixel out of the viewport, 
       we can figure out if the header is sticking by testing if the `intersectingRatio` is < 1. */
     top: -1px;
     
+    /* In larger screen sizes, the title and description should appear on the left of the tab 
+      navigation bar. */
+    @media (min-width: 992px) {
+      grid-template-areas: 
+        "doctitle docnav"
+        "docdesc docnav";
+    }
+    
     // Remove top margin on <h1> so the spacing is the same as on other pages
     h1 {
+      grid-area: doctitle;
       margin: 0.5rem 1rem 0.25rem;
+    }
+    
+    .reader-desc {
+      grid-area: docdesc;
+    }
+    
+    .reader-nav {
+      grid-area: docnav;
+      justify-self: end;
     }
     
     .nav {
@@ -248,7 +268,7 @@ a,
       } // end .reader-container .reader-header .nav .nav-link.vpkg-chooser
     } // end .reader-container .reader-header .nav
     
-    // Overriding styles for when the Reader header is sticking.
+    /* Overriding styles for when the Reader header is sticking to the top of the viewport. */
     &.is-sticking {
       
       /* Truncate long document titles to a single line */
@@ -256,6 +276,11 @@ a,
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+      }
+      
+      /* Hide the description of the document. */
+      .reader-desc {
+        //display: none;
       }
     } // end .reader-container .reader-header.is-sticking
   } // end .reader-container .reader-header
