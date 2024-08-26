@@ -208,12 +208,12 @@ a:focus,
 }
 .reader-container .reader-header.is-sticking {
   /* Truncate long document titles to a single line */
+  /*h1 {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }*/
   /* Hide the description of the document. */
-}
-.reader-container .reader-header.is-sticking h1 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 .reader-container #reader {
   padding: 2rem;
