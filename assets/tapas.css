@@ -201,10 +201,11 @@ a:focus,
 .reader-container .reader-header .reader-desc {
   background-color: var(--tapas-accent-bg);
   border: thin solid var(--tapas-transparency);
-  border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+  border-radius: var(--tapas-border-radius);
   grid-area: docdesc;
   margin: 0 0.5rem;
   padding: 0.25rem 0.5rem 0;
+  /* In larger screen sizes, only the top corners should have a modified border radius. */
   /*opacity: 1;
       transition: 
         opacity 1s,
@@ -221,10 +222,15 @@ a:focus,
         opacity: 0;
       }*/
 }
+@media (min-width: 992px) {
+  .reader-container .reader-header .reader-desc {
+    border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+  }
+}
 .reader-container .reader-header .reader-desc summary {
   color: var(--tapas-block-dark);
   font-size: 0.9em;
-  padding-bottom: 0.25rem;
+  padding: 0.15rem 0.5rem 0.25rem;
 }
 .reader-container .reader-header.is-sticking {
   /* Truncate long document titles to a single line */
