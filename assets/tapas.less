@@ -264,11 +264,10 @@ a,
     } // end .reader-container .reader-header .reader-nav
     
     .reader-desc {
+      align-self: stretch;
       background-color: var(--tapas-accent-bg);
       border: thin solid var(--tapas-transparency);
-      //border-bottom-style: none;
       border-radius: var(--tapas-border-radius);
-      //display: block;
       grid-area: docdesc;
       margin: 0 0.5rem;
       padding: 0.25rem 0.5rem 0;
@@ -283,50 +282,11 @@ a,
         font-size: 0.9em;
         padding: 0.15rem 0.5rem 0.25rem;
       }
-      
-      /*opacity: 1;
-      transition: 
-        opacity 1s,
-        display 1s allow-discrete;
-    
-      @starting-style {
-        .reader-container .reader-header .reader-desc.hidden {
-          opacity: 1;
-        }
-      }
-      
-      &.hidden {
-        display: none;
-        opacity: 0;
-      }*/
     } // end .reader-container .reader-header .reader-desc
     
     /* Overriding styles for when the Reader header is sticking to the top of the viewport. */
     &.is-sticking {
       
-      /* Truncate long document titles to a single line */
-      /*h1 {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }*/
-      
-      /* Hide the description of the document. */
-      .reader-desc {
-        //display: none;
-        //opacity: 0;
-        /*height: 0;
-        opacity: 0;
-        overflow: hidden;
-        transform: translateY(10px);
-        transition: all .5s ease;*/
-      }
-      
-      @media (prefers-reduced-motion: no-preference) {
-        /*opacity: 0;
-        transition: all .5s ease;
-        transform: translateY(10px);*/
-      }
     } // end .reader-container .reader-header.is-sticking
   } // end .reader-container .reader-header
   

@@ -199,6 +199,7 @@ a:focus,
   color: var(--tapas-text-light);
 }
 .reader-container .reader-header .reader-desc {
+  align-self: stretch;
   background-color: var(--tapas-accent-bg);
   border: thin solid var(--tapas-transparency);
   border-radius: var(--tapas-border-radius);
