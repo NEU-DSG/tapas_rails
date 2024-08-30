@@ -8,8 +8,8 @@ tapas.reader = {};
 
 // Create an anonymous function to hold functions to be namespaced.
 ( function() {
-  /* Capture the current context so these functions can refer to themselves even 
-    when the context changes. */
+  /* Capture the current context so these functions can refer to themselves even when the context 
+    changes. */
   var that = this;
   
   /* An object for storing information about which classes of elements are currently visible (or not). */
@@ -25,67 +25,43 @@ tapas.reader = {};
     user is. This is a callback function for an IntersectionObserver.
    */
   let setScrollButtonVisibility = function (entries, observer) {
-    let readerHeader = null,
+    let allVisible,
+        readerHeader = null,
+        readerHeaderMayBeSticking = false,
         scrollDiv = document.getElementById('jump-to-top').closest('div');
+    /* Each entry marks a change in an observed element. Here, each entry indicates that its 
+      corresponding element has become hidden, partially visible, or fully visible. We want to track 
+      which elements are currently visible in the visibilityByMainClass object defined above. */
     entries.forEach(entry => {
       let mainClass = entry.target.classList[0];
       visibilityByMainClass[mainClass] = entry.isIntersecting;
-      if ( mainClass === 'reader-header' && entry.intersectionRatio < 1 ) {
+      /* If the main class of this entry's target is "reader-header", we also want to check if this 
+        element might be sticking to the top of the page. If so, its intersection ratio will be below 1, 
+        because `.reader-header` is set to `top: -1px`. */
+      if ( mainClass === 'reader-header' ) {
         readerHeader = entry.target;
+        readerHeaderMayBeSticking = entry.intersectionRatio < 1;
       }
     });
-    //console.log(visibilityByMainClass);
-    /* If every element referenced in `visibilityByMainClass` is indeed visible, the header is visible 
-      and there's no need to show the "Return to top" button. */
-    if ( Object.values(visibilityByMainClass).every(classEl => { return classEl; }) ) {
-      scrollDiv.classList.remove('jump-sticky');
-    /* If `readerHeader` isn't null, then it was set because 
+    /* Check if all observed elements are currently visible. */
+    allVisible = Object.values(visibilityByMainClass).every(classEl => classEl);
+    /* If `readerHeaderMayBeSticking` is true, then it was set because 
       (1) an entry indicates an intersection change for the reader header, 
       (2) the reader header's intersection ratio says that part of the header is out of sight, meaning 
       (3) the reader header might be acting in a "sticky" fashion. 
-      If we're at this conditional, we also know that any other observed upper-page structure is not 
-      visible. Therefore, we can assume that it would be useful for the reader to see the "Return to 
-      top" button on the page. */
-    } else if ( readerHeader !== null ) {
-      //entry.target.classList.add('is-sticking');
+      If it's ALSO true that some other observed upper-page structure is not visible, we can assume that 
+      the reader header is not just too big to fit in the window; it's likely sticking to the top of the 
+      screen. In that case, it would be useful for the reader to see the "Return to top" button on the 
+      page, and for us to hide any document description. */
+    if ( !allVisible && readerHeaderMayBeSticking ) {
       scrollDiv.classList.add('jump-sticky');
-    /* By default, don't make the "Return to top" button sticky. */
+      /* When the reader header is sticking, toggle the reader description closed. It is not reopened 
+        automatically. */
+      document.querySelector('.reader-desc').toggleAttribute('open', false);
+    /* By default, remove the class that makes the "Return to top" button sticky. */
     } else {
       scrollDiv.classList.remove('jump-sticky');
     }
-    // Test any outer structure entries for visibility
-    // For the `.reader-header` specifically, add "is-sticking" if the intersection ratio is < 1 and the outer structures are 0
-    // entries.forEach( entry => {
-    //   let scrollDiv = document.getElementById('jump-to-top').closest('div');
-    //   /* If the target entry (the reader header) isn't fully inside the viewport, make sure the button 
-    //     only appears in document order. Also, add the `.is-sticking` class to the entry element. */
-    //   if ( entry.intersectionRatio < 1 ) {
-    //     entry.target.classList.add('is-sticking');
-    //     scrollDiv.classList.add('jump-sticky');
-    //   /* Otherwise, use "sticky" position to show the button at the bottom of the screen, and remove the 
-    //     `.is-sticking` class from the entry element. */
-    //   } else {
-    //     entry.target.classList.remove('is-sticking');
-    //     scrollDiv.classList.remove('jump-sticky');
-    //   }
-    // });
-  };
-  
-  /* As the breadcrumbs move out of sight, adjust the height of the Reader description. */
-  let setDescriptionVisibility = function (entries, observer) {
-    entries.forEach( entry => {
-      console.log(entry.intersectionRatio);
-      let descEl = document.querySelector('.reader-header .reader-desc');
-      if ( entry.intersectionRatio === 0 ) {
-        descEl.style.display = 'none';
-      } else if ( entry.intersectionRatio === 1 ) {
-        descEl.style.removeProperty('display');
-        descEl.style.removeProperty('height');
-      } else {
-        descEl.style.removeProperty('display');
-        descEl.style.height = entry.intersectionRatio * 100 +'px';
-      }
-    });
   };
   
   
@@ -95,26 +71,28 @@ tapas.reader = {};
   
   /*
     Set up an Intersection Observer which will add the `.jump-sticky` class to the "Return to top" 
-    container when `.header` scrolls out of view. This solution owes a great deal to "How to Make an 
-    Unobtrusive Scroll-to-Top Button" by Marcel Rojas 
+    container when `.reader-header` scrolls out of view. This solution owes a great deal to "How to Make 
+    an Unobtrusive Scroll-to-Top Button" by Marcel Rojas 
     (https://css-tricks.com/how-to-make-an-unobtrusive-scroll-to-top-button/) and "How to Detect When a 
     Sticky Element Gets Pinned" by Chris Coyier 
     (https://css-tricks.com/how-to-detect-when-a-sticky-element-gets-pinned/).
    */
   this.setUpScrollButton = function () {
-    /* We're only interested in tracking when the `.reader-header` intersection ratio changes to or from 
-      1.0 (fully visible). When it's below 1, the header's "sticky" position is kicking in. (We know 
-      this because `.reader-header` is set to `top: -1px;`, meaning that when the header is behaving 
-      "stickily", a single pixel is out of the viewport — and the ratio is less than 1.0.) */
-    let ratioThresholds = [ 0, 0.5, 0.75, 1 ],
-        readerHeader = document.querySelector('.reader-header'),
-        headerObserver = new IntersectionObserver(setScrollButtonVisibility, { threshold: [0, 1] }),
-        breadcrumbObserver = new IntersectionObserver(
-          setDescriptionVisibility, { threshold:
-          ratioThresholds });
-    headerObserver.observe(readerHeader);
+    /* We're only interested in tracking when the intersection ratio changes to or from 0 (fully hidden) 
+      and 1.0 (fully visible). */
+    let headerObserver = new IntersectionObserver(setScrollButtonVisibility, { threshold: [0, 1] });
+    /* When `.reader-header` is below 1, the header's "sticky" position might be kicking in. We can 
+      guess at this because `.reader-header` is set to `top: -1px;`, meaning that when the header is 
+      sticking to the top of the viewport, a single pixel is out of sight — and the header's 
+      intersection ratio is less than 1.0. */
+    headerObserver.observe(document.querySelector('.reader-header'));
+    /* We also need to watch the `.breadcrumbs` component just above the reader header. If the document 
+      title and/or description are especially long, and the screen is especially small, `.reader-header`
+      may be too tall to fit entirely in the viewport. In such a case, the header's intersection ratio 
+      would _also_ be over 0 but less than 1. To ensure that the "Return to top" button only shows up 
+      when it's possible to scroll up to the top, we have the headerObserver keep track of the 
+      visibility of `.breadcrumbs` as well. */
     headerObserver.observe(document.querySelector('.breadcrumbs'));
-    //breadcrumbObserver.observe(document.querySelector('nav.breadcrumbs'))
   }
   
 }).apply(tapas.reader); // Apply the namespace to the anonymous function.
