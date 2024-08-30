@@ -14,11 +14,14 @@
     --tapas-accent-orig: #DF691A;
     --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
     
-    --tapas-accent-bg: #C1F20F; /* modified green from the TAPAS icon */
+    --tapas-accent-bg: #FFE9D9;
     
     --tapas-text-light: #EBEBEB;
     
     --tapas-transparency: rgba(0,0,0,0);
+    
+    // Use Bootstrap's default border radius to keep things looking cohesive
+    --tapas-border-radius: var(--bs-border-radius);
     
     /* Reset Bootstrap defaults: */
     --bs-border-color: #888;
@@ -184,7 +187,7 @@ a,
   
   /* Breadcrumbs */
   nav.breadcrumbs {
-    border-radius: 0.25rem;
+    border-radius: var(--tapas-border-radius);
     border: thin solid #DDD;
     //background-color: #EBEBEB;
     font-weight: 400;
@@ -230,7 +233,7 @@ a,
       grid-template-areas: 
         "doctitle doctitle"
         "docdesc docnav";
-      grid-template-columns: auto minmax(30%,max-content);
+      grid-template-columns: 1fr minmax(30%,max-content);
     }
     
     // Remove top margin on <h1> so the spacing is the same as on other pages
@@ -239,30 +242,59 @@ a,
       margin: 0.5rem 1rem 0.25rem;
     }
     
-    .reader-desc {
-      grid-area: docdesc;
-    } // end .reader-container .reader-header .reader-desc
-    
     .reader-nav {
       grid-area: docnav;
       justify-self: end;
-    }
-    
-    .nav {
+      
+      .nav {
       border-bottom: none;
       
-      .vpkg-chooser {
-        
-        .dropdown-toggle {
+        .vpkg-chooser {
           
-          &.active {
-            background-color: var(--tapas-block-mid);
-            border-bottom-color: var(--tapas-block-mid);
-            color: var(--tapas-text-light);
-          }
-        } // end .reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle
-      } // end .reader-container .reader-header .nav .nav-link.vpkg-chooser
-    } // end .reader-container .reader-header .nav
+          .dropdown-toggle {
+            
+            &.active {
+              background-color: var(--tapas-block-mid);
+              border-bottom-color: var(--tapas-block-mid);
+              color: var(--tapas-text-light);
+            }
+          } // end & .dropdown-toggle
+        } // end & .vpkg-chooser
+      } // end & .nav
+    } // end .reader-container .reader-header .reader-nav
+    
+    .reader-desc {
+      background-color: var(--tapas-accent-bg);
+      border: thin solid var(--tapas-transparency);
+      //border-bottom-style: none;
+      border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+      //display: block;
+      grid-area: docdesc;
+      margin: 0 0.5rem;
+      padding: 0.25rem 0.5rem 0;
+      
+      summary {
+        color: var(--tapas-block-dark);
+        font-size: 0.9em;
+        padding: 0.15rem 0.5rem 0.25rem;
+      }
+      
+      /*opacity: 1;
+      transition: 
+        opacity 1s,
+        display 1s allow-discrete;
+    
+      @starting-style {
+        .reader-container .reader-header .reader-desc.hidden {
+          opacity: 1;
+        }
+      }
+      
+      &.hidden {
+        display: none;
+        opacity: 0;
+      }*/
+    } // end .reader-container .reader-header .reader-desc
     
     /* Overriding styles for when the Reader header is sticking to the top of the viewport. */
     &.is-sticking {
@@ -277,6 +309,18 @@ a,
       /* Hide the description of the document. */
       .reader-desc {
         //display: none;
+        //opacity: 0;
+        /*height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(10px);
+        transition: all .5s ease;*/
+      }
+      
+      @media (prefers-reduced-motion: no-preference) {
+        /*opacity: 0;
+        transition: all .5s ease;
+        transform: translateY(10px);*/
       }
     } // end .reader-container .reader-header.is-sticking
   } // end .reader-container .reader-header
@@ -285,6 +329,7 @@ a,
     padding: 2rem;
     border: thin solid var(--bs-border-color); // #dee2e6
     border-top: none;
+    //box-shadow: 0 0.15rem 0.5rem var(--tapas-block-mid);
     overflow: auto;
     
     /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */
