@@ -59,8 +59,8 @@ tapas.reader = {};
     if ( readerHeaderMayBeSticking && !allVisible ) {
       scrollDiv.classList.add('jump-sticky');
       /* When the reader header is sticking and this is not the initial observation, toggle the reader 
-        description closed. It is not reopened automatically. */
-      if ( !isFirstInit ) {
+        description closed (if it exists). It is not reopened automatically. */
+      if ( !isFirstInit && document.querySelector('.reader-desc') !== null ) {
         document.querySelector('.reader-desc').toggleAttribute('open', false);
       }
     /* By default, remove the class that makes the "Return to top" button sticky. */
