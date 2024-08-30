@@ -26,6 +26,7 @@ tapas.reader = {};
    */
   let setScrollButtonVisibility = function (entries, observer) {
     let allVisible,
+        isFirstInit = Object.keys(visibilityByMainClass).length === 0,
         readerHeader = null,
         readerHeaderMayBeSticking = false,
         scrollDiv = document.getElementById('jump-to-top').closest('div');
@@ -52,12 +53,16 @@ tapas.reader = {};
       If it's ALSO true that some other observed upper-page structure is not visible, we can assume that 
       the reader header is not just too big to fit in the window; it's likely sticking to the top of the 
       screen. In that case, it would be useful for the reader to see the "Return to top" button on the 
-      page, and for us to hide any document description. */
-    if ( !allVisible && readerHeaderMayBeSticking ) {
+      page, and for us to hide any document description. Note that if this is the first state in which 
+      the page is loaded, nothing should be done, in order to prevent the description from loading and 
+      quickly disappearing. */
+    if ( readerHeaderMayBeSticking && !allVisible ) {
       scrollDiv.classList.add('jump-sticky');
-      /* When the reader header is sticking, toggle the reader description closed. It is not reopened 
-        automatically. */
-      document.querySelector('.reader-desc').toggleAttribute('open', false);
+      /* When the reader header is sticking and this is not the initial observation, toggle the reader 
+        description closed. It is not reopened automatically. */
+      if ( !isFirstInit ) {
+        document.querySelector('.reader-desc').toggleAttribute('open', false);
+      }
     /* By default, remove the class that makes the "Return to top" button sticky. */
     } else {
       scrollDiv.classList.remove('jump-sticky');
