@@ -267,11 +267,16 @@ a,
       background-color: var(--tapas-accent-bg);
       border: thin solid var(--tapas-transparency);
       //border-bottom-style: none;
-      border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+      border-radius: var(--tapas-border-radius);
       //display: block;
       grid-area: docdesc;
       margin: 0 0.5rem;
       padding: 0.25rem 0.5rem 0;
+      
+      /* In larger screen sizes, only the top corners should have a modified border radius. */
+      @media (min-width: 992px) {
+        border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+      }
       
       summary {
         color: var(--tapas-block-dark);
