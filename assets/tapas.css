@@ -11,10 +11,10 @@
   --tapas-accent-orig: #DF691A;
   --tapas-accent-mid: #FF8A3D;
   /* stands out well against block-dark (5.50 contrast ratio) */
-  --tapas-accent-bg: #C1F20F;
-  /* modified green from the TAPAS icon */
+  --tapas-accent-bg: #FFE9D9;
   --tapas-text-light: #EBEBEB;
   --tapas-transparency: rgba(0, 0, 0, 0);
+  --tapas-border-radius: var(--bs-border-radius);
   /* Reset Bootstrap defaults: */
   --bs-border-color: #888;
 }
@@ -146,7 +146,7 @@ a:focus,
   }
 }
 .main-container nav.breadcrumbs {
-  border-radius: 0.25rem;
+  border-radius: var(--tapas-border-radius);
   border: thin solid #DDD;
   font-weight: 400;
   margin-bottom: 1.5rem;
@@ -179,27 +179,52 @@ a:focus,
 @media (min-width: 992px) {
   .reader-container .reader-header {
     grid-template-areas: "doctitle doctitle" "docdesc docnav";
-    grid-template-columns: auto minmax(30%, max-content);
+    grid-template-columns: 1fr minmax(30%, max-content);
   }
 }
 .reader-container .reader-header h1 {
   grid-area: doctitle;
   margin: 0.5rem 1rem 0.25rem;
 }
-.reader-container .reader-header .reader-desc {
-  grid-area: docdesc;
-}
 .reader-container .reader-header .reader-nav {
   grid-area: docnav;
   justify-self: end;
 }
-.reader-container .reader-header .nav {
+.reader-container .reader-header .reader-nav .nav {
   border-bottom: none;
 }
-.reader-container .reader-header .nav .vpkg-chooser .dropdown-toggle.active {
+.reader-container .reader-header .reader-nav .nav .vpkg-chooser .dropdown-toggle.active {
   background-color: var(--tapas-block-mid);
   border-bottom-color: var(--tapas-block-mid);
   color: var(--tapas-text-light);
+}
+.reader-container .reader-header .reader-desc {
+  background-color: var(--tapas-accent-bg);
+  border: thin solid var(--tapas-transparency);
+  border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+  grid-area: docdesc;
+  margin: 0 0.5rem;
+  padding: 0.25rem 0.5rem 0;
+  /*opacity: 1;
+      transition: 
+        opacity 1s,
+        display 1s allow-discrete;
+    
+      @starting-style {
+        .reader-container .reader-header .reader-desc.hidden {
+          opacity: 1;
+        }
+      }
+      
+      &.hidden {
+        display: none;
+        opacity: 0;
+      }*/
+}
+.reader-container .reader-header .reader-desc summary {
+  color: var(--tapas-block-dark);
+  font-size: 0.9em;
+  padding-bottom: 0.25rem;
 }
 .reader-container .reader-header.is-sticking {
   /* Truncate long document titles to a single line */
@@ -209,6 +234,20 @@ a:focus,
         white-space: nowrap;
       }*/
   /* Hide the description of the document. */
+}
+.reader-container .reader-header.is-sticking .reader-desc {
+  /*height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(10px);
+        transition: all .5s ease;*/
+}
+@media (prefers-reduced-motion: no-preference) {
+  .reader-container .reader-header.is-sticking {
+    /*opacity: 0;
+        transition: all .5s ease;
+        transform: translateY(10px);*/
+  }
 }
 .reader-container #reader {
   padding: 2rem;
