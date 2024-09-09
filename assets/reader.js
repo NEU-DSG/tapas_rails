@@ -29,7 +29,8 @@ tapas.reader = {};
         isFirstInit = Object.keys(visibilityByMainClass).length === 0,
         readerHeader = null,
         readerHeaderMayBeSticking = false,
-        scrollDiv = document.getElementById('jump-to-top').closest('div');
+        scrollDiv = document.getElementById('jump-to-top').closest('div'),
+        readerDesc = document.querySelector('.reader-desc');
     /* Each entry marks a change in an observed element. Here, each entry indicates that its 
       corresponding element has become hidden, partially visible, or fully visible. We want to track 
       which elements are currently visible in the visibilityByMainClass object defined above. */
@@ -60,8 +61,8 @@ tapas.reader = {};
       scrollDiv.classList.add('jump-sticky');
       /* When the reader header is sticking and this is not the initial observation, toggle the reader 
         description closed (if it exists). It is not reopened automatically. */
-      if ( !isFirstInit && document.querySelector('.reader-desc') !== null ) {
-        document.querySelector('.reader-desc').toggleAttribute('open', false);
+      if ( !isFirstInit && readerDesc !== null ) {
+        readerDesc.toggleAttribute('open', false);
       }
     /* By default, remove the class that makes the "Return to top" button sticky. */
     } else {
