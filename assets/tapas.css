@@ -4,6 +4,11 @@
   Refactored from the TAPAS themes for Drupal.
  */
 :root {
+  /* Reset Bootstrap defaults: */
+  --bs-border-color: #888;
+  --tapas-border-color: var(--bs-border-color);
+  --tapas-border-radius: var(--bs-border-radius);
+  /* TAPAS-specific variables */
   --tapas-block-main: white;
   --tapas-block-dark: #26333F;
   --tapas-block-mid: #3F5A74;
@@ -11,12 +16,9 @@
   --tapas-accent-orig: #DF691A;
   --tapas-accent-mid: #FF8A3D;
   /* stands out well against block-dark (5.50 contrast ratio) */
-  --tapas-accent-bg: #FFE9D9;
+  --tapas-accent-bg: #EDEDED;
   --tapas-text-light: #EBEBEB;
   --tapas-transparency: rgba(0, 0, 0, 0);
-  --tapas-border-radius: var(--bs-border-radius);
-  /* Reset Bootstrap defaults: */
-  --bs-border-color: #888;
 }
 body {
   background-color: var(--tapas-block-dark);
@@ -164,7 +166,7 @@ a:focus,
 .reader-container .reader-header {
   align-items: end;
   background-color: var(--tapas-block-main);
-  border-bottom: thin solid var(--bs-border-color);
+  border-bottom: thin solid var(--tapas-border-color);
   display: grid;
   gap: 0.75rem;
   grid-template-areas: "doctitle" "docdesc" "docnav";
@@ -201,27 +203,13 @@ a:focus,
 .reader-container .reader-header .reader-desc {
   align-self: stretch;
   background-color: var(--tapas-accent-bg);
-  border: thin solid var(--tapas-transparency);
+  border: thin solid var(--tapas-border-color);
+  border-bottom-color: var(--tapas-transparency);
   border-radius: var(--tapas-border-radius);
   grid-area: docdesc;
   margin: 0 0.5rem;
   padding: 0.25rem 0.5rem 0;
   /* In larger screen sizes, only the top corners should have a modified border radius. */
-  /*opacity: 1;
-      transition: 
-        opacity 1s,
-        display 1s allow-discrete;
-    
-      @starting-style {
-        .reader-container .reader-header .reader-desc.hidden {
-          opacity: 1;
-        }
-      }
-      
-      &.hidden {
-        display: none;
-        opacity: 0;
-      }*/
 }
 @media (min-width: 992px) {
   .reader-container .reader-header .reader-desc {
@@ -233,32 +221,9 @@ a:focus,
   font-size: 0.9em;
   padding: 0.15rem 0.5rem 0.25rem;
 }
-.reader-container .reader-header.is-sticking {
-  /* Truncate long document titles to a single line */
-  /*h1 {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }*/
-  /* Hide the description of the document. */
-}
-.reader-container .reader-header.is-sticking .reader-desc {
-  /*height: 0;
-        opacity: 0;
-        overflow: hidden;
-        transform: translateY(10px);
-        transition: all .5s ease;*/
-}
-@media (prefers-reduced-motion: no-preference) {
-  .reader-container .reader-header.is-sticking {
-    /*opacity: 0;
-        transition: all .5s ease;
-        transform: translateY(10px);*/
-  }
-}
 .reader-container #reader {
   padding: 2rem;
-  border: thin solid var(--bs-border-color);
+  border: thin solid var(--tapas-border-color);
   border-top: none;
   overflow: auto;
   /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */

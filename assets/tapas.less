@@ -7,24 +7,25 @@
 //*  VARIABLES
 
   :root {
+    /* Reset Bootstrap defaults: */
+    --bs-border-color: #888;
+    
+    // Use Bootstrap's default border variables to keep things looking cohesive
+    --tapas-border-color: var(--bs-border-color);
+    --tapas-border-radius: var(--bs-border-radius);
+    
+    /* TAPAS-specific variables */
     --tapas-block-main: white;
     --tapas-block-dark: #26333F;
     --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
     
     --tapas-accent-orig: #DF691A;
     --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
-    
-    --tapas-accent-bg: #FFE9D9;
+    --tapas-accent-bg: #EDEDED;
     
     --tapas-text-light: #EBEBEB;
     
     --tapas-transparency: rgba(0,0,0,0);
-    
-    // Use Bootstrap's default border radius to keep things looking cohesive
-    --tapas-border-radius: var(--bs-border-radius);
-    
-    /* Reset Bootstrap defaults: */
-    --bs-border-color: #888;
   }
 
 
@@ -215,7 +216,7 @@ a,
   .reader-header {
     align-items: end;
     background-color: var(--tapas-block-main);
-    border-bottom: thin solid var(--bs-border-color);
+    border-bottom: thin solid var(--tapas-border-color);
     display: grid;
     gap: 0.75rem;
     grid-template-areas: 
@@ -266,7 +267,8 @@ a,
     .reader-desc {
       align-self: stretch;
       background-color: var(--tapas-accent-bg);
-      border: thin solid var(--tapas-transparency);
+      border: thin solid var(--tapas-border-color);
+      border-bottom-color: var(--tapas-transparency);
       border-radius: var(--tapas-border-radius);
       grid-area: docdesc;
       margin: 0 0.5rem;
@@ -292,7 +294,7 @@ a,
   
   #reader {
     padding: 2rem;
-    border: thin solid var(--bs-border-color); // #dee2e6
+    border: thin solid var(--tapas-border-color); // #dee2e6
     border-top: none;
     //box-shadow: 0 0.15rem 0.5rem var(--tapas-block-mid);
     overflow: auto;
