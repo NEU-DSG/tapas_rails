@@ -39,6 +39,16 @@ a:focus,
 .nav-link:focus {
   text-decoration: underline;
 }
+/*
+ * BOOTSTRAP STYLE OVERRIDES
+ */
+@media (min-width: 768px) {
+  /* The sticky header is usually z-index 1020, but this cuts off open dropdown 
+    menus in the TAPAS header (z-index 1000). */
+  .sticky-md-top {
+    z-index: 950;
+  }
+}
 /* 
  * HEADER
  */
@@ -204,16 +214,17 @@ a:focus,
   align-self: stretch;
   background-color: var(--tapas-accent-bg);
   border: thin solid var(--tapas-border-color);
-  border-bottom-color: var(--tapas-transparency);
   border-radius: var(--tapas-border-radius);
   grid-area: docdesc;
   margin: 0 0.5rem;
-  padding: 0.25rem 0.5rem 0;
-  /* In larger screen sizes, only the top corners should have a modified border radius. */
+  padding: 0.25rem 0.5rem;
+  /* In medium screen sizes and larger, only the top corners should have a modified border radius. */
 }
 @media (min-width: 992px) {
   .reader-container .reader-header .reader-desc {
+    border-bottom-color: var(--tapas-transparency);
     border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+    padding-bottom: 0;
   }
 }
 .reader-container .reader-header .reader-desc summary {

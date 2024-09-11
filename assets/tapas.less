@@ -31,6 +31,8 @@
 
 //*  MIXINS
   
+@medium-screen: 768px;
+@large-screen: 992px;
 
 
 //*  STYLES
@@ -54,6 +56,18 @@ a,
   }
 } // end a
 
+/*
+ * BOOTSTRAP STYLE OVERRIDES
+ */
+
+@media (min-width: @medium-screen) {
+  
+  /* The sticky header is usually z-index 1020, but this cuts off open dropdown 
+    menus in the TAPAS header (z-index 1000). */
+  .sticky-md-top {
+    z-index: 950;
+  }
+}
 
 /* 
  * HEADER
@@ -182,7 +196,7 @@ a,
   min-height: 2rem;
   padding: 2rem 1rem;
   
-  @media (min-width: 992px) {
+  @media (min-width: @large-screen) {
     padding: 2rem 10vw;
   }
   
@@ -230,7 +244,7 @@ a,
     
     /* In larger screen sizes, the doc description should appear on the left of the tab 
       navigation bar. */
-    @media (min-width: 992px) {
+    @media (min-width: @large-screen) {
       grid-template-areas: 
         "doctitle doctitle"
         "docdesc docnav";
@@ -268,15 +282,16 @@ a,
       align-self: stretch;
       background-color: var(--tapas-accent-bg);
       border: thin solid var(--tapas-border-color);
-      border-bottom-color: var(--tapas-transparency);
       border-radius: var(--tapas-border-radius);
       grid-area: docdesc;
       margin: 0 0.5rem;
-      padding: 0.25rem 0.5rem 0;
+      padding: 0.25rem 0.5rem;
       
-      /* In larger screen sizes, only the top corners should have a modified border radius. */
-      @media (min-width: 992px) {
+      /* In medium screen sizes and larger, only the top corners should have a modified border radius. */
+      @media (min-width: @large-screen) {
+        border-bottom-color: var(--tapas-transparency);
         border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+        padding-bottom: 0;
       }
       
       summary {
