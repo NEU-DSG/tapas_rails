@@ -2,22 +2,27 @@ class Collection < ActiveRecord::Base
   include Discard::Model
   include SolrHelpers
 
-  has_and_belongs_to_many :communities
+  # associations
+  has_one :image_file, as: :imageable
+
+  has_many :project_collections
+  has_many :projects, through: :project_collections
   belongs_to :depositor, class_name: "User"
-  # TODO: (charles) Unclear if we need to implement this.
-  # Leaving it out for now.
-  # has_and_belongs_to_many :collections,
-  #                         join_table: "collection_collections",
-  #                         association_foreign_key: "parent_collection_id"
-
   has_and_belongs_to_many :core_files
-  # has_many_attached :thumbnails
 
-  after_create :add_to_solr_index
-  after_update :update_solr_index
+  # callbacks
+  after_create :project_collection
+  after_save :update_solr_index
   around_destroy :delete_from_solr_index
 
+  # validations
   validates :depositor, :description, :title, presence: true
+
+
+  # returns url for attached thumbnail
+  def thumbnail
+    self.image_file.file.attached? ? url_for(self.image_file.file) : nil
+  end
 
   def self.phantom_collection
     pid = Rails.configuration.phantom_collection_pid
@@ -49,7 +54,7 @@ class Collection < ActiveRecord::Base
   def as_json
     fname = (thumbnail_1.label == "File Datastream" ? '' : thumbnail_1.label)
 
-    { :project_did => (community ? community.did : ''),
+    { :project_did => (project ? project.did : ''),
       :depositor => depositor,
       :title => mods.title.first,
       :access => drupal_access,
@@ -66,10 +71,6 @@ class Collection < ActiveRecord::Base
     #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 
-  def add_to_solr_index
-    index_record if locate_record['numFound'] == 0
-  end
-
   def update_solr_index
     update_record if locate_record['numFound'] > 0
   end
@@ -81,7 +82,7 @@ class Collection < ActiveRecord::Base
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_record_model_ssi"] = self.class.to_s
     solr_doc['depositor_tesim'] = depositor.id
-    solr_doc['edit_access_person_ssim'] = community&.project_admins.map(&:id)
+    solr_doc['edit_access_person_ssim'] = project&.project_admins.map(&:id)
     solr_doc['title_info_title_ssi'] = title
     solr_doc['table_id_ssi'] = id
     solr_doc['id'] = "#{self.class.to_s}_#{id}"
@@ -89,24 +90,26 @@ class Collection < ActiveRecord::Base
     solr_doc['thumbnail_list_tesim'] = 'public/assets/logo_no_text.png' # this string will be replaced with S3 storage
     # bucket url
     # TODO: drop the db, recreate, run migrations, then run the rake task to generate new dummy records and update solr
-    solr_doc['is_member_of_ssim'] = community_id # this will have to be updated to return an array with 1 or more
-    # communities to which the collection belongs; TODO: review the community/collection association and refactor to ensure habtm is properly implemented
+    solr_doc['is_member_of_ssim'] = project_id # this will have to be updated to return an array with 1 or more
+    # projects to which the collection belongs;
 
     solr_doc
   end
 
-  def community
-    # TODO: (charles) This makes it look like a collection belongs_to a single community,
-    # but elsewhere it seems like collections can be shared. Which way should we go?
-    if !self.community_id.blank?
-      if Community.exists?(self.community_id)
-        return Community.find(community_id)
+  def project
+    if !self.project_id.blank?
+      if Project.exists?(self.project_id)
+        return Project.find(project_id)
       else
         return nil
       end
     else
       return nil
     end
+  end
+
+  def project_collection
+    ProjectCollection.create(collection_id: id, project_id: self.project_id)
   end
 
   # def remove_thumbnail

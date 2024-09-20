@@ -1,7 +1,7 @@
-class CollectionsController < CatalogController
+class CollectionsController < ApplicationController
   include ApiAccessible
 
-  self.copy_blacklight_config_from(CatalogController)
+  # self.copy_blacklight_config_from(CatalogController)
 
   before_action :can_edit?, only: [:edit, :update, :destroy]
   before_action :can_read?, :only => :show
@@ -19,7 +19,7 @@ class CollectionsController < CatalogController
 
   def index
     @page_title = "All Collections"
-    @results = Collection.order(updated_at: :desc)
+    @results = Collection.all
 
     respond_to do |format|
       format.html { render :template => 'shared/index' }
@@ -29,13 +29,13 @@ class CollectionsController < CatalogController
 
   def show
     @collection = Collection.find(params[:id])
-    @page_title = @collection.title
+    @page_title = @collection.title || ''
   end
 
   def new
     @page_title = "Create New Collection"
-    @communities = Community.joins(:community_members).where(community_members: { user_id: current_user.id, member_type: ["editor", "admin"] })
-    @collection = Collection.new(community: @community)
+    @projects = Project.joins(:project_members).where(project_members: { user_id: current_user.id, role: ["editor", "admin"] })
+    @collection = Collection.new(project: @project)
   end
 
   def create
@@ -48,16 +48,16 @@ class CollectionsController < CatalogController
 
   def destroy
     collection = Collection.find(params[:id])
-    community = collection.community
+    project = collection.project
 
     collection.discard!
 
-    redirect_to community
+    redirect_to project
   end
 
   def edit
     @collection = Collection.find(params[:id])
-    @communities = Community.accessible_by(current_ability)
+    @projects = Project.accessible_by(current_ability)
     @page_title = "Edit #{@collection.title}"
   end
 
@@ -86,11 +86,11 @@ class CollectionsController < CatalogController
     params
       .require(:collection)
       .permit(
-        :community_id,
+        :project_id,
         :description,
         :is_public,
         :title,
-        thumbnails: []
+        :thumbnail
       )
   end
 end
