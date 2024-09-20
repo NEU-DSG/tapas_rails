@@ -16,8 +16,9 @@ gem 'sprockets-rails', :require => 'sprockets/railtie'
 # Use mysql2 for the staging environment
 gem 'mysql2', '~> 0.5.6'
 
-# gem 'sass-rails', '~> 4.0.2'
-gem 'bootstrap-sass', '3.3.4.1'
+gem 'sassc-rails', '>= 2.1.0'
+
+gem 'bootstrap', '~> 5.3.3'
 
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
