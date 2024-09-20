@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   include Blacklight::Controller
   layout 'blacklight'
 
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -56,11 +57,11 @@ class ApplicationController < ActionController::Base
       :password,
       :name,
       :institution_id,
-      :avatar,
+      { image_file: [:file] },
       :bio,
       :account_type
     ])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:username, :email, :password, :password_confirmation, :current_password, :name, :institution_id, :avatar, :remove_avatar, :bio, :account_type])
+    devise_parameter_sanitizer.permit(:account_update, keys: [:username, :email, :password, :password_confirmation, :current_password, :name, :institution_id, { image_file: [:file] }, :remove_avatar, :bio, :account_type])
   end
 
   def current_user_can?(perm_level, record)
