@@ -8,6 +8,7 @@
 //= require bootstrap/tab
 //= require bootstrap/carousel
 //= require twitter/typeahead
+//= require popper
 //= require bootstrap
 //= require blacklight/blacklight
 //= require activestorage
