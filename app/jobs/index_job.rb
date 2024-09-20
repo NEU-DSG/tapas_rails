@@ -22,7 +22,7 @@ class IndexJob
     begin
       obj = Base.find(pid, :cast=>true)
 
-      if ![Community, Collection, Compilation, Employee].include? obj.class
+      if ![Project, Collection, Compilation, Employee].include? obj.class
 
         if obj.datastreams.keys.include? "content"
           # Add file size if it doesn't have it
