@@ -1,10 +1,10 @@
-class CoreFilesController < CatalogController
+class CoreFilesController < ApplicationController
   include ApiAccessible
   include ModsDisplay::ControllerExtension
   include ControllerHelper
   include TapasRails::ViewPackages
 
-  self.copy_blacklight_config_from(CatalogController)
+  # self.copy_blacklight_config_from(CatalogController)
 
   configure_mods_display do
     identifier { ignore! }
@@ -93,7 +93,9 @@ class CoreFilesController < CatalogController
   end
 
   def view_package_html
-    @core_file = CoreFile.find_by_did(params[:did])
+    # the :did attribute has been removed since it's not part of the new version of the app
+    # but it may need to be added again to store legacy did's? not sure yet
+    @core_file = CoreFile.find_by_id(params[:did])
     if @core_file.blank?
       render :text => "Resource not found", :status => 404
     else
@@ -132,7 +134,7 @@ class CoreFilesController < CatalogController
   end
 
   def api_show
-    @core_file = CoreFile.find_by_did(params[:did])
+    @core_file = CoreFile.find_by_id(params[:id])
 
     if @core_file.upload_status.blank?
       @core_file.retroactively_set_status!
@@ -149,20 +151,25 @@ class CoreFilesController < CatalogController
   end
 
   def upsert
+    # revise this method to format POST requests per the updated xml db docs:
+    # request.set_form([['file', File.open('/path/to/file.xml')], ['collections', "#{f.c
+    # ollection_ids}"]], 'multipart/form-data')
+    # here, collections is an array of collection ids; make sure multiple collection ids use the correct delimiter,
+    # comma-separated in a single string versus an array, e.g., collection_ids_array.map(&:to_s).join(','), and request authorization is basic_auth
     begin
       # Step 1: Find or create the CoreFile Object -
       # we do this here so that we have a stub record to
       # attach error messages & status tracking to.
-      if CoreFile.exists_by_did?(params[:did])
-        core_file = CoreFile.find_by_did(params[:did])
+      if CoreFile.exists?(params[:id])
+        core_file = CoreFile.find_by_id(params[:id])
         core_file.mark_upload_in_progress!
       else
-        core_file = CoreFile.create(did: params[:did],
+        core_file = CoreFile.create(id: params[:id],
                                     depositor: params[:depositor])
         core_file.mark_upload_in_progress!
       end
 
-      # Step 2: Extract uploaded files to temporary locations if they exist
+      # Step 2: Extract uploaded files to temporary locations if they tapas_xq
       if params[:tei]
         params[:tei] = create_temp_file params[:tei]
       end
@@ -182,7 +189,7 @@ class CoreFilesController < CatalogController
           :title => params[:title]
         }
 
-        @mods = Exist::GetMods.execute(params[:tei], opts)
+        @mods = TapasXq::GetMods.execute(params[:tei], opts)
       end
 
       # Step 4: Kick off an upsert job
