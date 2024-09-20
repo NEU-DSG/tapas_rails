@@ -1,4 +1,4 @@
-module Exist
+module TapasXq
   module Concerns
     module Helpers
       extend ActiveSupport::Concern
@@ -26,7 +26,7 @@ module Exist
       end
 
       def build_url(url_fragment)
-        base = Settings['exist']['url']
+        base = Settings['tapas_xq']['url']
 
         if url_fragment.starts_with? '/'
           url_fragment = url_fragment[1..-1]
@@ -36,8 +36,8 @@ module Exist
       end
 
       def options_hash
-        { :user => Settings['exist']['username'], 
-          :password => Settings['exist']['password'],
+        { :user => Settings['tapas_xq']['username'],
+          :password => Settings['tapas_xq']['password'],
           :headers => Hash.new } 
       end
     end

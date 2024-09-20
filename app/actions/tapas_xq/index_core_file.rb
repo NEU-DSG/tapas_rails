@@ -1,5 +1,5 @@
-# Takes a presumed complete CoreFile and handles indexing it into exist.
-module Exist
+# Takes a presumed complete CoreFile and handles indexing it into tapas_xq.
+module TapasXq
   class IndexCoreFile
     attr_accessor :core_file, :filepath, :mod_opts
 
@@ -15,18 +15,18 @@ module Exist
 
     def execute
       if filepath
-        Exist::StoreTei.execute(filepath, core_file)
-        Exist::StoreMods.execute(filepath, core_file, mod_opts)
+        TapasXq::StoreTei.execute(filepath, core_file)
+        TapasXq::StoreMods.execute(filepath, core_file, mod_opts)
       else
         content = core_file.canonical_object.content.content
         @file = Tempfile.new(['tei', '.xml'])
         @file.write(content)
         @file.rewind
-        Exist::StoreTei.execute(@file.path, core_file)
-        Exist::StoreMods.execute(@file.path, core_file, mod_opts)
+        TapasXq::StoreTei.execute(@file.path, core_file)
+        TapasXq::StoreMods.execute(@file.path, core_file, mod_opts)
       end
 
-      Exist::StoreTfe.execute(core_file)
+      TapasXq::StoreTfe.execute(core_file)
     ensure
       @file.unlink if @file
     end

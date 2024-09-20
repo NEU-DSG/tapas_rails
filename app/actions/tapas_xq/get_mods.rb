@@ -1,10 +1,10 @@
 # Takes a filepath pointing at a TEI XML document and sends it to eXist.
 # Returns a raw string of the resulting XML data.
 # Does not move, delete, modify, or validate the file you provide.
-module Exist
+module TapasXq
   class GetMods
-    include Exist::Concerns::Helpers
-    include Exist::Concerns::Mods
+    include TapasXq::Concerns::Helpers
+    include TapasXq::Concerns::ModsXML
 
     def initialize(tei_filepath, **opts)
       @tei_filepath = tei_filepath

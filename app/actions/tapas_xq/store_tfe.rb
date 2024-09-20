@@ -1,10 +1,10 @@
 # This endpoint handles adding necessary metadata to an already indexed TEI
 # document that controls who is capable of viewing it.  This request can
 # only be run after a TEI document with the specified drupal ID has been
-# indexed in exist.
-module Exist
+# indexed in tapas_xq.
+module TapasXq
   class StoreTfe
-    include Exist::Concerns::Helpers
+    include TapasXq::Concerns::Helpers
     attr_reader :core_file
 
     def initialize(core_file)

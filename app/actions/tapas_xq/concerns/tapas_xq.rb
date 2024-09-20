@@ -1,4 +1,4 @@
-module Exist
+module TapasXq
   module Concerns
     module Mods
       extend ActiveSupport::Concern 
@@ -17,6 +17,7 @@ module Exist
       end
 
       def send_mods_request
+        # mods xml is now returned in response to the new 'store core file and supplementals' request, i.e., this method can be combined with related methods for storing new core files
         post_params = {}
 
         post_params[:file] = File.open(tei_filepath)

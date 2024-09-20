@@ -1,7 +1,7 @@
-module Exist
+module TapasXq
   class StoreTei
     attr_reader :tei_path, :core_file
-    include Exist::Concerns::Helpers
+    include TapasXq::Concerns::Helpers
 
     def initialize(tei_path, core_file)
       @tei_path = tei_path
@@ -19,7 +19,7 @@ module Exist
         # p_did = core_file.project.did.to_s.gsub(':','_')
         p_did = core_file.project.id.to_s.gsub(':','_')
       else
-        p_did = core_file.collections.first.community.did.to_s.gsub(':','_')
+        p_did = core_file.collections.first.project.did.to_s.gsub(':','_')
       end
       url = build_url "#{p_did}/#{did}/tei"
       options = options_hash.merge({

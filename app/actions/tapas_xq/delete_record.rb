@@ -1,8 +1,8 @@
 # Sends a request to eXist to delete the file and indexing associated with the
 # record with the given Drupal ID
-module Exist
+module TapasXq
   class DeleteRecord
-    include Exist::Concerns::Helpers
+    include TapasXq::Concerns::Helpers
 
     attr_reader :did
 

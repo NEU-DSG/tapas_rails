@@ -1,4 +1,4 @@
-class RebuildCommunityReadingInterfaceJob
+class RebuildProjectReadingInterfaceJob
   attr_accessor :pid
 
   def initialize(pid)
@@ -10,8 +10,8 @@ class RebuildCommunityReadingInterfaceJob
   end
 
   def run
-    if Community.exists?(self.pid)
-      project = Community.find(self.pid)
+    if Project.exists?(self.pid)
+      project = Project.find(self.pid)
       project.descendent_collections.each do |col|
         # logger.info "col is #{col.pid}"
         # rerun the ographies first

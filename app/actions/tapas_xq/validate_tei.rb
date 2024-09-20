@@ -2,10 +2,10 @@
 # a response indicating errors into an array of TEI 
 # validation errors, otherwise returns an empty
 # array
-module Exist
+module TapasXq
   class ValidateTei
-    include Exist::Concerns::Helpers
-    include Exist::Concerns::Mods
+    include TapasXq::Concerns::Helpers
+    include TapasXq::Concerns::ModsXML
 
     def self.execute(tei_filepath)
       self.new(tei_filepath).execute

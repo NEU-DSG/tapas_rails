@@ -1,6 +1,6 @@
-module Exist
+module TapasXq
   class GetReadingInterface
-    include Exist::Concerns::Helpers
+    include TapasXq::Concerns::Helpers
     include TapasRails::ViewPackages
     attr_reader :xml_blob, :type
 

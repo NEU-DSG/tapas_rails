@@ -1,7 +1,7 @@
-module Exist
+module TapasXq
   class StoreMods
-    include Exist::Concerns::Helpers
-    include Exist::Concerns::Mods
+    include TapasXq::Concerns::Helpers
+    include TapasXq::Concerns::ModsXML
 
     attr_reader :core_file
 
