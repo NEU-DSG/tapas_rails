@@ -5,7 +5,7 @@ describe CollectionValidator do
   include FileHelpers
 
   before(:all) do
-    @community = FactoryBot.create :community
+    @project = FactoryBot.create :project
   end
 
   after(:all) { ActiveFedora::Base.delete_all }
@@ -16,7 +16,7 @@ describe CollectionValidator do
       description: "A sample collection",
       depositor: "test",
       access: "public",
-      community: @community.pid,
+      project: @project.pid,
       thumbnail: Rack::Test::UploadedFile.new(
         fixture_file('image.jpg'), 'image/jpeg'
       ) }
@@ -55,7 +55,7 @@ describe CollectionValidator do
     end
 
     it 'raises an error with no community' do
-      validate(params.except(:community))
+      validate(params.except(:project))
       expect(@errors.length).to eq 1
     end
   end

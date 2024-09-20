@@ -141,12 +141,12 @@ describe UpsertCoreFile do
 
       @collections = FactoryBot.create_list(:collection, 3)
 
-      @community   = FactoryBot.create :community
+      @project   = FactoryBot.create :project
 
       # Make all the collections private
       @collections.each do |collection|
         collection.drupal_access = 'private'
-        collection.community = @community
+        collection.community = @project
         collection.save!
       end
 
@@ -166,7 +166,7 @@ describe UpsertCoreFile do
       @zip = nil
       @tei = nil
       @collections = nil
-      @community = nil
+      @project = nil
       @params = nil
     end
 

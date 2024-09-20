@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Exist::StoreTei do
+describe TapasXq::StoreTei do
   include FileHelpers
   include FixtureBuilders
 
@@ -11,7 +11,7 @@ describe Exist::StoreTei do
     file = fixture_file 'tei.xml'
     core_file, collections, community = FixtureBuilders.create_all
 
-    response = Exist::StoreTei.execute(file, core_file)
+    response = TapasXq::StoreTei.execute(file, core_file)
     expect(response.code).to eq 201
   end
 end
