@@ -5,7 +5,8 @@
 #   - Return a TEIBP/Tapas Generic representations of the object
 #   - Return the MODS metadata associated with this object 
 # - Ask eXist-db to unindex a given record
-class ExistService
+# update endpoint names for get/post/delete requests
+class TapasXQService
   def self.post(url_frag, payload)
     RestClient.post(build_url(url_frag), payload, build_authorization_header)  
   end
@@ -24,6 +25,6 @@ class ExistService
     end
   
     def self.build_url(relative_path)
-      "#{Settings['exist']['url']}/#{relative_path}"
+      "#{Settings['tapas_xq']['url']}/#{relative_path}"
     end
 end

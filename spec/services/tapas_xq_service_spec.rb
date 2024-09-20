@@ -1,5 +1,5 @@
 require 'spec_helper'
 
-describe ExistService do
+describe TapasXQService do
   skip "Write tests once a test environment exists" 
 end
