@@ -1,4 +1,4 @@
-= form_for @community do |f|
+= form_for @project do |f|
   .container-fluid
     .row
       .form-horizontal
@@ -14,21 +14,21 @@
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           = f.check_box :is_public, { checked: true }
-        -#.form-group
-        -#  = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
-        -#  .col-md-6
-        -#    - if @community.thumbnail.attached?
-        -#      =image_tag url_for(@community.thumbnail)
-        -#      = f.label :remove_thumbnail, "Remove Thumbnail"
-        -#      = f.check_box "remove_thumbnail", {:checked => false}
-        -#    = f.file_field :thumbnail, accept: ".jpeg, .jpeg, .png", direct_upload: true
+        .form-group
+          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          .col-md-6
+            - if @project.thumbnail.attached?
+              =image_tag url_for(@project.thumbnail)
+              = f.label :remove_thumbnail, "Remove Thumbnail"
+              = f.check_box "remove_thumbnail", {:checked => false}
+            = f.file_field :thumbnail, accept: ".jpeg, .jpg, .png", direct_upload: true
 
 
-    .row.form-group.institutions
-      = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
-      .col-md-6
-        %span.institution
-          = f.select :institutions, options_for_select(@institutions, @community.institutions.pluck(:id)), {}, {name: "community[institutions][]", class: "form-control pb1", multiple: true}
+    -#.row.form-group.institutions
+    -#  = f.label :institutions, "Affiliated Institutions", class: "control-label col-md-2"
+    -#  .col-md-6
+    -#    %span.institution
+    -#      = f.select :institutions, options_for_select(@institutions, @project.institutions.pluck(:id)), {}, {name: "community[institutions][]", class: "form-control pb1", multiple: true}
 
       -# TODO - add content date
       -# TODO - add keywords/subjects
@@ -36,19 +36,19 @@
       = f.label :project_members,"Project Members", class: "control-label col-md-2"
       .col-md-6
         %span.project_member
-          = f.select :project_members, options_for_select(@users, @community.project_members.pluck(:id)), {}, {name: "community[project_members][]", class: "form-control", multiple: true}
+          = f.select :project_members, options_for_select(@users, @project.project_members.pluck(:id)), {}, {name: "community[project_members][]", class: "form-control", multiple: true}
 
     .row.form-group.project_editors
       = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
       .col-md-6
         %span.project_editor
-          = f.select :project_editors, options_for_select(@users, @community.project_editors.pluck(:id)), {}, { name: 'community[project_editors][]', class: "form-control", multiple: true}
+          = f.select :project_editors, options_for_select(@users, @project.project_editors.pluck(:id)), {}, { name: 'community[project_editors][]', class: "form-control", multiple: true}
 
     .row.form-group.project_admins
       = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
       .col-md-6
         %span.project_admin
-          = f.select :project_admins, options_for_select(@users, @community.project_admins.pluck(:id)), {}, { name: 'community[project_admins][]', class: "form-control", multiple: true}
+          = f.select :project_admins, options_for_select(@users, @project.project_admins.pluck(:id)), {}, { name: 'community[project_admins][]', class: "form-control", multiple: true}
 
   -# .row
   -#   .col-md-2

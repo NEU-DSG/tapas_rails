@@ -1,2 +1,3 @@
 =label_tag :reading_selector, "Choose Stylesheet"
-=select_tag :reading_selector, options_for_select(@view_packages)
+- unless @view_packages.nil?
+  = select_tag :reading_selector, options_for_select(@view_packages)

@@ -4,16 +4,16 @@
 %br
 
 %ul.nav.nav-tabs.browse-tabs
-  %li.active
-    %a{:href=>"#projects", "data-toggle"=>"tab", "data-type"=>"communities"} Projects
   %li
+    %a{:href=>"#projects", "data-toggle"=>"tab", "data-type"=>"projects"} Projects
+  %li.active
     %a{:href=>"#collections", "data-toggle"=>"tab", "data-type"=>"collections"} Collections
   %li
     %a{:href=>"#records", "data-toggle"=>"tab", "data-type"=>"core_files"} Records
 .tab-content
-  #projects.tab-pane.active
+  #projects.tab-pane
     Loading...
-  #collections.tab-pane
+  #collections.tab-pane.active
     Loading...
   #records.tab-pane
     Loading...
@@ -24,7 +24,7 @@
     $(".browse-tabs a").click(function(e){
       var data_type = $(this).data('type');
       var type = "";
-      if (data_type == 'communities'){
+      if (data_type == 'projects'){
         type = "projects";
       }
       if (data_type == "collections"){
@@ -48,7 +48,7 @@
           var type = $(this).parents(".tab-pane").attr("id");
           var data_type = "";
           if (type == "projects"){
-            data_type = "communities";
+            data_type = "projects";
           }
           if (type == "collections"){
             data_type = "collections";

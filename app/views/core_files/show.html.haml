@@ -1,6 +1,6 @@
 %ul.breadcrumb
   %li
-    = link_to @core_file.project.title, community_path(@core_file.project)
+    = link_to @core_file.project.title, project_path(@core_file.project)
   %li.collection
     -if @core_file.collections.count > 1
       -@core_file.collections.each_with_index do |col, i|
@@ -12,7 +12,7 @@
   %li
     = @core_file.title
 
-- if can? :manage, @core_file
+- if current_user_can? :manage, @core_file
   = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
   = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this file?"
 
@@ -32,8 +32,8 @@
   .tab-content.vertical-tabs-panes
     #reader.tab-pane.active
       -# FIXME: (charles) It's not clear why these partials are here. @view_packages is not defined.
-      -# = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages}
-      -# = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages}
+      = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages}
+      = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages}
 
     #metadata.tab-pane
       = @mods_html
@@ -41,10 +41,7 @@
         %dt  File Type
         %dd
           %ul
-            - @core_file.ography_type.each do |ot|
-              %li
-                = ot.titleize
-
+            - @core_file.ography_type.titleize
 
     #files.tab-pane
       -if @core_file.canonical_object.attached?
@@ -58,7 +55,7 @@
     #project_details.tab-pane
       -if @core_file.project
         %dt Project:
-        %dd= link_to @core_file.project.title, community_path(@core_file.project)
+        %dd= link_to @core_file.project.title, project_path(@core_file.project)
         -unless @core_file.project.depositor.nil?
           - depositor = @core_file.project.depositor
           %dt Project Owner:
@@ -72,8 +69,7 @@
           %dd= link_to c.title, collection_path(c)
       -if @core_file.is_ography?
         %dt Ography Type:
-        - @core_file.ography_type.each do |o|
-          %dd= o.titleize
+        - @core_file.ography_type.titleize
 
 :javascript
   $('.nav-tabs a').click(function (e) {
@@ -81,7 +77,7 @@
     $(this).tab('show');
   });
 
-=javascript_include_tag '/view_packages/common/jquery/plugins/jquery.blockUI.min.js'
-=javascript_include_tag '/view_packages/common/d3/d3.v4.min.js'
--# FIXME: =javascript_include_tag "core_files"
--# FIXME: =javascript_include_tag "ace/ace"
+-# =javascript_include_tag '/view_packages/common/jquery/plugins/jquery.blockUI.min.js'
+-# =javascript_include_tag '/view_packages/common/d3/d3.v4.min.js'
+-# = javascript_include_tag "core_files"
+-# = javascript_include_tag "ace/ace"
