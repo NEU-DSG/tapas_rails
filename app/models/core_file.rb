@@ -7,15 +7,11 @@ class CoreFile < ActiveRecord::Base
 
   has_and_belongs_to_many :users
   has_and_belongs_to_many :collections
-  has_many_attached :thumbnails
-
-  has_one_attached :canonical_object
+  has_many :image_files, as: :imageable
 
   # Callbacks
-  after_create :add_to_solr_index
-  after_update :update_solr_index
-  around_destroy :delete_from_solr_index
-
+  after_save :update_solr_index
+  before_destroy :delete_from_solr_index
 
   # these strings refer to the role of the file in collection(s);
   # if the user doesn't select an ography type, the file is not a support file but is still a tei file that
@@ -56,14 +52,9 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  def community
-    # All collections that a CoreFile belongs to will belong to the same community
-    collections.first.community
-  end
-
   def project
-    # Just an alias for #community
-    community
+    # All collections that a CoreFile belongs to will belong to the same project
+    collections.first.project
   end
 
   def clear_ographies!
@@ -95,6 +86,26 @@ class CoreFile < ActiveRecord::Base
     else
       set_default_display_error
       mark_upload_failed!
+    end
+  end
+
+  def create_view_package_methods
+    array = available_view_packages_machine
+
+    array.each do |method_name|
+      string_name = method_name
+      method_name = method_name.to_sym
+      CoreFile.send :define_method, method_name do |arg = :models|
+        if arg.blank?
+          arg = :models
+        end
+        tg = self.content_objects(:raw).find do |x|
+          x["active_fedora_model_ssi"] == "HTMLFile" &&
+            x["html_type_ssi"] == string_name
+        end
+
+        load_specified_type(tg, arg)
+      end
     end
   end
 
@@ -147,7 +158,7 @@ class CoreFile < ActiveRecord::Base
       'edit_access_person_ssim' => project.project_admins.map(&:id),
       # these two replace the is_member_of_ssim field
       'collections_ssim' => self.collections.map(&:id),
-      'communities_ssim' => self.collections.map(&:community_id),
+      'projects_ssim' => self.collections.map(&:project_id),
       'title_info_title_ssi' => title,
       'creator_tesim' => nil, # name of person who uploaded file
       'personal_creators_tesim' => nil, # name of person who uploaded file
