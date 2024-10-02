@@ -49,6 +49,33 @@ a:focus,
     z-index: 950;
   }
 }
+.card-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+.card-sequence .card {
+  flex: 1;
+  position: unset;
+}
+@media (min-width: 768px) {
+  .card-sequence {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  .card-sequence .card {
+    min-width: 40%;
+  }
+}
+h1 .btn,
+h2 .btn,
+h3 .btn,
+h4 .btn,
+h5 .btn,
+h6 .btn {
+  font-size: inherit;
+}
 /* 
  * HEADER
  */
@@ -169,6 +196,45 @@ a:focus,
 }
 .main-container #main-content {
   margin-top: 2rem;
+}
+/*
+ * TAPAS CONTAINER
+ *
+ * Used for displaying projects and/or collections as a hierarchy.
+ */
+.tapas-container {
+  border: thin solid var(--tapas-border-color);
+  border-radius: var(--tapas-border-radius);
+  margin: 1rem 0.25rem;
+}
+.tapas-container .tapas-container-heading {
+  border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+  /* Move bottom margin from heading to the button, so we can toggle it off when 
+      the section is collapsed. */
+  margin-bottom: 0;
+}
+.tapas-container .tapas-container-heading button {
+  background-color: var(--tapas-accent-bg);
+  border: medium solid var(--tapas-transparency);
+  border-radius: inherit;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem;
+  width: 100%;
+}
+.tapas-container .tapas-container-heading button.collapsed {
+  border-radius: var(--tapas-border-radius);
+  margin-bottom: 0;
+}
+.tapas-container .tapas-container-heading button:hover,
+.tapas-container .tapas-container-heading button:focus {
+  background-color: var(--tapas-block-mid);
+  color: var(--tapas-text-light);
+}
+.tapas-container .tapas-container-heading button:focus {
+  border-color: var(--tapas-accent-mid);
+}
+.tapas-container .tapas-container-content {
+  margin: 1rem;
 }
 /*
  * TEI READER

@@ -69,6 +69,37 @@ a,
   }
 }
 
+.card-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  
+  .card {
+    flex: 1;
+    position: unset;
+  }
+  
+  @media (min-width: @medium-screen) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    //justify-content: center;
+    
+    .card {
+      min-width: 40%;
+      //max-width: 50%;
+    }
+  }
+} // end .card-sequence
+
+h1, h2, h3, h4, h5, h6 {
+  
+  .btn {
+    font-size: inherit;
+  }
+} // end h1, h2, h3, h4, h5, h6
+
+
 /* 
  * HEADER
  */
@@ -219,6 +250,54 @@ a,
     margin-top: 2rem;
   } // end .main-container #main-content
 } // end .main-container
+
+
+/*
+ * TAPAS CONTAINER
+ *
+ * Used for displaying projects and/or collections as a hierarchy.
+ */
+
+.tapas-container {
+  border: thin solid var(--tapas-border-color);
+  border-radius: var(--tapas-border-radius);
+  margin: 1rem 0.25rem;
+  
+  .tapas-container-heading {
+    border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+    /* Move bottom margin from heading to the button, so we can toggle it off when 
+      the section is collapsed. */
+    margin-bottom: 0;
+    
+    button {
+      background-color: var(--tapas-accent-bg);
+      border: medium solid var(--tapas-transparency);
+      border-radius: inherit;
+      margin-bottom: 0.5rem;
+      padding: 0.25rem;
+      width: 100%;
+      
+      &.collapsed {
+        border-radius: var(--tapas-border-radius);
+        margin-bottom: 0;
+      }
+      
+      &:hover,
+      &:focus {
+        background-color: var(--tapas-block-mid);
+        color: var(--tapas-text-light);
+      }
+      
+      &:focus {
+        border-color: var(--tapas-accent-mid);
+      }
+    } // end & button
+  } // end .tapas-container .tapas-container-heading
+  
+  .tapas-container-content {
+    margin: 1rem;
+  } // end .tapas-container .tapas-container-content
+} // end .tapas-container
 
 
 /*
