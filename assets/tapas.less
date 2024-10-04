@@ -18,10 +18,13 @@
     --tapas-block-main: white;
     --tapas-block-dark: #26333F;
     --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
+    --tapas-block-light: #F5F5F5;
     
     --tapas-accent-orig: #DF691A;
     --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
-    --tapas-accent-bg: #EDEDED;
+    //--tapas-accent-bg: #EDEDED;
+    
+    --tapas-accent2-light: #A1F5BE; /* stands out well against block-dark (5.58 contrast ratio) */
     
     --tapas-text-light: #EBEBEB;
     
@@ -30,9 +33,10 @@
 
 
 //*  MIXINS
-  
-@medium-screen: 768px;
-@large-screen: 992px;
+
+@small-screen: 30rem; // 30rem x 16px font = 480px
+@medium-screen: 48rem; // 48rem x 16px font = 768px
+@large-screen: 62rem; // 62rem x 16px font = 992px
 
 
 //*  STYLES
@@ -49,10 +53,13 @@ h1, .h1 {
 
 a,
 .nav-link {
+  /* Replace links' underlines with a border for readability. We want the link-ness 
+    of these to be evident without relying solely on color. */
+  border-bottom: thin dotted;
   text-decoration: none;
   
   &:hover, &:focus {
-    text-decoration: underline;
+    border-bottom-style: solid;
   }
 } // end a
 
@@ -98,6 +105,22 @@ h1, h2, h3, h4, h5, h6 {
     font-size: inherit;
   }
 } // end h1, h2, h3, h4, h5, h6
+
+.nav-tabs {
+  gap: 0.5rem;
+  
+  .nav-link {
+    border-color: var(--tapas-border-color);
+    
+    &:hover,
+    &:focus {
+      //background-color: var(--tapas-block-light);
+      border-color: var(--tapas-accent-mid);
+      border-bottom-color: var(--tapas-border-color);
+      text-decoration: underline;
+    }
+  } // end & .nav-link
+} // end .nav-tabs
 
 
 /* 
@@ -263,35 +286,100 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: var(--tapas-border-radius);
   margin: 1rem 0.25rem;
   
+  &.project {
+    
+    /* Use more prominent colors for project-level headings. */
+    > .tapas-container-heading {
+      background-color: var(--tapas-block-mid);
+      
+      button {
+        color: var(--tapas-text-light);
+      }
+    }
+  } // end .tapas-container.project
+  
   .tapas-container-heading {
+    align-items: baseline;
+    background-color: var(--tapas-block-light);
+    border-bottom: thin solid var(--tapas-border-color);
     border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
-    /* Move bottom margin from heading to the button, so we can toggle it off when 
-      the section is collapsed. */
-    margin-bottom: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    
+    > h2,
+    > h3 {
+      display: inline-block;
+      /* Move bottom margin from heading to the button, so we can toggle it off when 
+        the section is collapsed. */
+      margin-bottom: 0;
+    }
+    
+    .tapas-container-nav {
+      display: inline-flex;
+      gap: 0.5rem;
+      margin: 0 0.5rem;
+      
+      @media screen and (min-width: @small-screen) {
+        //gap: 1rem;
+        margin: 0 2rem;
+      }
+      
+      a {
+        color: var(--tapas-accent-mid);
+      }
+      
+      &.nav-tabs {
+        align-self: end;
+        border-bottom: none;
+        
+        a.nav-link {
+          background-color: var(--tapas-block-main);
+          color: var(--bs-black);
+        }
+      } // end .tapas-container-heading .tapas-container-nav.nav-tabs
+    } // end .tapas-container-heading .tapas-container-nav
     
     button {
-      background-color: var(--tapas-accent-bg);
+      align-items: baseline;
+      background-color: inherit;
       border: medium solid var(--tapas-transparency);
       border-radius: inherit;
-      margin-bottom: 0.5rem;
-      padding: 0.25rem;
-      width: 100%;
+      display: flex;
+      gap: 0.5rem;
+      justify-content: start;
+      margin-bottom: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      
+      @media screen and (min-width: @small-screen) {
+        padding: 0.25rem 1rem;
+      }
       
       &.collapsed {
         border-radius: var(--tapas-border-radius);
         margin-bottom: 0;
-      }
+        
+        svg {
+          transform: rotate(0.5turn);
+        }
+      } // end .tapas-container .tapas-container-heading button.collapsed
       
       &:hover,
       &:focus {
-        background-color: var(--tapas-block-mid);
-        color: var(--tapas-text-light);
+        //background-color: var(--tapas-block-mid);
+        color: var(--tapas-accent-orig);
       }
       
       &:focus {
         border-color: var(--tapas-accent-mid);
       }
-    } // end & button
+    } // end .tapas-container .tapas-container-heading button
+    
+    .badge {
+      background-color: var(--tapas-block-main);
+      border: thin solid var(--tapas-border-color);
+      color: black;
+    } // end .tapas-container .tapas-container-heading .badge
   } // end .tapas-container .tapas-container-heading
   
   .tapas-container-content {
@@ -359,7 +447,7 @@ h1, h2, h3, h4, h5, h6 {
     
     .reader-desc {
       align-self: stretch;
-      background-color: var(--tapas-accent-bg);
+      background-color: var(--tapas-block-light);
       border: thin solid var(--tapas-border-color);
       border-radius: var(--tapas-border-radius);
       grid-area: docdesc;
