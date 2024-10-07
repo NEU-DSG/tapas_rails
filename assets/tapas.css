@@ -6,6 +6,7 @@
 :root {
   /* Reset Bootstrap defaults: */
   --bs-border-color: #888;
+  --bs-body-color: #090909;
   --tapas-border-color: var(--bs-border-color);
   --tapas-border-radius: var(--bs-border-radius);
   /* TAPAS-specific variables */
@@ -19,6 +20,7 @@
   /* stands out well against block-dark (5.50 contrast ratio) */
   --tapas-accent2-light: #A1F5BE;
   /* stands out well against block-dark (5.58 contrast ratio) */
+  --tapas-text-dark: var(--bs-body-color);
   --tapas-text-light: #EBEBEB;
   --tapas-transparency: rgba(0, 0, 0, 0);
 }
@@ -53,6 +55,14 @@ a:focus,
   .sticky-md-top {
     z-index: 950;
   }
+}
+.alert {
+  /* Use the standard dark text color for warning alerts, rather than Bootstrap's 
+    dark yellow. (We may want to override the text color for other alert types as 
+    well.) */
+}
+.alert.alert-warning {
+  color: var(--tapas-text-dark);
 }
 .card-sequence {
   display: flex;
@@ -89,8 +99,8 @@ h6 .btn {
 }
 .nav-tabs .nav-link:hover,
 .nav-tabs .nav-link:focus {
-  border-color: var(--tapas-accent-mid);
-  border-bottom-color: var(--tapas-border-color);
+  border-color: var(--tapas-border-color);
+  box-shadow: 0.125rem -0.075rem 0.25rem var(--tapas-accent-mid);
   text-decoration: underline;
 }
 /* 
@@ -233,10 +243,15 @@ h6 .btn {
 .tapas-container.project > .tapas-container-heading button {
   color: var(--tapas-text-light);
 }
+.tapas-container.project > .tapas-container-heading button:hover {
+  color: var(--tapas-accent-mid);
+}
+.tapas-container.tapas-container-collapsed .tapas-container-heading {
+  border-radius: var(--tapas-border-radius);
+}
 .tapas-container .tapas-container-heading {
   align-items: baseline;
   background-color: var(--tapas-block-light);
-  border-bottom: thin solid var(--tapas-border-color);
   border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
   display: flex;
   flex-wrap: wrap;
@@ -306,7 +321,9 @@ h6 .btn {
   color: black;
 }
 .tapas-container .tapas-container-content {
-  margin: 1rem;
+  border-top: thin solid var(--tapas-border-color);
+  border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
+  padding: 1rem;
 }
 /*
  * TEI READER
