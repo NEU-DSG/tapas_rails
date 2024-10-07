@@ -95,7 +95,10 @@ class CoreFilesController < ApplicationController
   def view_package_html
     # the :did attribute has been removed since it's not part of the new version of the app
     # but it may need to be added again to store legacy did's? not sure yet
-    @core_file = CoreFile.find_by_id(params[:did])
+    # decide what to do with did values that are associated with core files in the current prod database as those files are imported into the new database
+    core_file_id = params[:id] || params[:did]
+
+    @core_file = CoreFile.find_by_id(core_file_id)
     if @core_file.blank?
       render :text => "Resource not found", :status => 404
     else
@@ -169,7 +172,7 @@ class CoreFilesController < ApplicationController
         core_file.mark_upload_in_progress!
       end
 
-      # Step 2: Extract uploaded files to temporary locations if they tapas_xq
+      # Step 2: Extract uploaded files to temporary locations if they exist
       if params[:tei]
         params[:tei] = create_temp_file params[:tei]
       end

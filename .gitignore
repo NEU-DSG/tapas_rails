@@ -17,9 +17,11 @@ saxon-js-compilation.md
 app_navigator.rb
 tapas_xq_query_syntax.rb
 cch_admin_test_record.xml
+migrations.txt
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
+/db/data/backing-up-TAPAS.md
 
 # Ignore all logfiles and tempfiles.
 /log/*.log

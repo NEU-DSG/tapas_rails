@@ -100,6 +100,7 @@ class CoreFile < ActiveRecord::Base
           arg = :models
         end
         tg = self.content_objects(:raw).find do |x|
+          #change this to whatever field name replaced "active_fedora_model_ssi"
           x["active_fedora_model_ssi"] == "HTMLFile" &&
             x["html_type_ssi"] == string_name
         end
