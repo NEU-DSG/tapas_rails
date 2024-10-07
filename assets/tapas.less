@@ -9,6 +9,7 @@
   :root {
     /* Reset Bootstrap defaults: */
     --bs-border-color: #888;
+    --bs-body-color: #090909;
     
     // Use Bootstrap's default border variables to keep things looking cohesive
     --tapas-border-color: var(--bs-border-color);
@@ -26,6 +27,7 @@
     
     --tapas-accent2-light: #A1F5BE; /* stands out well against block-dark (5.58 contrast ratio) */
     
+    --tapas-text-dark: var(--bs-body-color);
     --tapas-text-light: #EBEBEB;
     
     --tapas-transparency: rgba(0,0,0,0);
@@ -76,6 +78,16 @@ a,
   }
 }
 
+.alert {
+  
+  /* Use the standard dark text color for warning alerts, rather than Bootstrap's 
+    dark yellow. (We may want to override the text color for other alert types as 
+    well.) */
+  &.alert-warning {
+    color: var(--tapas-text-dark);
+  }
+} // end .alert
+
 .card-sequence {
   display: flex;
   flex-direction: column;
@@ -114,9 +126,8 @@ h1, h2, h3, h4, h5, h6 {
     
     &:hover,
     &:focus {
-      //background-color: var(--tapas-block-light);
-      border-color: var(--tapas-accent-mid);
-      border-bottom-color: var(--tapas-border-color);
+      border-color: var(--tapas-border-color);
+      box-shadow: 0.125rem -0.075rem 0.25rem var(--tapas-accent-mid);
       text-decoration: underline;
     }
   } // end & .nav-link
@@ -294,14 +305,28 @@ h1, h2, h3, h4, h5, h6 {
       
       button {
         color: var(--tapas-text-light);
+        
+        &:hover {
+          color: var(--tapas-accent-mid);
+        }
       }
-    }
+    } // end .tapas-container.project > .tapas-container-heading
   } // end .tapas-container.project
+  
+  /* When the `.tapas-container-content` is collapsed, Javascript will add the 
+    "tapas-container-collapsed" class to the container. */
+  &.tapas-container-collapsed {
+    
+    /* Use the rounded corners for all edges of the heading. */
+    .tapas-container-heading {
+      border-radius: var(--tapas-border-radius);
+    }
+  } // end .tapas-container.tapas-container-collapsed
   
   .tapas-container-heading {
     align-items: baseline;
     background-color: var(--tapas-block-light);
-    border-bottom: thin solid var(--tapas-border-color);
+    //border-bottom: thin solid var(--tapas-border-color);
     border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
     display: flex;
     flex-wrap: wrap;
@@ -383,7 +408,9 @@ h1, h2, h3, h4, h5, h6 {
   } // end .tapas-container .tapas-container-heading
   
   .tapas-container-content {
-    margin: 1rem;
+    border-top: thin solid var(--tapas-border-color);
+    border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
+    padding: 1rem;
   } // end .tapas-container .tapas-container-content
 } // end .tapas-container
 
