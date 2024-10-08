@@ -4,10 +4,7 @@
   Refactored from the TAPAS themes for Drupal.
  */
 :root {
-  /* Reset Bootstrap defaults: */
-  --bs-border-color: #888;
-  --bs-body-color: #090909;
-  --tapas-border-color: var(--bs-border-color);
+  --tapas-border-color: #888;
   --tapas-border-radius: var(--bs-border-radius);
   /* TAPAS-specific variables */
   --tapas-block-main: white;
@@ -20,9 +17,17 @@
   /* stands out well against block-dark (5.50 contrast ratio) */
   --tapas-accent2-light: #A1F5BE;
   /* stands out well against block-dark (5.58 contrast ratio) */
-  --tapas-text-dark: var(--bs-body-color);
+  --tapas-link-color: #0061EF;
+  --tapas-link-hover: #A84B0D;
+  --tapas-text-dark: #090909;
   --tapas-text-light: #EBEBEB;
   --tapas-transparency: rgba(0, 0, 0, 0);
+  /* Reset Bootstrap defaults: */
+  --bs-border-color: var(--tapas-border-color);
+  --bs-body-color: var(--tapas-text-dark);
+}
+:root .table {
+  --bs-table-striped-bg: var(--tapas-block-light);
 }
 body {
   background-color: var(--tapas-block-dark);
@@ -38,6 +43,7 @@ a,
   /* Replace links' underlines with a border for readability. We want the link-ness 
     of these to be evident without relying solely on color. */
   border-bottom: thin dotted;
+  color: var(--tapas-link-color);
   text-decoration: none;
 }
 a:hover,
@@ -45,6 +51,7 @@ a:hover,
 a:focus,
 .nav-link:focus {
   border-bottom-style: solid;
+  color: var(--tapas-link-hover);
 }
 /*
  * BOOTSTRAP STYLE OVERRIDES
@@ -100,7 +107,7 @@ h6 .btn {
 .nav-tabs .nav-link:hover,
 .nav-tabs .nav-link:focus {
   border-color: var(--tapas-border-color);
-  box-shadow: 0.125rem -0.075rem 0.25rem var(--tapas-accent-mid);
+  box-shadow: 0 0 0.5rem var(--tapas-accent-mid);
   text-decoration: underline;
 }
 /* 
@@ -221,7 +228,7 @@ h6 .btn {
 .main-container nav.breadcrumbs .breadcrumb {
   margin-bottom: 0;
 }
-.main-container #main-content {
+.main-container .breadcrumbs + #main-content {
   margin-top: 2rem;
 }
 /*
@@ -233,6 +240,8 @@ h6 .btn {
   border: thin solid var(--tapas-border-color);
   border-radius: var(--tapas-border-radius);
   margin: 1rem 0.25rem;
+  /* When the `.tapas-container-content` is collapsed, Javascript will add the 
+    "tapas-container-collapsed" class to the container. */
 }
 .tapas-container.project {
   /* Use more prominent colors for project-level headings. */
@@ -245,6 +254,9 @@ h6 .btn {
 }
 .tapas-container.project > .tapas-container-heading button:hover {
   color: var(--tapas-accent-mid);
+}
+.tapas-container.tapas-container-collapsed {
+  /* Use the rounded corners for all edges of the heading. */
 }
 .tapas-container.tapas-container-collapsed .tapas-container-heading {
   border-radius: var(--tapas-border-radius);
@@ -289,21 +301,16 @@ h6 .btn {
   align-items: baseline;
   background-color: inherit;
   border: medium solid var(--tapas-transparency);
-  border-radius: inherit;
+  border-radius: var(--tapas-border-radius);
   display: flex;
   gap: 0.5rem;
   justify-content: start;
-  margin-bottom: 0.25rem;
   padding: 0.25rem 0.5rem;
 }
 @media screen and (min-width: 30rem) {
   .tapas-container .tapas-container-heading button {
     padding: 0.25rem 1rem;
   }
-}
-.tapas-container .tapas-container-heading button.collapsed {
-  border-radius: var(--tapas-border-radius);
-  margin-bottom: 0;
 }
 .tapas-container .tapas-container-heading button.collapsed svg {
   transform: rotate(0.5turn);
@@ -324,6 +331,10 @@ h6 .btn {
   border-top: thin solid var(--tapas-border-color);
   border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
   padding: 1rem;
+}
+.tapas-container table.records-list th,
+.tapas-container table.records-list td {
+  vertical-align: bottom;
 }
 /*
  * TEI READER
