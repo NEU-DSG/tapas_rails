@@ -1,6 +1,6 @@
 /*
   TAPAS styles
-  
+
   Refactored from the TAPAS themes for Drupal.
  */
 :root {
@@ -9,19 +9,16 @@
   /* TAPAS-specific variables */
   --tapas-block-main: white;
   --tapas-block-dark: #26333F;
-  --tapas-block-mid: #3F5A74;
-  /* originally #4E5D6C */
+  --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
   --tapas-block-light: #F5F5F5;
   --tapas-accent-orig: #DF691A;
-  --tapas-accent-mid: #FF8A3D;
-  /* stands out well against block-dark (5.50 contrast ratio) */
-  --tapas-accent2-light: #A1F5BE;
-  /* stands out well against block-dark (5.58 contrast ratio) */
+  --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
+  --tapas-accent2-light: #A1F5BE; /* stands out well against block-dark (5.58 contrast ratio) */
   --tapas-link-color: #0061EF;
   --tapas-link-hover: #A84B0D;
   --tapas-text-dark: #090909;
   --tapas-text-light: #EBEBEB;
-  --tapas-transparency: rgba(0, 0, 0, 0);
+  --tapas-transparency: rgba(0,0,0,0);
   /* Reset Bootstrap defaults: */
   --bs-border-color: var(--tapas-border-color);
   --bs-body-color: var(--tapas-text-dark);
@@ -29,15 +26,17 @@
 :root .table {
   --bs-table-striped-bg: var(--tapas-block-light);
 }
+
 body {
   background-color: var(--tapas-block-dark);
   font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
 }
-h1,
-.h1 {
+
+h1, .h1 {
   margin: 1.25rem 0 1rem;
 }
+
 a,
 .nav-link {
   /* Replace links' underlines with a border for readability. We want the link-ness 
@@ -46,13 +45,13 @@ a,
   color: var(--tapas-link-color);
   text-decoration: none;
 }
-a:hover,
+a:hover, a:focus,
 .nav-link:hover,
-a:focus,
 .nav-link:focus {
   border-bottom-style: solid;
   color: var(--tapas-link-hover);
 }
+
 /*
  * BOOTSTRAP STYLE OVERRIDES
  */
@@ -71,6 +70,7 @@ a:focus,
 .alert.alert-warning {
   color: var(--tapas-text-dark);
 }
+
 .card-sequence {
   display: flex;
   flex-direction: column;
@@ -90,26 +90,23 @@ a:focus,
     min-width: 40%;
   }
 }
-h1 .btn,
-h2 .btn,
-h3 .btn,
-h4 .btn,
-h5 .btn,
-h6 .btn {
+
+h1 .btn, h2 .btn, h3 .btn, h4 .btn, h5 .btn, h6 .btn {
   font-size: inherit;
 }
+
 .nav-tabs {
   gap: 0.5rem;
 }
 .nav-tabs .nav-link {
   border-color: var(--tapas-border-color);
 }
-.nav-tabs .nav-link:hover,
-.nav-tabs .nav-link:focus {
+.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
   border-color: var(--tapas-border-color);
   box-shadow: 0 0 0.5rem var(--tapas-accent-mid);
   text-decoration: underline;
 }
+
 /* 
  * HEADER
  */
@@ -120,6 +117,7 @@ h6 .btn {
   margin: 0.5rem 1rem;
   padding: 0.5rem 1rem;
 }
+
 #header {
   background-color: var(--tapas-block-mid);
   font-size: 1.125em;
@@ -127,13 +125,11 @@ h6 .btn {
 #header > .container-fluid {
   align-items: baseline;
 }
-#header a,
-#header .nav-link {
+#header a, #header .nav-link {
   border: thin solid var(--tapas-transparency);
   color: var(--tapas-text-light);
 }
-#header a:focus,
-#header .nav-link:focus {
+#header a:focus, #header .nav-link:focus {
   background-color: var(--tapas-block-dark);
   border-color: var(--tapas-accent-mid);
 }
@@ -166,6 +162,7 @@ h6 .btn {
 #header .dropdown-menu a:focus {
   background-color: var(--tapas-transparency);
 }
+
 /*
  * FOOTER
  */
@@ -176,8 +173,7 @@ h6 .btn {
 .footer a {
   color: var(--tapas-accent-mid);
 }
-.footer a:hover,
-.footer a:focus {
+.footer a:hover, .footer a:focus {
   color: var(--tapas-accent-mid);
 }
 .footer a.logo {
@@ -191,13 +187,13 @@ h6 .btn {
   border: thin solid var(--tapas-transparency);
 }
 .footer .nav a:focus {
-  background-color: var(--bs-body-color);
-  /* rgb(33, 37, 41) */
+  background-color: var(--bs-body-color); /* rgb(33, 37, 41) */
   border-color: var(--tapas-accent-mid);
 }
 .footer #footer-about > .row {
   align-items: baseline;
 }
+
 /*
  * MAIN CONTENT
  *
@@ -231,6 +227,7 @@ h6 .btn {
 .main-container .breadcrumbs + #main-content {
   margin-top: 2rem;
 }
+
 /*
  * TAPAS CONTAINER
  *
@@ -273,7 +270,7 @@ h6 .btn {
 .tapas-container .tapas-container-heading > h3 {
   display: inline-block;
   /* Move bottom margin from heading to the button, so we can toggle it off when 
-        the section is collapsed. */
+    the section is collapsed. */
   margin-bottom: 0;
 }
 .tapas-container .tapas-container-heading .tapas-container-nav {
@@ -315,8 +312,7 @@ h6 .btn {
 .tapas-container .tapas-container-heading button.collapsed svg {
   transform: rotate(0.5turn);
 }
-.tapas-container .tapas-container-heading button:hover,
-.tapas-container .tapas-container-heading button:focus {
+.tapas-container .tapas-container-heading button:hover, .tapas-container .tapas-container-heading button:focus {
   color: var(--tapas-accent-orig);
 }
 .tapas-container .tapas-container-heading button:focus {
@@ -332,10 +328,10 @@ h6 .btn {
   border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
   padding: 1rem;
 }
-.tapas-container table.records-list th,
-.tapas-container table.records-list td {
+.tapas-container table.records-list th, .tapas-container table.records-list td {
   vertical-align: bottom;
 }
+
 /*
  * TEI READER
  */
@@ -348,10 +344,10 @@ h6 .btn {
   grid-template-areas: "doctitle" "docdesc" "docnav";
   justify-content: space-between;
   /* `top` will only kick in when the header is sticky. By having a single pixel out of the viewport, 
-      we can figure out if the header is sticking by testing if the `intersectingRatio` is < 1. */
+    we can figure out if the header is sticking by testing if the `intersectingRatio` is < 1. */
   top: -1px;
   /* In larger screen sizes, the doc description should appear on the left of the tab 
-      navigation bar. */
+    navigation bar. */
   /* Overriding styles for when the Reader header is sticking to the top of the viewport. */
 }
 @media (min-width: 62rem) {
@@ -424,3 +420,5 @@ h6 .btn {
   border: 2px solid var(--tapas-accent-orig);
   padding: 0.5rem;
 }
+
+/*# sourceMappingURL=tapas.css.map */
