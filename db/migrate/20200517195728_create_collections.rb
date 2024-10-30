@@ -8,8 +8,10 @@ class CreateCollections < ActiveRecord::Migration[5.2]
     end
 
     create_table :community_collections do |t|
-      t.belongs_to :collection
-      t.belongs_to :community
+      t.references :collection, foreign_key: true
+      t.references :community, foreign_key: true
+
+      t.timestamps
     end
 
     # add_index :community_collections, [:collection_id, :community_id], unique: true
