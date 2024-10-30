@@ -90,3 +90,4 @@ all-db_04102023.sql
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/db/data/

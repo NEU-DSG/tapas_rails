@@ -4,11 +4,11 @@ class Collection < ActiveRecord::Base
 
   # associations
   has_one :image_file, as: :imageable
-
   has_many :project_collections
   has_many :projects, through: :project_collections
+  has_many :collection_core_files
+  has_many :core_files, through: :collection_core_files
   belongs_to :depositor, class_name: "User"
-  has_and_belongs_to_many :core_files
 
   # callbacks
   after_create :project_collection
@@ -21,7 +21,7 @@ class Collection < ActiveRecord::Base
 
   # returns url for attached thumbnail
   def thumbnail
-    self.image_file.file.attached? ? url_for(self.image_file.file) : nil
+    self.image_file.attached? ? url_for(self.image_file) : nil
   end
 
   def self.phantom_collection
