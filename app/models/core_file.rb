@@ -1,17 +1,24 @@
+# frozen_string_literal: true
+
 class CoreFile < ActiveRecord::Base
   include Discard::Model
   include SolrHelpers
 
   # Associations
   belongs_to :depositor, class_name: "User"
-
-  has_and_belongs_to_many :users
-  has_and_belongs_to_many :collections
+  belongs_to :collection
+  has_many :project_core_files
+  has_many :projects, through: :project_core_files
+  has_many :collection_core_files
+  has_many :collections, through: :collection_core_files
   has_many :image_files, as: :imageable
+  has_and_belongs_to_many :users
 
   # Callbacks
   after_save :update_solr_index
   before_destroy :delete_from_solr_index
+  after_save :add_project_core_file_ref
+  # after_create :associate_with_project
 
   # these strings refer to the role of the file in collection(s);
   # if the user doesn't select an ography type, the file is not a support file but is still a tei file that
@@ -55,6 +62,12 @@ class CoreFile < ActiveRecord::Base
   def project
     # All collections that a CoreFile belongs to will belong to the same project
     collections.first.project
+  end
+
+  def add_project_core_file_ref
+    p = project
+
+    ProjectCoreFile.find_or_create_by(project_id: p.id, core_file_id: id)
   end
 
   def clear_ographies!
@@ -213,6 +226,13 @@ class CoreFile < ActiveRecord::Base
       :access => drupal_access
     }
   end
+
+  # may refactor this method to check the project_core_file join table to ensure the association exists
+  # def associate_with_project
+  #   if collection&.project
+  #     self.projects << collection.project
+  #   end
+  # end
 
   # def calculate_drupal_access
   #   if collections.any? { |collection| collection.drupal_access == 'public' }
