@@ -25,9 +25,9 @@ class UpsertCoreFile
       core_file.depositor = params[:depositor]
 
       # Validate TEI
-      tei_errors = Exist::ValidateTei.execute params[:tei]
+      tei_errors = TapasXq::ValidateTei.execute params[:tei]
       if tei_errors.any?
-        core_file.errors_display << 'Your TEI File was invalid.'\
+        core_file.errors_display << 'Your TEI File was invalid.'
           '  Please reupload once you have fixed all errors.'
         core_file.errors_display = core_files.errors_display + tei_errors
         core_file.mark_upload_failed!
@@ -41,7 +41,7 @@ class UpsertCoreFile
       opts[:contributors] = params[:display_contributors]
 
       if mods_needs_updating
-        mods_record = Exist::GetMods.execute(params[:tei], opts)
+        mods_record = TapasXq::GetMods.execute(params[:tei], opts)
         core_file.mods.content = mods_record
 
         # Rewrite did to mods after update
@@ -89,10 +89,10 @@ class UpsertCoreFile
       core_file.save!
       upsert_logger.info("CoreFile upsert for #{core_file.pid} has did #{core_file.did}")
 
-      Exist::IndexCoreFile.execute(core_file, params[:tei], opts)
+      TapasXq::IndexCoreFile.execute(core_file, params[:tei], opts)
 
       if core_file.is_ography?
-        TapasRails::Application::Queue.push(RebuildCommunityReadingInterfaceJob.new(core_file.project.pid))
+        TapasRails::Application::Queue.push(RebuildProjectReadingInterfaceJob.new(core_file.project.pid))
         #if it is an ography then run a job to rebuild all the reading interfaces in this project
       end
 

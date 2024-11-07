@@ -48,6 +48,9 @@ class CollectionsController < ApplicationController
 
   def destroy
     collection = Collection.find(params[:id])
+    # TODO: create a view or partial that will display instructions for what to do with core files and button to confirm
+    # deletion that will actually invoke collection.discard!
+
     project = collection.project
 
     collection.discard!

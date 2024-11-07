@@ -6,6 +6,8 @@ class Collection < ActiveRecord::Base
   has_one :image_file, as: :imageable
   has_many :project_collections
   has_many :projects, through: :project_collections
+  #TODO: implement logic so that deleting a collection displays a prompt in the ui requiring they decide which other
+  # collection the core files collection currently in the collection to be deleted should be added
   has_many :collection_core_files
   has_many :core_files, through: :collection_core_files
   belongs_to :depositor, class_name: "User"
