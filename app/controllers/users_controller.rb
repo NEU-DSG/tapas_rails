@@ -9,7 +9,7 @@ class UsersController < CatalogController
   def my_tapas
     @page_title = "My TAPAS"
     @user = current_user
-    @projects = five_communities
+    @projects = five_projects
     @collections = five_collections
     @records = five_records
     render 'my_tapas'
@@ -18,7 +18,7 @@ class UsersController < CatalogController
   def my_projects
     @page_title = "My Projects"
     @user = current_user
-    @results = @user.communities
+    @results = @user.projects
 
     render 'my_projects'
   end
@@ -80,8 +80,10 @@ class UsersController < CatalogController
     end
   end
 
-  def five_communities
-    @user.communities.kept.limit(5).order("RAND()")
+  def five_projects
+    @user.projects.first(5)
+
+    # @user.projects.kept.limit(5).order("RAND()")
   end
 
   def five_collections
