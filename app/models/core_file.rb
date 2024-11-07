@@ -8,9 +8,14 @@ class CoreFile < ActiveRecord::Base
   belongs_to :depositor, class_name: "User"
   belongs_to :collection
   has_many :project_core_files
+  # TODO: create logic such that deleting a core file by removing it from it's sole collection will also delete the reference
+  # to it and the collection's parent project on the project_core_files join table; once there is no reference on the join
+  # table between a core file and a project, the core file can be deleted along with it's records on the collection_core_files
+  # join table
   has_many :projects, through: :project_core_files
   has_many :collection_core_files
   has_many :collections, through: :collection_core_files
+  # TODO: create logic to delete project_core_file reference when all the parent collections have been deleted
   has_many :image_files, as: :imageable
   has_and_belongs_to_many :users
 
@@ -18,6 +23,10 @@ class CoreFile < ActiveRecord::Base
   after_save :update_solr_index
   before_destroy :delete_from_solr_index
   after_save :add_project_core_file_ref
+  # TODO: test to determine whether a separate callback is needed to remove project_core_file reference after a core file's
+  # parent collection has been deleted from the project and not added to a different parent collection
+
+
   # after_create :associate_with_project
 
   # these strings refer to the role of the file in collection(s);
@@ -123,8 +132,7 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  # Check to see if this is an ography-type upload or a tei file type
-  # upload
+  # Check to see if this is an ography-type upload or a tei file type upload
   def file_type
     if is_ography?
       :ography

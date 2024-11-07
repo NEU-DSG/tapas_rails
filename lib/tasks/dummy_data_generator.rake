@@ -34,18 +34,40 @@ namespace :dummy_data_generator do
     image_name ||= "#{record.class}_#{record.__id__}"
     depositor_id = record.is_a?(User) ? record.id : record.depositor_id
 
-    record.image_file.file.attach(io: image_data, filename: image_name, content_type: image_data.content_type)
+    record_assoc_image_file = ImageFile.create(
+      title: image_name,
+      depositor_id: depositor_id,
+      imageable_type: record.class.name,
+      imageable_id: record.id,
+      file_format: image_data&.content_type,
+      image_url: url
+    )
 
-    record_image = ImageFile.create(title: image_name, depositor_id: depositor_id, imageable_type: record.class.name, imageable_id: record.id, file_format: image_data.content_type)
+    record_assoc_image_file.save
 
-    record_image.save
+    record.image_file.attach(
+      io: image_data,
+      filename: record_assoc_image_file.title,
+      content_type: record_assoc_image_file.file_format
+    )
 
-    puts "Image file attached for #{record.class} #{record.id}" if record_image.file.attached?
+    puts record.image_file.analyze
 
-    # process image file metadata
-    # if record_image.file.attached?
-    #   record_image.file.analyze
-    # end
+    puts "Image file attached for #{record.class} #{record.id}" if record.image_file.attached?
+  end
+
+  desc 'attach image files'
+  task :attach_image_files => :environment do
+    [
+      # CoreFile,
+      User,
+      Collection,
+      Project
+    ].map(&:all).flatten.each do |o|
+      image_file_name = "#{o.class}_#{o.id}"
+
+      record_image(o, image_file_name) unless o.image_file.attached?
+    end
   end
 
   desc "create admin user"
@@ -53,16 +75,14 @@ namespace :dummy_data_generator do
     email = ENV.fetch('DUMMY_ADMIN_EMAIL')
     password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
 
-    u = User.create(name: 'Admin',
+    user = User.create(name: 'Admin',
                 email: email,
                 bio: Faker::Lorem.paragraph,
                 password: password,
                 admin_at: Time.now
     )
 
-    user_avatar_name = "#{u.class}_#{u.id}"
-
-    record_image(u, user_avatar_name)
+    puts "Admin user #{user.id} has been created." unless user.nil?
   end
 
   desc "create debug non-admin user"
@@ -70,11 +90,13 @@ namespace :dummy_data_generator do
     email = ENV.fetch('DUMMY_DEBUG_EMAIL')
     password = ENV.fetch('DUMMY_DEBUG_PASSWORD')
 
-    User.create(name: 'Debug',
+    user = User.create(name: 'Debug',
                 email: email,
                 bio: Faker::Lorem.paragraph,
                 password: password
     )
+
+    puts "Debug non-admin user #{user.id} has been created." unless user.nil?
   end
 
   desc "create non-admin users"
@@ -87,15 +109,6 @@ namespace :dummy_data_generator do
       )
 
       puts "Non-admin user #{user.id} has been created." unless user.nil?
-    end
-  end
-
-  desc 'attach user avatars'
-  task :attach_user_avatars => :environment do
-    User.all.each do |u|
-      user_avatar_name = "#{u.class}_#{u.id}"
-
-      record_image(u, user_avatar_name)
     end
   end
 
@@ -121,34 +134,40 @@ namespace :dummy_data_generator do
       )
       puts "Private project #{project.id} has been created." unless project.nil?
     end
-
-    Project.each do |p|
-      project_thumbnail_name = "#{p.class}_#{p.id}"
-
-      record_image(p, project_thumbnail_name)
-    end
   end
 
   desc 'create project members'
   task :generate_project_members => :environment do
     Project.all.each do |project|
       5.times do
+        user_id = User.all.where(admin_at: nil).sample.id
+
         ProjectMember.create(project_id: project.id,
-                             user_id: User.all.where(admin_at: nil).sample.id,
+                             user_id: user_id,
                              role: 'contributor'
-      )
+        )
+
+        puts "User #{user_id} has been added to Project #{project.id}'s project members as a Contributor."
       end
       2.times do
+        user_id = User.all.where(admin_at: nil).sample.id
+
         ProjectMember.create(project_id: project.id,
-                             user_id: User.all.where(admin_at: nil).sample.id,
+                             user_id: user_id,
                              role: 'editor'
         )
+
+        puts "User #{user_id} has been added to Project #{project.id}'s project members as an Editor."
       end
       1.times do
+        user_id = User.all.where(admin_at: nil).sample.id
+
         ProjectMember.create(project_id: project.id,
-                             user_id: User.all.where(admin_at: nil).sample.id,
+                             user_id: user_id,
                              role: 'owner'
         )
+
+        puts "User #{user_id} has been added to Project #{project.id}'s project members as an Owner."
       end
     end
   end
@@ -225,7 +244,7 @@ namespace :dummy_data_generator do
   end
 
   desc 'generate all dummy data'
-  task :run_all_generate_tasks => :environment do
+  task :run_all => :environment do
     puts 'Creating admin user...'
     Rake::Task['dummy_data_generator:generate_admin_user'].invoke
 
@@ -234,31 +253,31 @@ namespace :dummy_data_generator do
     puts 'Creating non-admin users...'
     Rake::Task['dummy_data_generator:generate_non_admin_users'].invoke
 
-    puts 'Adding user avatar image files...'
-    Rake::Task['dummy_data_generator:attach_user_avatars'].invoke
-
     puts 'Creating public projects...'
     Rake::Task['dummy_data_generator:generate_public_projects'].invoke
 
     puts 'Creating private projects...'
     Rake::Task['dummy_data_generator:generate_private_projects'].invoke
 
-    puts 'Creating project members...'
-    Rake::Task['dummy_data_generator:generate_project_members'].invoke
+    puts 'Creating public collections...'
+    Rake::Task['dummy_data_generator:generate_public_collections'].invoke
 
     puts 'Creating private collections...'
     Rake::Task['dummy_data_generator:generate_private_collections'].invoke
 
-    puts 'Creating project_collection join table records'
-    Rake::Task['dummy_data_generator:generate_project_collections'].invoke
+    # puts 'Creating public core files...'
+    # Rake::Task['dummy_data_generator:generate_public_core_files'].invoke
+    #
+    # puts 'Creating private core files...'
+    # Rake::Task['dummy_data_generator:generate_private_core_files'].invoke
 
-    puts 'Creating public core files...'
-    Rake::Task['dummy_data_generator:generate_public_core_files'].invoke
+    # puts 'Creating ography core files...'
+    # Rake::Task['dummy_data_generator:generate_core_files_as_ographies'].invoke
 
-    puts 'Creating private core files...'
-    Rake::Task['dummy_data_generator:generate_private_core_files'].invoke
+    puts 'Creating project members...'
+    Rake::Task['dummy_data_generator:generate_project_members'].invoke
 
-    puts 'Creating ography core files...'
-    Rake::Task['dummy_data_generator:generate_core_files_as_ographies'].invoke
+    puts 'Adding image files...'
+    Rake::Task['dummy_data_generator:attach_image_files'].invoke
   end
 end
