@@ -1,6 +1,9 @@
 - if current_user_can? :manage, @project
   = link_to "Edit", edit_project_path(@project), class:['btn', 'btn-info', 'btn-large']
   = link_to "Delete", project_path(@project), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this community?"
+  -# TODO: this should take the user to a page (or display a partial) that requires they confirm they want to delete
+  -# the project and explains they won't have access to the core files after deletion;
+  -# also display a list of the project's collections and their child core files, with the titles hyperlinked
 
 %h2.page-header= @project.title
 

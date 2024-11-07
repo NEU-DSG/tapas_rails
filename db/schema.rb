@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_08_22_185808) do
+ActiveRecord::Schema.define(version: 2024_10_21_161329) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -49,6 +49,15 @@ ActiveRecord::Schema.define(version: 2024_08_22_185808) do
     t.index ["active_storage_attachment_id"], name: "index_captions_on_active_storage_attachment_id"
   end
 
+  create_table "collection_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "collection_id"
+    t.bigint "core_file_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id"], name: "index_collection_core_files_on_collection_id"
+    t.index ["core_file_id"], name: "index_collection_core_files_on_core_file_id"
+  end
+
   create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -60,14 +69,6 @@ ActiveRecord::Schema.define(version: 2024_08_22_185808) do
     t.datetime "discarded_at"
     t.index ["depositor_id"], name: "index_collections_on_depositor_id"
     t.index ["discarded_at"], name: "index_collections_on_discarded_at"
-  end
-
-  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "core_file_id"
-    t.bigint "collection_id"
-    t.index ["collection_id", "core_file_id"], name: "index_collections_core_files_on_collection_id_and_core_file_id", unique: true
-    t.index ["collection_id"], name: "index_collections_core_files_on_collection_id"
-    t.index ["core_file_id"], name: "index_collections_core_files_on_core_file_id"
   end
 
   create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -112,6 +113,7 @@ ActiveRecord::Schema.define(version: 2024_08_22_185808) do
     t.bigint "imageable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_url"
     t.index ["imageable_type", "imageable_id"], name: "index_image_files_on_imageable_type_and_imageable_id"
   end
 
@@ -150,9 +152,21 @@ ActiveRecord::Schema.define(version: 2024_08_22_185808) do
   create_table "project_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "collection_id"
     t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["collection_id", "project_id"], name: "index_project_collections_on_collection_id_and_project_id"
     t.index ["collection_id"], name: "index_project_collections_on_collection_id"
     t.index ["project_id"], name: "index_project_collections_on_project_id"
+  end
+
+  create_table "project_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id"
+    t.bigint "core_file_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["core_file_id"], name: "index_project_core_files_on_core_file_id"
+    t.index ["project_id", "core_file_id"], name: "index_project_core_files_on_project_id_and_core_file_id", unique: true
+    t.index ["project_id"], name: "index_project_core_files_on_project_id"
   end
 
   create_table "project_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -244,4 +258,10 @@ ActiveRecord::Schema.define(version: 2024_08_22_185808) do
   end
 
   add_foreign_key "captions", "active_storage_attachments"
+  add_foreign_key "collection_core_files", "collections"
+  add_foreign_key "collection_core_files", "core_files"
+  add_foreign_key "project_collections", "collections"
+  add_foreign_key "project_collections", "projects"
+  add_foreign_key "project_core_files", "core_files"
+  add_foreign_key "project_core_files", "projects"
 end

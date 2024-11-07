@@ -9,6 +9,10 @@
 - if current_user_can? :manage, @collection
   = link_to "Edit", edit_collection_path(@collection), class: ['btn', 'btn-info', 'btn-large']
   = link_to "Delete", collection_path(@collection), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this collection?"
+    -# TODO: add a form with text informing the user that deleting a collection will delete the core files in it unless a
+    -# different collection is selected for the core files; instruct the user to select an existing or create a new
+    -# collection for the associated core files, if any exist;
+    -# form should have a select input listing other collections the user has edit access to based on their project role
 - records = @collection.core_files || []
 
 %h2.page-header= @collection.title
