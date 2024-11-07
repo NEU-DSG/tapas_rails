@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ProjectMember < ActiveRecord::Base
   # constants
   ROLES = %w[contributor owner editor]

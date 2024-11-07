@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  # TODO: this will have to be refactored to parse requests for pages by their database table id (primary key), Friendly ID slug, or Drupal human-readable identifier so that this controller can return pages created in the current Production TAPAS app, and ones created after the V2 launch.
   extend ActiveSupport::Concern
   before_action :verify_admin, :except => :show
   before_action :verify_published, :only => :show

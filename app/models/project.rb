@@ -6,10 +6,15 @@ class Project < ActiveRecord::Base
 
   # associations
   belongs_to :depositor, class_name: "User"
+  has_one_attached :image_file
   has_one :image_file, as: :imageable
-
   has_many :project_members
   has_many :users, through: :project_members
+  has_many :project_core_files
+  has_many :core_files, through: :project_core_files
+  #TODO: create logic such that deleting a collection in a project, when the user has not specified the collection's core
+  # files should be added to a new collection in that project, should delete the record associated with core file on the
+  # project_core_files join table;
   has_many :project_collections
   has_many :collections, through: :project_collections
 
