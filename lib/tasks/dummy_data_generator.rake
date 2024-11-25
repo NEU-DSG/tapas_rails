@@ -25,8 +25,8 @@ namespace :dummy_data_generator do
   # # Check if a thumbnail is attached
   # project.thumbnail_file.attached?
 
-  IMAGE_BASE_URL = ENV.fetch(IMAGE_BASE_URL, nil)
-  RAW_TEI_URL = ENV.fetch(RAW_TEI_URL, nil)
+  IMAGE_BASE_URL = ENV.fetch("IMAGE_BASE_URL", nil)
+  RAW_TEI_URL = ENV.fetch("RAW_TEI_URL", nil)
 
   def record_image(record, image_name=nil)
     url = "#{IMAGE_BASE_URL}"
