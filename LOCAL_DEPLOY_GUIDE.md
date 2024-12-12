@@ -49,6 +49,6 @@ Ensure the following are installed:
 2. **visit**: `http://localhost:3000`
 3. **Happy coding!**
 
-#### Troubleshooting:
+### Troubleshooting:
 - stop the server: `ctrl C`
 - Review the **Notes for OSX** section of the [README](README.md) to configure additional environment dependencies. i.e., nokogiri, openssl, libv8

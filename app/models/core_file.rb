@@ -159,10 +159,6 @@ class CoreFile < ActiveRecord::Base
     #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 
-  def add_to_solr_index
-    index_record if locate_record['numFound'] == 0
-  end
-
   def update_solr_index
     update_record if locate_record['numFound'] > 0
   end
