@@ -25,8 +25,8 @@ namespace :dummy_data_generator do
   # # Check if a thumbnail is attached
   # project.thumbnail_file.attached?
 
-  IMAGE_BASE_URL = ENV.fetch(IMAGE_BASE_URL, nil)
-  RAW_TEI_URL = ENV.fetch(RAW_TEI_URL, nil)
+  IMAGE_BASE_URL = ENV.fetch("IMAGE_BASE_URL", nil)
+  RAW_TEI_URL = ENV.fetch("RAW_TEI_URL", nil)
 
   def record_image(record, image_name=nil)
     url = "#{IMAGE_BASE_URL}"
@@ -58,15 +58,19 @@ namespace :dummy_data_generator do
 
   desc 'attach image files'
   task :attach_image_files => :environment do
-    [
-      # CoreFile,
-      User,
-      Collection,
-      Project
-    ].map(&:all).flatten.each do |o|
-      image_file_name = "#{o.class}_#{o.id}"
+    if IMAGE_BASE_URL == nil
+      puts "IMAGE_BASE_URL not set — skipping image attachment"
+    else
+      [
+        # CoreFile,
+        User,
+        Collection,
+        Project
+      ].map(&:all).flatten.each do |o|
+        image_file_name = "#{o.class}_#{o.id}"
 
-      record_image(o, image_file_name) unless o.image_file.attached?
+        record_image(o, image_file_name) unless o.image_file.attached?
+      end
     end
   end
 
