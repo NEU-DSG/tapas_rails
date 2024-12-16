@@ -263,6 +263,9 @@ namespace :dummy_data_generator do
     puts 'Creating private projects...'
     Rake::Task['dummy_data_generator:generate_private_projects'].invoke
 
+    puts 'Creating project members...'
+    Rake::Task['dummy_data_generator:generate_project_members'].invoke
+
     puts 'Creating public collections...'
     Rake::Task['dummy_data_generator:generate_public_collections'].invoke
 
@@ -278,10 +281,7 @@ namespace :dummy_data_generator do
     # puts 'Creating ography core files...'
     # Rake::Task['dummy_data_generator:generate_core_files_as_ographies'].invoke
 
-    puts 'Creating project members...'
-    Rake::Task['dummy_data_generator:generate_project_members'].invoke
-
-    puts 'Adding image files...'
-    Rake::Task['dummy_data_generator:attach_image_files'].invoke
+    # puts 'Adding image files...'
+    # Rake::Task['dummy_data_generator:attach_image_files'].invoke
   end
 end

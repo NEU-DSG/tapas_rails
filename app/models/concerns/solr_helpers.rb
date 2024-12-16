@@ -14,33 +14,37 @@ module SolrHelpers
   end
 
   def index_record
-    response = locate_record
-
-    if response['numFound'] == 0
-      SOLR_CORE_CONNECTION.add(self.to_solr) && SOLR_CORE_CONNECTION.commit
-    else
-      puts 'Record is already indexed.'
-    end
+    # response = locate_record
+    #
+    # if response['numFound'] == 0
+      SOLR_CORE_CONNECTION.add(self.to_solr)
+      SOLR_CORE_CONNECTION.commit
+    # else
+    #   puts 'Record is already indexed.'
+    # end
   end
 
   def update_record
-    response = locate_record
-
-    if response['numFound'] == 1
-      SOLR_CORE_CONNECTION.update(self.to_solr) && SOLR_CORE_CONNECTION.commit
-    else
-      index_record
-    end
+    # response = locate_record
+    #
+    # if response['numFound'] == 1
+      SOLR_CORE_CONNECTION.update(self.to_solr)
+      SOLR_CORE_CONNECTION.commit
+    # else
+    #   index_record
+    # end
   end
 
   def delete_record
     record_id = self.to_solr['id']
 
-    SOLR_CORE_CONNECTION.delete_by_id("#{record_id}") && SOLR_CORE_CONNECTION.commit
+    SOLR_CORE_CONNECTION.delete_by_id("#{record_id}")
+    SOLR_CORE_CONNECTION.commit
   end
 
   def self.delete_all_indexed_records
-    SOLR_CORE_CONNECTION.delete_by_query('*:*') && SOLR_CORE_CONNECTION.commit
+    SOLR_CORE_CONNECTION.delete_by_query('*:*')
+    SOLR_CORE_CONNECTION.commit
   end
 
   def self.record_count(query=nil)

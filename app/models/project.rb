@@ -19,8 +19,9 @@ class Project < ActiveRecord::Base
   has_many :collections, through: :project_collections
 
   # callbacks
-  after_save :update_solr_index
-  around_destroy :delete_from_solr_index
+  after_create_commit :index_record
+  after_update_commit :update_record
+  before_destroy :delete_record
 
 
   def project_members
@@ -35,15 +36,7 @@ class Project < ActiveRecord::Base
     users.where(project_members: { role: "owner" })
   end
 
-  def update_solr_index
-    update_record if locate_record['numFound'] > 0
-  end
-
-  def delete_from_solr_index
-    delete_record if locate_record['numFound'] > 0
-  end
-
-  def to_solr(solr_doc = {})
+   def to_solr(solr_doc = {})
     solr_doc["active_record_model_ssi"] = self.class.to_s
     solr_doc['depositor_tesim'] = depositor.id
     solr_doc['edit_access_person_ssim'] = project_admins.map(&:id)

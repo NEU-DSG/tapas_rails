@@ -20,8 +20,9 @@ class CoreFile < ActiveRecord::Base
   has_and_belongs_to_many :users
 
   # Callbacks
-  after_save :update_solr_index
-  before_destroy :delete_from_solr_index
+  after_create_commit :index_record
+  after_update_commit :update_record
+  before_destroy :delete_record
   after_save :add_project_core_file_ref
   # TODO: test to determine whether a separate callback is needed to remove project_core_file reference after a core file's
   # parent collection has been deleted from the project and not added to a different parent collection
@@ -159,13 +160,13 @@ class CoreFile < ActiveRecord::Base
     #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 
-  def update_solr_index
-    update_record if locate_record['numFound'] > 0
-  end
-
-  def delete_from_solr_index
-    delete_record if locate_record['numFound'] > 0
-  end
+  # def update_solr_index
+  #   update_record if locate_record['numFound'] > 0
+  # end
+  #
+  # def delete_from_solr_index
+  #   delete_record if locate_record['numFound'] > 0
+  # end
 
   def to_solr
     {

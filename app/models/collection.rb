@@ -14,8 +14,9 @@ class Collection < ActiveRecord::Base
 
   # callbacks
   after_create :project_collection
-  after_save :update_solr_index
-  around_destroy :delete_from_solr_index
+  after_create_commit :index_record
+  after_update_commit :update_record
+  before_destroy :delete_record
 
   # validations
   validates :depositor, :description, :title, presence: true
@@ -73,13 +74,13 @@ class Collection < ActiveRecord::Base
     #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 
-  def update_solr_index
-    update_record if locate_record['numFound'] > 0
-  end
-
-  def delete_from_solr_index
-    delete_record if locate_record['numFound'] > 0
-  end
+  # def update_solr_index
+  #   update_record if locate_record['numFound'] > 0
+  # end
+  #
+  # def delete_from_solr_index
+  #   delete_record if locate_record['numFound'] > 0
+  # end
 
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_record_model_ssi"] = self.class.to_s
