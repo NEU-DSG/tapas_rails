@@ -1,0 +1,87 @@
+<!--
+    Header navbar
+  -->
+<header id="header" role="banner" class="navbar navbar-expand-md">
+  <div class="container-fluid">
+    <!-- TAPAS brand -->
+    <a class="logo" href="/">
+      <img src="https://tapasproject.org/profiles/buildtapas/themes/tapas-themes/tapas_redesign/logo.png" 
+        alt="" />
+      <span class="navbar-brand">TAPAS Project</span>
+    </a>
+    <!-- Toggle for collapsed navbar content -->
+    <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#header-nav"
+        aria-controls="header-nav" aria-expanded="true">
+      <span class="visually-hidden">Toggle navigation</span>
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!-- TAPAS site navigation -->
+    <nav id="header-nav" class="collapse navbar-collapse">
+      <ul class="navbar-nav">
+        <li class="nav-item dropdown">
+          <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
+            data-bs-toggle="dropdown">About</button>
+          <ul class="dropdown-menu">
+            <li class="nav-item"><!-- New landing page -->
+              <a href="/about-tapas" class="dropdown-item">About TAPAS</a></li>
+            <li class="nav-item">
+              <a href="/mission" class="dropdown-item">Mission and History</a></li>
+            <li class="nav-item">
+              <a href="/tapas-team" class="dropdown-item">TAPAS Team</a></li>
+            <li class="nav-item">
+              <a href="/partners-and-supporters" 
+                class="dropdown-item">Partners and Supporters</a></li>
+            <li class="nav-item">
+              <a href="/news" class="dropdown-item">News</a></li>
+            <li class="nav-item">
+              <a href="/contact" class="dropdown-item">Contact Us</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown">
+          <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
+            data-bs-toggle="dropdown">Support</button>
+          <ul class="dropdown-menu">
+            <li class="nav-item">
+              <a href="/getting-started-with-tapas" class="dropdown-item" 
+                title="An overview of TAPAS Features and Services">Getting Started</a></li>
+            <li>
+              <a href="/classroom" class="dropdown-item">Teaching with TAPAS</a></li>
+            <li>
+              <a href="/tapas-commons/tei-templates" class="dropdown-item" 
+                title="Learn the TEI with annotated TEI templates">TEI Templates</a></li>
+            <li class="nav-item">
+              <a href="/faq" class="dropdown-item">Frequently Asked Questions</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="/browse" class="nav-link">Browse</a>
+          <!--<button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
+            data-bs-toggle="dropdown">Discover</button>
+          <ul class="dropdown-menu">
+            <li><!-\- landing page -\->
+              <a href="/browse" class="dropdown-item">Browse</a></li>
+            <li>
+              <a href="/search" class="dropdown-item">Search</a></li>
+          </ul>-->
+        </li>
+        <li class="nav-item dropdown" data-tapas-registered-user="true">
+          <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
+            data-bs-toggle="dropdown">Create</button>
+          <ul class="dropdown-menu">
+            <li class="nav-item">
+              <a href="/add/record" class="dropdown-item">TEI Record</a></li>
+            <li class="nav-item">
+              <a href="/add/collection" class="dropdown-item">Collection</a></li>
+            <li class="nav-item">
+              <a href="/add/project" class="dropdown-item">Project</a></li>
+          </ul>
+        </li>
+      </ul>
+      <!-- User account and authentication -->
+      <div class="navbar-nav user-nav">
+        <!-- TODO: toggle between logged-in and logged-out display -->
+        <a href="/user/login" class="nav-link">Sign In</a>
+      </div>
+    </nav>
+  </div>
+</header>
