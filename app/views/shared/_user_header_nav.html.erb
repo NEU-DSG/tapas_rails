@@ -1,0 +1,18 @@
+<div class="navbar-nav user-nav">
+  <% if current_user.nil? %>
+    <a href="/users/sign_in" class="nav-link">Sign In</a>
+  <% elsif current_user %>
+    <div class="btn-group">
+      <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
+        data-bs-toggle="dropdown">My Account</button>
+      <ul class="dropdown-menu dropdown-menu-end">
+        <li class="nav-item">
+          <a href="/users/sign_out" class="nav-link">Log Out</a>
+        </li>
+        <li class="nav-item">
+          <a href="/users/edit" class="dropdown-item">Settings</a>
+        </li>
+      </ul>
+    </div>
+  <% end %>
+</div>
