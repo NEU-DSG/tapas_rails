@@ -36,9 +36,9 @@ TapasRails::Application.routes.draw do
   get 'browse' => 'catalog#browse'
 
   # Projects, formerly 'Communities'
-  post "projects/:id" => "projects#upsert" # TODO: upsert -> update
-  resources :projects, except: :update
+  resources :projects
   # TODO: add more complex routing to reflect ordered hierarchy, human-readable names
+  # 2025-02: Removed route for "projects#upsert", a Drupal-focused upload/update.
   #get 'projects/:id' => 'projects#show'
   #get 'projects/:id/edit' => 'projects#edit'
   #get 'projects' => 'projects#index'
@@ -46,8 +46,8 @@ TapasRails::Application.routes.draw do
   #delete "projects/:id" => "projects#destroy"
 
   # Collections
-  post 'collections/:id' => 'collections#upsert'
-  resources :collections, except: :update
+  resources :collections
+  # 2025-02: Removed route for "collections#upsert", a Drupal-focused upload/update.
   #get 'collections/id' => 'collections#show'
   #get 'collections/id/edit' => 'collections#edit'
   #get 'collections' => 'collections#index'
