@@ -38,6 +38,11 @@ Rails.application.routes.draw do
 
   # Collections
   resources :collections
+  # TODO: add more complex routing to reflect ordered hierarchy, human-readable names
+
+
+  # Collections
+  resources :collections
 
   # CoreFiles
   resources :core_files
