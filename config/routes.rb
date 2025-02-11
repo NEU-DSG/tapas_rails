@@ -40,9 +40,17 @@ Rails.application.routes.draw do
   resources :collections
   # TODO: add more complex routing to reflect ordered hierarchy, human-readable names
 
+  # Collections
+  resources :collections
+
+  # CoreFiles
+  resources :core_files
+  # TODO: add more complex routing to reflect ordered hierarchy, human-readable names
+  # 2025-02: Removed route for "projects#upsert", a Drupal-focused upload/update.
 
   # Collections
   resources :collections
+  # 2025-02: Removed route for "collections#upsert", a Drupal-focused upload/update.
 
   # CoreFiles
   resources :core_files
