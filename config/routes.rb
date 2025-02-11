@@ -39,36 +39,20 @@ TapasRails::Application.routes.draw do
   resources :projects
   # TODO: add more complex routing to reflect ordered hierarchy, human-readable names
   # 2025-02: Removed route for "projects#upsert", a Drupal-focused upload/update.
-  #get 'projects/:id' => 'projects#show'
-  #get 'projects/:id/edit' => 'projects#edit'
-  #get 'projects' => 'projects#index'
-  #get '/catalog/:id' => 'projects#show'
-  #delete "projects/:id" => "projects#destroy"
 
   # Collections
   resources :collections
   # 2025-02: Removed route for "collections#upsert", a Drupal-focused upload/update.
-  #get 'collections/id' => 'collections#show'
-  #get 'collections/id/edit' => 'collections#edit'
-  #get 'collections' => 'collections#index'
-  #get '/catalog/id' => 'collections#show'
-  #delete 'collections/id' => 'collections#destroy'
 
   # CoreFiles
   resources :core_files
-  #get 'core_files/id/edit' => 'core_files#edit'
-  #get 'core_files' => 'core_files#index'
-  #get 'core_files/new' => 'core_files#new'
-
   # get 'files/:did/mods' => 'core_files#mods'
   # get 'files/:did/tei' => 'core_files#tei'
   # get 'files/:did' => 'core_files#api_show'
   #get 'core_files/id' => 'core_files#show'
   # put 'core_files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
-  #post 'core_files/id' => 'core_files#update'
-  #post 'files/id' => 'core_files#upsert'
+  #post 'files/id' => 'core_files#upsert's
   #delete "files/id" => "core_files#destroy"
-
   # get 'files/:did/html/:view_package' => 'core_files#view_package_html'
 
   resources :downloads, :only => 'show'
