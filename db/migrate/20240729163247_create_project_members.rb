@@ -3,7 +3,8 @@ class CreateProjectMembers < ActiveRecord::Migration[5.2]
     create_table :project_members do |t|
       t.belongs_to :project
       t.belongs_to :user
-      t.string :role, default: 'contributor'
+      t.string :role, null: false
+      t.boolean :is_project_depositor
 
       t.timestamps
     end
