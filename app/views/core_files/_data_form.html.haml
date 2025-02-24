@@ -14,15 +14,15 @@
             %p.small.help-block="This field accepts plain text"
 
         .form-group
-          = f.label :authors, "Authors", class: "control-label col-md-2"
+          = f.label :tei_authors, "Authors", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :authors, pattern: ".*\\S.*", class: "form-control", placeholder: "Author's name"
+            = f.text_area :tei_authors, pattern: ".*\\S.*", class: "form-control", placeholder: "Author's name"
             %p.small.help-block="This field accepts plain text"
 
         .form-group
-          = f.label :contributors, "Contributors", class: "control-label col-md-2"
+          = f.label :tei_contributors, "Contributors", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :contributors, pattern: ".*\\S.*", class: "form-control", placeholder: "Name of Contributor"
+            = f.text_area :tei_contributors, pattern: ".*\\S.*", class: "form-control", placeholder: "Name of Contributor"
             %p.small.help-block="This field accepts plain text"
 
         .form-group

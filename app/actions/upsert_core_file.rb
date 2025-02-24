@@ -35,10 +35,10 @@ class UpsertCoreFile
       end
 
       opts = {}
-      opts[:authors] = params[:display_authors]
+      opts[:tei_authors] = params[:display_authors]
       opts[:date] = params[:display_date]
       opts[:title] = params[:display_title]
-      opts[:contributors] = params[:display_contributors]
+      opts[:tei_contributors] = params[:display_contributors]
 
       if mods_needs_updating
         mods_record = TapasXq::GetMods.execute(params[:tei], opts)

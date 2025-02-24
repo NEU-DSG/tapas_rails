@@ -79,8 +79,8 @@ class CoreFilesController < ApplicationController
 
   def edit
     @core_file = CoreFile.find(params[:id])
-    @collections = Collection.accessible_by(current_ability)
-    @users = User.order(:name)
+    @collections = @core_file.project.collections
+    @users = @core_file.project.users
     @page_title = "Edit #{@core_file.title}"
   end
 
@@ -186,8 +186,8 @@ class CoreFilesController < ApplicationController
       # file upload
       if params[:tei]
         opts = {
-          :authors => params[:display_authors],
-          :contributors => params[:display_contributors],
+          :tei_authors => params[:display_authors],
+          :tei_contributors => params[:display_contributors],
           :"timeline-date" => params[:display_date],
           :title => params[:title]
         }
@@ -230,13 +230,13 @@ class CoreFilesController < ApplicationController
   def core_file_params
     params.require(:core_file).permit(
       :canonical_object,
-      :collections,
       :depositor,
       :description,
       :featured,
       :title,
-      :authors => [],
-      :contributors => [],
+      :collections => [],
+      :tei_authors => [],
+      :tei_contributors => [],
       :thumbnails => []
     )
   end

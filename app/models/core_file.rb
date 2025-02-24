@@ -56,16 +56,12 @@ class CoreFile < ActiveRecord::Base
     project.users
   end
 
-  # TODO: write logic to return array of author name strings, and store it; could include users but either way, would still need to be manually input by user. i.e., do not return a list of users
   def authors
-    users.where(core_file_users: { user_type: "author" })
+    tei_authors
   end
 
-  # note: both authors and contributors, in relation to core files, refer
-  # to the TEI document rather than the TAPAS user roles. this should
-  # probably renamed to TEI_authors and TEI_contributors to avoid confusion
   def contributors
-    users.where(core_file_users: { user_type: "contributor" })
+    tei_contributors
   end
 
   def clear_ographies!
@@ -130,8 +126,13 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
+  # TODO: this needs refactoring to include the other supported attachments; i.e., html, tei, and image
   def canonical_object
-    image_file
+    [
+      image_file,
+    # tei_file,
+    # html_file
+    ]
   end
 
   def as_json
