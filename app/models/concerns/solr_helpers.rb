@@ -13,26 +13,18 @@ module SolrHelpers
     SOLR_CORE_CONNECTION.get('select', params: { q: "#{field_name}:#{field_value}"})['response']
   end
 
-  def index_record
-    # response = locate_record
-    #
-    # if response['numFound'] == 0
-      SOLR_CORE_CONNECTION.add(self.to_solr)
-      SOLR_CORE_CONNECTION.commit
-    # else
-    #   puts 'Record is already indexed.'
-    # end
+  def index_record(record=nil)
+    record ||= self unless self == 'SolrHelpers'
+
+    SOLR_CORE_CONNECTION.add(record.to_solr)
+    SOLR_CORE_CONNECTION.commit
   end
 
-  def update_record
-    # response = locate_record
-    #
-    # if response['numFound'] == 1
-      SOLR_CORE_CONNECTION.update(self.to_solr)
-      SOLR_CORE_CONNECTION.commit
-    # else
-    #   index_record
-    # end
+  def update_record(record=nil)
+    record ||= self unless self == 'SolrHelpers'
+
+    SOLR_CORE_CONNECTION.update(record.to_solr)
+    SOLR_CORE_CONNECTION.commit
   end
 
   def delete_record
@@ -43,6 +35,8 @@ module SolrHelpers
   end
 
   def self.delete_all_indexed_records
+    puts 'Deleting solr indexed records.'
+
     SOLR_CORE_CONNECTION.delete_by_query('*:*')
     SOLR_CORE_CONNECTION.commit
   end
