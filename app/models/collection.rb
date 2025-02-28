@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'concerns/join_association'
-
 class Collection < ActiveRecord::Base
   include Discard::Model
   include SolrHelpers
