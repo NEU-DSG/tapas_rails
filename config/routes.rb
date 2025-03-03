@@ -14,6 +14,7 @@ TapasRails::Application.routes.draw do
     :confirmations => 'users/confirmations'
   }
 
+  get 'users/:id' => 'users#profile'
   get 'my_tapas' => 'users#my_tapas'
   get 'my_projects' => 'users#my_projects'
   get 'my_collections' => 'users#my_collections'
@@ -21,7 +22,6 @@ TapasRails::Application.routes.draw do
   get 'admin/users/new' => 'users#admin_new', as: 'admin_new_user'
   get 'admin/users/id' => 'users#admin_show'
   post 'admin/users' => 'users#admin_create', as: 'admin_create_user'
-  get 'users/id' => 'users#profile'
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'
 

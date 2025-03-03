@@ -42,10 +42,10 @@
           - records.each do |record|
             %div.col-lg-3
               .record.tile
+                %a{href:core_file_path(record)}=record.title
                 - if current_user_can? :manage, record
-                  %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}
-                    %i.fa.fa-pencil
-                      = "Edit"
+                  -#%i.fa.fa-pencil
+                  %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}= "Edit"
                 - if !record.image_file.attached?
                   = image_tag "tapaslogo-opaque.png"
                 -else

@@ -38,22 +38,22 @@
         -#     = f.select :file_type, options_for_select(@file_types, @sel_file_types), {}, {name: "file_types[]", class: "form-control", multiple: true}
         -#     %p.help-block
         -#       = "Select multiple values by holding CTRL"
-
+      - unless current_user.nil?
         - if current_user.admin?
           .form-group
             = f.label :featured, "Featured?", class: "control-label col-md-2"
             .col-md-6
               = f.check_box :featured, {}, true
-        .form-group
-          = f.label :canonical_object, "File", class: "control-label col-md-2"
-          .col-md-6
-            = f.file_field :canonical_object, direct_upload: true
-            -if @core_file.canonical_object.attached?
-              %p
-                ="Current File:"
-                %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
-                  %span.fa.fa-file-code-o
-                    = @core_file.canonical_object.filename
+        -#.form-group
+        -#  = f.label :canonical_object, "File", class: "control-label col-md-2"
+        -#  .col-md-6
+        -#    = f.file_field :canonical_object, direct_upload: true
+        -#    -if @core_file.canonical_object.attached?
+        -#      %p
+        -#        ="Current File:"
+        -#        %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
+        -#          %span.fa.fa-file-code-o
+        -#            = @core_file.canonical_object.filename
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6

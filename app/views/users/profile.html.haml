@@ -2,9 +2,6 @@
   = @user.name
 - if current_user && current_user == @user
   = link_to "Manage Account", edit_user_registration_path(@user), class:['btn', 'btn-info', 'btn-large']
-- if @user.email
-  %dt= "Email"
-  %dd= @user.email
 %dt= "Member Since"
 %dd= @user.created_at.strftime("%D")
 - if @user.bio

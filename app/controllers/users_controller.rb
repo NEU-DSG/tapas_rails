@@ -12,6 +12,7 @@ class UsersController < CatalogController
     @projects = five_projects
     @collections = five_collections
     @records = five_records
+
     render 'my_tapas'
   end
 
@@ -27,6 +28,7 @@ class UsersController < CatalogController
     @page_title = "My Collections"
     @user = current_user
     @results = Collection.kept.accessible_by(current_ability)
+
     render 'my_collections'
   end
 
@@ -34,6 +36,7 @@ class UsersController < CatalogController
     @page_title = "My Records"
     @user = current_user
     @results = CoreFile.kept.accessible_by(current_ability)
+
     render 'my_records'
   end
 
@@ -55,6 +58,7 @@ class UsersController < CatalogController
 
   def profile
     @user = User.find(params[:id])
+
     render 'profile'
   end
 

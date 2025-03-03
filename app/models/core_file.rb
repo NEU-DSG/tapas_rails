@@ -126,13 +126,9 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  # TODO: this needs refactoring to include the other supported attachments; i.e., html, tei, and image
+  # TODO: this needs refactoring to include the other supported attachments; i.e., html and image
   def canonical_object
-    [
-      image_file,
-    # tei_file,
-    # html_file
-    ]
+    # this will be the TEI uploaded when creating a new core file
   end
 
   def as_json
