@@ -1,0 +1,54 @@
+- if current_user_can? :manage, @project
+  = link_to "Edit", edit_project_path(@project), class:['btn', 'btn-info', 'btn-large']
+  = link_to "Delete", project_path(@project), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this community?"
+  -# TODO: this should take the user to a page (or display a partial) that requires they confirm they want to delete
+  -# the project and explains they won't have access to the core files after deletion;
+  -# also display a list of the project's collections and their child core files, with the titles hyperlinked
+
+%h2.page-header= @project.title
+
+%div.row
+  %div.col-md-3
+    - if !@project.image_file&.attached?
+      =image_tag "tapaslogo-opaque.png"
+    - else
+      %img{src: url_for(@project.image_file)}
+    %dt= "Description"
+    %dd= @project.description
+    - if @project.collections.count > 0
+      %dt= "Collection Count"
+      %dd= @project.collections.count
+      -#%dt= "Record Count"
+      -#%dd= @rec_count
+    %br
+    %dt= "Project Members"
+- if @project.project_members.count > 0
+  - @project.members.each do |pm|
+    %dt= pm[0].capitalize.pluralize
+    - pm[1..-1].flatten.each do |m|
+      %dd= link_to(m.name, "/users/#{m.id}")
+    %br
+  %br
+  %div.col-md-9
+    %panel.panel-default.panel-records
+      %div.panel-heading
+        %h3.panel-title
+          = "Collections"
+          - if can? :manage, @project
+            %small
+              %a{href:new_collection_path(:project => @project), class: 'pull-right'}
+                %i.fa.fa-plus
+                = "Add New"
+      %div.panel-body
+        - @project.collections.each do |collection|
+          %div.col-lg-3
+            .collection.tile
+              - if can? :manage, collection
+                %a{href:edit_collection_path(collection), class: ['btn','btn-xs','btn-default','pull-right']}
+                  %i.fa.fa-pencil
+                  = "Edit"
+              -# - if collection.image_files.blank?
+              -#   =image_tag "tapaslogo-opaque.png"
+              -# -else
+              -#   %img{src:collection.image_files.first}
+              %h4= link_to collection.title, collection

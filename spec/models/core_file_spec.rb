@@ -7,7 +7,7 @@ describe CoreFile do
 
   let(:core_file) { FactoryBot.create :core_file }
   let(:collection) { FactoryBot.create :collection }
-  let(:community) { FactoryBot.create :community }
+  let(:project) { FactoryBot.create :project }
 
   describe "Collections relationship" do
     let(:core_file) { FactoryBot.create :core_file }
@@ -80,10 +80,10 @@ describe CoreFile do
       core_file.collections << collection
       core_file.save!
 
-      collection.community = community
+      collection.community = project
       collection.save!
 
-      expect(core_file.project.pid).to eq community.pid
+      expect(core_file.project.pid).to eq project.pid
     end
   end
 
@@ -107,7 +107,7 @@ describe CoreFile do
       expect(core_file).to respond_to(:tapas_generic)
     end
 
-    it "should not have method if the view_package doesn't exist" do
+    it "should not have method if the view_package doesn't tapas_xq" do
       FactoryBot.create :tapas_generic
       core_file.create_view_package_methods
       expect(core_file).to respond_to(:tapas_generic)

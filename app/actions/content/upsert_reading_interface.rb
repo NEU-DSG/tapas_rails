@@ -46,7 +46,7 @@ module Content
         Nokogiri::XML(File.read(file_path))).to_xml
 
       # Pass the updated TEI File to eXist
-      html = Exist::GetReadingInterface.execute(xml_updated, interface_type)
+      html = TapasXq::GetReadingInterface.execute(xml_updated, interface_type)
 
       # Add the HTML to the html_file object
       add_unique_file(html_file, :filename => filename, :blob => html)

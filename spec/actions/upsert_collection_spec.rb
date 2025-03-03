@@ -10,19 +10,19 @@ describe UpsertCollection do
       :title => 'A Test Collection',
       :access => 'public',
       :project_did => '333',
-      :community => '333',
+      :project => '333',
       :thumbnail => tmp_fixture_file('image_copy.jpg'),
     }
   end
 
   def build_parent_community
-    if !Community.all.blank?
-      @community = Community.new
-      @community.title = "Test Community"
-      @community.did = params[:project_did]
-      @community.save!
+    if !Project.all.blank?
+      @project = Project.new
+      @project.title = "Test Community"
+      @project.did = params[:project_did]
+      @project.save!
     else
-      @community = Community.all.first
+      @project = Project.all.first
     end
   end
 
@@ -55,7 +55,7 @@ describe UpsertCollection do
       end
 
       it 'attaches it to the requested community' do
-        expect(collection.community.pid).to eq @community.pid
+        expect(collection.community.pid).to eq @project.pid
       end
 
       it 'assigns a depositor' do
@@ -97,7 +97,7 @@ describe UpsertCollection do
       collection.title = "Test Collection"
       collection.depositor = 'Old Depositor'
       collection.save!
-      collection.community = FactoryBot.create(:community)
+      collection.community = FactoryBot.create(:project)
       collection.og_reference = [collection.community.did]
       collection.save!
       @count_before = Collection.count
@@ -112,7 +112,7 @@ describe UpsertCollection do
     end
 
     it 'does not update the containing project even if a new one is provided' do
-      expect(collection.community.pid).not_to eq @community.pid
+      expect(collection.community.pid).not_to eq @project.pid
     end
 
     it 'does not update the og reference even if a new one is provided' do

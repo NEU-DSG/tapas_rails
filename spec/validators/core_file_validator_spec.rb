@@ -93,7 +93,7 @@ describe CoreFileValidator do
 
     it 'raises an error when collection_dids references nonexistent collections' do 
       validate(params.merge(collection_dids: ['111-111']))
-      it_raises_a_single_error('collections that do not exist')
+      it_raises_a_single_error('collections that do not tapas_xq')
     end
 
     it 'raises an error when collection_dids references collections that '\

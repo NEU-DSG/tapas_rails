@@ -14,7 +14,7 @@ module Content
 
     current_name = content.filename
 
-    if content.instance_of? ::ImageThumbnailFile
+    if content.instance_of? ::ImageFile
       current_content = content.thumbnail_1.content
     else
       current_content = content.content.content
@@ -24,7 +24,7 @@ module Content
     content_matches = (new_content == current_content)
 
     unless names_match && content_matches
-      ds = content.instance_of?(::ImageThumbnailFile) ? 'thumbnail_1' : 'content'
+      ds = content.instance_of?(::ImageFile) ? 'thumbnail_1' : 'content'
       content.add_file(new_content, ds, new_name)
     end
 

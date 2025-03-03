@@ -8,12 +8,12 @@ class Ability
     if user.admin?
       can :manage, :all
     else
-      can :manage, Community, depositor_id: user.id
-      can :manage, Community, community_members: { member_type: ["editor", "admin"], user_id: user.id }
+      can :manage, Project, depositor_id: user.id
+      can :manage, Project, project_members: { role: ["editor", "admin"], id: user.id }
       can :manage, Collection, depositor_id: user.id
-      can :manage, Collection, community: { community_members: { member_type: ["editor", "admin"], user_id: user.id } }
+      can :manage, Collection, project: { project_members: { role: ["editor", "admin"], id: user.id } }
       can :manage, CoreFile, depositor_id: user.id
-      can :manage, CoreFile, collections: { community: { community_members: { member_type: ["editor", "admin"], user_id: user.id } } }
+      can :manage, CoreFile, collections: { project: { project_members: { role: ["editor", "admin"], id: user.id } } }
     end
   end
 end

@@ -1,14 +1,15 @@
+require "net/http"
+require "uri"
+
 class User < ActiveRecord::Base
-  require "net/http"
-  require "uri"
-  # Connects this user object to Hydra behaviors.
-  # include Hydra::User
-  # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
 
-  # cch: commenting this out to allow for time to upgrade carrierwave
-  mount_uploader :avatar, AvatarUploader
-  validates_integrity_of :avatar
+  has_one_attached(:image_file)
+  has_one :image_file, as: :imageable
+
+  #TODO: add logic to update role when user creates or joins an existing project or collection
+
+  # delegate :image, to: :image_file, allow_nil: true
 
   # if Blacklight::Utils.needs_attr_accessible?
   #   attr_accessible :email, :password, :password_confirmation, :name, :role, :bio, :account_type
@@ -21,23 +22,25 @@ class User < ActiveRecord::Base
          :recoverable,
          :rememberable,
          :trackable,
-         :validatable,
-         :confirmable
+         :validatable
+         # :confirmable; TODO: add this again after smtp is configured
 
   delegate :can?, :cannot?, :to => :ability
 
-  belongs_to :institution
+  has_one_attached :image_file
+  has_one :image_file, as: :imageable
+  has_many :project_members
+  has_many :projects, through: :project_members
+  has_and_belongs_to_many :core_files
 
-  has_many :community_members
-  has_many :communities, through: :community_members
-
-  ROLES = %w[admin paid_user unpaid_user]
-
-  ACCOUNT_TYPES = %w[free teic teic_inst]
 
   def api_key=(api_key)
     @api_key = Digest::SHA512.hexdigest api_key
     self.encrypted_api_key = @api_key
+  end
+
+  def role
+    ProjectMember.find_by_user_id(id).role ||= 'reader'
   end
 
   # Method added by Blacklight; Blacklight uses #to_s on your

@@ -5,14 +5,14 @@ module FixtureBuilders
   def self.create_all(collections = 1)
     core = FactoryBot.create :core_file
     collections = FactoryBot.create_list(:collection, collections)
-    community = FactoryBot.create :community
+    project = FactoryBot.create :project
 
     core.collections = collections
     core.save!
 
-    collections.each { |collection| collection.community = community }
+    collections.each { |collection| collection.project = project }
     collections.each { |collection| collection.save! }
 
-    return core, collections, community
+    return core, collections, project
   end
 end

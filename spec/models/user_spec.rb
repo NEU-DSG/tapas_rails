@@ -4,10 +4,10 @@ describe User do
   let(:institution) { FactoryBot.create :instutition }
   let(:user) { FactoryBot.create(:user, institution: institution)  }
 
-  describe "#communities" do
-    let(:community) { FactoryBot.create(:community, depositor: user, institutions: [institution])}
+  describe "#projects" do
+    let(:project) { FactoryBot.create(:project, depositor: user, institutions: [institution])}
 
-    it "has many communities" do
+    it "has many projects" do
       skip
     end
   end

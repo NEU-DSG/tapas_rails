@@ -1,5 +1,5 @@
 exist:
   username: 'tapas'
   password: <%=  ENV['STAGING_EXIST_PASSWORD'] %>
-  url: 'http://localhost:8868/exist/apps/tapas-xq'
+  url: 'http://localhost:8868/tapas_xq/apps/tapas-xq'
 base_url: 'http://beta.tapasproject.org'

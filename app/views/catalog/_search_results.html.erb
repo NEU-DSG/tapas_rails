@@ -16,7 +16,10 @@
   <%- @results.map do |r| %>
     <tr>
       <td>
-        <%= r.title %>
+        <a href= <%= url_for(
+                       action: 'show',
+                       id: r.id
+                     )%>><%= r.title %></a>
       </td>
       <td>
         <%= r.description %>
@@ -25,14 +28,14 @@
         <%= r.depositor.nil? ? "No depositor on file" : r.depositor.email %>
       </td>
       <td>
-        <%- if can? :manage, r %>
+        <%- result = r.is_a?(Project) ? r : r.project %>
+        <%- if result.project_members.select { |u| u.role.eql?('editor') || u.role.eql?('admin') }.map(&:id).include?(current_user.__id__) %>
           <a class="btn btn-default btn-sm"
             href="<%= url_for(
                         :only_path => true,
                         controller: request.path
                           .sub('my_', '')
-                          .sub('records', 'core_files')
-                          .sub('projects', 'communities'),
+                          .sub('records', 'core_files'),
                         action: 'edit',
                         id: r.id) %>">Edit</a>
           <a class="btn btn-danger btn-sm"
@@ -40,8 +43,7 @@
                         :only_path => true,
                         controller: request.path
                           .sub('my_', '')
-                          .sub('records', 'core_files')
-                          .sub('projects', 'communities'),
+                          .sub('records', 'core_files'),
                         action: 'destroy',
                         id: r.id) %>"
             data-method="delete"

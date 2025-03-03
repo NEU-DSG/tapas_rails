@@ -9,8 +9,6 @@ class Page < ActiveRecord::Base
   friendly_id :slug, use: :slugged
 
   after_save :index_record
-  # deletes the record from the solr index
-  before_destroy :delete_record
 
   def to_solr
     obj =

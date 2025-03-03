@@ -541,7 +541,7 @@ jQuery.extend( {
 	},
 
 	// jQuery.support is not used in Core but other projects attach their
-	// properties to it so it needs to exist.
+	// properties to it so it needs to tapas_xq.
 	support: support
 } );
 
@@ -797,7 +797,7 @@ function Sizzle( selector, context, results, seed ) {
 		if ( documentIsHTML ) {
 
 			// If the selector is sufficiently simple, try using a "get*By*" DOM method
-			// (excepting DocumentFragment context, where the methods don't exist)
+			// (excepting DocumentFragment context, where the methods don't tapas_xq)
 			if ( nodeType !== 11 && (match = rquickExpr.exec( selector )) ) {
 
 				// ID selector
@@ -1059,7 +1059,7 @@ support = Sizzle.support = {};
  * @returns {Boolean} True iff elem is a non-HTML XML node
  */
 isXML = Sizzle.isXML = function( elem ) {
-	// documentElement is verified for cases where it doesn't yet exist
+	// documentElement is verified for cases where it doesn't yet tapas_xq
 	// (such as loading iframes in IE - #4833)
 	var documentElement = elem && (elem.ownerDocument || elem).documentElement;
 	return documentElement ? documentElement.nodeName !== "HTML" : false;
@@ -5016,7 +5016,7 @@ jQuery.event = {
 				}
 			}
 
-			// Remove generic event handler if we removed something and no more handlers exist
+			// Remove generic event handler if we removed something and no more handlers tapas_xq
 			// (avoids potential for endless recursion during removal of special event handlers)
 			if ( origCount && !handlers.length ) {
 				if ( !special.teardown ||
@@ -7241,7 +7241,7 @@ if ( !support.opacity ) {
 			// Force it by setting the zoom level
 			style.zoom = 1;
 
-			// if setting opacity to 1, and no other filters exist -
+			// if setting opacity to 1, and no other filters tapas_xq -
 			// attempt to remove filter attribute #6652
 			// if value === "", then remove inline opacity #12685
 			if ( ( value >= 1 || value === "" ) &&
@@ -10510,7 +10510,7 @@ jQuery.ajaxPrefilter( "json jsonp", function( s, originalSettings, jqXHR ) {
 		// Clean-up function (fires after converters)
 		jqXHR.always( function() {
 
-			// If previous value didn't exist - remove it
+			// If previous value didn't tapas_xq - remove it
 			if ( overwritten === undefined ) {
 				jQuery( window ).removeProp( callbackName );
 
@@ -12311,7 +12311,7 @@ var dataSpace = "ui-effects-",
 	dataSpaceAnimated = "ui-effects-animated",
 
 	// Create a local jQuery because jQuery Color relies on it and the
-	// global may not exist with AMD and a custom build (#10199)
+	// global may not tapas_xq with AMD and a custom build (#10199)
 	jQuery = $;
 
 $.effects = {
@@ -12581,7 +12581,7 @@ color.fn = jQuery.extend( color.prototype, {
 					var cache = space.cache;
 					each( space.props, function( key, prop ) {
 
-						// If the cache doesn't exist, and we know how to convert
+						// If the cache doesn't tapas_xq, and we know how to convert
 						if ( !inst[ cache ] && space.to ) {
 
 							// If the value was null, we don't need to copy it
@@ -12737,7 +12737,7 @@ color.fn = jQuery.extend( color.prototype, {
 
 		return "#" + jQuery.map( rgba, function( v ) {
 
-			// Default to 0 when nulls exist
+			// Default to 0 when nulls tapas_xq
 			v = ( v || 0 ).toString( 16 );
 			return v.length === 1 ? "0" + v : v;
 		} ).join( "" );
@@ -12830,7 +12830,7 @@ each( spaces, function( spaceName, space ) {
 	// Makes rgba() and hsla()
 	color.fn[ spaceName ] = function( value ) {
 
-		// Generate a cache for this space if it doesn't exist
+		// Generate a cache for this space if it doesn't tapas_xq
 		if ( to && !this[ cache ] ) {
 			this[ cache ] = to( this._rgba );
 		}
@@ -18556,7 +18556,7 @@ return $.widget( "ui.controlgroup", {
 						return;
 					}
 
-					// Create the widget if it doesn't exist
+					// Create the widget if it doesn't tapas_xq
 					if ( !instance ) {
 						instance = element[ widget ]()[ widget ]( "instance" );
 					}
@@ -19196,7 +19196,7 @@ $.widget( "ui.button", {
 		} else {
 
 			// Position is beginning or end so remove the ui-widget-icon-block class and add the
-			// space if it does not exist
+			// space if it does not tapas_xq
 			if ( !this.iconSpace ) {
 				this.iconSpace = $( "<span> </span>" );
 				this._addClass( this.iconSpace, "ui-button-icon-space" );
@@ -21497,7 +21497,7 @@ $.fn.datepicker = function( options ) {
 		$.datepicker.initialized = true;
 	}
 
-	/* Append datepicker main container to body if not exist. */
+	/* Append datepicker main container to body if not tapas_xq. */
 	if ( $( "#" + $.datepicker._mainDivId ).length === 0 ) {
 		$( "body" ).append( $.datepicker.dpDiv );
 	}
@@ -30946,7 +30946,7 @@ $.widget( "ui.tooltip", {
 				}
 
 				// JQuery creates a special event for focusin when it doesn't
-				// exist natively. To improve performance, the native event
+				// tapas_xq natively. To improve performance, the native event
 				// object is reused and the type is changed. Therefore, we can't
 				// rely on the type being correct after the event finished
 				// bubbling, so we set it back to the previous value. (#8740)
@@ -33944,7 +33944,7 @@ return $.ui.tooltip;
                     // check if depth limit has reached
                     depth = this.placeEl.parents(opt.listNodeName).length;
                     if (depth + this.dragDepth <= opt.maxDepth) {
-                        // create new sub-level if one doesn't exist
+                        // create new sub-level if one doesn't tapas_xq
                         if (!list.length) {
                             list = $('<' + opt.listNodeName + '/>').addClass(opt.listClass);
                             list.append(this.placeEl);

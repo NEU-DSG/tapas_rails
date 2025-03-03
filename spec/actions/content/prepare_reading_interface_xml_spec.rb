@@ -23,11 +23,11 @@ describe PrepareReadingInterfaceXML do
 
     before(:all) do
       @core_file = FactoryBot.create :core_file
-      @community = FactoryBot.create :community
+      @project = FactoryBot.create :project
       @collection = FactoryBot.create :collection
 
       @core_file.collections << @collection
-      @collection.community = @community
+      @collection.community = @project
 
       # Create page images
       @pimg1, @pimg2 = FactoryBot.create_list(:image_master_file, 2)
@@ -46,7 +46,7 @@ describe PrepareReadingInterfaceXML do
                                         @collection, 'placeography.xml')
 
       @core_file.save!
-      @community.save!
+      @project.save!
       @collection.save!
       @pimg1.save!
       @pimg2.save!

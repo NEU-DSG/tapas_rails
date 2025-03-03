@@ -36,6 +36,6 @@
         %td
           - unless user.discarded_at.nil?
             = user.discarded_at
-            = link_to "Really delete", user_path(user.id), class: ['btn', 'btn-default', 'btn-sm', 'btn-danger'], method: :delete, data: { confirm: "Are you sure you want to delete #{user.name} for real? This record will no longer exist." }
+            = link_to "Really delete", user_path(user.id), class: ['btn', 'btn-default', 'btn-sm', 'btn-danger'], method: :delete, data: { confirm: "Are you sure you want to delete #{user.name} for real? This record will no longer tapas_xq." }
 -else
   There are currently no users available

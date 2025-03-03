@@ -44,15 +44,15 @@ describe CollectionsController do
 
     it 'returns a 202 and creates the requested collection on a valid request' do
       Resque.inline = true
-      community = FactoryBot.create :community
+      community = FactoryBot.create :project
 
       post_params = { title: 'Collection',
-        access: 'private',
-        did: '8018',
-        community: community.pid,
-        description: 'This is a test collection',
-        depositor: '101',
-        thumbnail: Rack::Test::UploadedFile.new(fixture_file('image.jpg')), }
+                      access: 'private',
+                      did: '8018',
+                      project: community.pid,
+                      description: 'This is a test collection',
+                      depositor: '101',
+                      thumbnail: Rack::Test::UploadedFile.new(fixture_file('image.jpg')), }
 
       post :upsert, post_params
 
@@ -92,10 +92,10 @@ describe CollectionsController do
       Resque.inline = true
       @user = FactoryBot.create(:user)
       # Creation of Community object before all test begin which is used later for creating a Collection object
-      @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
-      @community.did = @community.pid
-      @community.save!
-      @did = @community.did}
+      @project = Project.new(title:"ParentCommunity", description:"Community created for holding collection", mass_permissions:"public")
+      @project.did = @project.pid
+      @project.save!
+      @did = @project.did}
 
     before(:each){
 
@@ -104,7 +104,7 @@ describe CollectionsController do
       @collectionCreated.did = @collectionCreated.pid
       @collectionCreated.depositor = '000000000'
       @collectionCreated.save!
-      @collectionCreated.community = @community
+      @collectionCreated.community = @project
       @collectionCreated.save!
       @collectdid = @collectionCreated.did
     }
@@ -126,28 +126,28 @@ describe CollectionsController do
     it 'community object should be created with id' do
 
       # Expecting the community created with same id as the one assigned during creation
-      expect(@community.did). to eq @did
+      expect(@project.did). to eq @did
     end
 
     # Purpose statement
     it 'community object should created with assigned title' do
 
       # Expecting the community created with same title as the one passed during creation
-      expect(@community.title). to eq "ParentCommunity"
+      expect(@project.title). to eq "ParentCommunity"
     end
 
     # Purpose statement
     it 'community object should created with specified description' do
 
       # Expecting the community created with same description as the one passed during creation
-      expect(@community.description). to eq "Community created for holding collection"
+      expect(@project.description). to eq "Community created for holding collection"
     end
 
     # Purpose statement
     it 'community object should created with specified mass permissions' do
 
       # Expecting the community created with same mass permission as the one passed during creation
-      expect(@community.mass_permissions). to eq "public"
+      expect(@project.mass_permissions). to eq "public"
     end
 
     # Testing Collection creation
@@ -194,7 +194,7 @@ describe CollectionsController do
               :title => 'New collection',
               :description => 'This is a test collection.',
               :mass_permissions => 'public',
-              :community => @community
+              :project => @project
           }
       }
 
@@ -224,7 +224,7 @@ describe CollectionsController do
   # Testing the update function in the Collection Controller
   describe 'post #update' do
     Resque.inline = true
-    let(:community) { FactoryBot.create :community }
+    let(:project) { FactoryBot.create :project }
     let(:collection) { FactoryBot.create :collection }
     let(:user) { FactoryBot.create(:user) }
 
@@ -234,7 +234,7 @@ describe CollectionsController do
       collection.community = community
       collection.depositor = user.id.to_s
       collection.save!
-      params = { :did=> collection.did, :id=>collection.pid, :collection=>{:title=>'Updated collection', :mass_permissions=>'public', :community=>community, :description=>'Updated description'}}
+      params = { :did=> collection.did, :id=>collection.pid, :collection=>{ :title=>'Updated collection', :mass_permissions=>'public', :project=>community, :description=>'Updated description'}}
       sign_in user
       # Calling the update function
       put :update, params

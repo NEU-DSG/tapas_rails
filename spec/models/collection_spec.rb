@@ -117,7 +117,7 @@ describe Collection do
     end
 
     it 'returns the correct values where data exists' do
-      community = FactoryBot.create :community
+      community = FactoryBot.create :project
 
       collection = FactoryBot.create :collection
       collection.mods.title = "The Most Dangerous Game"

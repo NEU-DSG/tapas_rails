@@ -3,7 +3,7 @@
 
 default:
   adapter: mysql2
-  encoding: utf8
+  encoding: utf8mb4
   pool: 5
   username: <%= ENV.fetch('MYSQL_USER') %>
   password: <%= ENV.fetch('MYSQL_PASSWORD') %>

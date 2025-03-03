@@ -15,11 +15,13 @@ saxon-js-compilation.md
 # Ignore bundler config.
 /.bundle
 app_navigator.rb
-
+tapas_xq_query_syntax.rb
 cch_admin_test_record.xml
+migrations.txt
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
+/db/data/backing-up-TAPAS.md
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
@@ -46,6 +48,7 @@ capybara-*.html
 **.orig
 config/initializers/secret_token.rb
 config/secrets.yml
+db_architecture.md
 
 ## Environment normalisation:
 /.bundle
@@ -87,3 +90,5 @@ all-db_04102023.sql
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/db/data/
+/to-do.txt

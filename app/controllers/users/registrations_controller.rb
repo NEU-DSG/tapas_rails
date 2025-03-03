@@ -9,7 +9,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def edit
-    @institutions = Institution.select(:name, :id)
+    # @institutions = Institution.select(:name, :id)
 
     super
   end

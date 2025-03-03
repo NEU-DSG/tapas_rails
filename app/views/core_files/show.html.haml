@@ -1,6 +1,6 @@
 %ul.breadcrumb
   %li
-    = link_to @core_file.project.title, community_path(@core_file.project)
+    = link_to @core_file.project.title, project_path(@core_file.project)
   %li.collection
     -if @core_file.collections.count > 1
       -@core_file.collections.each_with_index do |col, i|
@@ -11,10 +11,10 @@
       = link_to @core_file.collections.first.title, collection_path(@core_file.collections.first)
   %li
     = @core_file.title
-
-- if can? :manage, @core_file
-  = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
-  = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this file?"
+- unless current_user.nil?
+  - if current_user_can? :manage, @core_file
+    = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
+    = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this file?"
 
 %h2.page-header= @core_file.title
 
@@ -32,33 +32,31 @@
   .tab-content.vertical-tabs-panes
     #reader.tab-pane.active
       -# FIXME: (charles) It's not clear why these partials are here. @view_packages is not defined.
-      -# = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages}
-      -# = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages}
+      = render partial:'view_package_options', locals:{core_file: @core_file, view_packages:@view_packages}
+      = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages}
 
     #metadata.tab-pane
-      = @mods_html
-      - if @core_file.file_type != :tei_content
-        %dt  File Type
-        %dd
-          %ul
-            - @core_file.ography_type.each do |ot|
-              %li
-                = ot.titleize
+      - unless @core_file.ography_type.nil?
+        = @mods_html
+        - if @core_file.file_type != :tei_content
+          %dt  File Type
+          %dd
+            %ul
+              - @core_file.ography_type.titleize
 
-
-    #files.tab-pane
-      -if @core_file.canonical_object.attached?
-        %dt TEI File:
-        %dd
-          %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
-            %span.fa.fa-file-code-o
-            = @core_file.canonical_object.filename
+    -##files.tab-pane
+    -#  -if @core_file.canonical_object.attached?
+    -#    %dt TEI File:
+    -#    %dd
+    -#      %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
+    -#        %span.fa.fa-file-code-o
+    -#        = @core_file.canonical_object.filename
       -# TODO add other auxilliary files
 
     #project_details.tab-pane
       -if @core_file.project
         %dt Project:
-        %dd= link_to @core_file.project.title, community_path(@core_file.project)
+        %dd= link_to @core_file.project.title, project_path(@core_file.project)
         -unless @core_file.project.depositor.nil?
           - depositor = @core_file.project.depositor
           %dt Project Owner:
@@ -70,10 +68,9 @@
         %dt Collections:
         -@core_file.collections.each do |c|
           %dd= link_to c.title, collection_path(c)
-      -if @core_file.is_ography?
+      - unless @core_file.ography_type.nil?
         %dt Ography Type:
-        - @core_file.ography_type.each do |o|
-          %dd= o.titleize
+        - @core_file.ography_type.titleize
 
 :javascript
   $('.nav-tabs a').click(function (e) {
@@ -81,7 +78,7 @@
     $(this).tab('show');
   });
 
-=javascript_include_tag '/view_packages/common/jquery/plugins/jquery.blockUI.min.js'
-=javascript_include_tag '/view_packages/common/d3/d3.v4.min.js'
--# FIXME: =javascript_include_tag "core_files"
--# FIXME: =javascript_include_tag "ace/ace"
+-# =javascript_include_tag '/view_packages/common/jquery/plugins/jquery.blockUI.min.js'
+-# =javascript_include_tag '/view_packages/common/d3/d3.v4.min.js'
+-# = javascript_include_tag "core_files"
+-# = javascript_include_tag "ace/ace"

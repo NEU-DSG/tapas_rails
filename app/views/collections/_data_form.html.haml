@@ -12,9 +12,9 @@
             = f.text_area :description, required: true, pattern: ".*\\S.*", class: "form-control", placeholder: "Brief description of the collection"
             %p.small.help-block="This field accepts plain text"
         .form-group
-          = f.label :community_id, "Project", class: "control-label col-md-2"
+          = f.label :project_id, "Project", class: "control-label col-md-2"
           .col-md-6
-            = f.select :community_id, options_from_collection_for_select(@communities, 'id', 'title', @collection.community), {}, { class: "form-control" }
+            = f.select :project_id, options_from_collection_for_select(@projects, 'id', 'title', @collection.project), {}, { class: "form-control" }
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           .col-md-6
@@ -22,11 +22,11 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if @collection.thumbnails.attached?
-              =image_tag url_for(@collection.thumbnails.first)
+            - if @collection.thumbnail.attached?
+              =image_tag url_for(@collection.thumbnail)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", { :checked => false }
-            = f.file_field :thumbnails, accept: ".jpeg, .jpeg, .png", multiple: true, direct_upload: true
+            = f.file_field :thumbnails, accept: ".jpeg, .jpg, .png", direct_upload: true
 
 
     %hr

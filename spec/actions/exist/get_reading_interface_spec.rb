@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Exist::GetReadingInterface, :existdb => true do
+describe TapasXq::GetReadingInterface, :existdb => true do
   include FileHelpers
 
   def valid_request_test(type)
@@ -8,7 +8,7 @@ describe Exist::GetReadingInterface, :existdb => true do
     FactoryBot.create :tapas_generic
     FactoryBot.create :teibp
     # core_file.create_view_package_methods
-    response = Exist::GetReadingInterface.execute(blob, type)
+    response = TapasXq::GetReadingInterface.execute(blob, type)
     expect(response.code).to eq 200
     expect {
       Nokogiri::XML(response) { |c| c.strict }
@@ -19,7 +19,7 @@ describe Exist::GetReadingInterface, :existdb => true do
     skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
     path = fixture_file 'tei.xml'
     e = Exceptions::ExistError
-    expect { Exist::GetReadingInterface.execute(path, 'x') }.to raise_error e
+    expect { TapasXq::GetReadingInterface.execute(path, 'x') }.to raise_error e
   end
 
   it 'returns valid xhtml when teibp is requested' do

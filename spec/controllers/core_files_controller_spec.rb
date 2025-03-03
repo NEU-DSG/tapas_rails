@@ -202,7 +202,7 @@ describe CoreFilesController do
   describe "PUT #rebuild_reading_interfaces" do
     after(:each) { ActiveFedora::Base.delete_all }
 
-    it 'raises a 404 for dids that do not exist' do
+    it 'raises a 404 for dids that do not tapas_xq' do
       expect{put :rebuild_reading_interfaces, did: 'no-such-did'}.to raise_error(ActiveFedora::ObjectNotFoundError)
     end
 
@@ -241,7 +241,7 @@ describe CoreFilesController do
       Resque.inline = true
 
       # Create a community for our collections to be attached to
-      community = FactoryBot.create :community
+      community = FactoryBot.create :project
       community.did = community.pid
       community.save!
 
@@ -265,7 +265,7 @@ describe CoreFilesController do
       tei  = core.canonical_object(:model)
 
       # Ensure support file content has been attached
-      expect(core.thumbnail).to be_instance_of ImageThumbnailFile
+      expect(core.thumbnail).to be_instance_of Thumbnail
       expect(core.page_images.count).to eq 3
 
       collection_pids = core.collections.map { |x| x.pid }
@@ -297,9 +297,6 @@ describe CoreFilesController do
       # Calling create function
       get :new
 
-      # Testing the object creation parameters of core file
-      #binding.pry
-
       # Checking whether the new object is of class type CoreFile
       expect(assigns(:core_file)).to be_a_new(CoreFile)
     end
@@ -307,7 +304,7 @@ describe CoreFilesController do
 
   # Testing the create function in the Core files Controller
   describe 'post #create' do
-    let(:community) { FactoryBot.create :community }
+    let(:project) { FactoryBot.create :project }
     let(:collection) { FactoryBot.create :collection }
     Resque.inline = true
     before(:all) {
@@ -333,9 +330,9 @@ describe CoreFilesController do
     # Purpose statement
     it 'should create a core file object and go to show page' do
       skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-      community.did = community.pid
-      community.save!
-      collection.community = community
+      project.did = project.pid
+      project.save!
+      collection.community = project
       collection.save!
 
       # Calling the create function
@@ -370,10 +367,10 @@ describe CoreFilesController do
       Resque.inline = true
 
       # Creation of Community object before all test begin which is used later for creating a Core File object
-      @community = Community.new(title:"ParentCommunity",description:"Community created for holding collection",mass_permissions:"public")
-      @community.did = @community.pid
-      @community.save!
-      @did = @community.did}
+      @project = Project.new(title:"ParentCommunity", description:"Community created for holding collection", mass_permissions:"public")
+      @project.did = @project.pid
+      @project.save!
+      @did = @project.did}
 
     before(:each){
 
@@ -382,7 +379,7 @@ describe CoreFilesController do
       @collectionCreated.did = @collectionCreated.pid
       @collectionCreated.depositor = '000000000'
       @collectionCreated.save!
-      @collectionCreated.community = @community
+      @collectionCreated.community = @project
       @collectionCreated.save!
       @collectdid = @collectionCreated.did
     }

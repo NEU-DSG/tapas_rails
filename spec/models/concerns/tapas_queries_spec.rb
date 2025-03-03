@@ -3,7 +3,7 @@ require 'spec_helper'
 describe 'TapasQueries' do
   let(:core_file) { FactoryBot.create(:core_file) }
   let(:collection) { FactoryBot.create(:collection) }
-  let(:community) { FactoryBot.create(:community) }
+  let(:project) { FactoryBot.create(:project) }
 
   describe '#all_ography_tei_files' do
 
@@ -56,8 +56,8 @@ describe 'TapasQueries' do
   describe '#thumbnail' do
     let(:thumbnail_file) { FactoryBot.create :image_thumbnail_file }
 
-    it 'returns nil for Communities' do
-      expect(community.thumbnail).to be nil
+    it 'returns nil for Projects' do
+      expect(project.thumbnail).to be nil
     end
 
     it 'returns nil for Collections' do

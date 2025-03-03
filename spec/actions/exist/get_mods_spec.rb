@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Exist::GetMods, :existdb => true do
+describe TapasXq::GetMods, :existdb => true do
   include FileHelpers
 
   describe '#execute' do
@@ -9,14 +9,14 @@ describe Exist::GetMods, :existdb => true do
         skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
         path = fixture_file 'xml_malformed.xml'
         error = RestClient::BadRequest
-        expect { Exist::GetMods.execute path  }.to raise_error error
+        expect { TapasXq::GetMods.execute path  }.to raise_error error
       end
 
       it 'returns a MODS document when given valid TEI XML' do
         skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
         path = fixture_file 'tei.xml'
-        expect { Exist::GetMods.execute path  }.not_to raise_error
-        response = Exist::GetMods.execute path
+        expect { TapasXq::GetMods.execute path  }.not_to raise_error
+        response = TapasXq::GetMods.execute path
         expect { Nokogiri::XML(response) { |c| c.strict } }.not_to raise_error
       end
     end
@@ -31,9 +31,9 @@ describe Exist::GetMods, :existdb => true do
         title = 'Testing valid display params'
         date = Time.now.iso8601
 
-        opts = { authors: authors, contributors: contributors,
+        opts = { tei_authors: authors, tei_contributors: contributors,
                  date: date, title: title }
-        response = Exist::GetMods.execute(path, opts)
+        response = TapasXq::GetMods.execute(path, opts)
 
         # While we don't want to write tests that test against the exact
         # structure of the XML that eXist returns (too fragile), we should
@@ -47,9 +47,9 @@ describe Exist::GetMods, :existdb => true do
 
       it 'ignores invalid display params' do
         skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-        opts = { authors: ['Squilliam Tentacles'], abstract: 'Foobar' }
-        response = Exist::GetMods.execute(path, opts)
-        expect(opts[:authors].all? { |a| response.include? a }).to be true
+        opts = { tei_authors: ['Squilliam Tentacles'], abstract: 'Foobar' }
+        response = TapasXq::GetMods.execute(path, opts)
+        expect(opts[:tei_authors].all? { |a| response.include? a }).to be true
         expect(response.include? opts[:abstract]).to be false
       end
     end

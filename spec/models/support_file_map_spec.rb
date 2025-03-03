@@ -3,7 +3,7 @@ require 'spec_helper'
 describe SupportFileMap do
   let(:core_file) { FactoryBot.create :core_file }
   let(:collection) { FactoryBot.create :collection }
-  let(:community) { FactoryBot.create :community }
+  let(:project) { FactoryBot.create :project }
 
   after(:each) { ActiveFedora::Base.delete_all }
 

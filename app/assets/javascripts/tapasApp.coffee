@@ -27,7 +27,7 @@ $(document).ready ->
 
     setup = ->
       CoreFilesPage()
-      CommunitiesPage()
+      ProjectsPage()
       tooltipSetup()
       handleRequiredInputs()
       # ellipsisExpand()
@@ -162,9 +162,9 @@ $(document).ready ->
       return
 
 
-    #Handles spawning new permission related form elements on the communities/new and edit page.
-    CommunitiesPage = ->
-      # Adding the form fields behavior to the buttons on the communities.
+    #Handles spawning new permission related form elements on the Projects/new and edit page.
+    ProjectsPage = ->
+      # Adding the form fields behavior to the buttons on the Projects.
 
       $('#add_another_project_member').addFormFields
         target: $('span.project_member:not(.to-remove)')

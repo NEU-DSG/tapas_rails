@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2024_05_14_145813) do
+ActiveRecord::Schema.define(version: 2025_02_24_220204) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -49,19 +49,12 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.index ["active_storage_attachment_id"], name: "index_captions_on_active_storage_attachment_id"
   end
 
-  create_table "collection_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "collection_id"
-    t.integer "parent_collection_id", null: false
-    t.index ["collection_id", "parent_collection_id"], name: "index_collections_parent", unique: true
-    t.index ["collection_id"], name: "index_collection_collections_on_collection_id"
-  end
-
   create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "community_id", null: false
+    t.integer "project_id", null: false
     t.boolean "is_public"
     t.integer "depositor_id", null: false
     t.datetime "discarded_at"
@@ -69,55 +62,11 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.index ["discarded_at"], name: "index_collections_on_discarded_at"
   end
 
-  create_table "collections_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "core_file_id"
-    t.bigint "collection_id"
+  create_table "collections_core_files", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "collection_id", null: false
+    t.bigint "core_file_id", null: false
     t.index ["collection_id", "core_file_id"], name: "index_collections_core_files_on_collection_id_and_core_file_id", unique: true
-    t.index ["collection_id"], name: "index_collections_core_files_on_collection_id"
-    t.index ["core_file_id"], name: "index_collections_core_files_on_core_file_id"
-  end
-
-  create_table "communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "title", null: false
-    t.text "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_public", default: true
-    t.integer "depositor_id", null: false
-    t.datetime "discarded_at"
-    t.index ["depositor_id"], name: "index_communities_on_depositor_id"
-    t.index ["discarded_at"], name: "index_communities_on_discarded_at"
-  end
-
-  create_table "communities_institutions", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "community_id", null: false
-    t.bigint "institution_id", null: false
-    t.index ["community_id", "institution_id"], name: "index_communities_instutitions", unique: true
-    t.index ["institution_id", "community_id"], name: "index_institutions_communities", unique: true
-  end
-
-  create_table "community_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "collection_id"
-    t.bigint "community_id"
-    t.index ["collection_id", "community_id"], name: "index_community_collections_on_collection_id_and_community_id", unique: true
-    t.index ["collection_id"], name: "index_community_collections_on_collection_id"
-    t.index ["community_id"], name: "index_community_collections_on_community_id"
-  end
-
-  create_table "community_communities", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "community_id"
-    t.integer "parent_community_id", null: false
-    t.index ["community_id", "parent_community_id"], name: "index_community_parent", unique: true
-    t.index ["community_id"], name: "index_community_communities_on_community_id"
-  end
-
-  create_table "community_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "community_id"
-    t.bigint "user_id"
-    t.string "member_type", limit: 6, default: "member"
-    t.index ["community_id", "user_id"], name: "index_community_members_on_community_id_and_user_id", unique: true
-    t.index ["community_id"], name: "index_community_members_on_community_id"
-    t.index ["user_id"], name: "index_community_members_on_user_id"
+    t.index ["core_file_id", "collection_id"], name: "index_collections_core_files_on_core_file_id_and_collection_id", unique: true
   end
 
   create_table "core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -130,15 +79,16 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.boolean "featured"
     t.datetime "discarded_at"
     t.string "ography_type"
+    t.text "tei_authors"
+    t.text "tei_contributors"
     t.index ["discarded_at"], name: "index_core_files_on_discarded_at"
   end
 
-  create_table "core_files_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "user_id", null: false
+  create_table "core_files_projects", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id", null: false
     t.bigint "core_file_id", null: false
-    t.string "user_type", limit: 11, default: "contributor", null: false
-    t.index ["core_file_id", "user_id"], name: "index_core_files_users_on_core_file_id_and_user_id", unique: true
-    t.index ["user_id", "core_file_id"], name: "index_core_files_users_on_user_id_and_core_file_id", unique: true
+    t.index ["core_file_id", "project_id"], name: "index_core_files_projects_on_core_file_id_and_project_id", unique: true
+    t.index ["project_id", "core_file_id"], name: "index_core_files_projects_on_project_id_and_core_file_id", unique: true
   end
 
   create_table "friendly_id_slugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -153,16 +103,17 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
-  create_table "institutions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name", null: false
+  create_table "image_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title", null: false
+    t.integer "depositor_id", null: false
     t.text "description"
-    t.string "image"
-    t.string "address"
-    t.string "latitude"
-    t.string "longitude"
-    t.string "url"
+    t.string "file_format"
+    t.string "imageable_type", null: false
+    t.bigint "imageable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "image_url"
+    t.index ["imageable_type", "imageable_id"], name: "index_image_files_on_imageable_type_and_imageable_id"
   end
 
   create_table "menu_links", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -197,6 +148,38 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.string "submenu"
   end
 
+  create_table "project_collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "collection_id"
+    t.bigint "project_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id", "project_id"], name: "index_project_collections_on_collection_id_and_project_id"
+    t.index ["collection_id"], name: "index_project_collections_on_collection_id"
+    t.index ["project_id"], name: "index_project_collections_on_project_id"
+  end
+
+  create_table "project_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "project_id"
+    t.bigint "user_id"
+    t.string "role", null: false
+    t.boolean "is_project_depositor"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["project_id"], name: "index_project_members_on_project_id"
+    t.index ["user_id"], name: "index_project_members_on_user_id"
+  end
+
+  create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "depositor_id", null: false
+    t.boolean "is_public", default: true
+    t.string "institution"
+    t.index ["depositor_id"], name: "index_projects_on_depositor_id"
+  end
+
   create_table "searches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.text "query_params"
     t.integer "user_id"
@@ -222,15 +205,11 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.boolean "guest", default: false
     t.string "encrypted_api_key"
     t.string "name"
-    t.bigint "institution_id"
-    t.string "avatar"
     t.text "bio"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.text "account_type"
     t.datetime "admin_at"
-    t.datetime "paid_at"
     t.datetime "discarded_at"
     t.string "invitation_token"
     t.datetime "invitation_created_at"
@@ -240,10 +219,10 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
     t.string "invited_by_type"
     t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
+    t.string "institution"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["discarded_at"], name: "index_users_on_discarded_at"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["institution_id"], name: "index_users_on_institution_id"
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
@@ -268,4 +247,6 @@ ActiveRecord::Schema.define(version: 2024_05_14_145813) do
   end
 
   add_foreign_key "captions", "active_storage_attachments"
+  add_foreign_key "project_collections", "collections"
+  add_foreign_key "project_collections", "projects"
 end

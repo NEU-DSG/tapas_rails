@@ -14,11 +14,11 @@ class UpsertCollection
         collection.og_reference = [params[:project_did]]
         update_metadata!(collection)
 
-        community = Community.find_by_did(params[:project_did])
+        community = Project.find_by_did(params[:project_did])
         if community
           collection.community = community
-        elsif Community.exists?(params[:community])
-          collection.community = Community.find(params[:community])
+        elsif Project.exists?(params[:project])
+          collection.community = Project.find(params[:project])
         else
           collection.collection = Collection.phantom_collection
         end
