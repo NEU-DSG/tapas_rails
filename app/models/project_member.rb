@@ -2,7 +2,7 @@
 
 class ProjectMember < ActiveRecord::Base
   # constants
-  ROLES = %w[contributor owner editor]
+  ROLES = %w[contributor collaborator owner]
 
   # associations
   belongs_to :project

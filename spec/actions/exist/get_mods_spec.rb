@@ -31,7 +31,7 @@ describe TapasXq::GetMods, :existdb => true do
         title = 'Testing valid display params'
         date = Time.now.iso8601
 
-        opts = { authors: authors, contributors: contributors,
+        opts = { tei_authors: authors, tei_contributors: contributors,
                  date: date, title: title }
         response = TapasXq::GetMods.execute(path, opts)
 
@@ -47,9 +47,9 @@ describe TapasXq::GetMods, :existdb => true do
 
       it 'ignores invalid display params' do
         skip("Test passes locally but not on Travis.") if ENV['TRAVIS']
-        opts = { authors: ['Squilliam Tentacles'], abstract: 'Foobar' }
+        opts = { tei_authors: ['Squilliam Tentacles'], abstract: 'Foobar' }
         response = TapasXq::GetMods.execute(path, opts)
-        expect(opts[:authors].all? { |a| response.include? a }).to be true
+        expect(opts[:tei_authors].all? { |a| response.include? a }).to be true
         expect(response.include? opts[:abstract]).to be false
       end
     end

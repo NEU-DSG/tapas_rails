@@ -1,13 +1,13 @@
+require "net/http"
+require "uri"
+
 class User < ActiveRecord::Base
-  require "net/http"
-  require "uri"
-  # Connects this user object to Hydra behaviors.
-  # include Hydra::User
-  # Connects this user object to Blacklights Bookmarks.
   include Blacklight::User
 
   has_one_attached(:image_file)
   has_one :image_file, as: :imageable
+
+  #TODO: add logic to update role when user creates or joins an existing project or collection
 
   # delegate :image, to: :image_file, allow_nil: true
 
@@ -40,7 +40,7 @@ class User < ActiveRecord::Base
   end
 
   def role
-    ProjectMember.find_by_user_id(id).role
+    ProjectMember.find_by_user_id(id).role ||= 'reader'
   end
 
   # Method added by Blacklight; Blacklight uses #to_s on your

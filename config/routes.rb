@@ -15,6 +15,7 @@ TapasRails::Application.routes.draw do
     :confirmations => 'users/confirmations'
   }
 
+  get 'users/:id' => 'users#profile'
   get 'my_tapas' => 'users#my_tapas'
   # 2025-02: removed "my_projects", "my_collections", and "my_records"
   get 'admin/users/new' => 'users#admin_new', as: 'admin_new_user'

@@ -6,35 +6,44 @@ class CoreFile < ActiveRecord::Base
 
   # Associations
   belongs_to :depositor, class_name: "User"
-  belongs_to :collection
-  has_many :project_core_files
-  # TODO: create logic such that deleting a core file by removing it from it's sole collection will also delete the reference
-  # to it and the collection's parent project on the project_core_files join table; once there is no reference on the join
-  # table between a core file and a project, the core file can be deleted along with it's records on the collection_core_files
-  # join table
-  has_many :projects, through: :project_core_files
-  has_many :collection_core_files
-  has_many :collections, through: :collection_core_files
-  # TODO: create logic to delete project_core_file reference when all the parent collections have been deleted
-  has_many :image_files, as: :imageable
+  has_and_belongs_to_many :collections
+  has_and_belongs_to_many :projects
   has_and_belongs_to_many :users
+  has_one_attached :image_file
+
+  # Validations
+  validates :title, :depositor_id, presence: true
 
   # Callbacks
-  after_create_commit :index_record
-  after_update_commit :update_record
-  before_destroy :delete_record
-  after_save :add_project_core_file_ref
-  # TODO: test to determine whether a separate callback is needed to remove project_core_file reference after a core file's
-  # parent collection has been deleted from the project and not added to a different parent collection
-
-
-  # after_create :associate_with_project
-
+  after_save :index_core_file
+  #TODO: add a callback to locate the indexed record by both active_record_model_ssi and id before deleting
+  after_update :update_indexed_core_file
   # these strings refer to the role of the file in collection(s);
   # if the user doesn't select an ography type, the file is not a support file but is still a tei file that
   # will need to be parsed for urls and have a map generated with the urls for the file;
   # this should be done by initializing SupportFileMap with the core_file object itself as a parameter, then passing
   # the support_file_map instance to SupportFileMap.build_map
+  # TODO: create logic such that deleting a core file by removing it from it's sole collection will also delete the reference
+  # # to it and the collection's parent project on the project_core_files join table; once there is no reference on the join
+  # # table between a core file and a project, the core file can be deleted along with it's records on the collection_core_files
+  # # join table
+  # # TODO: create logic to delete project_core_file reference when all the parent collections have been deleted
+
+  # def collections=(collection_ids)
+  #   collection_ids.reject(&:blank?).each do |collection_id|
+  #     collections << Collection.find(collection_id)
+  #   end
+  # end
+
+  def project
+    # All collections that a CoreFile belongs to will belong to the same project
+    collections.first.project
+  end
+
+  # def collections
+  #   collection_ids.map { |collection_id| Collection.find(collection_id) }
+  # end
+
   def self.all_ography_types
     %w[personography orgography bibliography otherography odd_file placeography]
   end
@@ -43,41 +52,16 @@ class CoreFile < ActiveRecord::Base
     all_ography_types.map { |x| :"#{x}_for" }
   end
 
-  def authors
-    users.where(core_files_users: { user_type: "author" })
+  def users
+    project.users
   end
 
-  def authors=(user_ids)
-    user_ids.reject(&:blank?).each do |user_id|
-      CoreFilesUser.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "author")
-    end
+  def authors
+    tei_authors
   end
 
   def contributors
-    users.where(core_files_users: { user_type: "contributor" })
-  end
-
-  def contributors=(user_ids)
-    user_ids.reject(&:blank?).each do |user_id|
-      CoreFilesUser.find_or_create_by(core_file_id: id, user_id: user_id, user_type: "contributor")
-    end
-  end
-
-  def collections=(collection_ids)
-    collection_ids.reject(&:blank?).each do |collection_id|
-      collections << Collection.find(collection_id)
-    end
-  end
-
-  def project
-    # All collections that a CoreFile belongs to will belong to the same project
-    collections.first.project
-  end
-
-  def add_project_core_file_ref
-    p = project
-
-    ProjectCoreFile.find_or_create_by(project_id: p.id, core_file_id: id)
+    tei_contributors
   end
 
   def clear_ographies!
@@ -142,6 +126,11 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
+  # TODO: this needs refactoring to include the other supported attachments; i.e., html and image
+  def canonical_object
+    # this will be the TEI uploaded when creating a new core file
+  end
+
   def as_json
     if upload_failed?
       render_failure_json
@@ -160,21 +149,13 @@ class CoreFile < ActiveRecord::Base
     #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 
-  # def update_solr_index
-  #   update_record if locate_record['numFound'] > 0
-  # end
-  #
-  # def delete_from_solr_index
-  #   delete_record if locate_record['numFound'] > 0
-  # end
-
   def to_solr
     {
       'active_record_model_ssi' => self.class.to_s,
-      'depositor_tesim' => self.depositor_id,
+      'depositor_tesim' => depositor_id,
       'table_id_ssi' => id,
       'id' => "#{self.class.to_s}_#{id}",
-      'edit_access_person_ssim' => project.project_admins.map(&:id),
+      'edit_access_person_ssim' => project.members.empty? ? depositor_id : project.owner[0].id,
       # these two replace the is_member_of_ssim field
       'collections_ssim' => self.collections.map(&:id),
       'projects_ssim' => self.collections.map(&:project_id),
@@ -184,14 +165,14 @@ class CoreFile < ActiveRecord::Base
       'all_text_timv' => nil, #TODO: review the pre-Archimedes conception of canonical object and determine if it is still useful for revamp; self.canonical_object.content.content if self.canonical_object
       # 'ography' refer to this support file's "ography role" in the collection as one of the types of ography files; it should have an array of the ids of the collections to which it serves as that type of file:
       'type_ssim' => self.is_ography? ? self.ography_type : 'TEI Record',
-      'is_ography_for_ssim' => is_ography_for,
+      'is_ography_for_ssim' => is_ography_for
       # odd is an acronym, 'one file does it all', it refers to a file that serves to expand on how to create the xml schema; not currently supported but will be in a future update
       # 'is_odd_file_for_ssim' => nil
     }
   end
 
   def is_ography?
-    self.ography_type
+    ography_type.nil?
   end
 
   def is_ography_for
@@ -204,6 +185,15 @@ class CoreFile < ActiveRecord::Base
   # end
 
   private
+
+
+  def index_core_file
+    index_record(self)
+  end
+
+  def update_indexed_core_file
+    update_record(self)
+  end
 
   def render_failure_json
     { :status => upload_status,

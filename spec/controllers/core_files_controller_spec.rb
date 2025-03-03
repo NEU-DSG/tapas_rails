@@ -297,9 +297,6 @@ describe CoreFilesController do
       # Calling create function
       get :new
 
-      # Testing the object creation parameters of core file
-      #binding.pry
-
       # Checking whether the new object is of class type CoreFile
       expect(assigns(:core_file)).to be_a_new(CoreFile)
     end

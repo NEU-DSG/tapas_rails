@@ -25,8 +25,8 @@ describe TapasXq::StoreMods do
     TapasXq::StoreTei.execute(file, @core_file)
 
     opts = {
-      :authors => ['Bob Jenkins'],
-      :contributors => ['Cotton Mathers'],
+      :tei_authors => ['Bob Jenkins'],
+      :tei_contributors => ['Cotton Mathers'],
       :date => Time.now.iso8601,
       :title => 'Test Store Mods Request'
     }
@@ -34,8 +34,8 @@ describe TapasXq::StoreMods do
     response = TapasXq::StoreMods.execute(file, @core_file, opts)
 
     expect(response.code).to eq 201
-    expect(response.include?(opts[:authors].first)).to be true
-    expect(response.include?(opts[:contributors].first)).to be true
+    expect(response.include?(opts[:tei_authors].first)).to be true
+    expect(response.include?(opts[:tei_contributors].first)).to be true
     expect(response.include?(opts[:date].first)).to be true
     expect(response.include?(opts[:title].first)).to be true
   end

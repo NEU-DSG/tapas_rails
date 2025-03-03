@@ -15,13 +15,13 @@
           = f.label :is_public, "Public?", class: "control-label col-md-2"
           = f.check_box :is_public, { checked: true }
         .form-group
-          = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
+          = f.label :image_file, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if @project.thumbnail.attached?
-              =image_tag url_for(@project.thumbnail)
-              = f.label :remove_thumbnail, "Remove Thumbnail"
-              = f.check_box "remove_thumbnail", {:checked => false}
-            = f.file_field :thumbnail, accept: ".jpeg, .jpg, .png", direct_upload: true
+            - if @project.image_file.attached?
+              =image_tag url_for(@project.image_file)
+              = f.label :remove_image_file, "Remove Thumbnail"
+              = f.check_box "remove_image_file", {:checked => false}
+            = f.file_field :image_file, accept: ".jpeg, .jpg, .png", direct_upload: true
 
 
     -#.row.form-group.institutions
@@ -36,19 +36,19 @@
       = f.label :project_members,"Project Members", class: "control-label col-md-2"
       .col-md-6
         %span.project_member
-          = f.select :project_members, options_for_select(@users, @project.project_members.pluck(:id)), {}, {name: "community[project_members][]", class: "form-control", multiple: true}
+          = f.select :project_members, options_for_select(@users, @project.members.values.flatten), {}, {name: "project[members][]", class: "form-control", multiple: true}
 
-    .row.form-group.project_editors
-      = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
-      .col-md-6
-        %span.project_editor
-          = f.select :project_editors, options_for_select(@users, @project.project_editors.pluck(:id)), {}, { name: 'community[project_editors][]', class: "form-control", multiple: true}
+    -#.row.form-group.project_editors
+    -#  = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
+    -#  .col-md-6
+    -#    %span.project_editor
+    -#      = f.select :project_editors, options_for_select(@users, @project.members['editors']), {}, { name: 'project.members[editors][]', class: "form-control", multiple: true}
 
     .row.form-group.project_admins
-      = f.label :project_admins, "Project Admins", class: "control-label col-md-2"
+      = f.label :admins, "Project Admins", class: "control-label col-md-2"
       .col-md-6
         %span.project_admin
-          = f.select :project_admins, options_for_select(@users, @project.project_admins.pluck(:id)), {}, { name: 'community[project_admins][]', class: "form-control", multiple: true}
+          = f.select :admins, options_for_select(@users, @project.admins), {}, { name: 'project_admins', class: "form-control", multiple: true}
 
   -# .row
   -#   .col-md-2

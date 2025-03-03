@@ -1,26 +1,22 @@
+# frozen_string_literal: true
+
 class Collection < ActiveRecord::Base
   include Discard::Model
   include SolrHelpers
 
   # associations
   has_one :image_file, as: :imageable
-  has_many :project_collections
-  has_many :projects, through: :project_collections
-  #TODO: implement logic so that deleting a collection displays a prompt in the ui requiring they decide which other
-  # collection the core files collection currently in the collection to be deleted should be added
-  has_many :collection_core_files
-  has_many :core_files, through: :collection_core_files
+  has_and_belongs_to_many :core_files
   belongs_to :depositor, class_name: "User"
+  belongs_to :project
 
   # callbacks
-  after_create :project_collection
+  #TODO: add a callback to locate the indexed record by both active_record_model_ssi and id before deleting
   after_create_commit :index_record
   after_update_commit :update_record
-  before_destroy :delete_record
 
   # validations
-  validates :depositor, :description, :title, presence: true
-
+  validates :depositor_id, :project_id, :title, presence: true
 
   # returns url for attached thumbnail
   def thumbnail
@@ -74,18 +70,11 @@ class Collection < ActiveRecord::Base
     #  self.mods.thumbnail = self.DC.thumbnail.first
   end
 
-  # def update_solr_index
-  #   update_record if locate_record['numFound'] > 0
-  # end
-  #
-  # def delete_from_solr_index
-  #   delete_record if locate_record['numFound'] > 0
-  # end
 
   def to_solr(solr_doc = Hash.new())
     solr_doc["active_record_model_ssi"] = self.class.to_s
     solr_doc['depositor_tesim'] = depositor.id
-    solr_doc['edit_access_person_ssim'] = project&.project_admins.map(&:id)
+    solr_doc['edit_access_person_ssim'] = project.members['owner'].empty? ? depositor_id : project.owner[0].id
     solr_doc['title_info_title_ssi'] = title
     solr_doc['table_id_ssi'] = id
     solr_doc['id'] = "#{self.class.to_s}_#{id}"
@@ -100,19 +89,12 @@ class Collection < ActiveRecord::Base
   end
 
   def project
-    if !self.project_id.blank?
-      if Project.exists?(self.project_id)
-        return Project.find(project_id)
-      else
-        return nil
-      end
-    else
-      return nil
-    end
+    # this assumes collections can't be shared across different projects even if the same individual is associated with different projects
+    Project.find(project_id)
   end
 
-  def project_collection
-    ProjectCollection.create(collection_id: id, project_id: self.project_id)
+  def core_files
+    CoreFile.all.select { |cf| cf.collections.include?(self) || cf.collection_ids.include?(id) }
   end
 
   # def remove_thumbnail

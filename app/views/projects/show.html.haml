@@ -20,13 +20,15 @@
       %dd= @project.collections.count
       -#%dt= "Record Count"
       -#%dd= @rec_count
+    %br
     %dt= "Project Members"
 - if @project.project_members.count > 0
-  - @project.project_members.each do |pm|
-    %dd= link_to(pm.name, "/users/#{pm.id}")
-    - if pm.role != "member"
-      %dt= "(#{pm.role})"
-
+  - @project.members.each do |pm|
+    %dt= pm[0].capitalize.pluralize
+    - pm[1..-1].flatten.each do |m|
+      %dd= link_to(m.name, "/users/#{m.id}")
+    %br
+  %br
   %div.col-md-9
     %panel.panel-default.panel-records
       %div.panel-heading

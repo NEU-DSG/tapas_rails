@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Project < ActiveRecord::Base
   include Discard::Model
   include SolrHelpers
@@ -8,38 +10,63 @@ class Project < ActiveRecord::Base
   belongs_to :depositor, class_name: "User"
   has_one_attached :image_file
   has_one :image_file, as: :imageable
+  has_many :collections
   has_many :project_members
   has_many :users, through: :project_members
-  has_many :project_core_files
-  has_many :core_files, through: :project_core_files
+  has_and_belongs_to_many :core_files
   #TODO: create logic such that deleting a collection in a project, when the user has not specified the collection's core
   # files should be added to a new collection in that project, should delete the record associated with core file on the
   # project_core_files join table;
-  has_many :project_collections
-  has_many :collections, through: :project_collections
 
   # callbacks
-  after_create_commit :index_record
-  after_update_commit :update_record
-  before_destroy :delete_record
+  after_save :index_record
+  after_update :update_record
+  #TODO: add a callback to locate the indexed record by both active_record_model_ssi and id before deleting
+  # before_destroy :remove_associations
 
+  # TODO: create a migration to add contact_email and a contact_website columns for project; add free-text fields to haml view
 
-  def project_members
-    users.where(project_members: { role: "contributor" })
+  def collections
+    Collection.all.where(project_id: id)
   end
 
-  def project_editors
-    users.where(project_members: { role: "editor" })
+  def core_files
+    CoreFile.all.select { |core_file| core_file.project == self }
   end
 
-  def project_admins
-    users.where(project_members: { role: "owner" })
+  def project_group
+    ProjectMember
+      .all
+      .where(project_id: id)
+      .group_by(&:role)
   end
 
-   def to_solr(solr_doc = {})
+  def members
+    user_members = {}
+
+    project_group.each do |k, v|
+      user_members[k] = v.map!(&:user)
+    end
+
+    user_members
+  end
+
+  def contributors
+    members['contributor']
+  end
+
+  def collaborators
+    members['collaborator']
+  end
+
+  def owner
+    members['owner']
+  end
+
+  def to_solr(solr_doc = {})
     solr_doc["active_record_model_ssi"] = self.class.to_s
-    solr_doc['depositor_tesim'] = depositor.id
-    solr_doc['edit_access_person_ssim'] = project_admins.map(&:id)
+    solr_doc['depositor_tesim'] = depositor_id
+    solr_doc['edit_access_person_ssim'] = members.empty? ? depositor_id : owner.id
     solr_doc['title_info_title_ssi'] = title
     solr_doc['table_id_ssi'] = id
     solr_doc['id'] = "#{self.class.to_s}_#{id}"

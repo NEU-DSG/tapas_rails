@@ -21,8 +21,8 @@ module TapasXq
         post_params = {}
 
         post_params[:file] = File.open(tei_filepath)
-        add_param(post_params, :contributors)
-        add_param(post_params, :authors)
+        add_param(post_params, :tei_contributors)
+        add_param(post_params, :tei_authors)
         add_param(post_params, :date, :"timeline-date")
         add_param(post_params, :title)
 

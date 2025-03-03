@@ -11,10 +11,10 @@
       = link_to @core_file.collections.first.title, collection_path(@core_file.collections.first)
   %li
     = @core_file.title
-
-- if current_user_can? :manage, @core_file
-  = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
-  = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this file?"
+- unless current_user.nil?
+  - if current_user_can? :manage, @core_file
+    = link_to "Edit", edit_core_file_path(@core_file), class:['btn', 'btn-info', 'btn-large']
+    = link_to "Delete", core_file_path(@core_file), class: ['btn', 'btn-danger', 'btn-large'], method: "delete", confirm: "Are you sure you want to delete this file?"
 
 %h2.page-header= @core_file.title
 
@@ -36,20 +36,21 @@
       = render partial:'reading_interface', locals:{core_file:@core_file, view_packages:@view_packages}
 
     #metadata.tab-pane
-      = @mods_html
-      - if @core_file.file_type != :tei_content
-        %dt  File Type
-        %dd
-          %ul
-            - @core_file.ography_type.titleize
+      - unless @core_file.ography_type.nil?
+        = @mods_html
+        - if @core_file.file_type != :tei_content
+          %dt  File Type
+          %dd
+            %ul
+              - @core_file.ography_type.titleize
 
-    #files.tab-pane
-      -if @core_file.canonical_object.attached?
-        %dt TEI File:
-        %dd
-          %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
-            %span.fa.fa-file-code-o
-            = @core_file.canonical_object.filename
+    -##files.tab-pane
+    -#  -if @core_file.canonical_object.attached?
+    -#    %dt TEI File:
+    -#    %dd
+    -#      %a{href: rails_blob_path(@core_file.canonical_object, disposition: "attachment")}
+    -#        %span.fa.fa-file-code-o
+    -#        = @core_file.canonical_object.filename
       -# TODO add other auxilliary files
 
     #project_details.tab-pane
@@ -67,7 +68,7 @@
         %dt Collections:
         -@core_file.collections.each do |c|
           %dd= link_to c.title, collection_path(c)
-      -if @core_file.is_ography?
+      - unless @core_file.ography_type.nil?
         %dt Ography Type:
         - @core_file.ography_type.titleize
 
