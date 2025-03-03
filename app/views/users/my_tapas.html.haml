@@ -15,7 +15,7 @@
           %br
           %br
         %table.table
-          - if !@projects || @projects&.length < 1
+          - if @projects.empty?
             = "There are no projects yet."
           - else
             - @projects.each do |p|
@@ -24,7 +24,7 @@
                   %h4
                     = link_to(p['title_info_title_ssi'], project_path(p['id']))
                 %td
-                  - if can? :manage, p
+                  - if @user.can? :manage, p
                     %a{href:edit_project_path(p['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"
@@ -36,13 +36,13 @@
         %h2.panel-title
           = "Collections"
       %div.panel-body
-        - if current_user && (@projects && @projects.length > 0)
+        - if @user && !@projects&.empty?
           %a{href:new_collection_path, class: 'btn btn-success btn-sm'}
             %i.fa.fa-plus
             = "Add New"
           %br
         %table.table
-          - if !@collections || @collections.length < 1
+          - if @collections.empty?
             = "You have no collections yet."
           - else
             - @collections.each do |c|
@@ -51,7 +51,7 @@
                   %h4
                     = link_to(c['title_info_title_ssi'], collection_path(c['id']))
                 %td
-                  - if current_user_can? :manage, c
+                  - if @user.can? :manage, c
                     %a{href:edit_collection_path(c['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"
@@ -63,13 +63,13 @@
         %h2.panel-title
           = "Records"
       %div.panel-body
-        - if current_user && (@collections && @collections.length > 0)
+        - if @user && !@collections.empty?
           %a{href:new_core_file_path, class: 'btn btn-success btn-sm'}
             %i.fa.fa-plus
             = "Add New"
           %br
         %table.table
-          - if !@records || @records.length < 1
+          - if !@records.empty?
             = "There are no collections yet."
           - else
             - @records.each do |r|
@@ -78,7 +78,7 @@
                   %h4
                     = link_to(r['title_info_title_ssi'], core_file_path(r['id']))
                 %td
-                  - if can? :manage, r
+                  - if @user.can? :manage, r
                     %a{href:edit_core_file_path(r['id']), class: ['btn','btn-xs','btn-default']}
                       %i.fa.fa-pencil
                       = "Edit"

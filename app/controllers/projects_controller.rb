@@ -47,39 +47,27 @@ class ProjectsController < ApplicationController
     if current_user
       @page_title = "Create New Project"
       @project = Project.new
-      # @institutions = Institution.pluck(:name, :id)
       @users = format_users_for_form
     end
   end
 
-  # Projects have many collections; each collection belongs to one project; CoreFiles can belong to many
-  # collections (many-to-many), but will always point back to one project
-
   def create
     @project = Project.create!(project_params.merge({ depositor_id: current_user.id }))
 
-    # add_institutions
     add_members
 
     redirect_to @project
   end
 
-  #This method is used to edit a particular project
   def edit
     @project = Project.find(params[:id])
     @page_title = "Edit #{@project.title || ''}"
-    # @institutions
     @users = format_users_for_form
   end
 
   def update
     @project = Project.find(params[:id])
-    # @project.project_members.destroy_all
-    # @project.institutions.destroy_all
     @project.update(project_params)
-
-    # add_institutions
-    # add_members
 
     if params[:project][:remove_image_file].present?
       @project.image_file.purge_later
@@ -88,17 +76,13 @@ class ProjectsController < ApplicationController
     redirect_to @project
   end
 
-  # def add_institutions
-  #   child_params[:institutions].reject(&:empty?).map { |iid| ProjectInstitution.create!(project_id: @project.id, institution_id: iid) }
-  # end
-
   def add_members
-    child_params[:project_members].reject(&:empty?).map { |uid| ProjectMember.create(project_id: @project.id, user_id: uid, role: 'member') }
-    child_params[:project_editors].reject(&:empty?).map { |uid| ProjectMember.create!(project_id: @project.id, user_id: uid, role: 'editor') }
-    child_params[:project_admins].reject(&:empty?).map { |uid| ProjectMember.create!(project_id: @project.id, user_id: uid, role: 'admin') }
+    child_params[:contributors].reject(&:empty?).map { |uid| ProjectMember.create(project_id: @project.id, user_id: uid, role: 'contributor') }
+    child_params[:collaborators].reject(&:empty?).map { |uid| ProjectMember.create!(project_id: @project.id, user_id: uid, role: 'collaborator') }
+    child_params[:owner].reject(&:empty?).map { |uid| ProjectMember.create!(project_id: @project.id, user_id: uid, role: 'owner') }
 
-    unless child_params[:project_admins].include?(current_user.id.to_s)
-      ProjectMember.create!(project_id: @project.id, user_id: current_user.id, role: 'admin')
+    unless child_params[:owner].include?(current_user.id.to_s)
+      ProjectMember.create!(project_id: @project.id, user_id: current_user.id, role: 'owner')
     end
   end
 
@@ -129,16 +113,17 @@ class ProjectsController < ApplicationController
       .permit(
         :description,
         :image_file,
-        :title
+        :title,
+        :is_public?,
+        :institution
       )
   end
 
   def child_params
     params.require(:project).permit(
-      # :institutions => [],
-      :project_admins => [],
-      :project_editors => [],
-      :project_members => []
+      :contributors => [],
+      :collaborators => [],
+      :owner => []
     )
   end
 end

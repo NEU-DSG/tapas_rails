@@ -22,10 +22,9 @@
       -#%dd= @rec_count
     %dt= "Project Members"
 - if @project.project_members.count > 0
-  - @project.project_members.each do |pm|
+  - @project.members.values.flatten.each do |pm|
     %dd= link_to(pm.name, "/users/#{pm.id}")
-    - if pm.role != "member"
-      %dt= "(#{pm.role})"
+    %dt= pm.role
 
   %div.col-md-9
     %panel.panel-default.panel-records

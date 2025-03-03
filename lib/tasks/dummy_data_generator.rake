@@ -45,37 +45,213 @@ namespace :dummy_data_generator do
 
     record_assoc_image_file.save
 
-    record.image_file.attach(
-      io: image_data,
-      filename: record_assoc_image_file.title,
-      content_type: record_assoc_image_file.file_format
-    )
+    record.image_file.attach(io: image_data, filename: record_assoc_image_file.title, content_type: record_assoc_image_file.file_format)
 
-    puts record.image_file.analyze
-
-    puts "Image file attached for #{record.class} #{record.id}" if record.image_file.attached?
+    puts "Image file attached for #{record.class} #{record.id}"
   end
 
-  desc 'attach image files'
-  task :attach_image_files => :environment do
-    if IMAGE_BASE_URL == nil
-      puts "IMAGE_BASE_URL not set — skipping image attachment"
-    else
-      [
-        # CoreFile,
-        User,
-        Collection,
-        Project
-      ].map(&:all).flatten.each do |o|
-        image_file_name = "#{o.class}_#{o.id}"
+  def create_project_members
+    Project.all.each do |project|
+      non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
 
-        record_image(o, image_file_name) unless o.image_file.attached?
+      # contributors
+      # has a TAPAS account and either creates or contributes to a TAPAS project
+      5.times do
+        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+
+        ProjectMember.create(project_id: project.id,
+                             user_id: user_id,
+                             role: 'contributor'
+        )
+      end
+
+      # collaborator
+      # has editorial access to a TAPAS project but is not the owner
+      3.times do
+        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+
+        ProjectMember.create(project_id: project.id,
+                             user_id: user_id,
+                             role: 'collaborator'
+        )
+      end
+
+      # project owners
+      # has created the project in question and has responsibility for it
+      1.times do
+        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+
+        ProjectMember.create(project_id: project.id,
+                             user_id: user_id,
+                             role: 'owner'
+        )
+      end
+
+      puts "#{project.members.values.flatten.count} project members created for #{project.__id__}: #{project.title}."
+    end
+  end
+
+  def create_collections
+    Project.all.each do |project|
+      project_users = project.members.values.flatten.shuffle
+
+      3.times do
+        public = Collection.create(title: Faker::Food.dish,
+                                   description: Faker::GreekPhilosophers.quote,
+                                   depositor_id: project_users.sample&.id,
+                                   project_id: project.id,
+                                   is_public: true
+        )
+
+        puts "Public collection #{public.id}: #{public.title} created for Project #{project.id}."
+      end
+
+      2.times do
+        private = Collection.create(title: Faker::Food.dish,
+                                    description: Faker::GreekPhilosophers.quote,
+                                    depositor_id: project_users.sample&.id,
+                                    project_id: project.id,
+                                    is_public: false
+        )
+
+        puts "Private collection #{private.id}: #{private.title} created for Project #{project.id}."
       end
     end
   end
 
-  desc "create admin user"
-  task :generate_admin_user => :environment do
+  def create_core_files
+    Collection.all.each do |collection|
+      project = collection.project
+      collection_users = project.members.values.flatten.shuffle
+      visibility = collection.is_public
+      ography_types = CoreFile.all_ography_types
+
+      47.times do
+        core_file = CoreFile.create(title: Faker::Book.title,
+                        description: Faker::Book.genre,
+                        depositor_id: collection_users.sample&.id,
+                        collections: [collection].compact,
+                        is_public: [visibility, !visibility].sample,
+                        tei_authors: Faker::Creature.name
+        )
+
+        if core_file.id.nil? || !core_file.valid?
+          puts 'Create Core Files task failed.'
+        else
+          puts "Core file #{core_file.id} created within Collection #{collection.id}"
+          # TODO: revisit this for TEI files
+          # record_image(core_file)
+        end
+      end
+
+      3.times do
+        CoreFile.create(title: Faker::Book.title,
+                        description: Faker::Book.genre,
+                        depositor_id: collection_users.sample&.id,
+                        collections: [collection].compact,
+                        is_public: visibility,
+                        ography_type: ography_types.sample,
+                        tei_authors: Faker::Artist.name
+        )
+      end
+    end
+  end
+
+  desc 'generate all dummy data'
+  task :run_all => :environment do
+    Rake::Task['dummy_data_generator:user_records'].invoke
+    Rake::Task['dummy_data_generator:non_user_records'].invoke
+  end
+
+  desc 'create user table records'
+  task :user_records => :environment do
+    puts 'Creating admin user...'
+    Rake::Task['dummy_data_generator:admin_user'].invoke
+
+    puts 'Creating debug user...'
+    Rake::Task['dummy_data_generator:debug_non_admin_user'].invoke
+
+    puts 'Creating non-admin users...'
+    Rake::Task['dummy_data_generator:non_admin_users'].invoke
+  end
+
+  desc 'create non-user table records'
+  task :non_user_records => :environment do
+    puts 'Creating projects...'
+    Rake::Task['dummy_data_generator:projects'].invoke
+
+    puts 'Creating project members...'
+    Rake::Task['dummy_data_generator:project_members'].invoke
+
+    puts 'Creating collections...'
+    Rake::Task['dummy_data_generator:collections'].invoke
+
+    if [User, Project, ProjectMember, Collection].map(&:any?).include?(false)
+      puts 'Deleting Solr index'
+      Rake::Task['dummy_data_generator:delete_indexed'].invoke
+
+      puts 'Recreating database'
+      Rake::Task['db:drop'].invoke
+      Rake::Task['db:create'].invoke
+      Rake::Task['db:migrate'].invoke
+      Rake::Task['dummy_data_generator:all_users'].invoke
+    else
+      puts 'Creating core files'
+      Rake::Task['dummy_data_generator:core_files'].invoke
+    end
+  end
+
+  desc "creates projects"
+  task :projects => :environment do
+    22.times do
+      Project.create(title: Faker::Company.bs,
+                     description: Faker::Lorem.paragraph,
+                     depositor_id: User.all.sample.id,
+                     institution: Faker::University.name
+      )
+    end
+
+    3.times do
+      Project.create(title: Faker::Company.bs,
+                     description: Faker::Lorem.paragraph,
+                     depositor_id: User.all.where(admin_at: nil).sample.id,
+                     is_public: false,
+                     institution: Faker::University.name
+      )
+    end
+
+    puts Project.count == 25 ? '25 Projects created.' : '"Create Projects" task failed.'
+  end
+
+  desc 'creates project members'
+  task :project_members => :environment do
+    if Project.any?
+      create_project_members
+    else
+      puts 'Create projects task failed.'
+    end
+  end
+
+  desc 'creates collections'
+  task :collections => :environment do
+    if Project.any?
+      create_collections
+    else
+      puts 'Create Project task failed.'
+    end
+  end
+
+  desc 'creates core files'
+  task :core_files => :environment do
+    if Collection.any?
+      create_core_files
+    else
+      puts '"Create Collections" task failed. Cannot create core files.'
+    end
+  end
+
+  desc "creates admin user"
+  task :admin_user => :environment do
     email = ENV.fetch('DUMMY_ADMIN_EMAIL')
     password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
 
@@ -89,8 +265,8 @@ namespace :dummy_data_generator do
     puts "Admin user #{user.id} has been created." unless user.nil?
   end
 
-  desc "create debug non-admin user"
-  task :generate_debug_non_admin_user => :environment do
+  desc "creates debug non-admin user"
+  task :debug_non_admin_user => :environment do
     email = ENV.fetch('DUMMY_DEBUG_EMAIL')
     password = ENV.fetch('DUMMY_DEBUG_PASSWORD')
 
@@ -103,9 +279,9 @@ namespace :dummy_data_generator do
     puts "Debug non-admin user #{user.id} has been created." unless user.nil?
   end
 
-  desc "create non-admin users"
-  task :generate_non_admin_users => :environment do
-    50.times do
+  desc "creates non-admin users"
+  task :non_admin_users => :environment do
+    275.times do
       user = User.create(name: Faker::Name.unique.name,
                   email: Faker::Internet.email,
                   bio: Faker::Lorem.paragraph,
@@ -116,172 +292,27 @@ namespace :dummy_data_generator do
     end
   end
 
-  desc "create public projects"
-  task :generate_public_projects => :environment do
-    25.times do
-      project = Project.create(title: Faker::Company.bs,
-                     description: Faker::Lorem.paragraph,
-                     depositor_id: User.all.sample.id
-      )
-
-      puts "Public project #{project.id} has been created." unless project.nil?
-    end
+  desc 'deletes records from solr index'
+  task :delete_indexed => :environment do
+    SolrHelpers.delete_all_indexed_records
   end
 
-  desc "create private projects"
-  task :generate_private_projects => :environment do
-    10.times do
-      project = Project.create(title: Faker::Company.bs,
-                     description: Faker::Lorem.paragraph,
-                     depositor_id: User.all.sample.id,
-                     is_public: 'false'
-      )
-      puts "Private project #{project.id} has been created." unless project.nil?
-    end
-  end
-
-  desc 'create project members'
-  task :generate_project_members => :environment do
-    Project.all.each do |project|
-      5.times do
-        user_id = User.all.where(admin_at: nil).sample.id
-
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'contributor'
-        )
-
-        puts "User #{user_id} has been added to Project #{project.id}'s project members as a Contributor."
-      end
-      2.times do
-        user_id = User.all.where(admin_at: nil).sample.id
-
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'editor'
-        )
-
-        puts "User #{user_id} has been added to Project #{project.id}'s project members as an Editor."
-      end
-      1.times do
-        user_id = User.all.where(admin_at: nil).sample.id
-
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'owner'
-        )
-
-        puts "User #{user_id} has been added to Project #{project.id}'s project members as an Owner."
-      end
-    end
-  end
-
-  desc 'create public collections'
-  task :generate_public_collections => :environment do
-    75.times do
-      Collection.create(title: Faker::Food.dish,
-                        description: Faker::GreekPhilosophers.quote,
-                        depositor_id: User.all.sample.id,
-                        project_id: Project.all.sample.id
-      )
-    end
-  end
-
-  desc 'create private collections'
-  task :generate_private_collections => :environment do
-    25.times do
-      Collection.create(title: Faker::Food.dish,
-                        description: Faker::GreekPhilosophers.quote,
-                        depositor_id: User.all.sample.id,
-                        project_id: Project.all.sample.id,
-                        is_public: 'false'
-      )
-    end
-  end
-
-  desc 'create public core files'
-  task :generate_public_core_files => :environment do
-    200.times do
-      CoreFile.create(title: Faker::Book.title,
-                      description: Faker::Book.genre,
-                      depositor_id: User.all.sample.id,
-                      collection_ids: Collection.all.sample.id
-      )
-    end
-  end
-
-  desc 'create private core files'
-  task :generate_private_core_files => :environment do
-    50.times do
-      CoreFile.create(title: Faker::Book.title,
-                      description: Faker::Book.genre,
-                      depositor_id: User.all.sample.id,
-                      collection_ids: Collection.all.sample.id,
-                      is_public: 'false'
-      )
-    end
-  end
-
-  desc 'create core files as ographies'
-  task :generate_core_files_as_ographies => :environment do
-    ography_types = CoreFile.all_ography_types
-
-    50.times do
-      CoreFile.create(title: Faker::Book.title,
-                      description: Faker::Book.genre,
-                      depositor_id: User.all.sample.id,
-                      collection_ids: Collection.all.sample.id,
-                      is_public: 'true',
-                      ography_type: ography_types.sample
-      )
-    end
-
-    25.times do
-      CoreFile.create(title: Faker::Book.title,
-                      description: Faker::Book.genre,
-                      depositor_id: User.all.sample.id,
-                      collection_ids: Collection.all.sample.id,
-                      is_public: 'false',
-                      ography_type: ography_types.sample
-      )
-    end
-  end
-
-  desc 'generate all dummy data'
-  task :run_all => :environment do
-    puts 'Creating admin user...'
-    Rake::Task['dummy_data_generator:generate_admin_user'].invoke
-
-    Rake::Task['dummy_data_generator:generate_debug_non_admin_user'].invoke
-
-    puts 'Creating non-admin users...'
-    Rake::Task['dummy_data_generator:generate_non_admin_users'].invoke
-
-    puts 'Creating public projects...'
-    Rake::Task['dummy_data_generator:generate_public_projects'].invoke
-
-    puts 'Creating private projects...'
-    Rake::Task['dummy_data_generator:generate_private_projects'].invoke
-
-    puts 'Creating project members...'
-    Rake::Task['dummy_data_generator:generate_project_members'].invoke
-
-    puts 'Creating public collections...'
-    Rake::Task['dummy_data_generator:generate_public_collections'].invoke
-
-    puts 'Creating private collections...'
-    Rake::Task['dummy_data_generator:generate_private_collections'].invoke
-
-    # puts 'Creating public core files...'
-    # Rake::Task['dummy_data_generator:generate_public_core_files'].invoke
-    #
-    # puts 'Creating private core files...'
-    # Rake::Task['dummy_data_generator:generate_private_core_files'].invoke
-
-    # puts 'Creating ography core files...'
-    # Rake::Task['dummy_data_generator:generate_core_files_as_ographies'].invoke
-
-    # puts 'Adding image files...'
-    # Rake::Task['dummy_data_generator:attach_image_files'].invoke
-  end
+  # # split this out into separate tasks or methods for attaching image files to users, projects, and core files
+  # desc 'attach image files'
+  # task :image_files => :environment do
+  #   if IMAGE_BASE_URL == nil
+  #     puts "IMAGE_BASE_URL not set — skipping image attachment"
+  #   else
+  #     [
+  #       # CoreFile,
+  #       User,
+  #       Collection,
+  #       Project
+  #     ].map(&:all).flatten.each do |o|
+  #       image_file_name = "#{o.class}_#{o.id}"
+  #
+  #       record_image(o, image_file_name) unless o.image_file.attached?
+  #     end
+  #   end
+  # end
 end
