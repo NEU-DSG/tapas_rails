@@ -20,12 +20,35 @@ tapas.general = {};
    **/
   
   /*
+    In response to some event, find all buttons for collapsing sections in `.tapas-container`, and close 
+    their target elements.
+   */
+  let collapseAllDisclosures = function(event) {
+    console.log("Collapsing containers");
+    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"]').forEach(element => {
+      let myTarget = document.querySelector(element.dataset.bsTarget);
+      bootstrap.Collapse.getOrCreateInstance(myTarget).hide();
+    });
+  }; // end collapseAllDisclosures()
+  
+  /*
+    In response to some event, find all buttons for collapsing sections in `.tapas-container`, and open 
+    their target elements.
+   */
+  let expandAllDisclosures = function(event) {
+    console.log("Expanding containers");
+    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"]').forEach(element => {
+      let myTarget = document.querySelector(element.dataset.bsTarget);
+      bootstrap.Collapse.getOrCreateInstance(myTarget).show();
+    });
+  }; // end collapseAllDisclosures()
+  
+  /*
     Toggle the "tapas-container-collapsed" class on the wrapper `.tapas-container` element.
    */
   let toggleContainerCollapse = function(event) {
     let containerEl = event.target.parentElement,
         isCollapsed = event.type === 'hidden.bs.collapse';
-    //console.log(event.target.parentElement);
     containerEl.classList.toggle('tapas-container-collapsed', isCollapsed);
   }; // end toggleContainerCollapse()
   
@@ -47,6 +70,20 @@ tapas.general = {};
         element.addEventListener('hidden.bs.collapse', toggleContainerCollapse);
         // Also trigger the event when the user asks to show the content again.
         element.addEventListener('show.bs.collapse', toggleContainerCollapse);
+      });
+    }
+    /* If there is a pair of "Expand all"/"Collapse all" controls, we need to add event listeners to 
+      make those actions happen. */ // #control-expand
+    let collapseAllButtons = document.querySelectorAll('button.control-collapse'),
+        expandAllButtons = document.querySelectorAll('button.control-expand');
+    if ( collapseAllButtons.length > 0 ) {
+      collapseAllButtons.forEach(element => {
+        element.addEventListener('click', collapseAllDisclosures);
+      });
+    }
+    if ( expandAllButtons.length > 0 ) {
+      expandAllButtons.forEach(element => {
+        element.addEventListener('click', expandAllDisclosures);
       });
     }
   }; // end tapas.general.prepareTapas()
