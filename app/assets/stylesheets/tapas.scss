@@ -92,7 +92,12 @@ ol.btn-list {
   li {
     list-style: none;
   }
-} // .btn-list
+} // end .btn-list
+
+img.thumbnail {
+  max-height: 3rem;
+  max-width: 3rem;
+} // end img.thumbnail
 
 
 /*
@@ -330,54 +335,35 @@ h1, h2, h3, h4, h5, h6 {
  * Used for displaying projects and/or collections as a hierarchy.
  */
 
-.tapas-container {
+.container-sequence {
+  background-color: var(--tapas-block-light);
   border: thin solid var(--tapas-border-color);
   border-radius: var(--tapas-border-radius);
-  margin: 1rem 0.25rem;
+  padding: 0.5em 0;
   
-  &.project {
-    
-    /* Use more prominent colors for project-level headings. */
-    > .tapas-container-heading {
-      background-color: var(--tapas-block-mid);
-      
-      button {
-        color: var(--tapas-text-light);
-        
-        &:hover {
-          color: var(--tapas-accent-mid);
-        }
-        
-        &:focus {
-          background-color: var(--tapas-block-dark);
-          border-color: var(--tapas-accent-mid);
-        }
-      } // end .tapas-container.project > .tapas-container-heading button
-      
-      .tapas-container-info {
-        color: var(--tapas-text-light);
-      }
-    } // end .tapas-container.project > .tapas-container-heading
-  } // end .tapas-container.project
+} // end .container-sequence
+
+ul.container-sequence, 
+ol.container-sequence {
   
-  /* When the `.tapas-container-content` is collapsed, Javascript will add the 
-    "tapas-container-collapsed" class to the container. */
-  &.tapas-container-collapsed {
-    
-    /* Use the rounded corners for all edges of the heading. */
-    .tapas-container-heading {
-      border-radius: var(--tapas-border-radius);
-    }
-  } // end .tapas-container.tapas-container-collapsed
+  li {
+    list-style: none;
+  }
+} // end ul.container-sequence, ol.container-sequence
+
+.tapas-container {
+  border-bottom: thin solid var(--tapas-border-color);
+  /* Flexbox allows us to use `.tapas-container` on both <div>s and <span>s. */
+  display: flex;
+  flex-direction: column;
   
   .tapas-container-heading {
-    align-items: baseline;
+    align-items: center;
     background-color: var(--tapas-block-light);
-    //border-bottom: thin solid var(--tapas-border-color);
-    border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    padding: 0.5em;
     
     > h2,
     > h3 {
@@ -387,23 +373,45 @@ h1, h2, h3, h4, h5, h6 {
       margin-bottom: 0;
     }
     
-    .tapas-container-nav {
+    img.thumbnail {
+      align-self: center;
+    }
+    
+    .tapas-container-name {
+      font-size: 1.75rem; // same size as <h3>
+    }
+    
+    .tapas-container-info {
+      flex: 1 2 30%;
+      
+      > * {
+        display: inline-block;
+        
+        &:before {
+          content: "·";
+          margin: 0.5em;
+        }
+      }
+    } // end .tapas-container .tapas-container-heading .tapas-container-info
+    
+    .tapas-container-heading-ender {
       display: inline-flex;
-      gap: 0.5rem;
+      flex: 1 auto;
+      justify-content: end;
       margin: 0 0.5rem;
       
-      @media screen and (max-width: $medium-screen - 1) {
-        margin: 0 2rem;
+      @media screen and (min-width: $small-screen) {
+        //margin: 0 1.5rem;
       }
       
       @media screen and (min-width: $medium-screen) {
         flex: 2;
         justify-content: end;
       }
-      
-      a {
-        color: var(--tapas-accent-mid);
-      }
+    } // end .tapas-container-heading .tapas-container-heading-ender
+    
+    .tapas-container-nav {
+      gap: 0.5rem;
       
       &.nav-tabs {
         align-self: end;
@@ -424,10 +432,10 @@ h1, h2, h3, h4, h5, h6 {
       display: flex;
       gap: 0.5rem;
       justify-content: start;
-      padding: 0.25rem 0.5rem;
+      padding: 0.25rem 1rem 0.25rem 0.5rem;
       
       @media screen and (min-width: $small-screen) {
-        padding: 0.25rem 1rem;
+        //padding: 0.25rem 1rem;
       }
       
       &.collapsed {
@@ -455,11 +463,31 @@ h1, h2, h3, h4, h5, h6 {
     } // end .tapas-container .tapas-container-heading .badge
   } // end .tapas-container .tapas-container-heading
   
+  &:first-child {
+    
+    .tapas-container-heading {
+      padding-top: 0.125em;
+    }
+  } // end .tapas-container:first-child
+  
   .tapas-container-content {
+    background-color: var(--tapas-block-main);
     border-top: thin solid var(--tapas-border-color);
-    border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
+    border-bottom: thin solid var(--tapas-border-color);
     padding: 1rem;
   } // end .tapas-container .tapas-container-content
+  
+  dl.tapas-container-content {
+    margin-bottom: 0;
+  }
+  
+  &:last-child {
+    border-bottom-style: none;
+    
+    .tapas-container-content {
+      border-bottom-width: 0.125em;
+    }
+  } // end .tapas-container:last-child
   
   table.records-list {
     
@@ -468,6 +496,66 @@ h1, h2, h3, h4, h5, h6 {
     }
   } // end .tapas-container table.records-list
 } // end .tapas-container
+
+/* This version of `.tapas-container` has rounded edges and takes up more space. It is suitable for the 
+  "My TAPAS" page but not for pages with a lot of projects, such as "Browse". */
+.container-sequence-mine {
+  
+  .tapas-container {
+    border: thin solid var(--tapas-border-color);
+    border-radius: var(--tapas-border-radius);
+    margin: 1rem 0.25rem;
+    
+    .tapas-container-heading {
+      border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+      padding: 0;
+    }
+    
+    &.project {
+    
+      /* Use more prominent colors for project-level headings. */
+      > .tapas-container-heading {
+        background-color: var(--tapas-block-mid);
+        color: var(--tapas-text-light);
+        
+        a {
+          color: var(--tapas-accent-mid);
+        }
+        
+        button {
+          color: var(--tapas-text-light);
+          
+          &:hover {
+            color: var(--tapas-accent-mid);
+          }
+          
+          &:focus {
+            background-color: var(--tapas-block-dark);
+            border-color: var(--tapas-accent-mid);
+          }
+        } // end .tapas-container.project > .tapas-container-heading button
+        
+        .tapas-container-info {
+          color: var(--tapas-text-light);
+        }
+      } // end & > .tapas-container-heading
+    } // end .container-sequence-mine .tapas-container.project
+    
+    /* When the `.tapas-container-content` is collapsed, Javascript will add the 
+      "tapas-container-collapsed" class to the container. */
+    &.tapas-container-collapsed {
+      
+      /* Use the rounded corners for all edges of the heading. */
+      .tapas-container-heading {
+        border-radius: var(--tapas-border-radius);
+      }
+    } // end .tapas-container.tapas-container-collapsed
+    
+    .tapas-container-content {
+      border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
+    } // end .tapas-container .tapas-container-content
+  } // end .container-sequence-mine .tapas-container
+} // end .container-sequence-mine
 
 
 /*
