@@ -9,13 +9,14 @@ class CoreFile < ActiveRecord::Base
   has_and_belongs_to_many :collections
   has_and_belongs_to_many :projects
   has_and_belongs_to_many :users
+  has_one :tei_file, dependent: :destroy
   has_one_attached :image_file
 
   # Validations
   validates :title, :depositor_id, presence: true
 
   # Callbacks
-  after_save :index_core_file
+  after_create :index_core_file
   #TODO: add a callback to locate the indexed record by both active_record_model_ssi and id before deleting
   after_update :update_indexed_core_file
   # these strings refer to the role of the file in collection(s);
@@ -39,10 +40,6 @@ class CoreFile < ActiveRecord::Base
     # All collections that a CoreFile belongs to will belong to the same project
     collections.first.project
   end
-
-  # def collections
-  #   collection_ids.map { |collection_id| Collection.find(collection_id) }
-  # end
 
   def self.all_ography_types
     %w[personography orgography bibliography otherography odd_file placeography]
@@ -117,7 +114,8 @@ class CoreFile < ActiveRecord::Base
     end
   end
 
-  # Check to see if this is an ography-type upload or a tei file type upload
+  # Q: are tei files always distinct from ography-type files?
+  # A: a tei file can contain an ography, but they are distinct intentionally so that it is easier to determine which view package(s) should render the file. in the future, there will be a view-package specific to ography files, so this method should be kept so that the correct view-package is displayed as a choice when the user creates or edits an existing file.
   def file_type
     if is_ography?
       :ography
