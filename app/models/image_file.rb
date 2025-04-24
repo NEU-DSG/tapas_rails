@@ -1,7 +1,6 @@
 class ImageFile < ActiveRecord::Base
   # associations
   belongs_to :imageable, polymorphic: true
-  # belongs_to :depositor, class_name: "User"
   has_one_attached :file
 
   # validations
