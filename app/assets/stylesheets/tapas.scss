@@ -69,19 +69,28 @@ h1, .h1 {
   margin: 1.25rem 0 1rem;
 }
 
-a,
-.nav-link {
-  /* Replace links' underlines with a border for readability. We want the link-ness 
-    of these to be evident without relying solely on color. */
-  border-bottom: thin dotted;
-  color: var(--tapas-link-color);
-  text-decoration: none;
+a {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 0.085rem;
   
   &:hover, &:focus {
-    border-bottom-style: solid;
+    text-decoration-style: solid;
+  }
+}
+
+a,
+.nav-link {
+  color: var(--tapas-link-color);
+  
+  &:hover, &:focus {
     color: var(--tapas-link-hover);
   }
-} // end a
+} // end a, .nav-link
+
+label {
+  font-size: 1.15em;
+}
 
 ul.btn-list,
 ol.btn-list {
@@ -94,10 +103,52 @@ ol.btn-list {
   }
 } // end .btn-list
 
+form.sort-controls {
+  align-items: center;
+  display: flex;
+  gap: 0.75em;
+  height: 100%;
+  margin: 0 1rem;
+} // end form.sort-controls
+
 img.thumbnail {
   max-height: 3rem;
   max-width: 3rem;
 } // end img.thumbnail
+
+button.collapse-toggle {
+  align-items: baseline;
+  background-color: var(--tapas-block-light);
+  border: medium solid var(--tapas-transparency);
+  border-radius: var(--tapas-border-radius);
+  color: var(--tapas-text-dark);
+  display: flex;
+  gap: 0.5rem;
+  justify-content: start;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  
+  &.collapsed {
+    
+    svg.collapse-toggle-img {
+      transform: rotate(0.5turn);
+    }
+  } // end button.collapse-toggle.collapsed
+  
+  &:hover,
+  &:focus {
+    color: var(--tapas-link-hover);
+  }
+  
+  &:focus {
+    border-color: var(--tapas-accent-mid);
+  }
+  
+  svg.collapse-toggle-img {
+    min-height: 1rem;
+    min-width: 1rem;
+  }
+} // end button.collapse-toggle
 
 
 /*
@@ -207,18 +258,23 @@ h1, h2, h3, h4, h5, h6 {
     align-items: baseline;
     display: flex;
     flex: 0 1 auto;
+    text-decoration: none;
+    
+    &.navbar-brand,
+    .navbar-brand {
+      font-size: 1.5em;
+    }
+    
+    .navbar-brand {
+      color: inherit;
+    }
     
     img {
       align-self: center;
       max-width: 50px;
       margin-right: 0.5em;
     }
-    
-    .navbar-brand {
-      color: inherit;
-      font-size: 1.5em;
-    }
-  } // end #navbar .logo
+  } // end #navbar a.logo
   
   .navbar-toggler {
     background-color: var(--tapas-block-main);
@@ -319,8 +375,26 @@ h1, h2, h3, h4, h5, h6 {
   } // end .main-container nav.breadcrumbs
   
   
+  
+  
   #main-content {
     
+    &.layout-sidebar {
+      
+      /* We only want a sidebar for larger screens, when there is ample horizontal screen space. */
+      @media (min-width: $large-screen) {
+        display: grid;
+        gap: 0 1em;
+        grid-template-areas:
+          "heading heading"
+          "sidebar content";
+        grid-template-columns: 25% auto;
+        
+        > h1 {
+          grid-area: heading;
+        }
+      }
+    } // end .main-container #main-content.layout-sidebar
   } // end .main-container #main-content
   
   .breadcrumbs + #main-content {
@@ -362,7 +436,7 @@ ol.container-sequence {
     background-color: var(--tapas-block-light);
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 0.75rem;
     padding: 0.5em;
     
     > h2,
@@ -378,6 +452,7 @@ ol.container-sequence {
     }
     
     .tapas-container-name {
+      flex: 1 2 50%;
       font-size: 1.75rem; // same size as <h3>
     }
     
@@ -395,23 +470,37 @@ ol.container-sequence {
     } // end .tapas-container .tapas-container-heading .tapas-container-info
     
     .tapas-container-heading-ender {
+      align-self: end;
       display: inline-flex;
-      flex: 1 auto;
+      flex: 0 1 auto;
       justify-content: end;
-      margin: 0 0.5rem;
       
       @media screen and (min-width: $small-screen) {
         //margin: 0 1.5rem;
       }
       
       @media screen and (min-width: $medium-screen) {
-        flex: 2;
         justify-content: end;
+        margin: 0 0.5rem;
       }
+      
+      @media screen and (min-width: $large-screen) {
+        flex: 2;
+      }
+      
+      .collapse-desc {
+        display: none;
+        
+        @media screen and (min-width: $large-screen) {
+          display: inline;
+        }
+      } // end .tapas-container-heading .tapas-container-heading-ender .collapse-desc
     } // end .tapas-container-heading .tapas-container-heading-ender
     
     .tapas-container-nav {
+      flex: 2 0 auto;
       gap: 0.5rem;
+      margin-right: 0.5rem;
       
       &.nav-tabs {
         align-self: end;
@@ -424,37 +513,9 @@ ol.container-sequence {
       } // end .tapas-container-heading .tapas-container-nav.nav-tabs
     } // end .tapas-container-heading .tapas-container-nav
     
-    button {
-      align-items: baseline;
+    button.collapse-toggle {
       background-color: inherit;
-      border: medium solid var(--tapas-transparency);
-      border-radius: var(--tapas-border-radius);
-      display: flex;
-      gap: 0.5rem;
-      justify-content: start;
-      padding: 0.25rem 1rem 0.25rem 0.5rem;
-      
-      @media screen and (min-width: $small-screen) {
-        //padding: 0.25rem 1rem;
-      }
-      
-      &.collapsed {
-        
-        svg {
-          transform: rotate(0.5turn);
-        }
-      } // end .tapas-container .tapas-container-heading button.collapsed
-      
-      &:hover,
-      &:focus {
-        //background-color: var(--tapas-block-mid);
-        color: var(--tapas-accent-orig);
-      }
-      
-      &:focus {
-        border-color: var(--tapas-accent-mid);
-      }
-    } // end .tapas-container .tapas-container-heading button
+    }
     
     .badge {
       background-color: var(--tapas-block-main);
@@ -509,7 +570,19 @@ ol.container-sequence {
     .tapas-container-heading {
       border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
       padding: 0;
-    }
+      
+      .tapas-container-name {
+        flex: revert;
+        
+        // On large screens, the container name can take up less space.
+        @media screen and (min-width: $medium-screen) {
+          max-width: 60%;
+        }
+        @media screen and (min-width: $large-screen) {
+          max-width: 40%;
+        }
+      }
+    } // end .container-sequence-mine .tapas-container .tapas-container-heading
     
     &.project {
     

@@ -25,7 +25,7 @@ tapas.general = {};
    */
   let collapseAllDisclosures = function(event) {
     console.log("Collapsing containers");
-    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"]').forEach(element => {
+    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"][aria-expanded="true"]').forEach(element => {
       let myTarget = document.querySelector(element.dataset.bsTarget);
       bootstrap.Collapse.getOrCreateInstance(myTarget).hide();
     });
@@ -37,7 +37,7 @@ tapas.general = {};
    */
   let expandAllDisclosures = function(event) {
     console.log("Expanding containers");
-    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"]').forEach(element => {
+    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"][aria-expanded="false"]').forEach(element => {
       let myTarget = document.querySelector(element.dataset.bsTarget);
       bootstrap.Collapse.getOrCreateInstance(myTarget).show();
     });
