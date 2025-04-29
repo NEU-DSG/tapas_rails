@@ -1,0 +1,8 @@
+<h1>Browse Projects</h1>
+
+<%= content_for :containers do %>
+  
+  <%= render partial: "browse_container", collection: [Project.first], as: :item %>
+<% end %>
+
+<%= render "shared/browse_page" %>

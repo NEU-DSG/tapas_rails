@@ -73,6 +73,10 @@ Rails.application.routes.draw do
 
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
+  
+  # Browse pages
+  get 'browse' => 'projects#browse'
+  get 'browse/projects' => 'projects#browse'
 
   # Browse pages
   get 'browse' => 'projects#browse'
