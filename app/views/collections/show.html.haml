@@ -19,7 +19,7 @@
     %dt= "Project"
     %dd= link_to parent.title, parent
     - if @collection.image_file.nil?
-      = image_tag "tapaslogo-opaque.png"
+      = image_tag "tapas-logo-opaque.png"
     -else
       = image_tag url_for(@collection.image_file)
     - if !@collection.description.blank?

@@ -10,7 +10,7 @@
 %div.row
   %div.col-md-3
     - if !@project.image_file&.attached?
-      =image_tag "tapaslogo-opaque.png"
+      =image_tag "tapas-logo-opaque.png"
     - else
       %img{src: url_for(@project.image_file)}
     %dt= "Description"
