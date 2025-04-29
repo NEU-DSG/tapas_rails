@@ -1,6 +1,6 @@
 TapasRails::Application.routes.draw do
   
-  root :to => "catalog#browse"
+  root :to => "projects#browse"
 
   resources :catalog, controller: 'catalog', only: [:index, :show] do
     collection do
@@ -33,8 +33,6 @@ TapasRails::Application.routes.draw do
   # constraints resque_web_constraint do
   mount Resque::Server.new, at: "/resque"
   # end
-
-  get 'browse' => 'catalog#browse'
 
   # Projects, formerly 'Communities'
   resources :projects
@@ -74,6 +72,10 @@ TapasRails::Application.routes.draw do
 
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
+  
+  # Browse pages
+  get 'browse' => 'projects#browse'
+  get 'browse/projects' => 'projects#browse'
 
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
 end
