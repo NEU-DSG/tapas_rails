@@ -1,8 +1,11 @@
 <h1>Browse Projects</h1>
 
 <%= content_for :containers do %>
-  
-  <%= render partial: "browse_container", collection: [Project.first], as: :item %>
+  <% @projects.each do |project| %>
+    <% unless project.nil? %>
+      <%= render partial: "browse_container", object: project, as: :item %>
+    <% end %>
+  <% end %>
 <% end %>
 
 <%= render "shared/browse_page" %>
