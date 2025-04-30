@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
   # self.search_params_logic += [:add_access_controls_to_solr_params]
   
   def browse
-    @projects = Project.all
+    @projects = Project.publicly_visible.includes(:collections, :core_files)
     render 'browse'
   end
   
