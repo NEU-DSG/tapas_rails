@@ -1,7 +1,7 @@
 require "net/http"
 require "uri"
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Blacklight::User
 
   has_one_attached(:image_file)

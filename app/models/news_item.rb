@@ -1,4 +1,4 @@
-class NewsItem < ActiveRecord::Base
+class NewsItem < ApplicationRecord
   extend FriendlyId
   include SolrHelpers
 

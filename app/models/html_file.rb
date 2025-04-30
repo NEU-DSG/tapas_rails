@@ -1,4 +1,4 @@
-class HTMLFile < ActiveRecord::Base
+class HTMLFile < ApplicationRecord
   include Filename
   include DownloadPath
   include TapasRails::ViewPackages

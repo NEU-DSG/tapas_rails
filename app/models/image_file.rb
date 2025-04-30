@@ -1,4 +1,6 @@
-class ImageFile < ActiveRecord::Base
+# frozen_string_literal: true
+
+class ImageFile < ApplicationRecord
   # associations
   belongs_to :imageable, polymorphic: true
   has_one_attached :file
