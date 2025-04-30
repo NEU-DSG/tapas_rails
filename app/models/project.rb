@@ -196,3 +196,19 @@ end
 #   end
 #   return members_with_roles
 # end
+
+
+###  SCOPES  ###
+
+public
+
+# TODO: Figure out why `scope` is undefined
+#scope :publicly_visible, -> { where(is_public: true) }
+def publicly_visible
+  where(is_public: true)
+end
+
+#scope :with_info_for_description, lambda {
+#  select(:id, :title).includes(:collections, :core_files)
+#}
+
