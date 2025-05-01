@@ -7,7 +7,7 @@
       <%= image_tag "tapas-logo-opaque.png", alt: "", class: "thumbnail" %>
     <% end %>
     
-    <%= content_tag "a", href: url_for(item), class: "tapas-container-name" do -%>
+    <%= tag.a href: url_for(item), class: "tapas-container-name" do -%>
       <%= item.title %>
     <% end -%>
     <!--<span class="tapas-container-heading-ender">
