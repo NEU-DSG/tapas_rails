@@ -47,7 +47,7 @@
                   -#%i.fa.fa-pencil
                   %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}= "Edit"
                 - if !record.image_file.attached?
-                  = image_tag "tapaslogo-opaque.png"
+                  = image_tag "tapas-logo-opaque.png"
                 -else
                   -# - TODO: add logic to resize thumbnail image
                   = image_tag url_for(record.image_file)
