@@ -1,5 +1,6 @@
 TapasRails::Application.routes.draw do
-  root :to => "catalog#browse"
+  
+  root :to => "projects#browse"
 
   resources :catalog, controller: 'catalog', only: [:index, :show] do
     collection do
@@ -16,12 +17,11 @@ TapasRails::Application.routes.draw do
 
   get 'users/:id' => 'users#profile'
   get 'my_tapas' => 'users#my_tapas'
-  get 'my_projects' => 'users#my_projects'
-  get 'my_collections' => 'users#my_collections'
-  get 'my_records' => 'users#my_records'
+  # 2025-02: removed "my_projects", "my_collections", and "my_records"
   get 'admin/users/new' => 'users#admin_new', as: 'admin_new_user'
-  get 'admin/users/id' => 'users#admin_show'
+  get 'admin/users/:id' => 'users#admin_show'
   post 'admin/users' => 'users#admin_create', as: 'admin_create_user'
+  get 'users/:id' => 'users#profile'
   get 'mail_users' => 'users#mail_all_users', as: 'mail_users'
   post 'mail_users' => 'users#mail_all_users'
 
@@ -34,41 +34,24 @@ TapasRails::Application.routes.draw do
   mount Resque::Server.new, at: "/resque"
   # end
 
-  get 'browse' => 'catalog#browse'
-
   # Projects, formerly 'Communities'
   resources :projects
-  get 'projects/id' => 'projects#show'
-  post "projects/id" => "projects#upsert"
-  get 'projects/id/edit' => 'projects#edit'
-  get 'projects' => 'projects#index'
-  get '/catalog/id' => 'projects#show'
-  delete "projects/id" => "projects#destroy"
+  # TODO: add more complex routing to reflect ordered hierarchy, human-readable names
+  # 2025-02: Removed route for "projects#upsert", a Drupal-focused upload/update.
 
   # Collections
   resources :collections
-  get 'collections/id' => 'collections#show'
-  post 'collections/id' => 'collections#upsert'
-  get 'collections/id/edit' => 'collections#edit'
-  get 'collections' => 'collections#index'
-  get '/catalog/id' => 'collections#show'
-  delete 'collections/id' => 'collections#destroy'
+  # 2025-02: Removed route for "collections#upsert", a Drupal-focused upload/update.
 
   # CoreFiles
   resources :core_files
-  get 'core_files/id/edit' => 'core_files#edit'
-  get 'core_files' => 'core_files#index'
-  get 'core_files/new' => 'core_files#new'
-
   # get 'files/:did/mods' => 'core_files#mods'
   # get 'files/:did/tei' => 'core_files#tei'
   # get 'files/:did' => 'core_files#api_show'
-  get 'core_files/id' => 'core_files#show'
+  #get 'core_files/id' => 'core_files#show'
   # put 'core_files/:did/reading_interfaces' => 'core_files#rebuild_reading_interfaces'
-  post 'core_files/id' => 'core_files#update'
-  post 'files/id' => 'core_files#upsert'
-  delete "files/id" => "core_files#destroy"
-
+  #post 'files/id' => 'core_files#upsert's
+  #delete "files/id" => "core_files#destroy"
   # get 'files/:did/html/:view_package' => 'core_files#view_package_html'
 
   resources :downloads, :only => 'show'
@@ -89,6 +72,10 @@ TapasRails::Application.routes.draw do
 
   resources :menu_links, path: "/menu"
   post 'update_menu_order' => 'menu_links#update_menu_order'
+  
+  # Browse pages
+  get 'browse' => 'projects#browse'
+  get 'browse/projects' => 'projects#browse'
 
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
 end

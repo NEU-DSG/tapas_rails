@@ -2,21 +2,40 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TapasRails</title>
+  <title><%= render_page_title %></title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- TAPAS uses the "Lato" font from Google: https://fonts.google.com/specimen/Lato -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&amp;display=swap');
+  </style>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-<div class="container">
-  <div class="row">
-    <div class="col-sm-12">
-      <%= yield %>
-    </div>
+  <!-- Skip link -->
+  <div id="skip-link" class="visually-hidden-focusable">
+    <a href="#main-content">Skip to main content</a>
   </div>
-</div>
-<footer></footer>
-<%= render 'shared/toolbar' %>
+  
+  <!-- Page content -->
+  <div>
+    <%= render :partial => 'shared/header' %>
+    
+    <!--
+        TAPAS main content
+      -->
+    <div class="main-container">
+      <!-- TODO: breadcrumbs -->
+      
+      <!-- Primary content of webpage -->
+      <main id="main-content" class="container-md">
+        <%= yield %>
+      </main>
+    </div>
+    
+    <%= render :partial => 'shared/footer' %>
+  </div>
 </body>
 </html>

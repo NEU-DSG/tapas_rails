@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   helper Openseadragon::OpenseadragonHelper
 
   include Blacklight::Controller
-  layout 'blacklight'
+  layout 'application'
 
 
   # Prevent CSRF attacks by raising an exception.
