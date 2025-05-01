@@ -26,13 +26,14 @@ class Project < ActiveRecord::Base
 
   # TODO: create a migration to add contact_email and a contact_website columns for project; add free-text fields to haml view
 
-  def collections
-    Collection.all.where(project_id: id)
-  end
+  #def collections
+    #Collection.all.where(project_id: id)
+  #end
 
-  def core_files
-    CoreFile.all.select { |core_file| core_file.project == self }
-  end
+  #def core_files
+    #CoreFile.all.select { |core_file| core_file.project == self }
+    #self.core_files
+  #end
 
   def project_group
     ProjectMember
