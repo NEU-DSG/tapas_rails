@@ -1,4 +1,7 @@
-<li class="container-fluid tapas-container project">
+<!-- Define an HTML ID for this project's collapsible content. All collapsibles start already collapsed. -->
+<% collapse_id = 'collapsible-' + item_counter.to_s %>
+
+<li class="container-fluid tapas-container project tapas-container-collapsed">
   <span class="tapas-container-heading">
     
     <% if item.image_file&.attached? %>
@@ -11,7 +14,7 @@
       <%= item.title %>
     <% end -%>
     <span class="tapas-container-heading-ender">
-      <%= render partial: "shared/icons/collapse_button", locals: { collapsible_id: 'TODO', starts_collapsed: true } %>
+      <%= render partial: "shared/icons/collapse_button", locals: { collapsible_id: collapse_id, starts_collapsed?: true } %>
       <!--<button type="button" class="collapse-toggle collapsed"
          aria-expanded="false" aria-controls="a-project-about" aria-label="More information"
          data-bs-toggle="collapse" data-bs-target="#a-project-about">
@@ -23,7 +26,7 @@
       </button>-->
     </span>
   </span>
-  <dl class="tapas-container-content row">
+  <%= tag.dl(id: collapse_id, class: ['tapas-container-content', 'row', 'collapse']) do -%>
     <dt class="col-md-3">Last updated</dt>
       <dd class="col-md-9">
         <%= item.updated_at %>
@@ -43,5 +46,5 @@
       <dd class="col-md-9">
         <%= item.core_files.count %>
       </dd>
-  </dl>
+  <% end -%>
 </li>
