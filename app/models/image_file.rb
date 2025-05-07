@@ -1,4 +1,4 @@
-class ImageFile < ActiveRecord::Base
+class ImageFile < ApplicationRecord
   # associations
   belongs_to :imageable, polymorphic: true
   # belongs_to :depositor, class_name: "User"

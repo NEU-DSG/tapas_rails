@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CoreFile < ActiveRecord::Base
+class CoreFile < ApplicationRecord
   include Discard::Model
   include SolrHelpers
 

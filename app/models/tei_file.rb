@@ -1,4 +1,4 @@
-class TEIFile < ActiveRecord::Base
+class TEIFile < ApplicationRecord
   include Filename
   include DownloadPath
 
