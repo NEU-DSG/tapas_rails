@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class ProjectMember < ActiveRecord::Base
+class ProjectMember < ApplicationRecord
   # constants
   ROLES = %w[contributor collaborator owner]
 

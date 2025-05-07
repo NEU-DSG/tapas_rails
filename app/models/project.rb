@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   include Discard::Model
   include SolrHelpers
 

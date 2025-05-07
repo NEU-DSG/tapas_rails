@@ -1,4 +1,4 @@
-class ViewPackage < ActiveRecord::Base
+class ViewPackage < ApplicationRecord
   include TapasRails::ViewPackages
   attr_accessible :human_name, :machine_name, :description, :file_type, :css_files, :js_files, :parameters, :run_process, :dir_name, :git_timestamp, :git_branch if Rails::VERSION::MAJOR < 4
 
