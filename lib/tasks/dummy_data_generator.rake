@@ -115,7 +115,7 @@ namespace :dummy_data_generator do
 
       3.times do
         public = Collection.create(title: fake[:food],
-                                   description: fake[:quote],
+                                   description: fake[:description],
                                    depositor_id: project_users.sample&.id,
                                    project_id: project.id,
                                    is_public: true
@@ -126,7 +126,7 @@ namespace :dummy_data_generator do
 
       2.times do
         private = Collection.create(title: fake[:food],
-                                    description: fake[:quote],
+                                    description: fake[:description],
                                     depositor_id: project_users.sample&.id,
                                     project_id: project.id,
                                     is_public: false

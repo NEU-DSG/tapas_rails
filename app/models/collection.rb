@@ -89,7 +89,7 @@ class Collection < ActiveRecord::Base
   end
 
   def project
-    Project.all.where(project_id)
+    Project.find(project_id)
   end
 
   def core_files
