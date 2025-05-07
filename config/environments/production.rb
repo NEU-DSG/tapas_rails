@@ -19,6 +19,10 @@ TapasRails::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
 
+  # Rails 5 now supports per-form CSRF tokens to mitigate against code-injection attacks with forms created by JavaScript. With this option turned on, forms in your application will each have their own CSRF token that is specific to the action and method for that form.
+  config.action_controller.per_form_csrf_tokens = true
+
+
   # config.action_mailer.default_url_options = { :host => "tapas.neu.edu"}
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application

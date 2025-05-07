@@ -65,10 +65,32 @@ gem 'rest-client'
 # Use rails_config gem for less crappy custom config
 gem 'rails_config'
 
+gem "rails-controller-testing"
+
+gem "activemodel-serializers-xml"
+
 gem 'puma', '~> 3.12', '>= 3.12.6'
 
 # Use mods_display to generate html from mods
 gem 'mods_display', '~> 0.3'
+
+
+# Ruby 2.7 has removed these gems which were default in prior versions.
+# Module for defining custom exceptions with specific messages; https://github.com/ruby/e2mmap
+gem 'e2mmap', '~> 0.1.0'
+
+# scanf is an implementation of the C function scanf(3); https://github.com/ruby/scanf
+gem 'scanf', '~> 1.0'
+
+# Watches for termination of multiple threads; https://github.com/ruby/thwait
+gem 'thwait', '~> 0.2.0'
+
+gem "record_tag_helper", "~> 1.0"
+
+gem "web-console", "~> 2.0"
+
+gem "responders", "~> 2.0"
+
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

@@ -89,8 +89,7 @@ class Collection < ActiveRecord::Base
   end
 
   def project
-    # this assumes collections can't be shared across different projects even if the same individual is associated with different projects
-    Project.find(project_id)
+    Project.all.where(project_id)
   end
 
   def core_files

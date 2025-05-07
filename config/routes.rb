@@ -1,4 +1,4 @@
-TapasRails::Application.routes.draw do
+Rails.application.routes.draw do
   root :to => "catalog#browse"
 
   resources :catalog, controller: 'catalog', only: [:index, :show] do
