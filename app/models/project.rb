@@ -51,14 +51,17 @@ class Project < ActiveRecord::Base
     user_members
   end
 
+  # can add content and manage it
   def contributors
     members['contributor']
   end
 
+  # can add content, and manage select content
   def collaborators
     members['collaborator']
   end
 
+  # full editing access
   def owner
     members['owner']
   end

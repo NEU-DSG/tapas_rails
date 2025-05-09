@@ -104,8 +104,6 @@ namespace :dummy_data_generator do
                              role: 'owner'
         )
       end
-
-      puts "#{project.members.values.flatten.count} project members created for #{project.__id__}: #{project.title}."
     end
   end
 
@@ -114,25 +112,21 @@ namespace :dummy_data_generator do
       project_users = project.members.values.flatten.shuffle
 
       3.times do
-        public = Collection.create(title: fake[:food],
-                                   description: fake[:description],
-                                   depositor_id: project_users.sample&.id,
-                                   project_id: project.id,
-                                   is_public: true
+        Collection.create(title: fake[:food],
+                                 description: fake[:description],
+                                 depositor_id: project_users.sample&.id,
+                                 project_id: project.id,
+                                 is_public: true
         )
-
-        puts "Public collection #{public.id}: #{public.title} created for Project #{project.id}."
       end
 
       2.times do
-        private = Collection.create(title: fake[:food],
-                                    description: fake[:description],
-                                    depositor_id: project_users.sample&.id,
-                                    project_id: project.id,
-                                    is_public: false
+        Collection.create(title: fake[:food],
+                                  description: fake[:description],
+                                  depositor_id: project_users.sample&.id,
+                                  project_id: project.id,
+                                  is_public: false
         )
-
-        puts "Private collection #{private.id}: #{private.title} created for Project #{project.id}."
       end
     end
   end
