@@ -1,6 +1,6 @@
-- MenuLink.all.where(:menu_name=>menu).order(:link_order).each do |l|
+- MenuLink.where(:menu_name=>menu).order(:link_order).each do |l|
   - if l.parent_link_id.blank?
-    - child_links = MenuLink.all.where(:parent_link_id => l.id).order(:link_order)
+    - child_links = MenuLink.where(:parent_link_id => l.id).order(:link_order)
     - klass = ""
     - if !child_links.blank?
       - klass = "expanded dropdown"

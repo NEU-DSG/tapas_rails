@@ -4,8 +4,10 @@ require "uri"
 class User < ApplicationRecord
   include Blacklight::User
 
-  has_one_attached(:image_file)
+  has_one_attached :image_file
   has_one :image_file, as: :imageable
+  has_many :project_members
+  has_many :projects, through: :project_members
 
   #TODO: add logic to update role when user creates or joins an existing project or collection
 
@@ -26,12 +28,6 @@ class User < ApplicationRecord
          # :confirmable; TODO: add this again after smtp is configured
 
   delegate :can?, :cannot?, :to => :ability
-
-  has_one_attached :image_file
-  has_one :image_file, as: :imageable
-  has_many :project_members
-  has_many :projects, through: :project_members
-  has_and_belongs_to_many :core_files
 
 
   def api_key=(api_key)

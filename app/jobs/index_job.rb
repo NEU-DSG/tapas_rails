@@ -20,7 +20,7 @@ class IndexJob
     rsolr_conn = SolrService.instance.conn
 
     begin
-      obj = Base.find(pid, :cast=>true)
+      obj = Base.find(pid, cast: true)
 
       if ![Project, Collection, Compilation, Employee].include? obj.class
 

@@ -1,16 +1,14 @@
 class MenuLinksController < ApplicationController
   extend ActiveSupport::Concern
-  before_action :verify_admin, :except => :show
+  before_action :verify_admin, except: :show
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
   end
 
-  included do
-    rescue_from ActiveRecord::RecordInvalid do |exception|
-      flash[:error] = exception.to_s
-      redirect_to '/admin'
-    end
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    flash[:error] = exception.to_s
+    redirect_to '/admin'
   end
 
   def show
@@ -29,13 +27,13 @@ class MenuLinksController < ApplicationController
 
   def update
     @menu_link = MenuLink.find(params[:id])
-    @menu_link.update_attributes(menu_link_params)
+    @menu_link.update(menu_link_params)
     if @menu_link.valid?
       @menu_link.save!
-      redirect_to(:action => :index)
+      redirect_to(action: :index)
     else
       flash.now[:error] = @menu_link.errors.full_messages.join(",")
-      render(:action => :edit)
+      render(action: :edit)
     end
   end
 
@@ -52,18 +50,18 @@ class MenuLinksController < ApplicationController
     @menu_link = MenuLink.new(menu_link_params)
     if @menu_link.valid?
       @menu_link.save!
-      redirect_to(:action => :index)
+      redirect_to(action: :index)
     else
       flash.now[:error] = @menu_link.errors.full_messages.join(",")
-      render(:action => :new)
+      render(action: :new)
     end
   end
 
   def index
     @page_title = "Menu Links"
-    @main_menu_links = MenuLink.all.where(:menu_name=>"main_menu").order(:link_order)
-    @documentation_sub_links = MenuLink.all.where(:menu_name=>"documentation_sub").order(:link_order)
-    @toolbar_tools_links = MenuLink.all.where(:menu_name=>"toolbar_tools").order(:link_order)
+    @main_menu_links = MenuLink.where(:menu_name=>"main_menu").order(:link_order)
+    @documentation_sub_links = MenuLink.where(:menu_name=>"documentation_sub").order(:link_order)
+    @toolbar_tools_links = MenuLink.where(:menu_name=>"toolbar_tools").order(:link_order)
     if session[:flash_success]
       flash[:success] = session[:flash_success]
       session.delete(:flash_success)
@@ -87,14 +85,19 @@ class MenuLinksController < ApplicationController
       end
     end
     respond_to do |format|
-      format.json { render :json=>{:status=>"Success", :links=>MenuLink.all.where(:menu_name=>params[:menu_name]).to_json}, status: 200}
+      format.json {
+        render json: {
+          status: "Success",
+          links: MenuLink.where(menu_name: params[:menu_name])
+        }, status: :ok
+      }
     end
   end
 
   def destroy
     @menu_link = MenuLink.find(params[:id])
     title = @menu_link.link_text
-    redirect_to(:action => :index)
+    redirect_to(action: :index)
     if @menu_link.destroy
       session[:flash_success] = "#{title} has been deleted"
     end

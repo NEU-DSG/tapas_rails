@@ -6,10 +6,9 @@ class CoreFile < ApplicationRecord
 
   # Associations
   belongs_to :depositor, class_name: "User"
-  has_and_belongs_to_many :collections
-  has_and_belongs_to_many :projects
-  has_and_belongs_to_many :users
-  has_one :tei_file, dependent: :destroy
+  has_many :collection_core_files
+  has_many :collections, through: :collection_core_files
+  has_one_attached :tei_file, dependent: :destroy
   has_one_attached :image_file
 
   # Validations
@@ -37,7 +36,6 @@ class CoreFile < ApplicationRecord
   # end
 
   def project
-    # All collections that a CoreFile belongs to will belong to the same project
     collections.first.project
   end
 

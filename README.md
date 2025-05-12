@@ -94,7 +94,7 @@ To modify the main menu
 
 To get started developing TAPAS, first install the required software:
 
-- Ruby 2.6.3
+- Ruby 2.7.7
 - Rails 5.2
 - MySQL 5.x
 

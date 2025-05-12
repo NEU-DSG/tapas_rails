@@ -7,7 +7,7 @@
         = link_to("Edit", edit_menu_link_path(l), "class"=>"inline-block")
         %a{:href=>menu_link_path(l), "data-method"=>"delete", "class"=>"inline-block"}
           %i.fa.fa-trash
-        - child_links = MenuLink.all.where(:parent_link_id => l.id).order(:link_order)
+        - child_links = MenuLink.where(:parent_link_id => l.id).order(:link_order)
         - if !child_links.blank?
           %ol.dd-list
             - child_links.each do |cl|

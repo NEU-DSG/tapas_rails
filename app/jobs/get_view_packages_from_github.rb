@@ -33,7 +33,7 @@ class GetViewPackagesFromGithub
       if view_packages.include?(dir_name)
         view = ViewPackage.where(dir_name: dir_name).first
       else
-        view = ViewPackage.create(:dir_name => dir_name)
+        view = ViewPackage.create(dir_name: dir_name)
       end
       FileUtils.cd(Rails.root.join("public/view_packages/#{dir_name}"))
       view.machine_name = dir_name.sub("-","_")

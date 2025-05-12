@@ -25,7 +25,6 @@ module TapasRails
     #   config.autoload_paths << dir
     # end
 
-
     config.secret_key_base = ENV["SECRET_KEY_BASE"]
 
     # Pid to use for the Collection that stores TEI files

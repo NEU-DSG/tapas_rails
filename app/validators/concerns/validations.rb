@@ -58,7 +58,7 @@ module Validations
   end
 
   def validate_file_and_type(param, valid_extensions)
-    valid_classes = [ActionDispatch::Http::UploadedFile, Rack::Test::UploadedFile]
+    valid_classes = Rack::Test::UploadedFile
     param_class = params[param].class
     if !(param_class.in? valid_classes)
       self.errors << "#{param} must be a file upload"

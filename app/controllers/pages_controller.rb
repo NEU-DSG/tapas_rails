@@ -1,27 +1,25 @@
 class PagesController < ApplicationController
   # TODO: this will have to be refactored to parse requests for pages by their database table id (primary key), Friendly ID slug, or Drupal human-readable identifier so that this controller can return pages created in the current Production TAPAS app, and ones created after the V2 launch.
   extend ActiveSupport::Concern
-  before_action :verify_admin, :except => :show
-  before_action :verify_published, :only => :show
-  before_action :get_submenu_options, :only => [:edit, :update, :create, :new]
+  before_action :verify_admin, except: :show
+  before_action :verify_published, only: :show
+  before_action :get_submenu_options, only: [:edit, :update, :create, :new]
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
   end
 
-  included do
-    rescue_from ActiveRecord::RecordInvalid do |exception|
-      flash[:error] = exception.to_s
-      redirect_to '/admin'
-    end
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    flash[:error] = exception.to_s
+    redirect_to '/admin'
   end
 
   def show
     @page = Page.friendly.find(params[:id])
     @page_title = @page.title
     if @page.slug == "home"
-      @news_items = NewsItem.where(:publish=>"true").limit(5).order('created_at desc')
-      @featured_core = CoreFile.find(:featured_ssim=>"true").limit(5)
+      @news_items = NewsItem.where(publish: "true").limit(5).order('created_at desc')
+      @featured_core = CoreFile.find(featured_ssim: "true").limit(5)
     end
   end
 
@@ -33,13 +31,13 @@ class PagesController < ApplicationController
   def update
     @page = Page.friendly.find(params[:id])
     @page_title = @page.title
-    @page.update_attributes(page_params)
+    @page.update(page_params)
     if @page.valid?
       @page.save!
       redirect_to @page
     else
-      flash.now[:error] = @page.errors.full_messages.join(",")
-      render(:action => :edit)
+      flash.now[:error] = safe_join(@page.errors.full_messages, ",")
+      render edit_page_path
     end
   end
 
@@ -58,15 +56,15 @@ class PagesController < ApplicationController
       @page.save!
       redirect_to @page
     else
-      flash.now[:error] = @page.errors.full_messages.join(",")
-      render(:action => :new)
+      flash.now[:error] = safe_join(@page.errors.full_messages, ",")
+      render new_page_path
     end
   end
 
   def index
     @page_title = "Pages"
     @pages = Page.all
-    if !session[:flash_success].blank?
+    unless session[:flash_success].blank?
       flash[:success] = session[:flash_success]
       session.delete(:flash_success)
     end
@@ -75,7 +73,7 @@ class PagesController < ApplicationController
   def destroy
     @page = Page.find(params[:id])
     title = @page.title
-    redirect_to(:action => :index)
+    redirect_to pages_path
     if @page.destroy
       session[:flash_success] = "#{title} has been deleted"
     end
@@ -84,12 +82,12 @@ class PagesController < ApplicationController
   private
 
     def verify_admin
-      redirect_to root_path unless current_user && current_user.admin?
+      redirect_to root_path unless current_user&.admin?
     end
 
     def verify_published
       page = Page.friendly.find(params[:id])
-      render_404("Access denied") unless page.publish == "true" || (current_user && current_user.admin?)
+      render_404("Access denied") unless (page.publish == "true" || current_user&.admin?)
     end
 
     def page_params

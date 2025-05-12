@@ -1,13 +1,5 @@
-# # Load the Rails application.
-# require_relative 'application'
-#
-# # Initialize the Rails application.
-# Rails.application.initialize!
-
-# pre-upgrade - 03272023 by CCH
-#
 # Load the Rails application.
-require File.expand_path('../application', __FILE__)
+require_relative 'application'
 
 Encoding.default_external = Encoding::UTF_8
 Encoding.default_internal = Encoding::UTF_8
@@ -15,5 +7,18 @@ Encoding.default_internal = Encoding::UTF_8
 # Initialize the Rails application.
 TapasRails::Application.initialize!
 
-# ActionView complains in tests if we don't copy this config over
-TapasRails::Application.default_url_options = TapasRails::Application.config.action_mailer.default_url_options
+# ==============
+
+# pre-upgrade - 03272023 by CCH
+#
+# Load the Rails application.
+# require File.expand_path('../application', __FILE__)
+#
+# Encoding.default_external = Encoding::UTF_8
+# Encoding.default_internal = Encoding::UTF_8
+#
+# # Initialize the Rails application.
+# TapasRails::Application.initialize!
+#
+# # ActionView complains in tests if we don't copy this config over
+# TapasRails::Application.default_url_options = TapasRails::Application.config.action_mailer.default_url_options

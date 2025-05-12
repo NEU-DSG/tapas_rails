@@ -1,17 +1,15 @@
 class NewsItemsController < ApplicationController
   extend ActiveSupport::Concern
-  before_action :verify_admin, :except => [:show, :index]
-  before_action :verify_published, :only => :show
+  before_action :verify_admin, except: [:show, :index]
+  before_action :verify_published, only: :show
 
   rescue_from ActiveRecord::RecordNotFound do |exception|
     render_404(exception)
   end
 
-  included do
-    rescue_from ActiveRecord::RecordInvalid do |exception|
-      flash[:error] = exception.to_s
-      redirect_to '/admin'
-    end
+  rescue_from ActiveRecord::RecordInvalid do |exception|
+    flash[:error] = exception.to_s
+    redirect_to '/admin'
   end
 
   def show
@@ -27,13 +25,13 @@ class NewsItemsController < ApplicationController
   def update
     @news_item = NewsItem.friendly.find(params[:id])
     @page_title = @news_item.title
-    @news_item.update_attributes(news_item_params)
+    @news_item.update(news_item_params)
     if @news_item.valid?
       @news_item.save!
       redirect_to @news_item
     else
-      flash.now[:error] = @news_item.errors.full_messages.join(",")
-      render(:action => :edit)
+      flash.now[:error] = safe_join(@news_item.errors.full_messages, ",")
+      render edit_news_item_path
     end
   end
 
@@ -52,14 +50,14 @@ class NewsItemsController < ApplicationController
       @news_item.save!
       redirect_to @news_item
     else
-      flash.now[:error] = @news_item.errors.full_messages.join(",")
-      render(:action => :new)
+      flash.now[:error] = safe_join(@news_item.errors.full_messages, ",")
+      render new_news_item_path
     end
   end
 
   def index
     @page_title = "News Items"
-    @news_items = NewsItem.all.where(:publish=>"true")
+    @news_items = NewsItem.where(publish: "true")
     if !session[:flash_success].blank?
       flash[:success] = session[:flash_success]
       session.delete(:flash_success)
@@ -69,7 +67,7 @@ class NewsItemsController < ApplicationController
   def destroy
     @news_item = NewsItem.find(params[:id])
     title = @news_item.title
-    redirect_to(:action => :index)
+    redirect_to menu_links_path
     if @news_item.destroy
       session[:flash_success] = "#{title} has been deleted"
     end
@@ -78,12 +76,12 @@ class NewsItemsController < ApplicationController
   private
 
     def verify_admin
-      redirect_to root_path unless current_user && current_user.admin?
+      redirect_to root_path unless current_user&.admin?
     end
 
     def verify_published
       news_item = NewsItem.friendly.find(params[:id])
-      render_404("Access denied") unless news_item.publish == "true" || (current_user && current_user.admin?)
+      render plain: "Access denied", status: 404 unless (news_item.publish == "true" || current_user&.admin?)
     end
 
     def news_item_params

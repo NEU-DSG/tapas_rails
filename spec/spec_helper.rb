@@ -61,4 +61,7 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
   config.include Devise::TestHelpers, :type => :controller
+  config.include Rails::Controller::Testing::TestProcess
+  config.include Rails::Controller::Testing::TemplateAssertions
+  config.include Rails::Controller::Testing::Integration
 end

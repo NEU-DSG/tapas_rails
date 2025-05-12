@@ -10,10 +10,9 @@ class Project < ApplicationRecord
   belongs_to :depositor, class_name: "User"
   has_one_attached :image_file
   has_one :image_file, as: :imageable
-  has_many :collections
+  has_many :collections, dependent: :destroy
   has_many :project_members
   has_many :users, through: :project_members
-  has_and_belongs_to_many :core_files
   #TODO: create logic such that deleting a collection in a project, when the user has not specified the collection's core
   # files should be added to a new collection in that project, should delete the record associated with core file on the
   # project_core_files join table;
@@ -26,57 +25,48 @@ class Project < ApplicationRecord
 
   # TODO: create a migration to add contact_email and a contact_website columns for project; add free-text fields to haml view
 
-  # 2025-05: Removed the methods below; the existing Project relationships should be enough.
-  #def collections
-    #Collection.all.where(project_id: id)
-  #end
-  
-  # 2025-05: This method in particular added ~1 minute of page load to the browse projects page.
-  #def core_files
-    #CoreFile.all.select { |core_file| core_file.project == self }
-  #end
 
-  def project_group
-    ProjectMember
-      .all
-      .where(project_id: id)
-      .group_by(&:role)
+  def depositor
+    User.find(depositor_id)
   end
 
   def members
     user_members = {}
 
-    project_group.each do |k, v|
-      user_members[k] = v.map!(&:user)
-    end
+    ProjectMember
+      .all
+      .where(project_id: id)
+      .group_by(&:role).each do |k, v|
+        user_members[k] = v.map!(&:user)
+      end
 
     user_members
   end
 
-  # can add content and manage it
+  # can add content to any project of which they're a member; edit content that they add
   def contributors
     members['contributor']
   end
 
-  # can add content, and manage select content
+  # full CRUD access for project content
   def collaborators
     members['collaborator']
   end
 
-  # full editing access
+  # full CRUD access for project content and project users
   def owner
     members['owner']
   end
 
   def to_solr(solr_doc = {})
     solr_doc["active_record_model_ssi"] = self.class.to_s
-    solr_doc['depositor_tesim'] = depositor_id
-    solr_doc['edit_access_person_ssim'] = members.empty? ? depositor_id : owner.id
+    solr_doc['depositor_tesi'] = depositor_id
+    solr_doc['edit_access_person_ssim'] = !project_members.exists? ? depositor_id : owner.id
     solr_doc['title_info_title_ssi'] = title
     solr_doc['table_id_ssi'] = id
     solr_doc['id'] = "#{self.class.to_s}_#{id}"
-    solr_doc['access_ssim'] = is_public ? "public" : "private"
-    solr_doc['thumbnail_list_tesim'] = 'public/assets/logo_no_text.png'
+    solr_doc['access_ssi'] = is_public ? "public" : "private"
+    solr_doc['thumbnail_tesi'] = 'public/assets/logo_no_text.png'
     # solr_doc['has_affiliation_ssim'] = # what are affiliations?
 
     solr_doc

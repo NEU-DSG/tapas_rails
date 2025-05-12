@@ -1,5 +1,6 @@
 # Borrowed from:
 # https://github.com/jeremy/resque-rails/blob/master/lib/resque/rails/queue.rb
+
 module TapasRails
   module Resque
     class Queue

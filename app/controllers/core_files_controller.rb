@@ -100,7 +100,7 @@ class CoreFilesController < ApplicationController
 
     @core_file = CoreFile.find_by_id(core_file_id)
     if @core_file.blank?
-      render :text => "Resource not found", :status => 404
+      render plain: "Resource not found", :status => 404
     else
       @core_file.create_view_package_methods
       view_package = ViewPackage.where(:machine_name => "#{params[:view_package]}").to_a.first
@@ -110,14 +110,14 @@ class CoreFilesController < ApplicationController
         html = @core_file.send("#{view_package.machine_name}".to_sym)
         render_content_asset html, e
       else
-        render :text => "The view package #{params[:view_package]} could not be found", :status => 422
+        render plain: "The view package #{params[:view_package]} could not be found", :status => 422
       end
     end
   end
 
   def mods
     @html = render_mods_display(@core_file).to_html
-    render :text => @html
+    render plain: @html
   end
 
   def tei
@@ -245,9 +245,9 @@ class CoreFilesController < ApplicationController
 
   def render_content_asset(asset, error_msg)
     if asset && asset.content.content.present?
-      render :text => asset.content.content
+      render plain: asset.content.content
     else
-      render :text => error_msg, :status => 404
+      render plain: error_msg, :status => 404
     end
   end
 end

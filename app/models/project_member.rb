@@ -10,5 +10,6 @@ class ProjectMember < ApplicationRecord
 
   # validations
   validates :user, uniqueness: { scope: :project }
+  validates :role, presence: true
   validates :role, inclusion: { in: ROLES, message: "%{value} is not a valid role" }
 end

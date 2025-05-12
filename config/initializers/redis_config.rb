@@ -1,17 +1,34 @@
-config = YAML::load(ERB.new(IO.read(File.join(Rails.root, 'config', 'redis.yml'))).result)[Rails.env].with_indifferent_access
-$redis = Redis.new(host: config[:host], port: config[:port], thread_safe: true) rescue nil
+redis_config = Rails.application.config_for(:redis)
 
-if $redis
-  begin
-    Rails.logger.info "Redis connection status: #{$redis.ping}"
-  rescue Redis::CannotConnectError
-    Rails.logger.error "Cannot connect to Redis"
-  end
-else
-  Rails.logger.error "Redis is not configured"
-end
+# if $redis
+#   begin
+#     Rails.logger.info "Redis connection status: #{$redis.ping}"
+#   rescue Redis::CannotConnectError
+#     Rails.logger.error "Cannot connect to Redis"
+#   end
+# else
+#   Rails.logger.error "Redis is not configured"
+#
+#   raise "Redis is required in #{Rails.env} environment." if Rails.env.production?
+# end
 
-# Code borrowed from Obie's Redis patterns talk at RailsConf'12
+$redis = begin
+           redis = Redis.new(
+             host: redis_config[:host],
+             port: redis_config[:port],
+             thread_safe: true,
+             timeout: 5
+           )
+
+           redis.ping
+           Rails.logger.info "Redis connection established."
+           redis
+
+         rescue Redis::CannotConnectError => e
+           Rails.logger.error "Cannot connect to Redis: #{e.message}"
+           Rails.env.production? ? raise : nil
+         end
+
 Nest.class_eval do
   def initialize(key, redis=$redis)
     super(key.to_param)
@@ -23,4 +40,8 @@ Nest.class_eval do
   end
 end
 
-TapasRails::Application::Queue = TapasRails::Resque::Queue.new('tapas_rails')
+if $redis
+  TapasRails::Application::Queue = TapasRails::Resque::Queue.new('tapas_rails')
+else
+  Rails.logger.warn "Queue not initialized. Redis is unavailable."
+end

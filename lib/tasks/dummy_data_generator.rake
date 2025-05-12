@@ -68,40 +68,45 @@ namespace :dummy_data_generator do
     puts "TEI file attached for core file #{record.__id__}."
   end
 
+  def project_member_ids(project)
+    project.project_members.map(&:user_id)
+  end
+
   def create_project_members
     Project.all.each do |project|
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
 
-      # contributors
-      # has a TAPAS account and either creates or contributes to a TAPAS project
-      5.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
-
+      # project owners
+      # has created the project in question and has responsibility for it
+      1.times do
         ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'contributor'
+                             user_id: project.depositor_id,
+                             role: 'owner',
+                             is_project_depositor: true
         )
       end
 
       # collaborator
       # has editorial access to a TAPAS project but is not the owner
       3.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
-
+        user_id = (non_admin_ids - project_member_ids(project)).sample
+        # verify that user_id is unique each time
         ProjectMember.create(project_id: project.id,
                              user_id: user_id,
-                             role: 'collaborator'
+                             role: 'collaborator',
+                             is_project_depositor: project.depositor_id == user_id
         )
       end
 
-      # project owners
-      # has created the project in question and has responsibility for it
-      1.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+      # contributors
+      # has a TAPAS account and either creates or contributes to a TAPAS project
+      5.times do
+        user_id = (non_admin_ids - project_member_ids(project)).sample
 
         ProjectMember.create(project_id: project.id,
                              user_id: user_id,
-                             role: 'owner'
+                             role: 'contributor',
+                             is_project_depositor: project.depositor_id == user_id
         )
       end
     end
@@ -185,12 +190,16 @@ namespace :dummy_data_generator do
     end
   end
 
+  def data_generated?
+    [User, Project, ProjectMember, Collection].map(&:count).reduce(&:+) > 0
+  end
+
   desc "creates projects"
   task :projects => :environment do
     22.times do
       Project.create(title: fake[:jargon],
                      description: fake[:bio],
-                     depositor_id: User.all.sample.id,
+                     depositor_id: User.where(admin_at: nil).sample.id,
                      institution: fake[:uni]
       )
     end
@@ -198,7 +207,7 @@ namespace :dummy_data_generator do
     3.times do
       Project.create(title: fake[:jargon],
                      description: fake[:bio],
-                     depositor_id: User.all.where(admin_at: nil).sample.id,
+                     depositor_id: User.where(admin_at: nil).sample.id,
                      is_public: false,
                      institution: fake[:uni]
       )
@@ -225,21 +234,19 @@ namespace :dummy_data_generator do
     end
   end
 
-  desc 'create -ography types'
-  # TODO: this isn't the best term for what this table will capture, i.e., an odd_file isn't an ography, but is a distinct form of a tei_file that might need special handling.
+  desc 'create ography types'
   task :ography_types => :environment do
-
-    ography_table_import = "mysql -u #{ENV['MYSQL_USER']} -p #{ENV['MYSQL_PASSWORD']} tapas_rails < db/data/ography_types_dump.sql"
-
-    system(ography_table_import)
+    OgraphyType::DEFINITIONS.map { |k, v| OgraphyType.create(name: k, description: v) }
   end
 
   desc 'creates core files'
   task :core_files => :environment do
-    if Collection.any?
+    if data_generated?
+      puts 'Creating core file ography types...'
+      Rake::Task['dummy_data_generator:ography_types']
+
+      puts 'Creating core files'
       create_core_files
-    else
-      puts '"Create Collections" task failed. Cannot create core files.'
     end
   end
 
@@ -286,8 +293,8 @@ namespace :dummy_data_generator do
 
   desc 'generate all dummy data'
   task :run_all => :environment do
-    Rake::Task['dummy_data_generator:user_records'].invoke
-    Rake::Task['dummy_data_generator:non_user_records'].invoke
+    Rake::Task['dummy_data_generator:create_user_records'].invoke
+    Rake::Task['dummy_data_generator:create_non_user_records'].invoke
   end
 
   desc 'create user table records'
@@ -313,7 +320,9 @@ namespace :dummy_data_generator do
     puts 'Creating collections...'
     Rake::Task['dummy_data_generator:collections'].invoke
 
-    if [User, Project, ProjectMember, Collection].map(&:any?).include?(false)
+    if data_generated?
+      Rake::Task['dummy_data_generator:core_files'].invoke
+    else
       puts 'Deleting Solr index'
       Rake::Task['dummy_data_generator:delete_indexed'].invoke
 
@@ -322,9 +331,6 @@ namespace :dummy_data_generator do
       Rake::Task['db:create'].invoke
       Rake::Task['db:migrate'].invoke
       Rake::Task['dummy_data_generator:all_users'].invoke
-    else
-      puts 'Creating core files'
-      Rake::Task['dummy_data_generator:core_files'].invoke
     end
   end
 
@@ -334,6 +340,7 @@ namespace :dummy_data_generator do
       Project,
       ProjectMember,
       Collection,
+      OgraphyType,
       CoreFile,
       ImageFile,
       TEIFile
