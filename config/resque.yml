@@ -1,0 +1,4 @@
+development: localhost:6379
+test: localhost:6379
+staging: localhost:6379
+production: <%= ENV['REDIS_URL'] || 'localhost:6379' %>
