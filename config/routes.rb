@@ -78,9 +78,5 @@ Rails.application.routes.draw do
   get 'browse' => 'projects#browse'
   get 'browse/projects' => 'projects#browse'
 
-  # Browse pages
-  get 'browse' => 'projects#browse'
-  get 'browse/projects' => 'projects#browse'
-
   match '/:id' => 'pages#show', via: 'get' #must go at end since it matches on everything
 end
