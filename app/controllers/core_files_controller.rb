@@ -14,8 +14,8 @@ class CoreFilesController < ApplicationController
   # skip_before_action :load_asset, :load_datastream, :authorize_download!
 
   # We can do better by using SOLR check instead of Fedora
-  before_action :can_edit?, only: [:edit, :update, :destroy]
-  before_action :can_read?, :only => :show
+  before_action can? :edit, only: [:edit, :update, :destroy]
+  before_action can? :read, :only => :show
   # before_action :enforce_show_permissions, :only=>:show
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]

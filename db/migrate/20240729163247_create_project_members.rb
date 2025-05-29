@@ -3,8 +3,10 @@ class CreateProjectMembers < ActiveRecord::Migration[5.2]
     create_table :project_members do |t|
       t.references :project, null: false, foreign_key: true
       t.references :user, null: false, foreign_key: true
-      t.string :role, null: false
-      t.boolean :is_project_depositor
+      t.string :role
+      t.boolean :contributor?, default: true
+      t.boolean :owner?, default: false
+      t.boolean :depositor?, default: false
 
       t.timestamps
     end

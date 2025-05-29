@@ -3,8 +3,8 @@ class CollectionsController < ApplicationController
 
   # self.copy_blacklight_config_from(CatalogController)
 
-  before_action :can_edit?, only: [:edit, :update, :destroy]
-  before_action :can_read?, :only => :show
+  before_action can? :edit, only: [:edit, :update, :destroy]
+  before_action can? :read, :only => :show
   # before_action :enforce_show_permissions, :only=>:show
 
   def upsert

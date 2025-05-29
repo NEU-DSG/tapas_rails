@@ -3,8 +3,8 @@ class ProjectsController < ApplicationController
 
   # figure out why this controller doesn't inherit from CatalogController the way CoreFilesController does
 
-  before_action :can_edit?, only: [:edit, :update, :destroy]
-  before_action :can_read?, :only => :show
+  before_action can? :edit, only: [:edit, :update, :destroy]
+  before_action can? :read, only: :show
   # before_action :enforce_show_permissions, :only=>:index
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
@@ -45,6 +45,7 @@ class ProjectsController < ApplicationController
   end
 
   def format_users_for_form
+    # TODO: refactor to return list of associated users rather than entire User table
     User.pluck(:name, :email, :id).map { |u| ["#{u[0]} (#{u[1]})", u[2]] }
   end
 
@@ -73,6 +74,7 @@ class ProjectsController < ApplicationController
   def update
     @project = Project.find(params[:id])
     @project.update(project_params)
+    @project.update(child_params)
 
     if params[:project][:remove_image_file].present?
       @project.image_file.purge_later
@@ -82,12 +84,33 @@ class ProjectsController < ApplicationController
   end
 
   def add_members
-    child_params[:contributors].reject(&:empty?).map { |uid| ProjectMember.create(project_id: @project.id, user_id: uid, role: 'contributor') }
-    child_params[:collaborators].reject(&:empty?).map { |uid| ProjectMember.create!(project_id: @project.id, user_id: uid, role: 'collaborator') }
-    child_params[:owner].reject(&:empty?).map { |uid| ProjectMember.create!(project_id: @project.id, user_id: uid, role: 'owner') }
+    child_params[:contributors]
+      .reject(&:empty?)
+      .map do |uid| ProjectMember.create(
+      project_id: @project.id,
+      user_id: uid,
+      contributor?: true,
+      owner?: false
+    )
+    end
 
-    unless child_params[:owner].include?(current_user.id.to_s)
-      ProjectMember.create!(project_id: @project.id, user_id: current_user.id, role: 'owner')
+    child_params[:owners]
+      .reject(&:empty?)
+      .map do |uid| ProjectMember.create!(
+      project_id: @project.id,
+      user_id: uid,
+      contributor?: false,
+      owner?: true
+    )
+    end
+
+    unless child_params[:owners].include?(user.id.to_s)
+      ProjectMember.create!(
+        project_id: @project.id,
+        user_id: user.id,
+        contributor?: false,
+        owner?: true
+      )
     end
   end
 
@@ -127,8 +150,7 @@ class ProjectsController < ApplicationController
   def child_params
     params.require(:project).permit(
       :contributors => [],
-      :collaborators => [],
-      :owner => []
+      :owners => []
     )
   end
 end

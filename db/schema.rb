@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_03_26_144137) do
+ActiveRecord::Schema.define(version: 2025_05_13_160140) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name", null: false
@@ -49,6 +49,16 @@ ActiveRecord::Schema.define(version: 2025_03_26_144137) do
     t.index ["active_storage_attachment_id"], name: "index_captions_on_active_storage_attachment_id"
   end
 
+  create_table "collection_core_files", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "collection_id", null: false
+    t.bigint "core_file_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["collection_id", "core_file_id"], name: "index_collection_core_files_on_collection_id_and_core_file_id", unique: true
+    t.index ["collection_id"], name: "index_collection_core_files_on_collection_id"
+    t.index ["core_file_id"], name: "index_collection_core_files_on_core_file_id"
+  end
+
   create_table "collections", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "title", null: false
     t.text "description"
@@ -82,13 +92,6 @@ ActiveRecord::Schema.define(version: 2025_03_26_144137) do
     t.text "tei_authors"
     t.text "tei_contributors"
     t.index ["discarded_at"], name: "index_core_files_on_discarded_at"
-  end
-
-  create_table "core_files_projects", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "project_id", null: false
-    t.bigint "core_file_id", null: false
-    t.index ["core_file_id", "project_id"], name: "index_core_files_projects_on_core_file_id_and_project_id", unique: true
-    t.index ["project_id", "core_file_id"], name: "index_core_files_projects_on_project_id_and_core_file_id", unique: true
   end
 
   create_table "friendly_id_slugs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -166,12 +169,15 @@ ActiveRecord::Schema.define(version: 2025_03_26_144137) do
   end
 
   create_table "project_members", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.bigint "project_id"
-    t.bigint "user_id"
-    t.string "role", null: false
-    t.boolean "is_project_depositor"
+    t.bigint "project_id", null: false
+    t.bigint "user_id", null: false
+    t.string "role"
+    t.boolean "contributor?", default: true
+    t.boolean "owner?", default: false
+    t.boolean "depositor?", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["project_id", "user_id"], name: "index_project_members_on_project_id_and_user_id", unique: true
     t.index ["project_id"], name: "index_project_members_on_project_id"
     t.index ["user_id"], name: "index_project_members_on_user_id"
   end
@@ -264,6 +270,10 @@ ActiveRecord::Schema.define(version: 2025_03_26_144137) do
   end
 
   add_foreign_key "captions", "active_storage_attachments"
+  add_foreign_key "collection_core_files", "collections"
+  add_foreign_key "collection_core_files", "core_files"
   add_foreign_key "project_collections", "collections"
   add_foreign_key "project_collections", "projects"
+  add_foreign_key "project_members", "projects"
+  add_foreign_key "project_members", "users"
 end

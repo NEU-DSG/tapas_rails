@@ -13,9 +13,6 @@ class Project < ApplicationRecord
   has_many :collections, dependent: :destroy
   has_many :project_members
   has_many :users, through: :project_members
-  #TODO: create logic such that deleting a collection in a project, when the user has not specified the collection's core
-  # files should be added to a new collection in that project, should delete the record associated with core file on the
-  # project_core_files join table;
 
   # callbacks
   after_save :index_record
@@ -25,7 +22,6 @@ class Project < ApplicationRecord
 
   # TODO: create a migration to add contact_email and a contact_website columns for project; add free-text fields to haml view
 
-
   def depositor
     User.find(depositor_id)
   end
@@ -33,10 +29,7 @@ class Project < ApplicationRecord
   def members
     user_members = {}
 
-    ProjectMember
-      .all
-      .where(project_id: id)
-      .group_by(&:role).each do |k, v|
+    project_members.group_by(&:role).each do |k, v|
         user_members[k] = v.map!(&:user)
       end
 
@@ -48,13 +41,8 @@ class Project < ApplicationRecord
     members['contributor']
   end
 
-  # full CRUD access for project content
-  def collaborators
-    members['collaborator']
-  end
-
   # full CRUD access for project content and project users
-  def owner
+  def owners
     members['owner']
   end
 
@@ -72,10 +60,6 @@ class Project < ApplicationRecord
     solr_doc
   end
 
-  def can_read?(user)
-    can? :read
-  end
-
   def remove_thumbnail
     self.thumbnails = []
     self.save!
@@ -84,6 +68,21 @@ class Project < ApplicationRecord
   def clean_edit_users
     return self.edit_users.keep_if{ |k| k != "" }
   end
+
+  ###  SCOPES  ###
+
+  # public
+  #
+  # # TODO: Figure out why `scope` is undefined
+  # scope :publicly_visible, -> { where(is_public: true) }
+  #
+  # def publicly_visible
+  #   where(is_public: true)
+  # end
+  #
+  # scope :with_info_for_description, lambda {
+  #  select(:id, :title).includes(:collections, :core_files)
+  # }
 end
 
 #legacy code that needs review
@@ -191,19 +190,3 @@ end
 #   end
 #   return members_with_roles
 # end
-
-
-###  SCOPES  ###
-
-public
-
-# TODO: Figure out why `scope` is undefined
-#scope :publicly_visible, -> { where(is_public: true) }
-def publicly_visible
-  where(is_public: true)
-end
-
-#scope :with_info_for_description, lambda {
-#  select(:id, :title).includes(:collections, :core_files)
-#}
-

@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 class TEIFile < ApplicationRecord
   include Filename
   include DownloadPath
 
-  # core_file_relationship :core_file
+  belongs_to :core_file
+  has_one_attached :file
 
   # FIXME: (charles) :property keyword no longer exists and causes
   # this to fail

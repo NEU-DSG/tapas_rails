@@ -16,8 +16,9 @@ class NewsItem < ApplicationRecord
      'title_info_title_ssi' => self.title,
      'all_text_timv' => self.content,
      'type_sim' => 'News Item',
-     'active_fedora_model_ssi' => 'NewsItem',
+     'active_record_model_ssi' => 'NewsItem',
      'creator_tesim' => self.author,
+     # TODO: review fields included in solr hash objects generated from class methods to determine if they're still useful
      'edit_access_person_ssim' => self.author
    }
    if self.publish == "true"

@@ -1,7 +1,6 @@
 TapasRails::Application.configure do
   Rails.application.routes.default_url_options[:host] = 'beta.tapasproject.org'
   config.cache_classes = true
-  # config.fedora_home = "/opt/fedora/data/datastreamStore/"
 
   config.eager_load = true
 
@@ -32,4 +31,5 @@ TapasRails::Application.configure do
       :exception_recipients => "e.zoller@northeastern.edu"
     }
 
+  # config.active_job.queue_adapter = :resque
 end

@@ -5,11 +5,11 @@
         .form-group
           = f.label :title, "Title", class: "control-label col-md-2"
           .col-md-6
-            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'community[title]', class: "form-control", placeholder: "University Libraries"
+            = f.text_field :title, required: true, pattern: ".*\\S.*", name: 'project[title]', class: "form-control", placeholder: "University Libraries"
         .form-group
           = f.label :description, "Description", class: "control-label col-md-2"
           .col-md-6
-            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'community[description]', class: "form-control", placeholder: "Brief description of the community"
+            = f.text_area :description, required: true, pattern: ".*\\S.*", name: 'project[description]', class: "form-control", placeholder: "Brief description of the project"
             %p.small.help-block="This field accepts plain text"
         .form-group
           = f.label :is_public, "Public?", class: "control-label col-md-2"
@@ -36,7 +36,7 @@
       = f.label :project_members,"Project Members", class: "control-label col-md-2"
       .col-md-6
         %span.project_member
-          = f.select :project_members, options_for_select(@users, @project.members.values.flatten), {}, {name: "project[members][]", class: "form-control", multiple: true}
+          = f.select :project_members, options_for_select(@project.members.values), {}, {name: "project[members][]", class: "form-control", multiple: true}
 
     -#.row.form-group.project_editors
     -#  = f.label :project_editors, "Project Editors", class: "control-label col-md-2"
@@ -48,7 +48,7 @@
       = f.label :admins, "Project Admins", class: "control-label col-md-2"
       .col-md-6
         %span.project_admin
-          = f.select :admins, options_for_select(@users, @project.admins), {}, { name: 'project_admins', class: "form-control", multiple: true}
+          = f.select :admins, options_for_select(@project.members.values), {}, { name: 'project_admins', class: "form-control", multiple: true}
 
   -# .row
   -#   .col-md-2

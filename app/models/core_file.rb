@@ -151,7 +151,7 @@ class CoreFile < ApplicationRecord
       'depositor_tesim' => depositor_id,
       'table_id_ssi' => id,
       'id' => "#{self.class.to_s}_#{id}",
-      'edit_access_person_ssim' => project.members.empty? ? depositor_id : project.owner[0].id,
+      'edit_access_person_ssim' => project.members.empty? ? depositor_id : project.owners[0].id,
       # these two replace the is_member_of_ssim field
       'collections_ssim' => self.collections.map(&:id),
       'projects_ssim' => self.collections.map(&:project_id),
