@@ -25,10 +25,7 @@ tapas.general = {};
    */
   let collapseAllDisclosures = function(event) {
     console.log("Collapsing containers");
-    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"][aria-expanded="true"]').forEach(element => {
-      let myTarget = document.querySelector(element.dataset.bsTarget);
-      bootstrap.Collapse.getOrCreateInstance(myTarget).hide();
-    });
+    toggleAllDisclosures(false);
   }; // end collapseAllDisclosures()
   
   /*
@@ -37,11 +34,35 @@ tapas.general = {};
    */
   let expandAllDisclosures = function(event) {
     console.log("Expanding containers");
-    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"][aria-expanded="false"]').forEach(element => {
-      let myTarget = document.querySelector(element.dataset.bsTarget);
-      bootstrap.Collapse.getOrCreateInstance(myTarget).show();
-    });
-  }; // end collapseAllDisclosures()
+    toggleAllDisclosures(true);
+  }; // end expandAllDisclosures()
+  
+  let toggleAllDisclosures = function(show) {
+    /* If the 'show' parameter isn't a Boolean, report it and do nothing. */
+    if ( show !== true && show !== false ) {
+      console.warn("Unexpected value of 'show' parameter: ");
+      console.warn(show);
+      return;
+    }
+    document.querySelectorAll('.tapas-container button[data-bs-toggle="collapse"][aria-expanded="'+ !show +'"]')
+      .forEach(element => { toggleThisDisclosure(element.dataset.bsTarget, show) });
+  }; // end toggleAllDisclosures()
+  
+  let toggleThisDisclosure = function(el, show) {
+    let bsInstance,
+        myTarget = document.querySelector(el);
+    /* Do nothing if the target doesn't exist. */
+    if ( myTarget === null ) {
+      console.warn("Disclosure '" + el + "' doesn't exist");
+      return;
+    }
+    bsInstance = bootstrap.Collapse.getOrCreateInstance(myTarget)
+    if ( show === false ) {
+      bsInstance.hide();
+    } else {
+      bsInstance.show();
+    }
+  }; // end toggleThisDisclosure()
   
   /*
     Toggle the "tapas-container-collapsed" class on the wrapper `.tapas-container` element.
@@ -58,9 +79,14 @@ tapas.general = {};
    **/
   
   /*
-    Set up any event listeners that are necessary to the working of the page.
+    Set up the event listeners that are necessary to the working of the page.
    */
-  this.prepareTapas = function() {
+  this.setUpCollapsibles = function() {
+    /* Make sure Bootstrap's Collapse is loaded before setting up anything. */
+    if ( window.bootstrap === undefined || window.bootstrap.Collapse === undefined ) {
+      console.error("Bootstrap isn't loaded. Cannot set up collapsible containers");
+      return;
+    }
     /* If there is a `.tapas-container` on this page, we need events to monitor the collapsible toggles, 
       and add the "tapas-container-collapsed" class when appropriate. */
     if ( document.querySelector('.tapas-container') !== null ) {
@@ -73,7 +99,7 @@ tapas.general = {};
       });
     }
     /* If there is a pair of "Expand all"/"Collapse all" controls, we need to add event listeners to 
-      make those actions happen. */ // #control-expand
+      make those actions happen. */
     let collapseAllButtons = document.querySelectorAll('button.control-collapse'),
         expandAllButtons = document.querySelectorAll('button.control-expand');
     if ( collapseAllButtons.length > 0 ) {
@@ -86,7 +112,7 @@ tapas.general = {};
         element.addEventListener('click', expandAllDisclosures);
       });
     }
-  }; // end tapas.general.prepareTapas()
+  }; // end tapas.general.setUpCollapsibles()
   
 }).apply(tapas.general); // Apply the namespace to the anonymous function.
 
@@ -97,7 +123,7 @@ tapas.general = {};
 if ( document.readyState === 'complete' 
    || ( document.readyState !== 'loading' && !document.documentElement.doScroll ) 
    ) {
-  tapas.general.prepareTapas();
+  tapas.general.setUpCollapsibles();
 } else {
-  document.addEventListener('DOMContentLoaded', tapas.general.prepareTapas);
+  document.addEventListener('DOMContentLoaded', tapas.general.setUpCollapsibles);
 }
