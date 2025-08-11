@@ -20,8 +20,8 @@ tapas.general = {};
    **/
   
   /*
-    In response to some event, find all buttons for collapsing sections in `.tapas-container`, and close 
-    their target elements.
+    Close all disclosures within a `.tapas-container`. Convenience function for 
+    `toggleAllDisclosures(false)`.
    */
   let collapseAllDisclosures = function(event) {
     console.log("Collapsing containers");
@@ -29,17 +29,21 @@ tapas.general = {};
   }; // end collapseAllDisclosures()
   
   /*
-    In response to some event, find all buttons for collapsing sections in `.tapas-container`, and open 
-    their target elements.
+    Open all disclosures within a `.tapas-container`. Convenience function for 
+    `toggleAllDisclosures(true)`.
    */
   let expandAllDisclosures = function(event) {
     console.log("Expanding containers");
     toggleAllDisclosures(true);
   }; // end expandAllDisclosures()
   
+  /*
+    Find all buttons for collapsing sections in `.tapas-container`, and either open or close their 
+    target elements.
+   */
   let toggleAllDisclosures = function(show) {
     /* If the 'show' parameter isn't a Boolean, report it and do nothing. */
-    if ( show !== true && show !== false ) {
+    if ( typeof show !== 'boolean' ) {
       console.warn("Unexpected value of 'show' parameter: ");
       console.warn(show);
       return;
@@ -48,6 +52,14 @@ tapas.general = {};
       .forEach(element => { toggleThisDisclosure(element.dataset.bsTarget, show) });
   }; // end toggleAllDisclosures()
   
+  /*
+    Given a DOM selector target, toggle that disclosure open or closed.
+    
+    Bootstrap's Collapse methods are used to perform the action on request. Since Bootstrap 
+    automatically toggles a single collapsible open or closed when the toggle button is pressed, this 
+    function is really only useful for augmenting Bootstrap's behavior with additional controls. 
+    (E.g. `toggleAllDisclosures()`.)
+   */
   let toggleThisDisclosure = function(el, show) {
     let bsInstance,
         myTarget = document.querySelector(el);
@@ -79,7 +91,7 @@ tapas.general = {};
    **/
   
   /*
-    Set up the event listeners that are necessary to the working of the page.
+    Set up event listeners for collapsible `.tapas-container`s.
    */
   this.setUpCollapsibles = function() {
     /* Make sure Bootstrap's Collapse is loaded before setting up anything. */
