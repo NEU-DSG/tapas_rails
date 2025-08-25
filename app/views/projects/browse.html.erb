@@ -1,0 +1,11 @@
+<h1>Browse Projects</h1>
+
+<%= content_for :containers do %>
+  <!-- A text description for the collapsible toggle is available on large enough screens. -->
+  <% content_for :toggle_desc do %>
+    <span class="collapse-desc">More information</span>
+  <% end %>
+  <%= render partial: "browse_container", collection: @projects, as: :item %>
+<% end %>
+
+<%= render "shared/browse_page" %>

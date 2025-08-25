@@ -1,0 +1,751 @@
+/*
+  TAPAS styles
+  
+  Refactored from the TAPAS themes for Drupal.
+ */
+
+//*  VARIABLES
+
+  :root {
+    
+    --tapas-border-color: #888;
+    // Use Bootstrap's default border variables to keep things looking cohesive
+    --tapas-border-radius: var(--bs-border-radius);
+    
+    /* TAPAS-specific variables */
+    --tapas-block-main: white;
+    --tapas-block-dark: #26333F;
+    --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
+    --tapas-block-light: #F5F5F5;
+    
+    --tapas-accent-orig: #DF691A;
+    --tapas-accent-mid: #FF8A3D; /* stands out well against block-dark (5.50 contrast ratio) */
+    //--tapas-accent-bg: #EDEDED;
+    
+    --tapas-accent2-light: #A1F5BE; /* stands out well against block-dark (5.58 contrast ratio) */
+    
+    --tapas-button-color: #2064C7;
+    
+    --tapas-link-color: #0061EF;
+    --tapas-link-hover: #A84B0D;
+    
+    --tapas-text-dark: #090909;
+    --tapas-text-light: #EBEBEB;
+    
+    --tapas-transparency: rgba(0,0,0,0);
+    
+    /* Reset Bootstrap defaults: */
+    --bs-border-color: var(--tapas-border-color);
+    --bs-body-color: var(--tapas-text-dark);
+    .table {
+      --bs-table-striped-bg: var(--tapas-block-light);
+    }
+    .btn-primary {
+      --bs-btn-bg: var(--tapas-button-color);
+    }
+  }
+
+
+//*  MIXINS
+
+$small-screen: 30rem; // 30rem x 16px font = 480px
+$medium-screen: 48rem; // 48rem x 16px font = 768px
+$large-screen: 62rem; // 62rem x 16px font = 992px
+
+
+//*  STYLES
+
+body {
+  background-color: var(--tapas-block-dark);
+  font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-weight: 300;
+}
+
+* + section {
+  margin-top: 1.5rem;
+}
+
+h1, .h1 {
+  margin: 1.25rem 0 1rem;
+}
+
+a {
+  text-decoration: underline dotted;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 0.085rem;
+  
+  &:hover, &:focus {
+    text-decoration-style: solid;
+  }
+}
+
+a,
+.nav-link {
+  color: var(--tapas-link-color);
+  
+  &:hover, &:focus {
+    color: var(--tapas-link-hover);
+  }
+} // end a, .nav-link
+
+label {
+  font-size: 1.15em;
+}
+
+ul.btn-list,
+ol.btn-list {
+  display: flex;
+  gap: 0.75em;
+  padding-left: 0.25rem;
+  
+  li {
+    list-style: none;
+  }
+} // end .btn-list
+
+form.sort-controls {
+  align-items: center;
+  display: flex;
+  gap: 0.75em;
+  height: 100%;
+  margin: 0 1rem;
+} // end form.sort-controls
+
+img.thumbnail {
+  max-height: 3rem;
+  max-width: 3rem;
+} // end img.thumbnail
+
+button.collapse-toggle {
+  align-items: baseline;
+  background-color: var(--tapas-block-light);
+  border: medium solid var(--tapas-transparency);
+  border-radius: var(--tapas-border-radius);
+  color: var(--tapas-text-dark);
+  display: flex;
+  gap: 0.5rem;
+  justify-content: start;
+  padding: 0.25rem 0.5rem;
+  text-align: left;
+  
+  &.collapsed {
+    
+    svg.collapse-toggle-img {
+      transform: rotate(0.5turn);
+    }
+  } // end button.collapse-toggle.collapsed
+  
+  &:hover,
+  &:focus {
+    color: var(--tapas-link-hover);
+  }
+  
+  &:focus {
+    border-color: var(--tapas-accent-mid);
+  }
+  
+  svg.collapse-toggle-img {
+    min-height: 1rem;
+    min-width: 1rem;
+  }
+} // end button.collapse-toggle
+
+
+/*
+ * BOOTSTRAP STYLE OVERRIDES
+ */
+
+@media (min-width: $medium-screen) {
+  
+  /* The sticky header is usually z-index 1020, but this cuts off open dropdown 
+    menus in the TAPAS header (z-index 1000). */
+  .sticky-md-top {
+    z-index: 950;
+  }
+}
+
+.alert {
+  
+  /* Use the standard dark text color for warning alerts, rather than Bootstrap's 
+    dark yellow. (We may want to override the text color for other alert types as 
+    well.) */
+  &.alert-warning {
+    color: var(--tapas-text-dark);
+  }
+} // end .alert
+
+.card-sequence {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  
+  .card {
+    flex: 1;
+    position: unset;
+  }
+  
+  @media (min-width: $medium-screen) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    //justify-content: center;
+    
+    .card {
+      min-width: 40%;
+      //max-width: 50%;
+    }
+  }
+} // end .card-sequence
+
+h1, h2, h3, h4, h5, h6 {
+  
+  .btn {
+    font-size: inherit;
+  }
+} // end h1, h2, h3, h4, h5, h6
+
+.nav-tabs {
+  gap: 0.5rem;
+  
+  .nav-link {
+    border-color: var(--tapas-border-color);
+    
+    &:hover,
+    &:focus {
+      border-color: var(--tapas-border-color);
+      box-shadow: 0 0 0.5rem var(--tapas-accent-mid);
+      text-decoration: underline;
+    }
+  } // end & .nav-link
+} // end .nav-tabs
+
+
+/* 
+ * HEADER
+ */
+
+#skip-link a {
+  border: thin solid var(--tapas-accent-orig);
+  color: var(--tapas-accent-mid);
+  display: block;
+  margin: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
+} // end #skip-link a
+
+#header {
+  background-color: var(--tapas-block-mid);
+  font-size: 1.125em;
+  
+  > .container-fluid {
+    align-items: baseline;
+  }
+  
+  a, .nav-link {
+    border: thin solid var(--tapas-transparency);
+    color: var(--tapas-text-light);
+    
+    &:hover {
+      color: var(--tapas-accent-mid);
+    }
+    
+    &:focus {
+      background-color: var(--tapas-block-dark);
+      border-color: var(--tapas-accent-mid);
+    }
+  } // end #header a, #header .nav-link
+  
+  a.logo {
+    align-items: baseline;
+    display: flex;
+    flex: 0 1 auto;
+    text-decoration: none;
+    
+    &.navbar-brand,
+    .navbar-brand {
+      font-size: 1.5em;
+    }
+    
+    .navbar-brand {
+      color: inherit;
+    }
+    
+    img {
+      align-self: center;
+      max-width: 50px;
+      margin-right: 0.5em;
+    }
+  } // end #navbar a.logo
+  
+  .navbar-toggler {
+    background-color: var(--tapas-block-main);
+  }
+  
+  #header-nav {
+    justify-content: space-between;
+    
+    .navbar-nav {
+      gap: 0.5em;
+    }
+  } // end #navbar #header-nav
+  
+  .dropdown-menu {
+    
+    a {
+      color: unset;
+      
+      &:focus {
+        background-color: var(--tapas-transparency);
+      }
+    } // end #navbar .dropdown-menu a
+  } // end #navbar .dropdown-menu
+} // end #navbar
+
+
+/*
+ * FOOTER
+ */
+
+.footer {
+  color: var(--tapas-text-light);
+  padding: 2rem 2rem 1em;
+  
+  a {
+    color: var(--tapas-accent-mid);
+    
+    &:hover, &:focus {
+      color: var(--tapas-accent-mid);
+    }
+    
+    &.logo {
+      display: inline-block;
+      padding: 0.25em;
+    }
+  } // end .footer a
+  
+  .nav {
+    margin-bottom: 1rem;
+    
+    a {
+      border: thin solid var(--tapas-transparency);
+      
+      &:focus {
+        background-color: var(--bs-body-color); /* rgb(33, 37, 41) */
+        border-color: var(--tapas-accent-mid);
+      }
+    } // end .footer .navbar a
+  } // end .footer .navbar
+  
+  #footer-about > .row {
+    align-items: baseline;
+  }
+} // end .footer
+
+
+/*
+ * MAIN CONTENT
+ *
+ * Note: The `.main-container` is a sibling of the page header and footer, and may 
+ *  contain additional navigation such as breadcrumbs. The `#main-content` is the 
+ *  part of the `.main-container` with the <h1> heading, where the skip link will 
+ *  take keyboard users.
+ */
+
+.main-container {
+  background-color: var(--tapas-block-main);
+  margin: 0;
+  min-height: 2rem;
+  padding: 2rem 1rem;
+  
+  @media (min-width: $large-screen) {
+    padding: 2rem 10vw;
+  }
+  
+  /* Breadcrumbs */
+  nav.breadcrumbs {
+    border-radius: var(--tapas-border-radius);
+    border: thin solid #DDD;
+    //background-color: #EBEBEB;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    padding: 0.25rem 0.75rem;
+    
+    .breadcrumb {
+      margin-bottom: 0;
+    }
+  } // end .main-container nav.breadcrumbs
+  
+  
+  
+  
+  #main-content {
+    
+    &.layout-sidebar {
+      
+      /* We only want a sidebar for larger screens, when there is ample horizontal screen space. */
+      @media (min-width: $large-screen) {
+        display: grid;
+        gap: 0 1em;
+        grid-template-areas:
+          "heading heading"
+          "sidebar content";
+        grid-template-columns: 25% auto;
+        
+        > h1 {
+          grid-area: heading;
+        }
+      }
+    } // end .main-container #main-content.layout-sidebar
+  } // end .main-container #main-content
+  
+  .breadcrumbs + #main-content {
+    margin-top: 2rem;
+  }
+} // end .main-container
+
+
+/*
+ * TAPAS CONTAINER
+ *
+ * Used for displaying projects and/or collections as a hierarchy.
+ */
+
+.container-sequence {
+  background-color: var(--tapas-block-light);
+  border: thin solid var(--tapas-border-color);
+  border-radius: var(--tapas-border-radius);
+  padding: 0.5em 0;
+  
+} // end .container-sequence
+
+ul.container-sequence, 
+ol.container-sequence {
+  
+  li {
+    list-style: none;
+  }
+} // end ul.container-sequence, ol.container-sequence
+
+.tapas-container {
+  border-bottom: thin solid var(--tapas-border-color);
+  /* Flexbox allows us to use `.tapas-container` on both <div>s and <span>s. */
+  display: flex;
+  flex-direction: column;
+  
+  .tapas-container-heading {
+    align-items: center;
+    background-color: var(--tapas-block-light);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.5em;
+    
+    > h2,
+    > h3 {
+      display: inline-block;
+      /* Move bottom margin from heading to the button, so we can toggle it off when 
+        the section is collapsed. */
+      margin-bottom: 0;
+    }
+    
+    img.thumbnail {
+      align-self: center;
+    }
+    
+    .tapas-container-name {
+      flex: 1 2 50%;
+      font-size: 1.75rem; // same size as <h3>
+    }
+    
+    .tapas-container-info {
+      flex: 1 2 30%;
+      
+      > * {
+        display: inline-block;
+        
+        &:before {
+          content: "·";
+          margin: 0.5em;
+        }
+      }
+    } // end .tapas-container .tapas-container-heading .tapas-container-info
+    
+    .tapas-container-heading-ender {
+      align-self: end;
+      display: inline-flex;
+      flex: 0 1 auto;
+      justify-content: end;
+      
+      @media screen and (min-width: $small-screen) {
+        //margin: 0 1.5rem;
+      }
+      
+      @media screen and (min-width: $medium-screen) {
+        justify-content: end;
+        margin: 0 0.5rem;
+      }
+      
+      @media screen and (min-width: $large-screen) {
+        flex: 2;
+      }
+      
+      .collapse-desc {
+        display: none;
+        
+        @media screen and (min-width: $large-screen) {
+          display: inline;
+        }
+      } // end .tapas-container-heading .tapas-container-heading-ender .collapse-desc
+    } // end .tapas-container-heading .tapas-container-heading-ender
+    
+    .tapas-container-nav {
+      flex: 2 0 auto;
+      gap: 0.5rem;
+      margin-right: 0.5rem;
+      
+      &.nav-tabs {
+        align-self: end;
+        border-bottom: none;
+        
+        a.nav-link {
+          background-color: var(--tapas-block-main);
+          color: var(--bs-black);
+        }
+      } // end .tapas-container-heading .tapas-container-nav.nav-tabs
+    } // end .tapas-container-heading .tapas-container-nav
+    
+    button.collapse-toggle {
+      background-color: inherit;
+    }
+    
+    .badge {
+      background-color: var(--tapas-block-main);
+      border: thin solid var(--tapas-border-color);
+      color: black;
+    } // end .tapas-container .tapas-container-heading .badge
+  } // end .tapas-container .tapas-container-heading
+  
+  &:first-child {
+    
+    .tapas-container-heading {
+      padding-top: 0.125em;
+    }
+  } // end .tapas-container:first-child
+  
+  .tapas-container-content {
+    background-color: var(--tapas-block-main);
+    border-top: thin solid var(--tapas-border-color);
+    border-bottom: thin solid var(--tapas-border-color);
+    padding: 1rem;
+  } // end .tapas-container .tapas-container-content
+  
+  dl.tapas-container-content {
+    margin-bottom: 0;
+  }
+  
+  &:last-child {
+    border-bottom-style: none;
+    
+    .tapas-container-content {
+      border-bottom-width: 0.125em;
+    }
+  } // end .tapas-container:last-child
+  
+  table.records-list {
+    
+    th, td {
+      vertical-align: bottom;
+    }
+  } // end .tapas-container table.records-list
+} // end .tapas-container
+
+/* This version of `.tapas-container` has rounded edges and takes up more space. It is suitable for the 
+  "My TAPAS" page but not for pages with a lot of projects, such as "Browse". */
+.container-sequence-mine {
+  
+  .tapas-container {
+    border: thin solid var(--tapas-border-color);
+    border-radius: var(--tapas-border-radius);
+    margin: 1rem 0.25rem;
+    
+    .tapas-container-heading {
+      border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+      padding: 0;
+      
+      .tapas-container-name {
+        flex: revert;
+        
+        // On large screens, the container name can take up less space.
+        @media screen and (min-width: $medium-screen) {
+          max-width: 60%;
+        }
+        @media screen and (min-width: $large-screen) {
+          max-width: 40%;
+        }
+      }
+    } // end .container-sequence-mine .tapas-container .tapas-container-heading
+    
+    &.project {
+    
+      /* Use more prominent colors for project-level headings. */
+      > .tapas-container-heading {
+        background-color: var(--tapas-block-mid);
+        color: var(--tapas-text-light);
+        
+        a {
+          color: var(--tapas-accent-mid);
+        }
+        
+        button {
+          color: var(--tapas-text-light);
+          
+          &:hover {
+            color: var(--tapas-accent-mid);
+          }
+          
+          &:focus {
+            background-color: var(--tapas-block-dark);
+            border-color: var(--tapas-accent-mid);
+          }
+        } // end .tapas-container.project > .tapas-container-heading button
+        
+        .tapas-container-info {
+          color: var(--tapas-text-light);
+        }
+      } // end & > .tapas-container-heading
+    } // end .container-sequence-mine .tapas-container.project
+    
+    /* When the `.tapas-container-content` is collapsed, Javascript will add the 
+      "tapas-container-collapsed" class to the container. */
+    &.tapas-container-collapsed {
+      
+      /* Use the rounded corners for all edges of the heading. */
+      .tapas-container-heading {
+        border-radius: var(--tapas-border-radius);
+      }
+    } // end .tapas-container.tapas-container-collapsed
+    
+    .tapas-container-content {
+      border-radius: 0 0 var(--tapas-border-radius) var(--tapas-border-radius);
+    } // end .tapas-container .tapas-container-content
+  } // end .container-sequence-mine .tapas-container
+} // end .container-sequence-mine
+
+
+/*
+ * TEI READER
+ */
+
+.reader-container {
+  
+  .reader-header {
+    align-items: end;
+    background-color: var(--tapas-block-main);
+    border-bottom: thin solid var(--tapas-border-color);
+    display: grid;
+    gap: 0.75rem;
+    grid-template-areas: 
+      "doctitle"
+      "docdesc"
+      "docnav";
+    justify-content: space-between;
+    /* `top` will only kick in when the header is sticky. By having a single pixel out of the viewport, 
+      we can figure out if the header is sticking by testing if the `intersectingRatio` is < 1. */
+    top: -1px;
+    
+    /* In larger screen sizes, the doc description should appear on the left of the tab 
+      navigation bar. */
+    @media (min-width: $large-screen) {
+      grid-template-areas: 
+        "doctitle doctitle"
+        "docdesc docnav";
+      grid-template-columns: 1fr minmax(30%,max-content);
+    }
+    
+    // Remove top margin on <h1> so the spacing is the same as on other pages
+    h1 {
+      grid-area: doctitle;
+      margin: 0.5rem 1rem 0.25rem;
+    }
+    
+    .reader-nav {
+      grid-area: docnav;
+      justify-self: end;
+      
+      .nav {
+      border-bottom: none;
+      
+        .vpkg-chooser {
+          
+          .dropdown-toggle {
+            
+            &.active {
+              background-color: var(--tapas-block-mid);
+              border-bottom-color: var(--tapas-block-mid);
+              color: var(--tapas-text-light);
+            }
+          } // end & .dropdown-toggle
+        } // end & .vpkg-chooser
+      } // end & .nav
+    } // end .reader-container .reader-header .reader-nav
+    
+    .reader-desc {
+      align-self: stretch;
+      background-color: var(--tapas-block-light);
+      border: thin solid var(--tapas-border-color);
+      border-radius: var(--tapas-border-radius);
+      grid-area: docdesc;
+      margin: 0 0.5rem;
+      padding: 0.25rem 0.5rem;
+      
+      /* In medium screen sizes and larger, only the top corners should have a modified border radius. */
+      @media (min-width: $large-screen) {
+        border-bottom-color: var(--tapas-transparency);
+        border-radius: var(--tapas-border-radius) var(--tapas-border-radius) 0 0;
+        padding-bottom: 0;
+      }
+      
+      summary {
+        color: var(--tapas-block-dark);
+        font-size: 0.9em;
+        padding: 0.15rem 0.5rem 0.25rem;
+      }
+    } // end .reader-container .reader-header .reader-desc
+    
+    /* Overriding styles for when the Reader header is sticking to the top of the viewport. */
+    &.is-sticking {
+      
+    } // end .reader-container .reader-header.is-sticking
+  } // end .reader-container .reader-header
+  
+  #reader {
+    padding: 2rem;
+    border: thin solid var(--tapas-border-color); // #dee2e6
+    border-top: none;
+    //box-shadow: 0 0.15rem 0.5rem var(--tapas-block-mid);
+    overflow: auto;
+    
+    /* Reset all CSS to browser defaults, so that the view package CSS can kick in. */
+    > .reader-view {
+      all: initial; // Removed `!important`
+    }
+  } // end .reader-container #reader
+    
+  .jump-container {
+    display: flex;
+    justify-content: end;
+    margin: 1rem -1rem 0.5rem 0;
+      
+    &.jump-sticky {
+      bottom: 1rem;
+      position: -webkit-sticky;
+      position: sticky;
+      z-index: 200;
+    }
+    
+    #jump-to-top {
+      background-color: var(--tapas-block-main);
+      border: 2px solid var(--tapas-accent-orig);
+      padding: 0.5rem;
+    }
+  } // end  .reader-container .jump-container
+} // end .reader-container

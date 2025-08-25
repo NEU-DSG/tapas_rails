@@ -1,0 +1,20 @@
+<nav>
+  <ul class="btn-list" aria-label="Section controls">
+    <li>
+      <form class="sort-controls">
+        <label for="browse-sort">Sort</label>
+        <select id="browse-sort" name="sort-by" class="form-select form-select-sm">
+          <option value="name">alphabetically</option>
+          <option value="updated" selected="selected">last updated</option>
+        </select>
+        <input type="submit" value="OK" class="btn btn-outline-primary btn-sm" />
+      </form>
+    </li>
+    <li><button class="btn btn-sm btn-primary control-expand">Expand all</button></li>
+    <li><button class="btn btn-sm btn-primary control-collapse">Collapse all</button></li>
+  </ul>
+</nav>
+
+<ul class="container-sequence">
+  <%= yield :containers %>
+</ul>

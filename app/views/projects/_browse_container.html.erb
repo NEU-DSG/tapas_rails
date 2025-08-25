@@ -1,0 +1,41 @@
+<!-- Define an HTML ID for this project's collapsible content. All collapsibles start already collapsed. -->
+<% collapse_id = 'collapsible-' + item_counter.to_s %>
+
+<li class="container-fluid tapas-container project tapas-container-collapsed">
+  <span class="tapas-container-heading">
+    
+    <% if item.image_file&.attached? %>
+      <%= image_tag url_for(item.image_file), alt: "", class: "thumbnail" %>
+    <% else %>
+      <%= image_tag "tapas-logo-opaque.png", alt: "", class: "thumbnail" %>
+    <% end %>
+    
+    <%= tag.a href: url_for(item), class: "tapas-container-name" do -%>
+      <%= item.title %>
+    <% end -%>
+    <span class="tapas-container-heading-ender">
+      <%= render partial: "shared/controls/collapse_button", locals: { collapsible_id: collapse_id, starts_collapsed?: true } %>
+    </span>
+  </span>
+  <%= tag.dl(id: collapse_id, class: ['tapas-container-content', 'row', 'collapse']) do -%>
+    <dt class="col-md-3">Last updated</dt>
+      <dd class="col-md-9">
+        <%= item.updated_at %>
+      </dd>
+    <dt class="col-md-3">Description</dt>
+      <dd class="col-md-9">
+        <%= item.description %>
+      </dd>
+    <!--<dt class="col-md-3">Project administrator</dt>
+      <dd class="col-md-9"> </dd>
+      <dd class="offset-md-3 col-md-9"> </dd>-->
+    <dt class="col-md-3">Number of collections</dt>
+      <dd class="col-md-9">
+        <%= item.collections.count %>
+      </dd>
+    <dt class="col-md-3">Number of documents</dt>
+      <dd class="col-md-9">
+        <%= item.core_files.count %>
+      </dd>
+  <% end -%>
+</li>

@@ -9,29 +9,8 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
-
  */
 
- @import 'tapas-variables';
-
- @import 'tapas-mixins';
-
- @import 'font-awesome/font-awesome';
-
  @import 'bootstrap';
-
  @import 'blacklight/blacklight';
-
- @import 'core_files';
-
- @import 'projects';
-
- @import 'jquery-ui';
-
- @import 'jquery-ui/resizable';
-
- @import 'tapas-general';
-
-// @import 'nestable';
-
- //= require_tree .
+ @import 'tapas';

@@ -1,20 +1,7 @@
-//= require jquery3
-//= require jquery_ujs
-//= require jquery-ui
-//= require jquery-ui/widgets/resizable
-//= require bootstrap/button
-//= require bootstrap/tooltip
-//= require bootstrap/popover
-//= require bootstrap/tab
-//= require bootstrap/carousel
-//= require twitter/typeahead
 //= require popper
 //= require bootstrap
-//= require blacklight/blacklight
+/* TODO: ActiveStorage JS allows for uploading directly to the cloud. 
+    https://api.rubyonrails.org/classes/ActiveStorage.html#module-ActiveStorage-label-Direct+uploads
+    We may want to proxy instead */
 //= require activestorage
-//= require plugins
-//= require tapasApp
-//= require jquery.nestable
-
-//= require_tree .
-//= require_self
+//= require tapas

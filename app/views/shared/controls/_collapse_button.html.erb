@@ -1,0 +1,18 @@
+<!-- By default, the toggle is set up to match an open collapsible. If the calling template defines the 
+  local `starts_collapsed` variable, the button should have the "collapsed" class, and the aria-expanded 
+  attribute should be "false". -->
+<%= tag.button(type: "button", class: ['collapse-toggle', local_assigns[:starts_collapsed?] ? 'collapsed' : nil ],
+      aria: { expanded: local_assigns[:starts_collapsed?] ? false : true, controls: collapsible_id, 
+        label: "More information" },
+      data: { bs_toggle: "collapse", bs_target: '#'+collapsible_id }) do -%>  
+  
+  <!-- This is the caret-up Bootstrap icon. By using SVG rather than <img>, we can use 
+    fill="currentColor", which keeps the icon color in sync with text color. -->
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+    class="collapse-toggle-img" viewBox="0 0 16 16" focusable="false" aria-hidden="true">
+    <path d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z"/>
+  </svg>
+  
+  <!-- If there's a textual description of the toggle button, it goes here. -->
+  <%= yield :toggle_desc %>
+<% end -%>

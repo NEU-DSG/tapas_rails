@@ -8,7 +8,12 @@ class ProjectsController < ApplicationController
   # before_action :enforce_show_permissions, :only=>:index
 
   # self.search_params_logic += [:add_access_controls_to_solr_params]
-
+  
+  def browse
+    @projects = Project.publicly_visible.includes(:collections, :core_files)
+    render 'browse'
+  end
+  
   def upsert
     if params[:image_file]
       params[:image_file] = create_temp_file(params[:image_file])
