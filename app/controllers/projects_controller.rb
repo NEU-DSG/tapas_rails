@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   include ApiAccessible
+  include ListResources
 
   # figure out why this controller doesn't inherit from CatalogController the way CoreFilesController does
 
@@ -10,7 +11,8 @@ class ProjectsController < ApplicationController
   # self.search_params_logic += [:add_access_controls_to_solr_params]
   
   def browse
-    @projects = Project.publicly_visible.includes(:collections, :core_files)
+    sortMethod = browse_params[:sortBy]
+    @projects = Project.publicly_visible.includes(:collections, :core_files).order(sortMethod)
     render 'browse'
   end
   
@@ -100,35 +102,35 @@ class ProjectsController < ApplicationController
 
   protected
 
-  def can_edit?
-    project = Project.find(params[:id])
-    can? :manage, project
-  end
+    def can_edit?
+      project = Project.find(params[:id])
+      can? :manage, project
+    end
 
-  def can_read?
-    project = Project.find(params[:id])
-    can? :read, project
-  end
+    def can_read?
+      project = Project.find(params[:id])
+      can? :read, project
+    end
 
   private
 
-  def project_params
-    params
-      .require(:project)
-      .permit(
-        :description,
-        :image_file,
-        :title,
-        :is_public?,
-        :institution
-      )
-  end
+    def project_params
+      params
+        .require(:project)
+        .permit(
+          :description,
+          :image_file,
+          :title,
+          :is_public?,
+          :institution
+        )
+    end
 
-  def child_params
-    params.require(:project).permit(
-      :contributors => [],
-      :collaborators => [],
-      :owner => []
-    )
-  end
+    def child_params
+      params.require(:project).permit(
+        :contributors => [],
+        :collaborators => [],
+        :owner => []
+      )
+    end
 end
