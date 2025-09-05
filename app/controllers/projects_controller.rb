@@ -11,14 +11,10 @@ class ProjectsController < ApplicationController
   # self.search_params_logic += [:add_access_controls_to_solr_params]
   
   def browse
-    # Check for a sort request parameter.
-    sortParam = browse_params[:sort]
-    # If a sort method is requested and is an allowed value, we use that. Otherwise, fall back on the 
-    # updated timestamp.
-    @sortMethod = is_valid_sort_method(sortParam) ? sortParam : 'updated_at'
-    # Decide for the user whether to apply the sort method in ascending or descending order.
-    sortDirection = @sortMethod == 'updated_at' ? 'DESC' : 'ASC'
-    @projects = Project.publicly_visible.includes(:collections, :core_files).order(@sortMethod+" "+sortDirection)
+    # The setup method defines @sort_method and @sort_direction for ListResource's sort_string() and the
+    # Browse views.
+    set_up_browse
+    @projects = Project.publicly_visible.includes(:collections, :core_files).order(sort_string)
     render 'browse'
   end
   
