@@ -4,8 +4,9 @@
       <form class="sort-controls">
         <label for="browse-sort">Sort</label>
         <select id="browse-sort" name="sort" class="form-select form-select-sm">
-          <option value="title">alphabetically</option>
-          <option value="updated_at" selected="selected">last updated</option>
+          <!-- Options for the sort method: by title, or by the date last updated. The <option> which 
+            corresponds to the current sort method (or "updated_at" if not set) is selected by default. -->
+          <%= options_for_select([['alphabetically', 'title'], ["last updated", 'updated_at']], @sortMethod || 'updated_at') %>
         </select>
         <input type="submit" value="OK" class="btn btn-outline-primary btn-sm" />
       </form>
