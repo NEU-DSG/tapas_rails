@@ -12,7 +12,7 @@ class ProjectsController < ApplicationController
   
   def browse
     # Check for a sortBy request parameter.
-    sortParam = browse_params[:sortBy]
+    sortParam = browse_params[:sort]
     # If a sortBy method is requested and is an allowed value, we use that. Otherwise, fall back on the 
     # updated timestamp.
     sortMethod = is_valid_sort_method(sortParam) ? sortParam : 'updated_at'
