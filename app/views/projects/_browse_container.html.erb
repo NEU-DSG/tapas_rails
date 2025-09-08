@@ -26,9 +26,17 @@
       <dd class="col-md-9">
         <%= item.description %>
       </dd>
-    <!--<dt class="col-md-3">Project administrator</dt>
-      <dd class="col-md-9"> </dd>
-      <dd class="offset-md-3 col-md-9"> </dd>-->
+    <% @owners = item.owner().map { |user| user.name } %>
+    <dt class="col-md-3">Project administrator<%= @owners.length > 1 ? 's' : '' %></dt>
+      <dd class="col-md-9">
+        <%= @owners.join(", ") %>
+      </dd>
+    <% if item.institution %>
+      <dt class="col-md-3">Institution</dt>
+        <dd class="col-md-9">
+          <%= item.institution %>
+        </dd>
+    <% end -%>
     <dt class="col-md-3">Number of collections</dt>
       <dd class="col-md-9">
         <%= item.collections.count %>

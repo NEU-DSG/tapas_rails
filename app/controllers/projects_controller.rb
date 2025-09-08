@@ -14,7 +14,7 @@ class ProjectsController < ApplicationController
     # The setup method defines @sort_method and @sort_direction for ListResource's sort_string() and the
     # Browse views.
     set_up_browse
-    @projects = Project.publicly_visible.includes(:collections, :core_files).order(sort_string)
+    @projects = Project.publicly_visible.includes(:collections, :core_files, :project_members).order(sort_string)
     render 'browse'
   end
   
