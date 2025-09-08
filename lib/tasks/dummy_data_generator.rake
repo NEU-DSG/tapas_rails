@@ -206,30 +206,25 @@ namespace :dummy_data_generator do
 
   desc "creates projects"
   task :projects => :environment do
-    num_public = 40
-    num_private = 5
+    # Check the number of Projects we had before creating new ones
+    current_projects = Project.count
+    num_projects = 45
+    # Pick a number between 0 and 2. If the number is 2, the project is private.
+    is_private = Random.rand(3) == 2
+    # Pick a number between 0 and 3. If the number is 3, generate an institution string.
+    include_institution = Random.rand(4) == 3
     
-    # Make public projects
-    num_public.times do
-      Project.create(title: Faker::Company.bs,
-                     description: Faker::Lorem.paragraph,
-                     depositor_id: User.all.sample.id,
-                     # Pick a number between 0 and 3. If the number is 3, generate an institution string.
-                     institution: Random.rand(4) == 3 ? Faker::University.name : nil
-      )
-    end
-
-    # Make private projects
-    num_private.times do
+    num_projects.times do
       Project.create(title: Faker::Company.bs,
                      description: Faker::Lorem.paragraph,
                      depositor_id: User.all.where(admin_at: nil).sample.id,
-                     is_public: false,
-                     institution: Faker::University.name
+                     is_public: !is_private,
+                     institution: include_institution ? Faker::University.name : nil
       )
     end
 
-    puts Project.count == num_public + num_private ? 'All Projects created.' : '"Create Projects" task failed.'
+    puts Project.count == num_projects + current_projects ? num_projects.to_s + ' Projects created.' 
+                                                          : '"Create Projects" task failed.'
   end
 
   desc 'creates project members'
