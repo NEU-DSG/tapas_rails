@@ -53,10 +53,13 @@ namespace :dummy_data_generator do
   def create_project_members
     Project.all.each do |project|
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
+      num_contributors = Random.rand(5)   # 0 to 5
+      num_collaborators = Random.rand(3)  # 0 to 3
+      num_owners = 1 + Random.rand(4)     # 1 to 4
 
       # contributors
       # has a TAPAS account and either creates or contributes to a TAPAS project
-      5.times do
+      num_contributors.times do
         user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
 
         ProjectMember.create(project_id: project.id,
@@ -67,7 +70,7 @@ namespace :dummy_data_generator do
 
       # collaborator
       # has editorial access to a TAPAS project but is not the owner
-      3.times do
+      num_collaborators.times do
         user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
 
         ProjectMember.create(project_id: project.id,
@@ -78,7 +81,7 @@ namespace :dummy_data_generator do
 
       # project owners
       # has created the project in question and has responsibility for it
-      1.times do
+      num_owners.times do
         user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
 
         ProjectMember.create(project_id: project.id,
@@ -203,15 +206,21 @@ namespace :dummy_data_generator do
 
   desc "creates projects"
   task :projects => :environment do
-    22.times do
+    num_public = 40
+    num_private = 5
+    
+    # Make public projects
+    num_public.times do
       Project.create(title: Faker::Company.bs,
                      description: Faker::Lorem.paragraph,
                      depositor_id: User.all.sample.id,
-                     institution: Faker::University.name
+                     # Pick a number between 0 and 3. If the number is 3, generate an institution string.
+                     institution: Random.rand(4) == 3 ? Faker::University.name : nil
       )
     end
 
-    3.times do
+    # Make private projects
+    num_private.times do
       Project.create(title: Faker::Company.bs,
                      description: Faker::Lorem.paragraph,
                      depositor_id: User.all.where(admin_at: nil).sample.id,
@@ -220,7 +229,7 @@ namespace :dummy_data_generator do
       )
     end
 
-    puts Project.count == 25 ? '25 Projects created.' : '"Create Projects" task failed.'
+    puts Project.count == num_public + num_private ? 'All Projects created.' : '"Create Projects" task failed.'
   end
 
   desc 'creates project members'

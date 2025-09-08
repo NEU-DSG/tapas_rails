@@ -26,10 +26,10 @@
       <dd class="col-md-9">
         <%= item.description %>
       </dd>
-    <% @owners = item.owner().map { |user| user.name } %>
-    <dt class="col-md-3">Project administrator<%= @owners.length > 1 ? 's' : '' %></dt>
+    <% owners = item.owner.map { |user| user.name } %>
+    <dt class="col-md-3">Project administrator<%= owners.length > 1 ? 's' : '' %></dt>
       <dd class="col-md-9">
-        <%= @owners.join(", ") %>
+        <%= owners.join(", ") %>
       </dd>
     <% if item.institution %>
       <dt class="col-md-3">Institution</dt>
