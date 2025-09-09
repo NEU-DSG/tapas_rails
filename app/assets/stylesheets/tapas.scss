@@ -103,6 +103,19 @@ ol.btn-list {
   }
 } // end .btn-list
 
+/* The "inline-list" class is intended to add a little extra spacing between list 
+  items formatted as inline text. Note that this class should be used mostly for 
+  small snippets of text, such as names. */
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.65em;
+}
+ol.inline-list,
+ul.inline-list {
+  padding-left: 0;
+}
+
 form.sort-controls {
   align-items: center;
   display: flex;
@@ -373,9 +386,6 @@ h1, h2, h3, h4, h5, h6 {
       margin-bottom: 0;
     }
   } // end .main-container nav.breadcrumbs
-  
-  
-  
   
   #main-content {
     
