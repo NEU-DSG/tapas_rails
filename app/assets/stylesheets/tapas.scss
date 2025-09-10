@@ -92,52 +92,6 @@ label {
   font-size: 1.15em;
 }
 
-ul.btn-list,
-ol.btn-list {
-  display: flex;
-  gap: 0.75em;
-  padding-left: 0.25rem;
-  
-  li {
-    list-style: none;
-  }
-} // end .btn-list
-
-/* The "inline-list" class is intended to add a little extra spacing between list 
-  items formatted as inline text. Note that this class should be used mostly for 
-  small snippets of text, such as names. */
-.inline-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 0.65em;
-}
-ol.inline-list,
-ul.inline-list {
-  padding-left: 0;
-}
-
-form.sort-controls {
-  align-items: center;
-  display: flex;
-  gap: 0.75em;
-  height: 100%;
-  margin: 0 1rem;
-  
-  label {
-    margin-left: 0.35em;
-    
-    &:first-child {
-      margin-left: 0;
-    }
-  } // end form.sort-controls label
-  
-  /* Override the `width: 100%` rule set by Bootstrap, which will cut off part of 
-    the <option> text when inside a flexbox. */
-  .form-select {
-    width: unset;
-  }
-} // end form.sort-controls
-
 img.thumbnail {
   max-height: 3rem;
   max-width: 3rem;
@@ -245,6 +199,74 @@ h1, h2, h3, h4, h5, h6 {
     }
   } // end & .nav-link
 } // end .nav-tabs
+
+
+/*
+ * COMMON CONTENT CONTAINERS
+ */
+
+.flex-spaced {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+ul.btn-list,
+ol.btn-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em 0.75em;
+  padding-left: 0.25rem;
+  
+  li {
+    list-style: none;
+  }
+} // end .btn-list
+
+/* The "inline-list" class is intended to add a little extra spacing between list 
+  items formatted as inline text. Note that this class should be used mostly for 
+  small snippets of text, such as names. */
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.65em;
+}
+ol.inline-list,
+ul.inline-list {
+  padding-left: 0;
+}
+
+form.sort-controls {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em 0.75em;
+  height: 100%;
+  
+  @media screen and (min-width: $medium-screen) {
+    margin: 0 1rem;
+  }
+  
+  label {
+    margin-left: 0.35em;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+  } // end form.sort-controls label
+  
+  /* Override the `width: 100%` rule set by Bootstrap, which will cut off part of 
+    the <option> text when inside a flexbox. */
+  .form-select {
+    width: unset;
+  }
+} // end form.sort-controls
+
+.pagination-container {
+  display: flex;
+  justify-content: end;
+}
 
 
 /* 
