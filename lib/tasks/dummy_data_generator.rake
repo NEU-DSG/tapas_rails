@@ -51,22 +51,25 @@ namespace :dummy_data_generator do
   end
 
   def create_project_members
+    # NOTE: Getting projects with no members will be much easier to do in Rails 6.1+, 
+    # e.g. `Project.where.missing(:project_members)`
     Project.all.each do |project|
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
-      num_contributors = Random.rand(5)   # 0 to 5
-      num_collaborators = Random.rand(3)  # 0 to 3
+      # 2025: Commented out "contributors" because a project should only have "administrators" and "collaborators"
+      #num_contributors = Random.rand(5)   # 0 to 4
+      num_collaborators = Random.rand(6)  # 0 to 5
       num_owners = 1 + Random.rand(4)     # 1 to 4
 
       # contributors
       # has a TAPAS account and either creates or contributes to a TAPAS project
-      num_contributors.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+      #num_contributors.times do
+      #  user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
 
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'contributor'
-        )
-      end
+      #  ProjectMember.create(project_id: project.id,
+      #                       user_id: user_id,
+      #                       role: 'contributor'
+      #  )
+      #end
 
       # collaborator
       # has editorial access to a TAPAS project but is not the owner
@@ -207,14 +210,15 @@ namespace :dummy_data_generator do
   desc "creates projects"
   task :projects => :environment do
     # Check the number of Projects we had before creating new ones
-    current_projects = Project.count
+    older_projects = Project.count
     num_projects = 45
-    # Pick a number between 0 and 2. If the number is 2, the project is private.
-    is_private = Random.rand(3) == 2
-    # Pick a number between 0 and 3. If the number is 3, generate an institution string.
-    include_institution = Random.rand(4) == 3
     
     num_projects.times do
+      # Pick a number between 0 and 2. If the number is 2, the project is private.
+      is_private = Random.rand(3) == 2
+      # Pick a number between 0 and 3. If the number is 3, generate an institution string.
+      include_institution = Random.rand(4) == 3
+      
       Project.create(title: Faker::Company.bs,
                      description: Faker::Lorem.paragraph,
                      depositor_id: User.all.where(admin_at: nil).sample.id,
@@ -223,8 +227,8 @@ namespace :dummy_data_generator do
       )
     end
 
-    puts Project.count == num_projects + current_projects ? num_projects.to_s + ' Projects created.' 
-                                                          : '"Create Projects" task failed.'
+    puts Project.count == num_projects + older_projects ? num_projects.to_s + ' Projects created.' 
+          : '"Create Projects" task failed.'
   end
 
   desc 'creates project members'
