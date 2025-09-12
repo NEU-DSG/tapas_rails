@@ -58,7 +58,7 @@ namespace :dummy_data_generator do
       # 2025: Commented out "contributors" because a project should only have "administrators" and "collaborators"
       #num_contributors = Random.rand(5)   # 0 to 4
       num_collaborators = Random.rand(6)  # 0 to 5
-      num_owners = 1 + Random.rand(4)     # 1 to 4
+      num_owners = 1                      # 1
 
       # contributors
       # has a TAPAS account and either creates or contributes to a TAPAS project
