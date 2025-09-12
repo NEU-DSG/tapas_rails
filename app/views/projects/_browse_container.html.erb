@@ -39,11 +39,11 @@
     <% end -%>
     <dt class="col-md-3">Number of collections</dt>
       <dd class="col-md-9">
-        <%= item.collections.count %>
+        <%= item.collections.publicly_visible.count %>
       </dd>
     <dt class="col-md-3">Number of documents</dt>
       <dd class="col-md-9">
-        <%= item.core_files.count %>
+        <%= item.core_files.publicly_visible.count %>
       </dd>
   <% end -%>
 </li>
