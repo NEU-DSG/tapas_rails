@@ -100,28 +100,34 @@ namespace :dummy_data_generator do
   def create_collections
     Project.all.each do |project|
       project_users = project.members.values.flatten.shuffle
+      older_collections = project.collections.length
+      num_collections = Random.rand(6) # 0 to 5
 
-      3.times do
-        public = Collection.create(title: Faker::Food.dish,
+      num_collections.times do
+        # If the project is public, the collection can be public or private.
+        # If the project is private, the new collection must be too.
+        visibility = project.is_public ? [true, false].sample : false
+        collection = Collection.create(title: Faker::Food.dish,
                                    description: Faker::GreekPhilosophers.quote,
                                    depositor_id: project_users.sample&.id,
                                    project_id: project.id,
-                                   is_public: true
+                                   is_public: visibility
         )
 
-        puts "Public collection #{public.id}: #{public.title} created for Project #{project.id}."
+        puts (visibility ? "Public" : "Private") + 
+          " collection #{collection.id}: #{collection.title} created for Project #{project.id}."
       end
 
-      2.times do
-        private = Collection.create(title: Faker::Food.dish,
-                                    description: Faker::GreekPhilosophers.quote,
-                                    depositor_id: project_users.sample&.id,
-                                    project_id: project.id,
-                                    is_public: false
-        )
+      #2.times do
+      #  private = Collection.create(title: Faker::Food.dish,
+      #                              description: Faker::GreekPhilosophers.quote,
+      #                              depositor_id: project_users.sample&.id,
+      #                              project_id: project.id,
+      #                              is_public: false
+      #  )
 
-        puts "Private collection #{private.id}: #{private.title} created for Project #{project.id}."
-      end
+      #  puts "Private collection #{private.id}: #{private.title} created for Project #{project.id}."
+      #end
     end
   end
 
