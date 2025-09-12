@@ -9,6 +9,7 @@
   :root {
     
     --tapas-border-color: #888;
+    --tapas-border-light: #CBCBCB;
     // Use Bootstrap's default border variables to keep things looking cohesive
     --tapas-border-radius: var(--bs-border-radius);
     
@@ -208,6 +209,7 @@ h1, h2, h3, h4, h5, h6 {
 .flex-spaced {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.75em;
   justify-content: space-between;
 }
 
@@ -237,19 +239,35 @@ ul.inline-list {
   padding-left: 0;
 }
 
+.sidebar {
+  border: thin solid var(--tapas-border-light);
+  border-radius: var(--tapas-border-radius);
+  padding: 0.75em 1em;
+}
+
 form.sort-controls {
-  align-items: center;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35em 0.75em;
+  gap: 0.5em 0.75em;
   height: 100%;
   
   @media screen and (min-width: $medium-screen) {
-    margin: 0 1rem;
+    align-items: start;
+    flex-direction: column;
   }
   
+  > div {
+    display: flex;
+    gap: 0.35em;
+    
+    @media screen and (min-width: $medium-screen) {
+      flex-direction: column;
+      width: 100%;
+    }
+  } // form.sort-controls > div
+  
   label {
-    margin-left: 0.35em;
+    //margin-left: 0.35em;
     
     &:first-child {
       margin-left: 0;
@@ -412,8 +430,7 @@ form.sort-controls {
   /* Breadcrumbs */
   nav.breadcrumbs {
     border-radius: var(--tapas-border-radius);
-    border: thin solid #DDD;
-    //background-color: #EBEBEB;
+    border: thin solid var(--tapas-border-light);
     font-weight: 400;
     margin-bottom: 1.5rem;
     padding: 0.25rem 0.75rem;
@@ -447,6 +464,39 @@ form.sort-controls {
     margin-top: 2rem;
   }
 } // end .main-container
+
+
+/*
+ * BROWSE PAGE CONTENT
+ */
+
+.browse-content {
+  display: grid;
+  grid-gap: 1rem 1.5rem;
+  
+  @media screen and (min-width: $medium-screen) {
+    align-items: start;
+    grid-auto-columns: 1fr 5fr;
+    grid-template-areas: 
+      "heading  heading"
+      "pagenav1 pagenav1"
+      "sidebar  list"
+      "sidebar  pagenav2";
+    
+    > h1 { grid-area: heading; }
+    > .flex-spaced { grid-area: pagenav1; }
+    > .sidebar { grid-area: sidebar; }
+    > .container-sequence { grid-area: list; }
+    > .pagination-container { grid-area: pagenav2; }
+  }
+  
+  > h1,
+  .btn-list,
+  .container-sequence,
+  .pagination {
+    margin-bottom: 0;
+  }
+} // end .browse-content
 
 
 /*
@@ -499,7 +549,7 @@ ol.container-sequence {
     
     .tapas-container-name {
       flex: 1 2 50%;
-      font-size: 1.75rem; // same size as <h3>
+      font-size: 1.5rem;
     }
     
     .tapas-container-info {
