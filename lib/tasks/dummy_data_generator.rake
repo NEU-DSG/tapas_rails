@@ -117,17 +117,6 @@ namespace :dummy_data_generator do
         puts (visibility ? "Public" : "Private") + 
           " collection #{collection.id}: #{collection.title} created for Project #{project.id}."
       end
-
-      #2.times do
-      #  private = Collection.create(title: Faker::Food.dish,
-      #                              description: Faker::GreekPhilosophers.quote,
-      #                              depositor_id: project_users.sample&.id,
-      #                              project_id: project.id,
-      #                              is_public: false
-      #  )
-
-      #  puts "Private collection #{private.id}: #{private.title} created for Project #{project.id}."
-      #end
     end
   end
 
@@ -157,17 +146,6 @@ namespace :dummy_data_generator do
         end
       end
       puts "Created "+ (collection.core_files.length - older_core_files).to_s + " core files within Collection #{collection.id}"
-
-      #3.times do
-      #  CoreFile.create(title: Faker::Book.title,
-      #                  description: Faker::Book.genre,
-      #                  depositor_id: collection_users.sample&.id,
-      #                  collections: [collection].compact,
-      #                  is_public: visibility,
-      #                  ography_type: ography_types.sample,
-      #                  tei_authors: Faker::Artist.name
-      #  )
-      #end
     end
   end
 
