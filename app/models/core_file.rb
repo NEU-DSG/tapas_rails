@@ -236,4 +236,11 @@ class CoreFile < ApplicationRecord
   #     self.drupal_access = 'private'
   #   end
   # end
+  
+  
+  ###  SCOPES  ###
+
+  public
+
+  scope :publicly_visible, -> { where(is_public: true) }
 end
