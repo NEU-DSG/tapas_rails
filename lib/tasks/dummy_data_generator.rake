@@ -131,35 +131,37 @@ namespace :dummy_data_generator do
       collection_users = project.members.values.flatten.shuffle
       visibility = collection.is_public
       ography_types = CoreFile.all_ography_types
+      older_core_files = collection.core_files.length
+      num_core_files = Random.rand(51) # 0 to 50
 
-      47.times do
+      num_core_files.times do
         core_file = CoreFile.create(title: Faker::Book.title,
                         description: Faker::Book.genre,
                         depositor_id: collection_users.sample&.id,
                         collections: [collection].compact,
-                        is_public: [visibility, !visibility].sample,
+                        is_public: visibility ? [visibility, !visibility].sample : visibility,
                         tei_authors: Faker::Creature.name
         )
 
         if core_file.id.nil? || !core_file.valid?
           puts 'Create Core Files task failed.'
-        else
-          puts "Core file #{core_file.id} created within Collection #{collection.id}"
+        #else
           # TODO: revisit this for TEI files
           # record_image(core_file)
         end
       end
+      puts "Created "+ (collection.core_files.length - older_core_files).to_s + " core files within Collection #{collection.id}"
 
-      3.times do
-        CoreFile.create(title: Faker::Book.title,
-                        description: Faker::Book.genre,
-                        depositor_id: collection_users.sample&.id,
-                        collections: [collection].compact,
-                        is_public: visibility,
-                        ography_type: ography_types.sample,
-                        tei_authors: Faker::Artist.name
-        )
-      end
+      #3.times do
+      #  CoreFile.create(title: Faker::Book.title,
+      #                  description: Faker::Book.genre,
+      #                  depositor_id: collection_users.sample&.id,
+      #                  collections: [collection].compact,
+      #                  is_public: visibility,
+      #                  ography_type: ography_types.sample,
+      #                  tei_authors: Faker::Artist.name
+      #  )
+      #end
     end
   end
 
