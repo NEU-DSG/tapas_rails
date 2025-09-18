@@ -13,7 +13,9 @@
     // Use Bootstrap's default border variables to keep things looking cohesive
     --tapas-border-radius: var(--bs-border-radius);
     
+    
     /* TAPAS-specific variables */
+    
     --tapas-block-main: white;
     --tapas-block-dark: #26333F;
     --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
@@ -32,18 +34,9 @@
     
     --tapas-text-dark: #090909;
     --tapas-text-light: #EBEBEB;
+    --tapas-text-underline-thickness: 0.085rem;
     
     --tapas-transparency: rgba(0,0,0,0);
-    
-    /* Reset Bootstrap defaults: */
-    --bs-border-color: var(--tapas-border-color);
-    --bs-body-color: var(--tapas-text-dark);
-    .table {
-      --bs-table-striped-bg: var(--tapas-block-light);
-    }
-    .btn-primary {
-      --bs-btn-bg: var(--tapas-button-color);
-    }
   }
 
 
@@ -71,9 +64,8 @@ h1, .h1 {
 }
 
 a {
-  text-decoration: underline dotted;
+  text-decoration: underline dotted var(--tapas-text-underline-thickness);
   text-underline-offset: 0.25em;
-  text-decoration-thickness: 0.085rem;
   
   &:hover, &:focus {
     text-decoration-style: solid;
@@ -136,6 +128,21 @@ button.collapse-toggle {
 /*
  * BOOTSTRAP STYLE OVERRIDES
  */
+
+/* Set new values for Bootstrap's CSS variables. */
+:root {
+  --bs-border-color: var(--tapas-border-color);
+  --bs-body-color: var(--tapas-text-dark);
+  
+  .btn-primary {
+    --bs-btn-bg: var(--tapas-button-color);
+  }
+  
+  .table {
+    --bs-table-striped-bg: var(--tapas-block-light);
+  }
+} // end resetting Bootstrap variables
+
 
 @media (min-width: $medium-screen) {
   
@@ -200,6 +207,26 @@ h1, h2, h3, h4, h5, h6 {
     }
   } // end & .nav-link
 } // end .nav-tabs
+  
+.pagination {
+  --bs-pagination-active-bg: var(--tapas-block-main);
+  --bs-pagination-active-border-color: var(--tapas-border-color);
+  --bs-pagination-active-color: var(--tapas-text-dark);
+  --bs-pagination-hover-bg: var(--tapas-block-light);
+  --bs-pagination-hover-color: var(--tapas-link-hover);
+  
+  a.page-link {
+    transition: none;
+    
+    &:hover {
+      text-decoration: underline var(--tapas-text-underline-thickness);
+    }
+  } // end .pagination .page-link
+  
+  span.page-link.active {
+    cursor: default;
+  }
+} // end .pagination
 
 
 /*
@@ -248,7 +275,7 @@ ul.inline-list {
 form.sort-controls {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em 0.75em;
+  gap: 0.75em;
   height: 100%;
   
   @media screen and (min-width: $medium-screen) {
@@ -282,7 +309,9 @@ form.sort-controls {
 } // end form.sort-controls
 
 .pagination-container {
+  align-items: baseline;
   display: flex;
+  gap: 0.75em;
   justify-content: end;
 }
 
@@ -476,25 +505,39 @@ form.sort-controls {
   
   @media screen and (min-width: $medium-screen) {
     align-items: start;
-    grid-auto-columns: 1fr 5fr;
+    grid-auto-columns: 2fr 4fr;
     grid-template-areas: 
       "heading  heading"
-      "pagenav1 pagenav1"
+      "summary  pagenav1"
       "sidebar  list"
       "sidebar  pagenav2";
     
     > h1 { grid-area: heading; }
+    > .pagination-summary { grid-area: summary; }
     > .flex-spaced { grid-area: pagenav1; }
     > .sidebar { grid-area: sidebar; }
     > .container-sequence { grid-area: list; }
-    > .pagination-container { grid-area: pagenav2; }
-  }
+    > .pagination-container:last-child { grid-area: pagenav2; }
+  } // end medium screen .browse-content
+  
+  @media screen and (min-width: $large-screen) {
+    grid-auto-columns: 1.5fr 5fr;
+    
+    input[type="submit"] {
+      max-width: 100px;
+    }
+  } // end large screen .browse-content
   
   > h1,
   .btn-list,
   .container-sequence,
+  .pagination-summary,
   .pagination {
     margin-bottom: 0;
+  }
+  
+  .pagination-summary {
+    align-self: center;
   }
 } // end .browse-content
 
