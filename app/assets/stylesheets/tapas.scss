@@ -129,19 +129,11 @@ button.collapse-toggle {
  * BOOTSTRAP STYLE OVERRIDES
  */
 
-/* Set new values for Bootstrap's CSS variables. */
+/* Set new values for Bootstrap's global CSS variables. */
 :root {
   --bs-border-color: var(--tapas-border-color);
   --bs-body-color: var(--tapas-text-dark);
-  
-  .btn-primary {
-    --bs-btn-bg: var(--tapas-button-color);
-  }
-  
-  .table {
-    --bs-table-striped-bg: var(--tapas-block-light);
-  }
-} // end resetting Bootstrap variables
+}
 
 
 @media (min-width: $medium-screen) {
@@ -162,6 +154,10 @@ button.collapse-toggle {
     color: var(--tapas-text-dark);
   }
 } // end .alert
+  
+.btn-primary {
+  --bs-btn-bg: var(--tapas-button-color);
+}
 
 .card-sequence {
   display: flex;
@@ -227,6 +223,10 @@ h1, h2, h3, h4, h5, h6 {
     cursor: default;
   }
 } // end .pagination
+
+.table {
+  --bs-table-striped-bg: var(--tapas-block-light);
+}
 
 
 /*
