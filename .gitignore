@@ -92,3 +92,6 @@ all-db_04102023.sql
 /config/master.key
 /db/data/
 /to-do.txt
+
+# Ignore git patch files
+*.patch
