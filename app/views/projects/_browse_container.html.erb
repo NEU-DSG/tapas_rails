@@ -26,10 +26,24 @@
       <dd class="col-md-9">
         <%= item.description %>
       </dd>
+    <!-- NOTE: The functional spec currently (2025-10-15) implies that there is only ever one project 
+      owner. There is an issue open to refine and confirm project membership roles: 
+      https://github.com/NEU-DSG/tapas_rails/issues/111 . Until this is resolved and the dummy data 
+      script is updated, the only way to test the plural form of this field is to manually add 1+ owner 
+      to a project, or temporarily change the dummy data script to do so programmatically. -->
     <% owners = item.owner.map { |user| user.name } %>
     <dt class="col-md-3">Project administrator<%= owners.length > 1 ? 's' : '' %></dt>
       <dd class="col-md-9">
-        <%= owners.join(", ") %>
+        <ul class="inline-list">
+          <!-- For each owner, list their name with a comma afterward. The last name in the array 
+            doesn't get a comma. -->
+          <% owners.each_with_index do |name, index| %>
+            <% is_last_name = index == (owners.length - 1) %>
+            <li>
+              <%= name + (is_last_name ? '' : ',') %>
+            </li>
+          <% end %>
+        </ul>
       </dd>
     <% if item.institution %>
       <dt class="col-md-3">Institution</dt>
