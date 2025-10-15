@@ -1,22 +1,68 @@
 <!-- HTML structure encompassing a list of resources for browsing. -->
-<nav>
-  <ul class="btn-list" aria-label="Section controls">
-    <li>
-      <form class="sort-controls">
+<div class="browse-content">
+  <h1><%= yield :heading %></h1>
+  
+  <!-- TODO: add content for pagination info -->
+  <p class="pagination-summary"></p>
+  
+  <div class="flex-spaced">
+    <!-- Upper pagination nav -->
+    <nav class="pagination-container" aria-label="Projects">
+      <!-- TODO -->
+    </nav>
+    
+    <!-- Disclosure toggles -->
+    <ul class="btn-list" aria-label="Section controls">
+      <li>
+        <button class="btn btn-sm btn-primary control-expand">Expand all 
+          <span class="visually-hidden">disclosures</span></button>
+      </li>
+      <li>
+        <button class="btn btn-sm btn-primary control-collapse">Collapse all 
+          <span class="visually-hidden">disclosures</span></button>
+      </li>
+    </ul>
+  </div>
+  
+  <aside class="sidebar">
+    <form class="sort-controls">
+      <div>
         <label for="browse-sort">Sort</label>
         <select id="browse-sort" name="sort" class="form-select form-select-sm">
           <!-- Options for the sort method: by title, or by the date last updated. The <option> which 
             corresponds to the current sort method (or "updated_at" if not set) is selected by default. -->
-          <%= options_for_select([['alphabetically', 'title'], ["last updated", 'updated_at']], @sort_method || 'updated_at') %>
+          <%= options_for_select([["date updated", 'updated_at'], ['title', 'title']], @sort_method || 'updated_at') %>
         </select>
-        <input type="submit" value="OK" class="btn btn-outline-primary btn-sm" />
-      </form>
-    </li>
-    <li><button class="btn btn-sm btn-primary control-expand">Expand all</button></li>
-    <li><button class="btn btn-sm btn-primary control-collapse">Collapse all</button></li>
+      </div>
+      <div>
+        <label for="browse-sort-direction">Order</label>
+        <select id="browse-sort-direction" name="sort-direction"
+           class="form-select form-select-sm">
+          <%= options_for_select([['ascending', 'asc'], ["descending", 'desc']], @sort_direction || 'asc') %>
+        </select>
+      </div>
+      <!-- TODO: results per page -> pagination -->
+      <!--<div>
+        <label for="page-limit-select">Results per page</label>
+        <select id="page-limit-select" name="limit" class="form-select form-select-sm">
+          <option value="25" selected="selected">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+      </div>-->
+      <div class="flex-grow-1 justify-content-end">
+        <input type="submit" value="Apply" class="btn btn-outline-primary btn-sm" />
+      </div>
+    </form>
+  </aside>
+  
+  <!-- List of resources for the Browse page -->
+  <ul class="container-sequence">
+    <%= yield :containers %>
   </ul>
-</nav>
-
-<ul class="container-sequence">
-  <%= yield :containers %>
-</ul>
+  
+  <!-- Lower pagination nav -->
+  <nav class="pagination-container" aria-label="Page">
+    <!-- TODO -->
+  </nav>
+</div>
