@@ -38,9 +38,9 @@
           <!-- For each owner, list their name with a comma afterward. The last name in the array 
             doesn't get a comma. -->
           <% owners.each_with_index do |name, index| %>
-            <% is_last_name = index == (owners.length - 1) %>
+            <% is_final_name = index == (owners.length - 1) %>
             <li>
-              <%= name + (is_last_name ? '' : ',') %>
+              <%= name + (is_final_name ? '' : ',') %>
             </li>
           <% end %>
         </ul>
