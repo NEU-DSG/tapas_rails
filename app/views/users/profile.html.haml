@@ -14,7 +14,7 @@
 %dd= @user.role
 
 %div.row
-  - if @user.image_file.attached?
+  - if @user.image_file&.file&.attached?
     %div.col-sm-4
-      = image_tag(@user.image_file.url)
+      = image_tag url_for(@user.image_file.file)
 

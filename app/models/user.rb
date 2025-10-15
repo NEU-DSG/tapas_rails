@@ -4,9 +4,6 @@ require "uri"
 class User < ApplicationRecord
   include Blacklight::User
 
-  has_one_attached(:image_file)
-  has_one :image_file, as: :imageable
-
   #TODO: add logic to update role when user creates or joins an existing project or collection
 
   # delegate :image, to: :image_file, allow_nil: true
@@ -27,11 +24,10 @@ class User < ApplicationRecord
 
   delegate :can?, :cannot?, :to => :ability
 
-  has_one_attached :image_file
-  has_one :image_file, as: :imageable
+  has_one :image_file, as: :imageable, dependent: :destroy
   has_many :project_members
   has_many :projects, through: :project_members
-  has_and_belongs_to_many :core_files
+  # has_and_belongs_to_many :core_files
 
 
   def api_key=(api_key)

@@ -8,14 +8,19 @@ class CoreFile < ApplicationRecord
   belongs_to :depositor, class_name: "User"
   has_and_belongs_to_many :collections
   has_and_belongs_to_many :projects
-  has_and_belongs_to_many :users
-  has_one_attached :image_file
+  # has_and_belongs_to_many :users
+  has_one_attached :tei_file
+  has_one :image_file, as: :imageable, dependent: :destroy
 
   # Validations
   validates :title, :depositor_id, presence: true
+  validates :collections, presence: true, if: -> { persisted? }
+  validate :collections_same_project, if: -> { collections.any? }
+  validate :tei_file_attached, unless: :is_ography?
 
   # Callbacks
   after_save :index_core_file
+  after_save :sync_project_association
   #TODO: add a callback to locate the indexed record by both active_record_model_ssi and id before deleting
   after_update :update_indexed_core_file
   # these strings refer to the role of the file in collection(s);
@@ -37,7 +42,7 @@ class CoreFile < ApplicationRecord
 
   def project
     # All collections that a CoreFile belongs to will belong to the same project
-    collections.first.project
+    collections.first&.project
   end
 
   # def collections
@@ -62,6 +67,11 @@ class CoreFile < ApplicationRecord
 
   def contributors
     tei_contributors
+  end
+
+  # Helper method to check if image is attached (for backward compatibility with views)
+  def thumbnail
+    image_file&.file&.attached? ? Rails.application.routes.url_helpers.url_for(image_file.file) : nil
   end
 
   def clear_ographies!
@@ -128,7 +138,7 @@ class CoreFile < ApplicationRecord
 
   # TODO: this needs refactoring to include the other supported attachments; i.e., html and image
   def canonical_object
-    # this will be the TEI uploaded when creating a new core file
+    tei_file
   end
 
   def as_json
@@ -172,11 +182,11 @@ class CoreFile < ApplicationRecord
   end
 
   def is_ography?
-    ography_type.nil?
+    ography_type.present?
   end
 
   def is_ography_for
-    is_ography?.nil? ? [] : collection_ids
+    is_ography? ? collection_ids : []
   end
 
   # def remove_thumbnail
@@ -222,12 +232,46 @@ class CoreFile < ApplicationRecord
     }
   end
 
-  # may refactor this method to check the project_core_file join table to ensure the association exists
-  # def associate_with_project
-  #   if collection&.project
-  #     self.projects << collection.project
-  #   end
-  # end
+  private
+
+  private
+
+  def collections_same_project
+    project_ids = collections.map(&:project_id).compact.uniq
+    if project_ids.size > 1
+      errors.add(:collections, "must all belong to the same project (found projects: #{project_ids.join(', ')})")
+    end
+  end
+
+  def tei_file_attached
+    unless tei_file.attached?
+      errors.add(:tei_file, "must be attached")
+    else
+      # Validate content type (Rails 5.2 compatible way)
+      unless tei_file.content_type.in?(%w[text/xml application/xml])
+        errors.add(:tei_file, "must be an XML file")
+      end
+    end
+  end
+
+  def sync_project_association
+    # Maintain the core_files_projects join table in sync with collections
+    # All collections must belong to the same project (enforced by validation)
+    return unless collections.any?
+
+    project = collections.first.project
+    return unless project
+
+    # Add project association if not already present
+    unless projects.include?(project)
+      projects << project
+    end
+
+    # Remove any project associations that don't match the collections' project
+    projects.where.not(id: project.id).each do |old_project|
+      projects.delete(old_project)
+    end
+  end
 
   # def calculate_drupal_access
   #   if collections.any? { |collection| collection.drupal_access == 'public' }

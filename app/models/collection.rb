@@ -20,7 +20,7 @@ class Collection < ApplicationRecord
 
   # returns url for attached thumbnail
   def thumbnail
-    self.image_file.attached? ? url_for(self.image_file) : nil
+    image_file&.file&.attached? ? Rails.application.routes.url_helpers.url_for(image_file.file) : nil
   end
 
   def self.phantom_collection

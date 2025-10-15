@@ -8,8 +8,7 @@ class Project < ApplicationRecord
 
   # associations
   belongs_to :depositor, class_name: "User"
-  has_one_attached :image_file
-  has_one :image_file, as: :imageable
+  has_one :image_file, as: :imageable, dependent: :destroy
   has_many :collections
   has_many :project_members
   has_many :users, through: :project_members

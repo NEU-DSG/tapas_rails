@@ -17,11 +17,11 @@
         .form-group
           = f.label :image_file, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if @project.image_file.attached?
-              =image_tag url_for(@project.image_file)
+            - if @project.image_file&.file&.attached?
+              =image_tag url_for(@project.image_file.file)
               = f.label :remove_image_file, "Remove Thumbnail"
               = f.check_box "remove_image_file", {:checked => false}
-            = f.file_field :image_file, accept: ".jpeg, .jpg, .png", direct_upload: true
+            = f.file_field :image_file, accept: ".jpeg, .jpg, .png, .gif, .svg, .pdf", direct_upload: true
 
 
     -#.row.form-group.institutions

@@ -50,6 +50,16 @@ The latest version of Apache Solr v8.x (currently v8.11.4) is recommended.
 
 To stop Solr, run `./bin/solr stop`.
 
+### Install Redis
+
+Redis is required for background job processing with Resque. The latest stable version is recommended.
+
+1. Install the `redis` package with your package manager.
+2. Start Redis:
+    1. With Homebrew: `brew services start redis`
+    2. Or manually: `redis-server`
+3. Verify Redis is running: `redis-cli ping` (should return `PONG`)
+
 ### Install MySQL
 The latest version of MySQL (currently v9.0.1) is recommended.
 
@@ -97,7 +107,19 @@ DUMMY_DEBUG_PASSWORD=definitelyChangeThisAsWell!
 
 ### Create test data
 
-To create fake users, projects, etc. for testing purposes, run `rails dummy_data_generator:run_all`. This task encompasses several other `dummy_data` tasks that can be run independently. (For a list, see `rails --tasks dummy_data_generator`.)
+To create fake users, projects, etc. for testing purposes:
+
+1. **Start a Resque worker** (required for file uploads):
+   ```bash
+   QUEUE=* bundle exec rake resque:work
+   ```
+
+2. **Run the dummy data generator** (in a new terminal):
+   ```bash
+   rails dummy_data_generator:run_all
+   ```
+
+This task encompasses several other `dummy_data` tasks that can be run independently. (For a list, see `rails --tasks dummy_data_generator`.)
 
 After creating dummy data, the TAPAS MySQL databases and Apache Solr should have new records you can examine.
 
@@ -122,9 +144,30 @@ Solr will not have information on TAPAS users, but should contain "documents" re
 
 ## Run TAPAS
 
-1. **start the server**: `rails server`
-2. **visit**: `http://localhost:3000`
-3. **Happy coding!**
+TAPAS requires multiple services to run simultaneously:
+
+1. **Start Redis** (if not running as a service):
+   ```bash
+   redis-server
+   ```
+
+2. **Start Resque worker** (REQUIRED for file uploads and background jobs):
+   ```bash
+   QUEUE=* bundle exec rake resque:work &
+   ```
+
+   **Important:** File uploads will fail without a running Resque worker.
+
+3. **Start the Rails server** (in a new terminal):
+   ```bash
+   rails server
+   ```
+
+4. **Visit**: `http://localhost:3000`
+
+5. **Monitor background jobs**: Visit `http://localhost:3000/resque` to view the Resque dashboard
+
+6. **Happy coding!**
 
 ### Troubleshooting:
 

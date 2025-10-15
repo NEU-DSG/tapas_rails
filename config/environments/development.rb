@@ -37,6 +37,10 @@ TapasRails::Application.configure do
 
   config.active_storage.service = :local
 
+  # Disable ActiveStorage analyze to prevent threading deadlocks during bulk uploads
+  config.active_storage.analyze = false
+  config.active_storage.variant_processor = :mini_magick
+
   # Debug mode disables concatenation and preprocessing of assets.
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
