@@ -36,9 +36,9 @@
       </div>
       <div>
         <label for="browse-sort-direction">Order</label>
-        <select id="browse-sort-direction" name="sort-direction"
+        <select id="browse-sort-direction" name="sort_direction"
            class="form-select form-select-sm">
-          <%= options_for_select([['ascending', 'asc'], ["descending", 'desc']], @sort_direction || 'asc') %>
+          <%= options_for_select([['ascending', 'ASC'], ['descending', 'DESC']], @sort_direction || 'ASC') %>
         </select>
       </div>
       <!-- TODO: results per page -> pagination -->

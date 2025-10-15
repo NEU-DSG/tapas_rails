@@ -13,15 +13,11 @@ module ListResources
     
     # If the user requested a valid sort direction, use that.
     order_param = params[:sort_direction]
-    if is_valid_sort_direction(order_param)
-      @sort_direction = order_param
-    # If the user didn't specify and the sort method is "updated_at", use descending order (most recent first).
-    elsif @sort_method == 'updated_at'
-      @sort_direction = 'DESC'
-    # Otherwise, use ascending order.
-    else
-      @sort_direction = 'ASC'
-    end
+    @sort_direction = 
+      is_valid_sort_direction(order_param) ? order_param.to_s.upcase :
+      # If there isn't a given sort order but the method is "updated_at", sort the newest first.
+      # Otherwise, use ascending order.
+      @sort_method == 'updated_at' ? 'DESC' : 'ASC'
   end
   
   def sort_string
@@ -32,12 +28,12 @@ module ListResources
   # if the request parameter is provided and its lower-cased value matches one of the approved strings.
   def is_valid_sort_method(sort_method = browse_params[:sort])
     allowed_methods = %w(title updated_at)
-    !sort_method.blank? && allowed_methods.include?(sort_method.to_s.downcase)
+    sort_method.present? && allowed_methods.include?(sort_method.to_s.downcase)
   end
   
   def is_valid_sort_direction(direction = browse_params[:sort_direction])
-    allowed_order = %w(desc asc)
-    !direction.blank? && allowed_order.include?(direction.to_s.downcase)
+    allowed_order = %w(ASC DESC)
+    direction.present? && allowed_order.include?(direction.to_s.upcase)
   end
   
   # For requests to a Browse page, permit only the sorting parameters.
