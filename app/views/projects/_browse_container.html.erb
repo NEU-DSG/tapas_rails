@@ -18,6 +18,10 @@
     </span>
   </span>
   <%= tag.dl(id: collapse_id, class: ['tapas-container-content', 'row', 'collapse']) do -%>
+    <dt class="col-md-3">Created at</dt>
+      <dd class="col-md-9">
+        <%= item.created_at %>
+      </dd>
     <dt class="col-md-3">Last updated</dt>
       <dd class="col-md-9">
         <%= item.updated_at %>

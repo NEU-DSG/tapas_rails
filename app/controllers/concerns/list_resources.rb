@@ -27,7 +27,7 @@ module ListResources
   # Test a requested sort method string against the methods we are prepared to accept. Returns true ONLY 
   # if the request parameter is provided and its lower-cased value matches one of the approved strings.
   def is_valid_sort_method(sort_method = browse_params[:sort])
-    allowed_methods = %w(title updated_at)
+    allowed_methods = %w(created_at title updated_at)
     sort_method.present? && allowed_methods.include?(sort_method.to_s.downcase)
   end
   
