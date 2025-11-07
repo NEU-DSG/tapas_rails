@@ -21,7 +21,7 @@
               =image_tag url_for(@project.image_file.file)
               = f.label :remove_image_file, "Remove Thumbnail"
               = f.check_box "remove_image_file", {:checked => false}
-            = f.file_field :image_file, accept: ".jpeg, .jpg, .png, .gif, .svg, .pdf", direct_upload: true
+            = f.file_field :image_file, direct_upload: true
 
 
     -#.row.form-group.institutions

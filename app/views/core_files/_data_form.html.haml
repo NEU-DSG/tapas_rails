@@ -65,7 +65,7 @@
               =image_tag url_for(@core_file.image_file.file)
               = f.label :remove_thumbnail, "Remove Image File"
               = f.check_box "remove_thumbnail", {:checked => false}
-            = f.file_field :thumbnails, accept: ".jpeg, .jpg, .png, .gif, .svg, .pdf", direct_upload: true, multiple: true
+            = f.file_field :thumbnails, direct_upload: true, multiple: true
 
     -# TODO add support_files?
 

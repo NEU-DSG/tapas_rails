@@ -33,7 +33,7 @@ class ZipContentValidator
 
   def self.support_files(support_file_paths)
     support_file_paths.each do |sf|
-      validate_extension(sf, %w(jpeg jpg png), "Page Image File")
+      validate_extension(sf, %w(jpeg png), "Page Image File")
     end
   end
 

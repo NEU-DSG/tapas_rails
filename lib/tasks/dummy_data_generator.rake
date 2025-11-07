@@ -171,17 +171,6 @@ namespace :dummy_data_generator do
         if core_file.save
           puts "Core file #{core_file.id} created within Collection #{collection.id}"
 
-          # Longer delay to prevent ActiveStorage deadlocks
-          sleep 0.3
-
-          # Every 2 files, clear connection pool to prevent exhaustion
-          if (i + 1) % 2 == 0
-            ActiveRecord::Base.connection_pool.release_connection
-            sleep 0.3
-            puts "  -> Cleared connection pool after #{i + 1} files"
-          end
-
-          # TODO: revisit this for TEI files
           # record_image(core_file)
         else
           puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
@@ -264,6 +253,8 @@ namespace :dummy_data_generator do
   task :run_all => :environment do
     # Check for Resque workers before proceeding
     check_resque_workers
+    # Start or restart Solr service for connection to instance
+    system('solr restart')
 
     Rake::Task['dummy_data_generator:user_records'].invoke
     Rake::Task['dummy_data_generator:non_user_records'].invoke

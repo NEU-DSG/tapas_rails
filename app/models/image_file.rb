@@ -17,7 +17,6 @@ class ImageFile < ApplicationRecord
 
     valid_types = %w[
       image/jpeg
-      image/jpg
       image/gif
       image/png
       image/svg+xml
@@ -25,7 +24,7 @@ class ImageFile < ApplicationRecord
     ]
 
     unless content_type.in?(valid_types)
-      errors.add(:image, "must be a JPEG, JPG, GIF, PNG, SVG, or PDF file")
+      errors.add(:image, "must be a JPEG, GIF, PNG, SVG, or PDF file")
     end
   end
 end
