@@ -44,6 +44,9 @@ gem 'figaro'
 
 # Use Resque to handle background tasks
 gem 'resque', :require => 'resque/server'
+# Pin redis and redis-namespace to compatible versions to avoid deprecation warnings
+gem 'redis', '~> 4.0'
+gem 'redis-namespace', '~> 1.8.0'
 
 # Use Nest because some inherited config uses Nest
 gem 'nest'
@@ -77,6 +80,8 @@ end
 
 gem "blacklight"
 gem 'blacklight-gallery'
+# Pin view_component to 2.x to avoid deprecation warnings about Rails 5.2/Ruby 2.7
+gem 'view_component', '~> 2.66'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
