@@ -12,7 +12,8 @@ class Project < ApplicationRecord
   has_many :collections
   has_many :project_members
   has_many :users, through: :project_members
-  has_and_belongs_to_many :core_files
+  has_many :core_files_projects, dependent: :destroy
+  has_many :core_files, through: :core_files_projects
   #TODO: create logic such that deleting a collection in a project, when the user has not specified the collection's core
   # files should be added to a new collection in that project, should delete the record associated with core file on the
   # project_core_files join table;

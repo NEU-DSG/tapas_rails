@@ -6,8 +6,10 @@ class CoreFile < ApplicationRecord
 
   # Associations
   belongs_to :depositor, class_name: "User"
-  has_and_belongs_to_many :collections
-  has_and_belongs_to_many :projects
+  has_many :collections_core_files, dependent: :destroy
+  has_many :collections, through: :collections_core_files
+  has_many :core_files_projects, dependent: :destroy
+  has_many :projects, through: :core_files_projects
   # has_and_belongs_to_many :users
   has_one_attached :tei_file
   has_one :image_file, as: :imageable, dependent: :destroy
