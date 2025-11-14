@@ -68,7 +68,7 @@ class Project < ApplicationRecord
   def to_solr(solr_doc = {})
     solr_doc["active_record_model_ssi"] = self.class.to_s
     solr_doc['depositor_tesim'] = depositor_id
-    solr_doc['edit_access_person_ssim'] = owner.present? ? owner[0].id : depositor_id
+    solr_doc['edit_access_person_ssim'] = members.empty? ? depositor_id : owner.id
     solr_doc['title_info_title_ssi'] = title
     solr_doc['table_id_ssi'] = id
     solr_doc['id'] = "#{self.class.to_s}_#{id}"

@@ -154,10 +154,9 @@ namespace :dummy_data_generator do
       collection_users = project.members.values.flatten.shuffle
       visibility = collection.is_public
       ography_types = CoreFile.all_ography_types
-      record_count_range = 1..7
 
-      # Create regular TEI content files
-      record_count_range.to_a.sample.times do |i|
+      # Create 3 regular TEI content files
+      3.times do |i|
         core_file = CoreFile.new(title: Faker::Book.title,
                         description: Faker::Book.genre,
                         depositor_id: collection_users.sample&.id,
@@ -171,31 +170,15 @@ namespace :dummy_data_generator do
 
         if core_file.save
           puts "Core file #{core_file.id} created within Collection #{collection.id}"
-        else
-          puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
-        end
-      end
 
-      record_count_range.to_a.sample.times do
-        core_file = CoreFile.new(title: Faker::Book.title,
-                                 description: Faker::Book.genre,
-                                 depositor_id: collection_users.sample&.id,
-                                 collections: [collection].compact,
-                                 is_public: [visibility, !visibility].sample,
-                                 tei_authors: Faker::Creature.name
-        )
-
-        if core_file.save
-          puts "Core file #{core_file.id} created within Collection #{collection.id}"
-
-          record_image(core_file)
+          # record_image(core_file)
         else
           puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
         end
       end
 
       # Create 3 ography support files (don't need TEI)
-      record_count_range.to_a.sample.times do
+      2.times do
         core_file = CoreFile.create(title: Faker::Book.title,
                         description: Faker::Book.genre,
                         depositor_id: collection_users.sample&.id,
@@ -398,7 +381,7 @@ namespace :dummy_data_generator do
 
   desc "creates non-admin users"
   task :non_admin_users => :environment do
-    50.times do
+    275.times do
       user = User.create(name: Faker::Name.unique.name,
                   email: Faker::Internet.email,
                   bio: Faker::Lorem.paragraph,
