@@ -84,35 +84,24 @@ namespace :dummy_data_generator do
     # e.g. `Project.where.missing(:project_members)`
     Project.all.each do |project|
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
-      # 2025: Commented out "contributors" because a project should only have "administrators" and "collaborators"
-      #num_contributors = Random.rand(5)   # 0 to 4
-      num_collaborators = Random.rand(6)  # 0 to 5
-      num_owners = 1                      # 1
+      num_contributors = Random.rand(5)   # 0 to 4
+      num_owners = 1 + Random.rand(3)     # 1 to 3
 
-      # contributors
-      # has a TAPAS account and either creates or contributes to a TAPAS project
-      #num_contributors.times do
-      #  user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
-
-      #  ProjectMember.create(project_id: project.id,
-      #                       user_id: user_id,
-      #                       role: 'contributor'
-      #  )
-      #end
-
-      # collaborator
-      # has editorial access to a TAPAS project but is not the owner
-      num_collaborators.times do
+      # contributor
+      # has access to a TAPAS project but is not the owner
+      # can create core files but not collections
+      num_contributors.times do
         user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
 
         ProjectMember.create(project_id: project.id,
                              user_id: user_id,
-                             role: 'collaborator'
+                             role: 'contributor'
         )
       end
 
       # project owners
-      # has created the project in question and has responsibility for it
+      # has full edit access for the project
+      # can create collections and core files
       num_owners.times do
         user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
 
@@ -128,9 +117,10 @@ namespace :dummy_data_generator do
 
   def create_collections
     Project.all.each do |project|
-      project_users = project.members.values.flatten.shuffle
+      project_owners = project.owner.flatten.shuffle
       older_collections = project.collections.length
-      num_collections = Random.rand(6) # 0 to 5
+      is_empty = Random.rand(101) >= 95  # Very low chance for a project to have 0 collections
+      num_collections = is_empty ? 0 : 1 + Random.rand(5) # 0 to 5
 
       num_collections.times do
         # If the project is public, the collection can be public or private.
@@ -138,7 +128,7 @@ namespace :dummy_data_generator do
         visibility = project.is_public ? [true, false].sample : false
         collection = Collection.create(title: Faker::Food.dish,
                                    description: Faker::GreekPhilosophers.quote,
-                                   depositor_id: project_users.sample&.id,
+                                   depositor_id: project_owners.sample&.id,
                                    project_id: project.id,
                                    is_public: visibility
         )
@@ -148,56 +138,48 @@ namespace :dummy_data_generator do
       end
     end
   end
+  
+  def create_new_core_file(collection, users, ography_type = nil)
+    project = collection.project
+    visibility = collection.is_public
+    core_file = CoreFile.create(title: Faker::Book.title,
+                    description: Faker::Book.genre,
+                    depositor_id: users.sample&.id,
+                    collections: [collection].compact,
+                    is_public: visibility ? [visibility, !visibility].sample : visibility,
+                    tei_authors: Faker::Creature.name,
+                    ography_type: ography_type
+    )
+
+    # Attach TEI file (required for non-ography files)
+    attach_tei_file(core_file)
+
+    if core_file.save
+      #puts "Core file #{core_file.id} created within Collection #{collection.id}"
+      # record_image(core_file)
+    else
+      puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
+    end
+  end
 
   def create_core_files
     Collection.all.each do |collection|
-      project = collection.project
-      collection_users = project.members.values.flatten.shuffle
-      visibility = collection.is_public
+      collection_users = collection.project.members.values.flatten.shuffle
       ography_types = CoreFile.all_ography_types
       older_core_files = collection.core_files.length
       num_core_files = Random.rand(51) # 0 to 50
+      num_ography_files = Random.rand(3) # 0 to 2
 
       num_core_files.times do
-        core_file = CoreFile.create(title: Faker::Book.title,
-                        description: Faker::Book.genre,
-                        depositor_id: collection_users.sample&.id,
-                        collections: [collection].compact,
-                        is_public: visibility ? [visibility, !visibility].sample : visibility,
-                        tei_authors: Faker::Creature.name
-        )
-
-        # Attach TEI file (required for non-ography files)
-        attach_tei_file(core_file)
-
-        if core_file.save
-          #puts "Core file #{core_file.id} created within Collection #{collection.id}"
-          # record_image(core_file)
-        else
-          puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
-        end
+        create_new_core_file(collection, collection_users)
       end
 
-      # Create 2 ography support files (don't need TEI)
-      2.times do
-        core_file = CoreFile.create(title: Faker::Book.title,
-                        description: Faker::Book.genre,
-                        depositor_id: collection_users.sample&.id,
-                        collections: [collection].compact,
-                        is_public: visibility,
-                        ography_type: ography_types.sample,
-                        tei_authors: Faker::Artist.name
-        )
-
-        if core_file.persisted?
-          puts "Ography file #{core_file.id} (#{core_file.ography_type}) created within Collection #{collection.id}"
-          sleep 0.3  # Longer delay
-        else
-          puts "Create Ography Files task failed: #{core_file.errors.full_messages.join(', ')}"
-        end
+      # Create 0 to 2 ography support files
+      num_ography_files.times do
+        create_new_core_file(collection, collection_users, ography_types.sample)
       end
       
-      puts "Created "+ (collection.core_files.length - older_core_files).to_s + " core files within Collection #{collection.id}"
+      puts "Created "+ (collection.core_files.reload.size - older_core_files).to_s + " core files within Collection #{collection.id}"
 
       # Clear connection pool after each collection
       ActiveRecord::Base.connection_pool.release_connection
