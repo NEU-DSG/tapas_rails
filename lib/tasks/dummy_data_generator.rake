@@ -325,8 +325,8 @@ namespace :dummy_data_generator do
     if Project.count == num_projects + older_projects
       puts "#{ num_projects.to_s } Projects created."
     else
-      numNew = Project.count - older_projects
-      puts "WARNING: #{numNew} projects created, expected #{num_projects + older_projects}"
+      num_new = Project.count - older_projects
+      puts "WARNING: #{num_new} projects created, expected #{num_projects + older_projects}"
     end
   end
 
@@ -391,14 +391,23 @@ namespace :dummy_data_generator do
 
   desc "creates non-admin users"
   task :non_admin_users => :environment do
-    275.times do
+    # Check the number of Users we had before creating new ones
+    older_users = User.count
+    num_new_users = 275
+    
+    num_new_users.times do
       user = User.create(name: Faker::Name.unique.name,
                   email: Faker::Internet.email,
                   bio: Faker::Lorem.paragraph,
                   password: Faker::Internet.password
       )
-
-      puts "Non-admin user #{user.id} has been created." unless user.nil?
+    end
+    
+    if User.count == older_users + num_new_users
+      puts "Created #{num_new_users} regular TAPAS users"
+    else
+      num_new = User.count - older_projects
+      puts "WARNING: #{num_new} users created, expected #{num_new_users + older_users}"
     end
   end
 
