@@ -83,6 +83,7 @@ namespace :dummy_data_generator do
     # NOTE: Getting projects with no members will be much easier to do in Rails 6.1+, 
     # e.g. `Project.where.missing(:project_members)`
     Project.all.each do |project|
+      puts "Creating users for project #{project.id}:"
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
       available_users = non_admin_ids #- ProjectMember.all.map(&:user_id)
       num_contributors = Random.rand(13)   # 0 to 12
@@ -93,8 +94,8 @@ namespace :dummy_data_generator do
       # can create collections and core files
       # Start with the project depositor.
       ProjectMember.create(project_id: project.id,
-                            user_id: project.depositor_id,
-                            role: 'owner'
+                           user_id: project.depositor_id,
+                           role: 'owner'
       )
       # Remove the depositor from the array of available users.
       available_users.delete(project.depositor_id)
@@ -121,15 +122,16 @@ namespace :dummy_data_generator do
         )
       end
 
-      puts "#{project.owner.flatten.length} project owners created for #{project.__id__}"
+      puts "   #{project.owner.flatten.length} project owner(s)"
       if project.contributors
-        puts "#{project.contributors.flatten.length} project contributors created for #{project.__id__}"
+        puts "   #{project.contributors.flatten.length} project contributor(s)"
       end
     end
   end
 
   def create_collections
     Project.all.each do |project|
+      puts "Creating collections for project #{project.id}"
       project_owners = project.owner.flatten.shuffle
       older_collections = project.collections.length
       is_empty = Random.rand(101) >= 95  # Very low chance for a project to have 0 collections
@@ -146,12 +148,15 @@ namespace :dummy_data_generator do
                                    is_public: visibility
         )
 
-        puts (visibility ? "Public" : "Private") + 
-          " collection #{collection.id}: #{collection.title} created for Project #{project.id}."
+        puts "   " + (visibility ? "Public" : "Private") 
+          + " collection #{collection.id}: #{collection.title}"
       end
     end
+    
+    puts "Collection creation complete!"
   end
   
+  # Create a single new Core File
   def create_new_core_file(collection, users, ography_type = nil)
     project = collection.project
     visibility = collection.is_public
@@ -171,12 +176,13 @@ namespace :dummy_data_generator do
       #puts "Core file #{core_file.id} created within Collection #{collection.id}"
       # record_image(core_file)
     else
-      puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
+      puts "Create Core File task failed: #{core_file.errors.full_messages.join(', ')}"
     end
   end
 
   def create_core_files
     Collection.all.each do |collection|
+      puts "Creating core files for collection #{collection.id} in project #{collection.project.id}"
       collection_users = collection.project.members.values.flatten.shuffle
       ography_types = CoreFile.all_ography_types
       older_core_files = collection.core_files.length
@@ -192,7 +198,7 @@ namespace :dummy_data_generator do
         create_new_core_file(collection, collection_users, ography_types.sample)
       end
       
-      puts "Created "+ (collection.core_files.reload.size - older_core_files).to_s + " core files within Collection #{collection.id}"
+      puts "   Created "+ (collection.core_files.reload.size - older_core_files).to_s + " core files"
 
       # Clear connection pool after each collection
       ActiveRecord::Base.connection_pool.release_connection
@@ -316,8 +322,12 @@ namespace :dummy_data_generator do
       )
     end
 
-    puts Project.count == num_projects + older_projects ? num_projects.to_s + ' Projects created.' 
-          : '"Create Projects" task failed.'
+    if Project.count == num_projects + older_projects
+      puts "#{ num_projects.to_s } Projects created."
+    else
+      numNew = Project.count - older_projects
+      puts "WARNING: #{numNew} projects created, expected #{num_projects + older_projects}"
+    end
   end
 
   desc 'creates project members'
