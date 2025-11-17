@@ -62,9 +62,27 @@ class CoreFilesController < ApplicationController
   end
 
   def create
-    file = CoreFile.create!(core_file_params.merge({ depositor_id: current_user.id }))
+    @core_file = CoreFile.new(core_file_params.merge({ depositor_id: current_user.id }))
 
-    redirect_to file
+    if @core_file.save
+      redirect_to @core_file, notice: "CoreFile created successfully"
+    else
+      @collections = Collection.accessible_by(current_ability)
+      @users = User.order(:name)
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    @core_file = CoreFile.find(params[:id])
+
+    if @core_file.update(core_file_params)
+      redirect_to @core_file, notice: "CoreFile updated successfully"
+    else
+      @collections = @core_file.project&.collections || Collection.accessible_by(current_ability)
+      @users = @core_file.project&.users || User.order(:name)
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   def destroy
@@ -82,14 +100,6 @@ class CoreFilesController < ApplicationController
     @collections = @core_file.project.collections
     @users = @core_file.project.users
     @page_title = "Edit #{@core_file.title}"
-  end
-
-  #This method contains the logic for editing/submission of edit form
-  def update
-    cf = CoreFile.find(params[:id])
-    cf.update(core_file_params)
-
-    redirect_to cf
   end
 
   def view_package_html
