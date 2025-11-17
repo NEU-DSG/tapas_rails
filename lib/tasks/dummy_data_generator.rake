@@ -84,26 +84,24 @@ namespace :dummy_data_generator do
     # e.g. `Project.where.missing(:project_members)`
     Project.all.each do |project|
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
-      num_contributors = Random.rand(5)   # 0 to 4
-      num_owners = 1 + Random.rand(3)     # 1 to 3
-
-      # contributor
-      # has access to a TAPAS project but is not the owner
-      # can create core files but not collections
-      num_contributors.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
-
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'contributor'
-        )
-      end
+      available_users = non_admin_ids #- ProjectMember.all.map(&:user_id)
+      num_contributors = Random.rand(13)   # 0 to 12
+      num_owners = Random.rand(6)   # 0 to 5, plus the depositor
 
       # project owners
       # has full edit access for the project
       # can create collections and core files
+      # Start with the project depositor.
+      ProjectMember.create(project_id: project.id,
+                            user_id: project.depositor_id,
+                            role: 'owner'
+      )
+      # Remove the depositor from the array of available users.
+      available_users.delete(project.depositor_id)
+      # Create any additional owners.
       num_owners.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+        user_id = available_users.sample
+        available_users.delete(user_id)
 
         ProjectMember.create(project_id: project.id,
                              user_id: user_id,
@@ -111,7 +109,22 @@ namespace :dummy_data_generator do
         )
       end
 
-      puts "#{project.members.values.flatten.count} project members created for #{project.__id__}: #{project.title}."
+      # contributor
+      # has access to a TAPAS project but is not the owner
+      # can create core files but not collections
+      num_contributors.times do
+        user_id = available_users.sample
+
+        ProjectMember.create(project_id: project.id,
+                             user_id: user_id,
+                             role: 'contributor'
+        )
+      end
+
+      puts "#{project.owner.flatten.length} project owners created for #{project.__id__}"
+      if project.contributors
+        puts "#{project.contributors.flatten.length} project contributors created for #{project.__id__}"
+      end
     end
   end
 
