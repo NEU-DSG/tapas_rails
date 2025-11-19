@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   include ApiAccessible
-  include ListResources
+  include Sortable
 
   # figure out why this controller doesn't inherit from CatalogController the way CoreFilesController does
 
@@ -11,8 +11,8 @@ class ProjectsController < ApplicationController
   # self.search_params_logic += [:add_access_controls_to_solr_params]
   
   def browse
-    # The setup method defines @sort_method and @sort_direction for ListResource's sort_string() and the
-    # Browse views. To the default sort methods we add the sort method "total_tei".
+    # The setup method defines @sort_method and @sort_direction for Sortable's sort_string() and the
+    # Browse views. The sort method "total_tei" is added to the default sort methods.
     set_sorting([["number of TEI documents", 'total_tei']])
     @projects = Project.publicly_visible.includes(:collections, :core_files, :project_members)
     @projects = @sort_method == 'total_tei' ? @projects.sort_by { |p| p.core_files.count } : @projects.order(sort_string)

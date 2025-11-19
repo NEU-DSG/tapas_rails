@@ -1,5 +1,5 @@
-# Methods common to the Browse pages (and possibly Search)
-module ListResources
+# Methods common to pages that list sorted resources (Browse, Search)
+module Sortable
   extend ActiveSupport::Concern
   
   SORT_OPTIONS = [
