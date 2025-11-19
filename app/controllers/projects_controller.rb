@@ -12,9 +12,10 @@ class ProjectsController < ApplicationController
   
   def browse
     # The setup method defines @sort_method and @sort_direction for ListResource's sort_string() and the
-    # Browse views.
-    set_up_browse
-    @projects = Project.publicly_visible.includes(:collections, :core_files, :project_members).order(sort_string)
+    # Browse views. To the default sort methods we add the sort method "total_tei".
+    set_sorting([["number of TEI documents", 'total_tei']])
+    @projects = Project.publicly_visible.includes(:collections, :core_files, :project_members)
+    @projects = @sort_method == 'total_tei' ? @projects.sort_by { |p| p.core_files.count } : @projects.order(sort_string)
     render 'browse'
   end
   
