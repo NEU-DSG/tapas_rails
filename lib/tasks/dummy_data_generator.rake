@@ -360,19 +360,25 @@ namespace :dummy_data_generator do
     end
   end
 
-  desc "creates admin user"
+  desc "creates the admin user, if it doesn't exist"
   task :admin_user => :environment do
     email = ENV.fetch('DUMMY_ADMIN_EMAIL')
-    password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
-
-    user = User.create(name: 'Admin',
-                email: email,
-                bio: Faker::Lorem.paragraph,
-                password: password,
-                admin_at: Time.now
-    )
-
-    puts "Admin user #{user.id} has been created." unless user.nil?
+    
+    # Check for an existing user with the dummy admin email address before creating a new user.
+    if  !User.where(email: email).exists?
+      password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
+  
+      user = User.create(name: 'Admin',
+                  email: email,
+                  bio: Faker::Lorem.paragraph,
+                  password: password,
+                  admin_at: Time.now
+      )
+  
+      puts "Admin user #{user.id} has been created." unless user.nil?
+    else
+      puts "Admin user already exists."
+    end
   end
 
   desc "creates debug non-admin user"
