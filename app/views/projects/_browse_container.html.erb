@@ -4,8 +4,8 @@
 <li class="container-fluid tapas-container project tapas-container-collapsed">
   <span class="tapas-container-heading">
     
-    <% if item.image_file&.attached? %>
-      <%= image_tag url_for(item.image_file), alt: "", class: "thumbnail" %>
+    <% if item.image_file&.file&.attached? %>
+      <%= image_tag url_for(item.image_file.file), alt: "", class: "thumbnail" %>
     <% else %>
       <%= image_tag "tapas-logo-opaque.png", alt: "", class: "thumbnail" %>
     <% end %>

@@ -18,10 +18,10 @@
   %div.col-md-3
     %dt= "Project"
     %dd= link_to parent.title, parent
-    - if @collection.image_file.nil?
+    - if @collection.image_file&.file&.attached?
+      = image_tag url_for(@collection.image_file.file)
+    - else
       = image_tag "tapas-logo-opaque.png"
-    -else
-      = image_tag url_for(@collection.image_file)
     - if !@collection.description.blank?
       %dt= "Description"
       %dd= @collection.description
@@ -46,11 +46,11 @@
                 - if current_user_can? :manage, record
                   -#%i.fa.fa-pencil
                   %a{href:edit_core_file_path(record), class: ['btn','btn-xs','btn-default','pull-right']}= "Edit"
-                - if !record.image_file.attached?
-                  = image_tag "tapas-logo-opaque.png"
-                -else
+                - if record.image_file&.file&.attached?
                   -# - TODO: add logic to resize thumbnail image
-                  = image_tag url_for(record.image_file)
+                  = image_tag url_for(record.image_file.file)
+                - else
+                  = image_tag "tapas-logo-opaque.png"
                   %h4= link_to record.title, record
                 - if record.file_type != :tei_content
                   %span.btn-xs.btn.btn-info= "Support File"

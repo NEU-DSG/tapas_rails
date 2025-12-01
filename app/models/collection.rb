@@ -6,7 +6,8 @@ class Collection < ApplicationRecord
 
   # associations
   has_one :image_file, as: :imageable
-  has_and_belongs_to_many :core_files
+  has_many :collections_core_files, dependent: :destroy
+  has_many :core_files, through: :collections_core_files
   belongs_to :depositor, class_name: "User"
   belongs_to :project
 
@@ -20,7 +21,7 @@ class Collection < ApplicationRecord
 
   # returns url for attached thumbnail
   def thumbnail
-    self.image_file.attached? ? url_for(self.image_file) : nil
+    image_file&.file&.attached? ? Rails.application.routes.url_helpers.url_for(image_file.file) : nil
   end
 
   def self.phantom_collection
@@ -88,14 +89,7 @@ class Collection < ApplicationRecord
     solr_doc
   end
 
-  def project
-    # this assumes collections can't be shared across different projects even if the same individual is associated with different projects
-    Project.find(project_id)
-  end
-
-  def core_files
-    CoreFile.all.select { |cf| cf.collections.include?(self) || cf.collection_ids.include?(id) }
-  end
+  # Removed custom project and core_files methods - now handled by belongs_to and has_many associations
 
   # def remove_thumbnail
   #   self.thumbnails = []

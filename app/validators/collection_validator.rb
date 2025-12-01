@@ -30,7 +30,7 @@ class CollectionValidator
   end
 
   def validate_thumbnail
-    validate_file_and_type(:thumbnail, %w(png jpeg jpg))
+    validate_file_and_type(:thumbnail, %w(jpg png jpeg))
   end
 
   def validate_access

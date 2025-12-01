@@ -26,7 +26,7 @@
               =image_tag url_for(@collection.thumbnail)
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", { :checked => false }
-            = f.file_field :thumbnails, accept: ".jpeg, .jpg, .png", direct_upload: true
+            = f.file_field :thumbnails, direct_upload: true
 
 
     %hr

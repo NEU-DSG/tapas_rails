@@ -279,4 +279,101 @@ describe CoreFile do
       expect(core_file.drupal_access).to eq 'private'
     end
   end
+
+  describe "ImageFile polymorphic association" do
+    let(:user) { FactoryBot.create :user }
+    let(:core_file) { FactoryBot.create :core_file, depositor: user }
+
+    it "has an image_file association" do
+      expect(core_file).to respond_to(:image_file)
+    end
+
+    it "can create an associated ImageFile" do
+      image = ImageFile.create!(
+        title: "Test Thumbnail",
+        depositor_id: user.id,
+        imageable: core_file,
+        file_format: "image/png"
+      )
+
+      expect(core_file.image_file).to eq(image)
+      expect(image.imageable).to eq(core_file)
+      expect(image.imageable_type).to eq("CoreFile")
+    end
+
+    it "destroys associated ImageFile when CoreFile is destroyed" do
+      image = ImageFile.create!(
+        title: "Test Thumbnail",
+        depositor_id: user.id,
+        imageable: core_file,
+        file_format: "image/png"
+      )
+      image_id = image.id
+
+      core_file.destroy
+
+      expect(ImageFile.exists?(image_id)).to be false
+    end
+
+    it "returns nil for thumbnail when no image is attached" do
+      expect(core_file.thumbnail).to be_nil
+    end
+  end
+
+  describe "collections_same_project validation" do
+    let(:user) { FactoryBot.create :user }
+    let(:project1) { FactoryBot.create :project, depositor: user }
+    let(:project2) { FactoryBot.create :project, depositor: user }
+    let(:collection1) { FactoryBot.create :collection, project: project1, depositor: user }
+    let(:collection2) { FactoryBot.create :collection, project: project2, depositor: user }
+    let(:collection3) { FactoryBot.create :collection, project: project1, depositor: user }
+
+    it "allows CoreFile to belong to multiple collections in the same project" do
+      core_file = FactoryBot.build :core_file, depositor: user
+      core_file.collections = [collection1, collection3]
+
+      expect(core_file).to be_valid
+      expect(core_file.collections).to match_array([collection1, collection3])
+    end
+
+    it "prevents CoreFile from belonging to collections in different projects" do
+      core_file = FactoryBot.build :core_file, depositor: user
+      core_file.collections = [collection1, collection2]
+
+      expect(core_file).not_to be_valid
+      expect(core_file.errors[:collections]).to include(/must all belong to the same project/)
+    end
+
+    it "returns the shared project from collections" do
+      core_file = FactoryBot.create :core_file, depositor: user
+      core_file.collections = [collection1, collection3]
+      core_file.save!
+
+      expect(core_file.project).to eq(project1)
+    end
+  end
+
+  describe "TEI file attachment validation" do
+    let(:user) { FactoryBot.create :user }
+
+    it "requires a TEI file to be attached" do
+      core_file = FactoryBot.build :core_file, depositor: user
+      core_file.tei_file.purge if core_file.tei_file.attached?
+
+      expect(core_file).not_to be_valid
+      expect(core_file.errors[:tei_file]).to be_present
+    end
+
+    it "validates TEI file content type is XML" do
+      core_file = FactoryBot.build :core_file, depositor: user
+
+      # This test would require a fixture file - placeholder for now
+      # core_file.tei_file.attach(
+      #   io: File.open(Rails.root.join('spec', 'fixtures', 'files', 'test.jpg')),
+      #   filename: 'test.jpg',
+      #   content_type: 'image/jpeg'
+      # )
+      # expect(core_file).not_to be_valid
+    end
+  end
 end

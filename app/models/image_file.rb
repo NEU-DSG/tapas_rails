@@ -15,6 +15,16 @@ class ImageFile < ApplicationRecord
   def file_format
     return unless file.attached?
 
-    errors.add(:image, "must be a JPEG, JPG, GIF, or PNG file") unless content_type.in?(%w[image/jpeg image/jpg image/gif image/png])
+    valid_types = %w[
+      image/jpeg
+      image/gif
+      image/png
+      image/svg+xml
+      application/pdf
+    ]
+
+    unless content_type.in?(valid_types)
+      errors.add(:image, "must be a JPEG, GIF, PNG, SVG, or PDF file")
+    end
   end
 end

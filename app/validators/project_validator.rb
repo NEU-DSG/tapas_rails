@@ -27,7 +27,7 @@ class ProjectValidator
   end
 
   def validate_thumbnail
-    validate_file_and_type(:thumbnail, %w(png jpg jpeg))
+    validate_file_and_type(:thumbnail, %w(jpg png jpeg))
   end
 
   def validate_description
