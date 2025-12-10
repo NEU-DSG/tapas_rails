@@ -243,8 +243,9 @@ class CoreFilesController < ApplicationController
       :depositor,
       :description,
       :featured,
+      :is_public,
       :title,
-      :collections => [],
+      :collection_ids => [],
       :tei_authors => [],
       :tei_contributors => [],
       :thumbnails => []

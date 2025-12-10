@@ -4,6 +4,8 @@ class ImageFile < ApplicationRecord
   # belongs_to :depositor, class_name: "User"
   has_one_attached :file
 
+  #TODO: create a constant accessible throughout the app that returns an array with all acceptable image file types
+
   # validations
   validates_presence_of :title, :depositor_id
   validate :file_format

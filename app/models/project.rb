@@ -18,6 +18,18 @@ class Project < ApplicationRecord
   # files should be added to a new collection in that project, should delete the record associated with core file on the
   # project_core_files join table;
 
+  # Prevent direct manipulation of core_files association
+  # Core files should be added to projects via collections only
+  # Note: The << operator cannot be easily overridden on has_many :through associations
+  # The CoreFilesProject join model has validations that prevent direct manipulation
+
+  def core_files=(core_files_array)
+    raise ActiveRecord::RecordInvalid,
+          "Cannot assign core files directly to projects. "
+          "Add core files to collections within this project instead. "
+          "The project-core_file association is automatically maintained based on collections."
+  end
+
   # callbacks
   after_save :index_record
   after_update :update_record
