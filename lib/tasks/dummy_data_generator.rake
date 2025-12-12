@@ -149,17 +149,14 @@ namespace :dummy_data_generator do
   end
 
   def create_core_files
-    Collection.all.shuffle.each do |collection|
-      file_count_range = 1..10
-      file_counter = file_count_range.to_a.sample
+    Collection.all.each do |collection|
       project = collection.project
       collection_users = project.members.values.flatten.shuffle
       visibility = collection.is_public
       ography_types = CoreFile.all_ography_types
-      file_count = file_counter.even? ? file_counter : file_counter + 1
 
-        # Create regular TEI content files
-      file_count.times do |i|
+      # Create 3 regular TEI content files
+      3.times do |i|
         core_file = CoreFile.new(title: Faker::Book.title,
                         description: Faker::Book.genre,
                         depositor_id: collection_users.sample&.id,
@@ -181,7 +178,7 @@ namespace :dummy_data_generator do
       end
 
       # Create 3 ography support files (don't need TEI)
-      file_count.times do
+      2.times do
         core_file = CoreFile.create(title: Faker::Book.title,
                         description: Faker::Book.genre,
                         depositor_id: collection_users.sample&.id,
