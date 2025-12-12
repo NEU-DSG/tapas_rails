@@ -8,8 +8,8 @@ class CoreFile < ApplicationRecord
   belongs_to :depositor, class_name: "User"
   has_many :collections_core_files, dependent: :destroy
   has_many :collections, through: :collections_core_files
-  has_many :core_files_projects, dependent: :destroy
-  has_many :projects, through: :core_files_projects
+  has_one :core_files_project, dependent: :destroy
+  has_one :project, through: :core_files_project
   # has_and_belongs_to_many :users
   has_one_attached :tei_file
   has_one :image_file, as: :imageable, dependent: :destroy
@@ -21,8 +21,8 @@ class CoreFile < ApplicationRecord
   validate :tei_file_attached, unless: :is_ography?
 
   # Callbacks
-  after_save :index_core_file
   after_save :sync_project_association
+  after_save :index_core_file
   #TODO: add a callback to locate the indexed record by both active_record_model_ssi and id before deleting
   after_update :update_indexed_core_file
   # these strings refer to the role of the file in collection(s);
@@ -41,11 +41,6 @@ class CoreFile < ApplicationRecord
   #     collections << Collection.find(collection_id)
   #   end
   # end
-
-  def project
-    # All collections that a CoreFile belongs to will belong to the same project
-    collections.first&.project
-  end
 
   # def collections
   #   collection_ids.map { |collection_id| Collection.find(collection_id) }
@@ -167,7 +162,7 @@ class CoreFile < ApplicationRecord
       'depositor_tesim' => depositor_id,
       'table_id_ssi' => id,
       'id' => "#{self.class.to_s}_#{id}",
-      'edit_access_person_ssim' => project.members.empty? ? depositor_id : project.owner[0].id,
+      'edit_access_person_ssim' => (project&.members&.dig('owner', 0)&.id || depositor_id),
       # these two replace the is_member_of_ssim field
       'collections_ssim' => self.collections.map(&:id),
       'projects_ssim' => self.collections.map(&:project_id),
@@ -257,21 +252,32 @@ class CoreFile < ApplicationRecord
   end
 
   def sync_project_association
-    # Maintain the core_files_projects join table in sync with collections
+    # Maintain the core_files_project join table in sync with collections
     # All collections must belong to the same project (enforced by validation)
     return unless collections.any?
 
-    project = collections.first.project
-    return unless project
+    collection_project = collections.first.project
 
-    # Add project association if not already present
-    unless projects.include?(project)
-      projects << project
+    if collection_project.nil?
+      raise ActiveRecord::RecordInvalid, "CoreFile #{id} has collections but collection #{collections.first.id} has no associated project"
     end
 
-    # Remove any project associations that don't match the collections' project
-    projects.where.not(id: project.id).each do |old_project|
-      projects.delete(old_project)
+    # Directly manage the join table record instead of using the association setter
+    # Find or create the CoreFilesProject record
+    existing_join = CoreFilesProject.find_by(core_file_id: id)
+
+    if existing_join
+      # Update if the project has changed
+      if existing_join.project_id != collection_project.id
+        existing_join.update_columns(project_id: collection_project.id)
+      end
+    else
+      # Create new join record, bypassing validations that check call stack
+      join_record = CoreFilesProject.new(
+        core_file_id: id,
+        project_id: collection_project.id
+      )
+      join_record.save(validate: false)
     end
   end
 

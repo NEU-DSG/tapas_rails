@@ -22,8 +22,8 @@
         .form-group
           = f.label :thumbnail, "Thumbnail", class: "control-label col-md-2"
           .col-md-6
-            - if @collection.thumbnail.attached?
-              =image_tag url_for(@collection.thumbnail)
+            - if @collection.image_file&.file&.attached?
+              =image_tag @collection.thumbnail
               = f.label :remove_thumbnail, "Remove Thumbnail"
               = f.check_box "remove_thumbnail", { :checked => false }
             = f.file_field :thumbnails, direct_upload: true
