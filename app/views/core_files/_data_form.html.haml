@@ -26,10 +26,10 @@
             %p.small.help-block="This field accepts plain text"
 
         .form-group
-          = f.label :collections, "Collections", class: "control-label col-md-2"
+          = f.label :collection_ids, "Collections", class: "control-label col-md-2"
           .col-md-6
             %span.collection
-              = f.select :collections, options_from_collection_for_select(@collections, 'id', 'title', @core_file.collections.map(&:id)), {}, {class: "form-control", multiple: true}
+              = f.select :collection_ids, options_from_collection_for_select(@collections, 'id', 'title', @core_file.collection_ids), {}, {class: "form-control", multiple: true}
 
         -# TODO: (charles) Figure out why we need Ography Type and reimplement it
         -# .form-group

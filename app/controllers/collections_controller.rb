@@ -34,7 +34,8 @@ class CollectionsController < ApplicationController
 
   def new
     @page_title = "Create New Collection"
-    @projects = Project.joins(:project_members).where(project_members: { user_id: current_user.id, role: ["editor", "admin"] })
+    @projects = Project.joins(:project_members).where(project_members: { user_id: current_user.id, role: ["owner", "collaborator"] })
+    @project = Project.find(params[:project]) if params[:project]
     @collection = Collection.new(project: @project)
   end
 
