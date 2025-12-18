@@ -2,6 +2,8 @@
 module Sortable
   extend ActiveSupport::Concern
   
+  private
+  
   SORT_OPTIONS = [
     ["date created", 'created_at'], 
     ["date updated", 'updated_at'], 
@@ -17,21 +19,28 @@ module Sortable
       @sort_options.concat(add_sort_options)
     end
     
-    # If the user requested a valid sort method, use that. Otherwise, use the default method.
-    sort_param = browse_params[:sort]
-    @sort_method = is_valid_sort_method(sort_param) ? sort_param : DEFAULT_SORT
-    
-    # If the user requested a valid sort direction, use that.
-    order_param = browse_params[:sort_direction]
-    @sort_direction = 
-      is_valid_sort_direction(order_param) ? order_param.to_s.upcase :
+    @sort_method = sort_method
+    @sort_direction = sort_direction
+  end
+  
+  # Choose a sort order direction.
+  def sort_direction(order_param = browse_params[:sort_direction])
+    # If the user requested a valid sort direction, use the uppercased value.
+    is_valid_sort_direction(order_param) ? order_param.to_s.upcase
       # If there isn't a given sort order but the method is "updated_at", sort the newest first.
-      # Otherwise, use ascending order.
-      @sort_method == 'updated_at' ? 'DESC' : 'ASC'
+      : @sort_method == 'updated_at' ? 'DESC'
+        # Otherwise, use ascending order.
+        : 'ASC'
+  end
+  
+  # Choose a sort method.
+  def sort_method(sort_param = browse_params[:sort])
+    # If the user requested a valid sort method, use that. Otherwise, use the default method.
+    is_valid_sort_method(sort_param) ? sort_param : DEFAULT_SORT
   end
   
   def sort_string
-    @sort_method+" "+@sort_direction
+    sort_method+" "+sort_direction
   end
   
   def allowed_sort_methods

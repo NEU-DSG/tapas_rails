@@ -365,7 +365,7 @@ namespace :dummy_data_generator do
     email = ENV.fetch('DUMMY_ADMIN_EMAIL')
     
     # Check for an existing user with the dummy admin email address before creating a new user.
-    if  !User.where(email: email).exists?
+    if  User.where(email: email).empty?
       password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
   
       user = User.create(name: 'Admin',
