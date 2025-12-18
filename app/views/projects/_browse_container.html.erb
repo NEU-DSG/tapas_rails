@@ -20,21 +20,16 @@
   <%= tag.dl(id: collapse_id, class: ['tapas-container-content', 'row', 'collapse']) do -%>
     <dt class="col-md-3">Created at</dt>
       <dd class="col-md-9">
-        <%= item.created_at %>
+        <%= item.created_at.strftime('%Y-%m-%d') %>
       </dd>
     <dt class="col-md-3">Last updated</dt>
       <dd class="col-md-9">
-        <%= item.updated_at %>
+        <%= item.updated_at.strftime('%Y-%m-%d') %>
       </dd>
     <dt class="col-md-3">Description</dt>
       <dd class="col-md-9">
         <%= item.description %>
       </dd>
-    <!-- NOTE: The functional spec currently (2025-10-15) implies that there is only ever one project 
-      owner. There is an issue open to refine and confirm project membership roles: 
-      https://github.com/NEU-DSG/tapas_rails/issues/111 . Until this is resolved and the dummy data 
-      script is updated, the only way to test the plural form of this field is to manually add 1+ owner 
-      to a project, or temporarily change the dummy data script to do so programmatically. -->
     <% owners = item.owner.map { |user| user.name } %>
     <dt class="col-md-3">Project administrator<%= owners.length > 1 ? 's' : '' %></dt>
       <dd class="col-md-9">
