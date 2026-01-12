@@ -1,5 +1,6 @@
 class ProjectsController < ApplicationController
   include ApiAccessible
+  include Sortable
 
   # figure out why this controller doesn't inherit from CatalogController the way CoreFilesController does
 
@@ -10,7 +11,22 @@ class ProjectsController < ApplicationController
   # self.search_params_logic += [:add_access_controls_to_solr_params]
   
   def browse
-    @projects = Project.publicly_visible.includes(:collections, :core_files)
+    # The setup method defines @sort_method and @sort_direction for Sortable's sort_string() and the
+    # Browse views. The sort method "total_tei" is added to the default sort methods.
+    set_sorting([["number of TEI documents", 'total_tei']])
+    @projects = Project.publicly_visible.includes(:collections, :core_files, :project_members)
+    # TODO: The use of `sort_by` below requires all Projects and Core Files to be loaded into memory —
+    #   it won't scale. We need a simple, fast SQL or Solr query, which suggests that it might be useful 
+    #   to store the count of CoreFiles associated with Projects (and Collections), and keep it up to
+    #   date as CoreFiles are added or removed.
+    if @sort_method == 'total_tei'
+      @projects = @projects.sort_by { |p| p.core_files.publicly_visible.count }
+      if @sort_direction == 'DESC'
+        @projects = @projects.reverse
+      end
+    else
+      @projects = @projects.order(sort_string)
+    end
     render 'browse'
   end
   
@@ -100,35 +116,35 @@ class ProjectsController < ApplicationController
 
   protected
 
-  def can_edit?
-    project = Project.find(params[:id])
-    can? :manage, project
-  end
+    def can_edit?
+      project = Project.find(params[:id])
+      can? :manage, project
+    end
 
-  def can_read?
-    project = Project.find(params[:id])
-    can? :read, project
-  end
+    def can_read?
+      project = Project.find(params[:id])
+      can? :read, project
+    end
 
   private
 
-  def project_params
-    params
-      .require(:project)
-      .permit(
-        :description,
-        :image_file,
-        :title,
-        :is_public?,
-        :institution
-      )
-  end
+    def project_params
+      params
+        .require(:project)
+        .permit(
+          :description,
+          :image_file,
+          :title,
+          :is_public?,
+          :institution
+        )
+    end
 
-  def child_params
-    params.require(:project).permit(
-      :contributors => [],
-      :collaborators => [],
-      :owner => []
-    )
-  end
+    def child_params
+      params.require(:project).permit(
+        :contributors => [],
+        :collaborators => [],
+        :owner => []
+      )
+    end
 end

@@ -163,4 +163,10 @@ class Collection < ApplicationRecord
       end
     end
   end
+  
+  ###  SCOPES  ###
+
+  public
+
+  scope :publicly_visible, -> { where(is_public: true) }
 end

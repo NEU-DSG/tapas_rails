@@ -9,10 +9,13 @@
   :root {
     
     --tapas-border-color: #888;
+    --tapas-border-light: #CBCBCB;
     // Use Bootstrap's default border variables to keep things looking cohesive
     --tapas-border-radius: var(--bs-border-radius);
     
+    
     /* TAPAS-specific variables */
+    
     --tapas-block-main: white;
     --tapas-block-dark: #26333F;
     --tapas-block-mid: #3F5A74; /* originally #4E5D6C */
@@ -31,18 +34,9 @@
     
     --tapas-text-dark: #090909;
     --tapas-text-light: #EBEBEB;
+    --tapas-text-underline-thickness: 0.085rem;
     
     --tapas-transparency: rgba(0,0,0,0);
-    
-    /* Reset Bootstrap defaults: */
-    --bs-border-color: var(--tapas-border-color);
-    --bs-body-color: var(--tapas-text-dark);
-    .table {
-      --bs-table-striped-bg: var(--tapas-block-light);
-    }
-    .btn-primary {
-      --bs-btn-bg: var(--tapas-button-color);
-    }
   }
 
 
@@ -70,9 +64,8 @@ h1, .h1 {
 }
 
 a {
-  text-decoration: underline dotted;
+  text-decoration: underline dotted var(--tapas-text-underline-thickness);
   text-underline-offset: 0.25em;
-  text-decoration-thickness: 0.085rem;
   
   &:hover, &:focus {
     text-decoration-style: solid;
@@ -91,25 +84,6 @@ a,
 label {
   font-size: 1.15em;
 }
-
-ul.btn-list,
-ol.btn-list {
-  display: flex;
-  gap: 0.75em;
-  padding-left: 0.25rem;
-  
-  li {
-    list-style: none;
-  }
-} // end .btn-list
-
-form.sort-controls {
-  align-items: center;
-  display: flex;
-  gap: 0.75em;
-  height: 100%;
-  margin: 0 1rem;
-} // end form.sort-controls
 
 img.thumbnail {
   max-height: 3rem;
@@ -155,6 +129,13 @@ button.collapse-toggle {
  * BOOTSTRAP STYLE OVERRIDES
  */
 
+/* Set new values for Bootstrap's global CSS variables. */
+:root {
+  --bs-border-color: var(--tapas-border-color);
+  --bs-body-color: var(--tapas-text-dark);
+}
+
+
 @media (min-width: $medium-screen) {
   
   /* The sticky header is usually z-index 1020, but this cuts off open dropdown 
@@ -173,6 +154,10 @@ button.collapse-toggle {
     color: var(--tapas-text-dark);
   }
 } // end .alert
+  
+.btn-primary {
+  --bs-btn-bg: var(--tapas-button-color);
+}
 
 .card-sequence {
   display: flex;
@@ -218,6 +203,117 @@ h1, h2, h3, h4, h5, h6 {
     }
   } // end & .nav-link
 } // end .nav-tabs
+  
+.pagination {
+  --bs-pagination-active-bg: var(--tapas-block-main);
+  --bs-pagination-active-border-color: var(--tapas-border-color);
+  --bs-pagination-active-color: var(--tapas-text-dark);
+  --bs-pagination-hover-bg: var(--tapas-block-light);
+  --bs-pagination-hover-color: var(--tapas-link-hover);
+  
+  a.page-link {
+    transition: none;
+    
+    &:hover {
+      text-decoration: underline var(--tapas-text-underline-thickness);
+    }
+  } // end .pagination .page-link
+  
+  span.page-link.active {
+    cursor: default;
+  }
+} // end .pagination
+
+.table {
+  --bs-table-striped-bg: var(--tapas-block-light);
+}
+
+
+/*
+ * COMMON CONTENT CONTAINERS
+ */
+
+.flex-spaced {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75em;
+  justify-content: space-between;
+}
+
+ul.btn-list,
+ol.btn-list {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em 0.75em;
+  padding-left: 0.25rem;
+  
+  li {
+    list-style: none;
+  }
+} // end .btn-list
+
+/* The "inline-list" class is intended to add a little extra spacing between list 
+  items formatted as inline text. Note that this class should be used mostly for 
+  small snippets of text, such as names. */
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 0.65em;
+}
+ol.inline-list,
+ul.inline-list {
+  padding-left: 0;
+}
+
+.sidebar {
+  border: thin solid var(--tapas-border-light);
+  border-radius: var(--tapas-border-radius);
+  padding: 0.75em 1em;
+}
+
+form.sort-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75em;
+  height: 100%;
+  
+  @media screen and (min-width: $medium-screen) {
+    align-items: start;
+    flex-direction: column;
+  }
+  
+  > div {
+    display: flex;
+    gap: 0.35em;
+    
+    @media screen and (min-width: $medium-screen) {
+      flex-direction: column;
+      width: 100%;
+    }
+  } // form.sort-controls > div
+  
+  label {
+    //margin-left: 0.35em;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+  } // end form.sort-controls label
+  
+  /* Override the `width: 100%` rule set by Bootstrap, which will cut off part of 
+    the <option> text when inside a flexbox. */
+  .form-select {
+    width: unset;
+  }
+} // end form.sort-controls
+
+.pagination-container {
+  align-items: baseline;
+  display: flex;
+  gap: 0.75em;
+  justify-content: end;
+}
 
 
 /* 
@@ -363,8 +459,7 @@ h1, h2, h3, h4, h5, h6 {
   /* Breadcrumbs */
   nav.breadcrumbs {
     border-radius: var(--tapas-border-radius);
-    border: thin solid #DDD;
-    //background-color: #EBEBEB;
+    border: thin solid var(--tapas-border-light);
     font-weight: 400;
     margin-bottom: 1.5rem;
     padding: 0.25rem 0.75rem;
@@ -373,9 +468,6 @@ h1, h2, h3, h4, h5, h6 {
       margin-bottom: 0;
     }
   } // end .main-container nav.breadcrumbs
-  
-  
-  
   
   #main-content {
     
@@ -401,6 +493,53 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 2rem;
   }
 } // end .main-container
+
+
+/*
+ * BROWSE PAGE CONTENT
+ */
+
+.browse-content {
+  display: grid;
+  grid-gap: 1rem 1.5rem;
+  
+  @media screen and (min-width: $medium-screen) {
+    align-items: start;
+    grid-auto-columns: 2fr 4fr;
+    grid-template-areas: 
+      "heading  heading"
+      "summary  pagenav1"
+      "sidebar  list"
+      "sidebar  pagenav2";
+    
+    > h1 { grid-area: heading; }
+    > .pagination-summary { grid-area: summary; }
+    > .flex-spaced { grid-area: pagenav1; }
+    > .sidebar { grid-area: sidebar; }
+    > .container-sequence { grid-area: list; }
+    > .pagination-container:last-child { grid-area: pagenav2; }
+  } // end medium screen .browse-content
+  
+  @media screen and (min-width: $large-screen) {
+    grid-auto-columns: 1.5fr 5fr;
+    
+    input[type="submit"] {
+      max-width: 100px;
+    }
+  } // end large screen .browse-content
+  
+  > h1,
+  .btn-list,
+  .container-sequence,
+  .pagination-summary,
+  .pagination {
+    margin-bottom: 0;
+  }
+  
+  .pagination-summary {
+    align-self: center;
+  }
+} // end .browse-content
 
 
 /*
@@ -453,7 +592,7 @@ ol.container-sequence {
     
     .tapas-container-name {
       flex: 1 2 50%;
-      font-size: 1.75rem; // same size as <h3>
+      font-size: 1.5rem;
     }
     
     .tapas-container-info {

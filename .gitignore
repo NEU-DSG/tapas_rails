@@ -95,3 +95,6 @@ all-db_04102023.sql
 /.nvmrc
 /storage/
 /admin_documentation/
+
+# Ignore git patch files
+*.patch

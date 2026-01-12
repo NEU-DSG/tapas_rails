@@ -18,24 +18,45 @@
     </span>
   </span>
   <%= tag.dl(id: collapse_id, class: ['tapas-container-content', 'row', 'collapse']) do -%>
+    <dt class="col-md-3">Created at</dt>
+      <dd class="col-md-9">
+        <%= item.created_at.strftime('%Y-%m-%d') %>
+      </dd>
     <dt class="col-md-3">Last updated</dt>
       <dd class="col-md-9">
-        <%= item.updated_at %>
+        <%= item.updated_at.strftime('%Y-%m-%d') %>
       </dd>
     <dt class="col-md-3">Description</dt>
       <dd class="col-md-9">
         <%= item.description %>
       </dd>
-    <!--<dt class="col-md-3">Project administrator</dt>
-      <dd class="col-md-9"> </dd>
-      <dd class="offset-md-3 col-md-9"> </dd>-->
+    <% owners = item.owner.map { |user| user.name } %>
+    <dt class="col-md-3">Project administrator<%= owners.length > 1 ? 's' : '' %></dt>
+      <dd class="col-md-9">
+        <ul class="inline-list">
+          <!-- For each owner, list their name with a comma afterward. The last name in the array 
+            doesn't get a comma. -->
+          <% owners.each_with_index do |name, index| %>
+            <% is_final_name = index == (owners.length - 1) %>
+            <li>
+              <%= name + (is_final_name ? '' : ',') %>
+            </li>
+          <% end %>
+        </ul>
+      </dd>
+    <% if item.institution %>
+      <dt class="col-md-3">Institution</dt>
+        <dd class="col-md-9">
+          <%= item.institution %>
+        </dd>
+    <% end -%>
     <dt class="col-md-3">Number of collections</dt>
       <dd class="col-md-9">
-        <%= item.collections.count %>
+        <%= item.collections.publicly_visible.count %>
       </dd>
     <dt class="col-md-3">Number of documents</dt>
       <dd class="col-md-9">
-        <%= item.core_files.count %>
+        <%= item.core_files.publicly_visible.count %>
       </dd>
   <% end -%>
 </li>

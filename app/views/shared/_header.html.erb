@@ -15,7 +15,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <!-- TAPAS site navigation -->
-    <nav id="header-nav" class="collapse navbar-collapse">
+    <nav id="header-nav" class="collapse navbar-collapse" aria-label="Site">
       <ul class="navbar-nav">
         <li class="nav-item dropdown">
           <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
@@ -52,29 +52,34 @@
               <a href="/faq" class="dropdown-item">Frequently Asked Questions</a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="/browse" class="nav-link">Browse</a>
-          <!--<button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
-            data-bs-toggle="dropdown">Discover</button>
-          <ul class="dropdown-menu">
-            <li><!-\- landing page -\->
-              <a href="/browse" class="dropdown-item">Browse</a></li>
-            <li>
-              <a href="/search" class="dropdown-item">Search</a></li>
-          </ul>-->
-        </li>
-        <li class="nav-item dropdown" data-tapas-registered-user="true">
+        <li class="nav-item dropdown">
           <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
-            data-bs-toggle="dropdown">Create</button>
+            data-bs-toggle="dropdown">Browse</button>
           <ul class="dropdown-menu">
             <li class="nav-item">
-              <a href="/add/record" class="dropdown-item">TEI Record</a></li>
+              <a href="/browse/records" class="dropdown-item">TEI Records</a></li>
             <li class="nav-item">
-              <a href="/add/collection" class="dropdown-item">Collection</a></li>
+              <a href="/browse/collections" class="dropdown-item">Collections</a></li>
             <li class="nav-item">
-              <a href="/add/project" class="dropdown-item">Project</a></li>
+              <a href="/browse/projects" class="dropdown-item">Projects</a></li>
+            <!--<li class="nav-item">
+              <a href="/search" class="dropdown-item">Search TAPAS</a></li>-->
           </ul>
         </li>
+        <% if current_user %>
+          <li class="nav-item dropdown">
+            <button type="button" class="nav-link dropdown-toggle" aria-expanded="false" 
+              data-bs-toggle="dropdown">Create</button>
+            <ul class="dropdown-menu">
+              <li class="nav-item">
+                <a href="/core_files/new" class="dropdown-item">TEI Record</a></li>
+              <li class="nav-item">
+                <a href="/collections/new" class="dropdown-item">Collection</a></li>
+              <li class="nav-item">
+                <a href="/projects/new" class="dropdown-item">Project</a></li>
+            </ul>
+          </li>
+        <% end %>
       </ul>
       <!-- User account and authentication -->
       <%= render 'shared/user_header_nav' %>

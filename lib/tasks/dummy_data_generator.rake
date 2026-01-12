@@ -80,35 +80,29 @@ namespace :dummy_data_generator do
   end
 
   def create_project_members
+    # NOTE: Getting projects with no members will be much easier to do in Rails 6.1+, 
+    # e.g. `Project.where.missing(:project_members)`
     Project.all.each do |project|
+      puts "Creating users for project #{project.id}:"
       non_admin_ids = User.all.select { |u| u.admin_at.nil? }.map(&:id)
-
-      # contributors
-      # has a TAPAS account and either creates or contributes to a TAPAS project
-      5.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
-
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'contributor'
-        )
-      end
-
-      # collaborator
-      # has editorial access to a TAPAS project but is not the owner
-      3.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
-
-        ProjectMember.create(project_id: project.id,
-                             user_id: user_id,
-                             role: 'collaborator'
-        )
-      end
+      available_users = non_admin_ids #- ProjectMember.all.map(&:user_id)
+      num_contributors = Random.rand(13)   # 0 to 12
+      num_owners = Random.rand(6)   # 0 to 5, plus the depositor
 
       # project owners
-      # has created the project in question and has responsibility for it
-      1.times do
-        user_id = (non_admin_ids - ProjectMember.all.map(&:user_id)).sample
+      # has full edit access for the project
+      # can create collections and core files
+      # Start with the project depositor.
+      ProjectMember.create(project_id: project.id,
+                           user_id: project.depositor_id,
+                           role: 'owner'
+      )
+      # Remove the depositor from the array of available users.
+      available_users.delete(project.depositor_id)
+      # Create any additional owners.
+      num_owners.times do
+        user_id = available_users.sample
+        available_users.delete(user_id)
 
         ProjectMember.create(project_id: project.id,
                              user_id: user_id,
@@ -116,85 +110,95 @@ namespace :dummy_data_generator do
         )
       end
 
-      puts "#{project.members.values.flatten.count} project members created for #{project.__id__}: #{project.title}."
+      # contributor
+      # has access to a TAPAS project but is not the owner
+      # can create core files but not collections
+      num_contributors.times do
+        user_id = available_users.sample
+
+        ProjectMember.create(project_id: project.id,
+                             user_id: user_id,
+                             role: 'contributor'
+        )
+      end
+
+      puts "   #{project.owner.flatten.length} project owner(s)"
+      if project.contributors
+        puts "   #{project.contributors.flatten.length} project contributor(s)"
+      end
     end
   end
 
   def create_collections
     Project.all.each do |project|
-      project_users = project.members.values.flatten.shuffle
+      puts "Creating collections for project #{project.id}"
+      project_owners = project.owner.flatten.shuffle
+      older_collections = project.collections.length
+      is_empty = Random.rand(101) >= 95  # Very low chance for a project to have 0 collections
+      num_collections = is_empty ? 0 : 1 + Random.rand(5) # 0 to 5
 
-      2.times do
-        public = Collection.create(title: Faker::Food.dish,
+      num_collections.times do
+        # If the project is public, the collection can be public or private.
+        # If the project is private, the new collection must be too.
+        visibility = project.is_public ? [true, false].sample : false
+        collection = Collection.create(title: Faker::Food.dish,
                                    description: Faker::GreekPhilosophers.quote,
-                                   depositor_id: project_users.sample&.id,
+                                   depositor_id: project_owners.sample&.id,
                                    project_id: project.id,
-                                   is_public: true
+                                   is_public: visibility
         )
 
-        puts "Public collection #{public.id}: #{public.title} created for Project #{project.id}."
+        puts "   " + (visibility ? "Public" : "Private") 
+          + " collection #{collection.id}: #{collection.title}"
       end
+    end
+    
+    puts "Collection creation complete!"
+  end
+  
+  # Create a single new Core File
+  def create_new_core_file(collection, users, ography_type = nil)
+    project = collection.project
+    visibility = collection.is_public
+    core_file = CoreFile.create(title: Faker::Book.title,
+                    description: Faker::Book.genre,
+                    depositor_id: users.sample&.id,
+                    collections: [collection].compact,
+                    is_public: visibility ? [visibility, !visibility].sample : visibility,
+                    tei_authors: Faker::Creature.name,
+                    ography_type: ography_type
+    )
 
-      1.times do
-        private = Collection.create(title: Faker::Food.dish,
-                                    description: Faker::GreekPhilosophers.quote,
-                                    depositor_id: project_users.sample&.id,
-                                    project_id: project.id,
-                                    is_public: false
-        )
+    # Attach TEI file (required for non-ography files)
+    attach_tei_file(core_file)
 
-        puts "Private collection #{private.id}: #{private.title} created for Project #{project.id}."
-      end
+    if core_file.save
+      #puts "Core file #{core_file.id} created within Collection #{collection.id}"
+      # record_image(core_file)
+    else
+      puts "Create Core File task failed: #{core_file.errors.full_messages.join(', ')}"
     end
   end
 
   def create_core_files
     Collection.all.each do |collection|
-      project = collection.project
-      collection_users = project.members.values.flatten.shuffle
-      visibility = collection.is_public
+      puts "Creating core files for collection #{collection.id} in project #{collection.project.id}"
+      collection_users = collection.project.members.values.flatten.shuffle
       ography_types = CoreFile.all_ography_types
+      older_core_files = collection.core_files.length
+      num_core_files = Random.rand(51) # 0 to 50
+      num_ography_files = Random.rand(3) # 0 to 2
 
-      # Create 3 regular TEI content files
-      3.times do |i|
-        core_file = CoreFile.new(title: Faker::Book.title,
-                        description: Faker::Book.genre,
-                        depositor_id: collection_users.sample&.id,
-                        collections: [collection].compact,
-                        is_public: [visibility, !visibility].sample,
-                        tei_authors: Faker::Creature.name
-        )
-
-        # Attach TEI file (required for non-ography files)
-        attach_tei_file(core_file)
-
-        if core_file.save
-          puts "Core file #{core_file.id} created within Collection #{collection.id}"
-
-          # record_image(core_file)
-        else
-          puts "Create Core Files task failed: #{core_file.errors.full_messages.join(', ')}"
-        end
+      num_core_files.times do
+        create_new_core_file(collection, collection_users)
       end
 
-      # Create 3 ography support files (don't need TEI)
-      2.times do
-        core_file = CoreFile.create(title: Faker::Book.title,
-                        description: Faker::Book.genre,
-                        depositor_id: collection_users.sample&.id,
-                        collections: [collection].compact,
-                        is_public: visibility,
-                        ography_type: ography_types.sample,
-                        tei_authors: Faker::Artist.name
-        )
-
-        if core_file.persisted?
-          puts "Ography file #{core_file.id} (#{core_file.ography_type}) created within Collection #{collection.id}"
-          sleep 0.3  # Longer delay
-        else
-          puts "Create Ography Files task failed: #{core_file.errors.full_messages.join(', ')}"
-        end
+      # Create 0 to 2 ography support files
+      num_ography_files.times do
+        create_new_core_file(collection, collection_users, ography_types.sample)
       end
+      
+      puts "   Created "+ (collection.core_files.reload.size - older_core_files).to_s + " core files"
 
       # Clear connection pool after each collection
       ActiveRecord::Base.connection_pool.release_connection
@@ -300,24 +304,30 @@ namespace :dummy_data_generator do
 
   desc "creates projects"
   task :projects => :environment do
-    22.times do
-      Project.create(title: Faker::Company.bs,
-                     description: Faker::Lorem.paragraph,
-                     depositor_id: User.all.sample.id,
-                     institution: Faker::University.name
-      )
-    end
-
-    3.times do
+    # Check the number of Projects we had before creating new ones
+    older_projects = Project.count
+    num_projects = 45
+    
+    num_projects.times do
+      # Pick a number between 0 and 2. If the number is 2, the project is private.
+      is_private = Random.rand(3) == 2
+      # Pick a number between 0 and 3. If the number is 3, generate an institution string.
+      include_institution = Random.rand(4) == 3
+      
       Project.create(title: Faker::Company.bs,
                      description: Faker::Lorem.paragraph,
                      depositor_id: User.all.where(admin_at: nil).sample.id,
-                     is_public: false,
-                     institution: Faker::University.name
+                     is_public: !is_private,
+                     institution: include_institution ? Faker::University.name : nil
       )
     end
 
-    puts Project.count == 25 ? '25 Projects created.' : '"Create Projects" task failed.'
+    if Project.count == num_projects + older_projects
+      puts "#{ num_projects.to_s } Projects created."
+    else
+      num_new = Project.count - older_projects
+      puts "WARNING: #{num_new} projects created, expected #{num_projects + older_projects}"
+    end
   end
 
   desc 'creates project members'
@@ -350,19 +360,25 @@ namespace :dummy_data_generator do
     end
   end
 
-  desc "creates admin user"
+  desc "creates the admin user, if it doesn't exist"
   task :admin_user => :environment do
     email = ENV.fetch('DUMMY_ADMIN_EMAIL')
-    password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
-
-    user = User.create(name: 'Admin',
-                email: email,
-                bio: Faker::Lorem.paragraph,
-                password: password,
-                admin_at: Time.now
-    )
-
-    puts "Admin user #{user.id} has been created." unless user.nil?
+    
+    # Check for an existing user with the dummy admin email address before creating a new user.
+    if  User.where(email: email).empty?
+      password = ENV.fetch('DUMMY_ADMIN_PASSWORD')
+  
+      user = User.create(name: 'Admin',
+                  email: email,
+                  bio: Faker::Lorem.paragraph,
+                  password: password,
+                  admin_at: Time.now
+      )
+  
+      puts "Admin user #{user.id} has been created." unless user.nil?
+    else
+      puts "Admin user already exists."
+    end
   end
 
   desc "creates debug non-admin user"
@@ -381,14 +397,23 @@ namespace :dummy_data_generator do
 
   desc "creates non-admin users"
   task :non_admin_users => :environment do
-    275.times do
+    # Check the number of Users we had before creating new ones
+    older_users = User.count
+    num_new_users = 275
+    
+    num_new_users.times do
       user = User.create(name: Faker::Name.unique.name,
                   email: Faker::Internet.email,
                   bio: Faker::Lorem.paragraph,
                   password: Faker::Internet.password
       )
-
-      puts "Non-admin user #{user.id} has been created." unless user.nil?
+    end
+    
+    if User.count == older_users + num_new_users
+      puts "Created #{num_new_users} regular TAPAS users"
+    else
+      num_new = User.count - older_projects
+      puts "WARNING: #{num_new} users created, expected #{num_new_users + older_users}"
     end
   end
 
